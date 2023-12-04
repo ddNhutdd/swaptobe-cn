@@ -1,0 +1,400 @@
+.FormWithdraw {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    align-items: flex-start;
+
+    @media screen and (max-width:1199px) {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    @media screen and (max-width:576px) {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    .left {
+        width: 450px;
+        padding: 30px;
+        background: #fff;
+        box-shadow: 0 10px 28px $boxShadown-color-3;
+        border-radius: 20px;
+
+        @media screen and (max-width: 576px) {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            display: flex;
+
+            span {
+                margin-right: 30px;
+                font-size: 20px;
+                font-weight: 700;
+                margin-bottom: 15px;
+                color: $text-color-3;
+                font-family: "IBM Plex Sans";
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &.disabled {
+                    opacity: .5;
+                    color: $background-color-4;
+                    border-bottom-color: $background-color-4;
+                    cursor: not-allowed;
+                }
+
+                &.active {
+                    border-bottom: 3px solid $background-color-1;
+                }
+            }
+        }
+
+        .wallet {
+            .withdraw-type {
+                margin-bottom: 20px;
+
+                .withdraw-type-items {
+                    padding: 10px;
+                    background: hsla(0, 0%, 91.8%, .62);
+                    border-radius: 4px;
+
+                    &.active {
+                        border: 1px solid $text-color-3;
+                    }
+                }
+            }
+
+            .input {
+                margin-bottom: 20px;
+                position: relative;
+
+                p {
+                    font-size: 16px;
+                    color: $footer-text-1;
+                    font-family: "IBM Plex Sans";
+                    margin-bottom: 15px;
+                }
+
+                input {
+                    width: 100%;
+                    background-color: $white;
+                    max-width: 100%;
+                    vertical-align: middle;
+                    padding: 5px 10px;
+                    border: 1px solid $background-color-4;
+                    border-radius: 5px;
+                    transition: .2s;
+
+                    &:hover {
+                        border-color: $header2-background;
+                    }
+
+                    &:focus {
+                        border-color: $header2-background;
+                    }
+
+                    &:focus-visible {
+                        outline: 1px solid $header2-background;
+                    }
+                }
+
+                .list-tag {
+                    position: absolute;
+                    display: flex;
+                    justify-content: flex-end;
+                    top: 41px;
+                    width: auto;
+                    right: -6px;
+                    gap: 5px;
+                    padding: 0 10px;
+                    align-items: center;
+                    height: 33px;
+
+                    span {
+                        color: $text-color-3;
+                        font-family: "IBM Plex Sans";
+
+                        &.active {
+                            height: 90%;
+                            padding: 0 10px;
+                            background: $background-color-6;
+                            border-radius: 7px;
+                            margin-left: 10px;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                        }
+                    }
+                }
+            }
+
+            .max-available {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                word-break: break-word;
+
+                span {
+                    &:first-child {
+                        font-size: 16px;
+                        color: $footer-text-1;
+                        font-family: "IBM Plex Sans";
+                    }
+
+                    &:last-child {
+                        font-size: 16px;
+                        color: $text-color-3;
+                        font-family: "IBM Plex Sans";
+                    }
+                }
+            }
+
+            .list-notify {
+                list-style: none;
+
+                .notify-item {
+                    margin-top: 40px;
+                    display: flex;
+
+                    span {
+                        margin-right: 10px;
+                    }
+
+                    p {
+                        color: $footer-text-1;
+                        font-family: "IBM Plex Sans";
+                        font-weight: 500;
+                    }
+                }
+            }
+
+            .button-submit-container {
+                margin-top: 40px;
+                text-align: center;
+
+                button {
+                    background: $header2-background;
+                    border-radius: 5px;
+                    padding: 10px;
+                    color: $white;
+                    width: 60%;
+                    border: none;
+                    outline: none;
+
+                    &:hover {
+                        background-color: $header2-background-light;
+                        cursor: pointer;
+                    }
+
+                    &.disabled {
+                        background-color: $background-color-4;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+
+        .aliases {
+            .input {
+                margin-bottom: 20px;
+                position: relative;
+
+                p {
+                    font-size: 16px;
+                    color: $footer-text-1;
+                    font-family: "IBM Plex Sans";
+                    margin-bottom: 15px;
+                }
+
+                input {
+                    width: 100%;
+                    background-color: $white;
+                    max-width: 100%;
+                    vertical-align: middle;
+                    padding: 5px 10px;
+                    border: 1px solid $border-color-4;
+                    border-radius: 5px;
+                    transition: .2s;
+
+                    &:hover {
+                        border-color: $header2-background;
+                    }
+
+                    &:focus {
+                        border-color: $header2-background;
+                    }
+
+                    &:focus-visible {
+                        outline: 1px solid $header2-background;
+                    }
+                }
+
+                .list-tag {
+                    position: absolute;
+                    display: flex;
+                    justify-content: flex-end;
+                    top: 41px;
+                    width: auto;
+                    right: 0;
+                    gap: 5px;
+                    padding: 0 10px;
+                    align-items: center;
+                    height: 33px;
+
+                    span {
+                        color: $text-color-3;
+                        font-family: "IBM Plex Sans";
+
+                        &.active {
+                            height: 90%;
+                            padding: 0 10px;
+                            background: $background-color-6;
+                            border-radius: 7px;
+                            margin-left: 10px;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                        }
+                    }
+                }
+
+                textarea {
+                    height: 150px;
+                    border: 1px solid $border-color-4;
+                    width: 100%;
+                    vertical-align: middle;
+                    padding: 2px 15px;
+                    border-radius: 4px;
+                    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                    resize: none;
+                }
+            }
+
+            .max-available {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+
+                word-break: break-word;
+
+                span {
+                    &:first-child {
+                        font-size: 16px;
+                        color: $footer-text-1;
+                        font-family: "IBM Plex Sans";
+                    }
+
+                    &:last-child {
+                        font-size: 16px;
+                        color: $text-color-3;
+                        font-family: "IBM Plex Sans";
+                    }
+                }
+            }
+
+            .button-submit-container {
+                margin-top: 40px;
+                text-align: center;
+
+                button {
+                    background: $header2-background;
+                    border-radius: 5px;
+                    padding: 10px;
+                    color: $white;
+                    width: 60%;
+                    border: none;
+                    outline: none;
+
+                    &:hover {
+                        background-color: $header2-background-light;
+                        cursor: pointer;
+                    }
+
+                    &.disabled {
+                        background-color: $background-color-4;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+    }
+
+    .right {
+        width: 450px;
+        padding: 30px;
+        background: $white;
+        box-shadow: 0 10px 28px $boxShadown-color-3;
+        border-radius: 20px;
+
+        @media screen and (max-width: 576px) {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .loading {
+            padding: 30px;
+            background: $white;
+            box-shadow: 0 10px 28px $boxShadown-color-3;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .formWithdraw__title {
+            font-weight: bold;
+            color: $primary-color;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            text-transform: capitalize;
+        }
+
+        .formWithdraw__Wallet-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .formWithdraw__Wallet-item {
+                box-shadow: 0 10px 20px 0 $boxShadown-color-4;
+                border-radius: 5px;
+
+                .formWithdraw__Wallet-header {
+                    padding: 10px 10px 5px 10px;
+                    background-color: $primary-color;
+                    width: 100%;
+                    border-top-left-radius: 5px;
+                    border-top-right-radius: 5px;
+                    color: $white;
+                    font-size: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+
+                .formWithdraw__Wallet-body {
+                    padding: 5px 10px 10px 10px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    border-bottom-left-radius: 5px;
+                    border-bottom-right-radius: 5px;
+                }
+            }
+
+        }
+
+        .paging {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}

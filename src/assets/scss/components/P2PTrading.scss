@@ -1,0 +1,255 @@
+.p2ptrading {
+  width: 100%;
+
+  .container {
+    @include container1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    .top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      @media screen and (max-width:576px) {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+
+
+      div {
+        display: flex;
+        align-items: center;
+
+        @media screen and (max-width:576px) {
+          align-items: flex-start;
+        }
+
+        img {
+          width: 30px;
+          height: 30px;
+          object-fit: cover;
+          margin-right: 5px;
+          display: block;
+        }
+
+        span {
+          font-weight: bold;
+          font-size: 20px;
+          color: $primary-color;
+        }
+      }
+    }
+
+    .center {
+      margin-top: 30px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+
+      @media screen and (max-width:576px) {
+        grid-template-columns: repeat(1, 1fr);
+      }
+
+      .left {
+        .left1 {
+          display: flex;
+          align-items: center;
+
+          i {
+            font-size: 20px;
+            color: $green;
+            margin-right: 10px;
+          }
+
+          span {
+            font-weight: 500;
+            font-size: 18px;
+          }
+        }
+
+        .left2 {
+          margin-top: 10px;
+          font-weight: bold;
+          font-size: 22px;
+          color: $green;
+        }
+
+        .buyNowBtn {
+          margin-top: 20px;
+          background-color: $green;
+          color: white;
+          border: none;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
+
+      .right {
+        .right1 {
+          display: flex;
+          align-items: center;
+
+          i {
+            font-size: 20px;
+            color: $red;
+            margin-right: 10px;
+          }
+
+          span {
+            font-weight: 500;
+            font-size: 18px;
+          }
+        }
+
+        .right2 {
+          margin-top: 10px;
+          font-weight: bold;
+          font-size: 22px;
+          color: $red;
+        }
+
+        .sellNowBtn {
+          margin-top: 20px;
+          background-color: $red;
+          color: white;
+          border: none;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
+    }
+
+    .bottom {
+      width: 100%;
+      margin-top: 30px;
+
+      i {
+        margin-right: 8px;
+      }
+
+      span {
+        display: inline-block;
+        margin-left: 8px;
+        color: $primary-color;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.p2ptrading__table {
+  .ant-spin-nested-loading {
+    .ant-spin-container {
+      .ant-table {
+        .ant-table-container {
+          .ant-table-content {
+            table {
+              @media screen and (max-width:576px) {
+                width: 100%;
+              }
+
+              .ant-table-thead {
+                @media screen and (max-width:576px) {
+                  width: 100%;
+                  display: table;
+                  position: sticky;
+                  top: 0;
+                  z-index: 9;
+                }
+
+                tr {
+                  @media screen and (max-width:576px) {
+                    width: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                  }
+
+                  th {
+                    @media screen and (max-width:576px) {
+                      display: block;
+                      width: 50%;
+                    }
+
+                    &:nth-of-type(2) {
+                      @media screen and (max-width:576px) {
+                        border-top-right-radius: 5px;
+                      }
+                    }
+                  }
+                }
+              }
+
+              .ant-table-tbody {
+                @media screen and (max-width:576px) {
+                  width: 100%;
+                  display: block;
+
+                  .ant-table-placeholder {
+                    .ant-table-cell {
+                      width: 100%;
+                    }
+                  }
+
+                  &>tr {
+                    @media screen and (max-width:576px) {
+                      width: 100%;
+                      display: flex;
+                      flex-wrap: wrap;
+                    }
+
+                    &>td {
+                      &:nth-of-type(1) {
+                        @media screen and (max-width:576px) {
+                          border-bottom: none;
+                        }
+                      }
+
+                      &:nth-of-type(2) {
+                        @media screen and (max-width:576px) {
+                          border-bottom: none;
+                        }
+                      }
+
+                      @media screen and (max-width:576px) {
+                        display: block;
+                        width: 50%;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.p2ptrading__model-spinner-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 500px;
+}
+
+.p2ptrading__table-paging {
+  padding: 15px 10px;
+  display: flex;
+  justify-content: flex-end;
+}

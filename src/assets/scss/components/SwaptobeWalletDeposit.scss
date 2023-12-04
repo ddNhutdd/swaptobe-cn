@@ -1,0 +1,313 @@
+.wallet-deposit {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+
+    @media screen and (max-width:1199px) {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    @media screen and (max-width:576px) {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    .wallet-deposit-left {
+        width: 450px;
+        padding: 30px;
+        background: #fff;
+        box-shadow: 0 10px 28px $boxShadown-color-3;
+        border-radius: 20px;
+
+        @media screen and (max-width: 576px) {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+
+            li {
+                display: flex;
+                gap: 20px;
+
+                .number {
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                    font-weight: 400;
+                    background-color: $background-color-3;
+                    font-size: 30px;
+                    color: $header2-background;
+                }
+
+                .wallet-deposit-input {
+                    flex: 1;
+                    position: relative;
+
+                    p {
+                        margin-bottom: 10px
+                    }
+
+                    .dropdown-content-selected {
+                        width: 100%;
+                        border: 1px solid $background-color-4;
+                        padding: 5px 10px;
+                        border-radius: 5px;
+                        display: flex;
+                        align-items: center;
+                        background-color: $white;
+                        gap: 5px;
+                        cursor: default;
+
+                        &:hover {
+                            border-color: $header2-background;
+                        }
+
+                        &.active {
+                            border-color: $header2-background;
+                            outline: 1px solid $header2-background;
+                        }
+
+                        img {
+                            width: 20px;
+                            height: 20px;
+                            object-fit: cover;
+                        }
+
+                        .content {
+                            display: flex;
+                            gap: 5px;
+
+                            .main-content {
+                                font-weight: bold;
+                            }
+                        }
+
+                        i {
+                            margin-left: auto;
+                        }
+                    }
+
+                    .dropdown-menu {
+                        margin-top: 2px;
+                        border: 1px solid $background-color-4;
+                        background-color: $white;
+                        border-radius: 5px;
+                        padding: 10px 0;
+                        position: absolute;
+                        top: 67px;
+                        width: 100%;
+                        z-index: -1;
+                        transition: .2s;
+                        max-height: 0;
+                        opacity: 0;
+                        overflow: hidden;
+
+                        &.show {
+                            max-height: 300px;
+                            opacity: 1;
+                            overflow-y: auto;
+                            z-index: 7;
+                        }
+
+                        .dropdown-item-coin {
+                            padding: 5px 10px;
+                            transition: .2s;
+                            display: flex;
+                            gap: 5px;
+
+                            &:hover {
+                                background-color: $background-color-6;
+                                cursor: pointer;
+                            }
+
+                            &.active {
+                                background-color: $background-color-6;
+                            }
+
+                            img {
+                                width: 20px;
+                                height: 20px;
+                                object-fit: cover
+                            }
+
+                            .dropdown-item-key {
+                                font-weight: bold;
+                            }
+                        }
+
+                        .dropdown-item-network {
+                            padding: 5px 10px;
+                            transition: .2s;
+                            display: flex;
+                            gap: 5px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+
+                            &:hover {
+                                background-color: $background-color-6;
+                                cursor: pointer;
+                            }
+
+                            .dropdown-item-network-left {
+                                display: flex;
+                                flex-direction: column;
+                                flex-wrap: 5px;
+                            }
+
+                            .dropdown-item-network-right {
+                                display: flex;
+                                flex-direction: column;
+                                flex-wrap: 5px;
+                                align-items: flex-end;
+                            }
+                        }
+                    }
+                }
+
+                .address {
+                    flex: 1;
+
+                    p {
+                        font-weight: bolder;
+                        position: relative;
+
+                        span {
+                            margin-left: 5px;
+                            color: $text-color-5;
+                            font-size: 16px;
+                            position: absolute;
+                            top: -8px;
+                            left: 123px;
+                        }
+                    }
+
+                    .address-content {
+                        padding: 10px;
+                        background-color: $background-color-5;
+                        display: flex;
+                        align-items: center;
+                        gap: 15px;
+
+                        .address-code {
+                            .code {
+                                padding: 10px;
+                                background-color: $white;
+                                border-radius: 3px;
+                                word-break: break-all;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 10px;
+                            }
+                        }
+
+                        .address-copy {
+                            padding: 10px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background-color: $background-color-6;
+                            border-radius: 3px;
+                            color: $black;
+
+                            &:hover {
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .wallet-deposit-right {
+        width: 450px;
+        padding: 30px;
+        background: #fff;
+        box-shadow: 0 10px 28px $boxShadown-color-3;
+        border-radius: 20px;
+
+        @media screen and (max-width: 576px) {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h3 {
+            font-size: 20px;
+        }
+
+        .wallet-deposit__history {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .wallet-deposite__history-item {
+                display: flex;
+                flex-wrap: wrap;
+                border-radius: 5px;
+                box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+                align-items: center;
+                gap: 8px;
+
+                .wallet-deposite__history-time {
+                    padding: 10px 10px 5px 10px;
+                    background-color: $header2-background;
+                    width: 100%;
+                    border-top-left-radius: 5px;
+                    border-top-right-radius: 5px;
+                    color: $white;
+                    font-size: 15px;
+                }
+
+                .wallet-deposite__history-name {
+                    box-sizing: border-box;
+                    width: 20%;
+                    padding: 0 10px;
+                }
+
+                .wallet-deposite__history-amount {
+                    box-sizing: border-box;
+                    padding: 0 10px;
+                    color: $green;
+                    font-weight: bold;
+                }
+
+                .wallet-deposite__history-final {
+                    width: 100%;
+                    display: flex;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    padding-bottom: 10px;
+
+                    span {
+                        display: block;
+
+                        &:first-child {
+                            width: 25%;
+                        }
+
+                        &:last-child {
+                            width: 75%
+                        }
+                    }
+                }
+            }
+        }
+
+        .wallet-deposite-paging {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}

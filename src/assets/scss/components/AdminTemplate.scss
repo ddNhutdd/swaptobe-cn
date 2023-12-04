@@ -1,0 +1,15 @@
+.adminTemplate {
+    background-color: $admin-background;
+    min-height: 100vh;
+
+    .adminTemplate__content {
+        .adminTemplate__content-main {
+            padding: 30px;
+            transition: margin-left .6s;
+
+            &.small {
+                margin-left: 300px;
+            }
+        }
+    }
+}

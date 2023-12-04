@@ -1,0 +1,27 @@
+@import "./base/base.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@import "./components/Header1.scss";
+@import "./components/Header2.scss";
+@import "./components/P2PTrading.scss";
+@import "./components/P2PTrading2.scss";
+@import "./components/Footer.scss";
+@import "./components/Swap.scss";
+@import "./components/CreateBuy.scss";
+@import "./components/Login.scss";
+@import "./components/Wallet.scss";
+@import "./components/Home.scss";
+@import "./components/SwaptobeWallet.scss";
+@import "./components/FormWithdraw.scss";
+@import "./components/SwaptobeWalletList.scss";
+@import "./components/SwaptobeWalletDeposit.scss";
+@import "./components/Profile.scss";
+@import "./components/AdminTemplate.scss";
+@import "./components/AdminHeader.scss";
+@import "./components/AdminSidebar.scss";
+@import "./components/AdminDashboard.scss";

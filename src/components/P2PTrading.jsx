@@ -1,0 +1,222 @@
+import { Button, Card, Modal, Table } from "antd";
+import { Spin } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import socket from "../util/socket";
+import P2PTrading2 from "./P2PTrading2";
+import { useTranslation } from "react-i18next";
+import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
+import { localStorageVariable } from "src/constant";
+import i18n, { availableLanguage } from "src/translation/i18n";
+import { DOMAIN } from "src/util/service";
+import { coinSetCoin } from "src/redux/actions/coin.action";
+import { getCurrent } from "src/redux/constant/currency.constant";
+import { getExchange } from "src/util/userCallApi";
+//
+export default function P2PTrading({ history }) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [data, setData] = useState([]);
+  const [sellPrice, setSellPrice] = useState(0);
+  const [buyPrice, setBuyPrice] = useState(0);
+  const [coinImage, setCoinImage] = useState(DOMAIN + "images/BTC.png");
+  const { coin } = useSelector((root) => root.coinReducer);
+  const userSelectedCurrency = useSelector(getCurrent);
+  const exchange = useRef();
+  console.log(exchange);
+  const [coinFullName, setCoinFullName] = useState();
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  useEffect(() => {
+    //
+    const language =
+      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+    i18n.changeLanguage(language);
+    //
+    const element = document.querySelector(".p2ptrading");
+    element.classList.add("fadeInBottomToTop");
+    //
+    socket.connect();
+    socket.on("listCoin", (res) => {
+      setData(res);
+    });
+    //
+    return () => socket.disconnect();
+  }, []);
+  useEffect(() => {
+    if (data.length !== 0) {
+      const x = data.find((item) => item.name === coin);
+      setBuyPrice(x?.price);
+      setSellPrice(x?.price * 1.01);
+      setCoinFullName(x?.token_key);
+      setCoinImage(DOMAIN + x?.image);
+    }
+  }, [data, coin]);
+  useEffect(() => {
+    getExchange()
+      .then((resp) => {
+        console.log(resp);
+        exchange.current = resp?.data?.data;
+      })
+      .catch((error) => console.log(error));
+  }, [userSelectedCurrency]);
+  //
+  const showModal = () => setIsModalVisible(true);
+  const handleOk = () => setIsModalVisible(false);
+  const handleCancel = () => setIsModalVisible(false);
+  const handleSelectedRow = (record) => {
+    setIsModalVisible(false);
+    dispatch(coinSetCoin(record.name));
+  };
+  const columns = [
+    {
+      title: t("name"),
+      key: "coinName",
+      dataIndex: "token_key",
+      render: (_, record) => {
+        return (
+          <span
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              gap: "5px",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+            onClick={() => handleSelectedRow(record)}
+          >
+            <img
+              style={{
+                display: "block",
+                width: "20px",
+                height: "20px",
+                objectFit: "cover",
+              }}
+              src={DOMAIN + record.image}
+              alt={record.token_key}
+            />
+            {record.token_key} - {record.name}
+          </span>
+        );
+      },
+    },
+    {
+      title: t("24hChange"),
+      key: "24hChange",
+      dataIndex: "percent",
+      render: (_, { percent }) => {
+        let color = "black";
+        if (percent > 0) {
+          color = "green";
+        } else if (percent < 0) {
+          color = "red";
+        }
+        return <span style={{ color: color }}>{percent}%</span>;
+      },
+    },
+    {
+      title: t("price"),
+      key: "price",
+      dataIndex: "price",
+      render: (_, { price }) => <span>${price}</span>,
+    },
+    {
+      title: t("24hVolume"),
+      key: "24hVolume",
+      dataIndex: "volume",
+    },
+  ];
+  const convertCurrency = function (usd) {
+    if (!exchange.current || !userSelectedCurrency) return;
+
+    const rate = exchange.current.filter(
+      (item) => item.title === userSelectedCurrency
+    )[0].rate;
+    console.log("converted ", usd, rate);
+    return usd * rate;
+  };
+  //
+  return (
+    <>
+      <div className="p2ptrading">
+        <div className="container">
+          <div className="top box">
+            <div>
+              <img src={coinImage} alt={coin} />
+              <span>{coinFullName}</span>
+            </div>
+            <Button onClick={showModal}>{t("chooseAnother")} </Button>
+          </div>
+          <div className="center">
+            <div className="left box">
+              <div className="left1">
+                <i className="fa-solid fa-flag"></i>
+                <span>{t("sellingPrice")}:</span>
+              </div>
+              <div className="left2">
+                {formatStringNumberCultureUS(
+                  convertCurrency(sellPrice)?.toFixed(3) ?? ""
+                )}
+                <span> {userSelectedCurrency}</span>
+              </div>
+              <Button className="buyNowBtn" size="large">
+                {t("buyNow")}
+              </Button>
+            </div>
+            <div className="right box">
+              <div className="right1">
+                <i className="fa-solid fa-flag"></i>
+                <span>{t("buyingPrice")}:</span>
+              </div>
+              <div className="right2">
+                {formatStringNumberCultureUS(
+                  convertCurrency(buyPrice)?.toFixed(3) ?? ""
+                )}
+                <span> USD</span>
+              </div>
+              <Button className="sellNowBtn" size="large">
+                {t("sellNow")}
+              </Button>
+            </div>
+          </div>
+          <div className="bottom box">
+            <i className="fa-solid fa-bolt"></i>
+            {t("receiveBitcoinWithin15MinutesOrBeRefunded")}
+            <span>{t("moreDetails")}</span>
+          </div>
+        </div>
+        <Modal
+          open={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <Card bodyStyle={{ padding: "0" }}>
+            {data && data.length ? (
+              <Table
+                className="p2ptrading__table"
+                columns={columns}
+                dataSource={data}
+                rowKey={(record) => record.id}
+                pagination={{
+                  onChange: () => {
+                    setTimeout(() => {
+                      document.querySelector(".ant-modal-wrap").scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      });
+                    }, 0);
+                  },
+                }}
+              />
+            ) : (
+              <div className="p2ptrading__model-spinner-container">
+                <Spin style={{ width: "100%" }} />
+              </div>
+            )}
+          </Card>
+        </Modal>
+      </div>
+      <P2PTrading2 history={history} />
+    </>
+  );
+}

@@ -1,0 +1,115 @@
+.swaptobeWalletList {
+    .list {
+        list-style: none;
+
+        .list-item {
+            padding: 25px 20px;
+            background: #fafafa;
+            box-shadow: 0 6px 4px rgba(0, 0, 0, .04);
+            display: flex;
+            flex-wrap: nowrap;
+
+            @media screen and(max-width:768px) {
+                flex-wrap: wrap;
+            }
+
+            @media screen and (max-width:576px) {
+                flex-direction: column;
+            }
+
+            .name {
+                display: flex;
+                align-items: center;
+                color: $text-color-3;
+                font-family: "IBM Plex Sans";
+                width: 35%;
+
+                @media screen and (max-width:768px) {
+                    width: 50%;
+                }
+
+                @media screen and (max-width:576px) {
+                    width: 100%;
+                }
+
+                img {
+                    width: 45px;
+                    height: 45px;
+                    margin-right: 10px;
+                }
+
+                span {
+                    font-weight: bolder;
+                }
+
+                div {
+                    margin-left: 3px;
+                }
+            }
+
+            .price {
+                align-self: center;
+                font-family: arial;
+                font-weight: 900;
+                color: $text-color-3;
+                display: flex;
+                flex-direction: column;
+
+                @media screen and (max-width:576px) {
+                    margin-left: 0;
+                    margin-top: 15px;
+                    align-self: flex-start;
+                }
+
+                span {
+                    &:last-child {
+                        color: $header2-background;
+                        font-weight: normal;
+                    }
+                }
+            }
+
+            .action {
+                margin-left: auto;
+                display: flex;
+                gap: 15px;
+
+                @media screen and (max-width:768px) {
+                    width: 100%;
+                    margin-top: 20px;
+                }
+
+                @media screen and (max-width:340px) {
+                    flex-direction: column;
+                }
+
+                .primary-button {
+                    background: $header2-background;
+                    color: #fff;
+                    padding: 8px 16px;
+                    box-sizing: border-box;
+                    border: none;
+                    border-radius: 5px;
+
+                    &:hover {
+                        background-color: $header2-background-light;
+                        cursor: pointer;
+                    }
+                }
+
+                .seconary-button {
+                    padding: 8px 16px;
+                    border: 1px solid $background-color-6;
+                    box-sizing: border-box;
+                    border-radius: 5px;
+
+                    &:hover {
+                        border-color: $header2-background;
+                        color: $header2-background;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}

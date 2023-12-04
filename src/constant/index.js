@@ -1,0 +1,39 @@
+export const localStorageVariable = {
+  lng: "lng",
+  token: "token",
+  user: "user",
+  currency: "currency",
+};
+
+export const url = {
+  home: "/",
+  signup: "/signup",
+  profile: "/profile",
+  wallet: "/wallet-2",
+  swap: "/swap",
+  login: "/login",
+  p2pTrading: "/p2p-trading",
+};
+
+export const api_url = {
+  login: "api/user/login",
+  refreshToken: "api/user/refreshToken",
+};
+
+export const showAlertType = {
+  success: "success",
+  error: "error",
+};
+
+export const api_status = {
+  pending: "pending",
+  fetching: "fetching",
+  fulfilled: "fulfilled",
+  rejected: "rejected",
+};
+
+export const currency = {
+  vnd: "VND",
+  eur: "EUR",
+  usd: "USD",
+};
