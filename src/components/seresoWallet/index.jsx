@@ -10,14 +10,17 @@ import {
 import { swaptoveWalletShowMainActionCreator as seresoWalletShowMainActionCreator } from "src/redux/actions/seresoWallet.action";
 import SeresoWalletDeposit from "./walletDeposite";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
-import { localStorageVariable } from "src/constant";
+import { currency, localStorageVariable } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { getCoinTotalValue } from "src/redux/constant/coin.constant";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 function SwaptobeWallet() {
   //
   const { t } = useTranslation();
   const showActionContent = useSelector(getShowContent);
   const totalValue = useSelector(getCoinTotalValue);
+  const userSelectedCurrentcy = useSelector(getCurrent);
+  const exchange = useSelector(getExchange);
   const dispatch = useDispatch();
   useEffect(() => {
     //
@@ -28,6 +31,15 @@ function SwaptobeWallet() {
     const element = document.querySelector(".swaptobe-wallet");
     element.classList.add("fadeInBottomToTop");
   }, []);
+  useEffect(() => {
+    if (!exchange || !userSelectedCurrentcy) return;
+    const rate =
+      exchange.filter((item) => item.title === userSelectedCurrentcy)[0]
+        ?.rate || 0;
+    const result = formatStringNumberCultureUS((totalValue * rate).toFixed(3));
+    const ele = document.getElementById("showTotalValue");
+    if (ele) ele.innerHTML = result;
+  }, [userSelectedCurrentcy, exchange, totalValue]);
   //
   const renderActionContent = () => {
     switch (showActionContent) {
@@ -37,6 +49,8 @@ function SwaptobeWallet() {
         return <FormWithdraw />;
       case actionContent.desposite:
         return <SeresoWalletDeposit />;
+      default:
+        return;
     }
   };
   const backToActionContentMainClickHandle = (e) => {
@@ -56,7 +70,6 @@ function SwaptobeWallet() {
             >
               {t("walletOverview")}
             </span>
-
             <span
               style={
                 showActionContent !== actionContent.withdraw
@@ -68,7 +81,6 @@ function SwaptobeWallet() {
               <img src="./img/left-arrow.png" alt="" />
               {t("withdraw")}
             </span>
-
             <span
               style={
                 showActionContent !== actionContent.desposite
@@ -84,8 +96,12 @@ function SwaptobeWallet() {
           <div className="info">
             <div className="left">
               <div>{t("estimatedAssetsValue")}</div>
-              <div>${formatStringNumberCultureUS(totalValue.toString())}</div>
-              <div>≈ 0 VND</div>
+              <div>
+                <span id="showTotalValue"></span>
+                {userSelectedCurrentcy === currency.usd && " $"}
+                {userSelectedCurrentcy === currency.eur && " €"}
+                {userSelectedCurrentcy === currency.vnd && " đ"}
+              </div>
             </div>
             <div className="right">
               <div className="right-text">

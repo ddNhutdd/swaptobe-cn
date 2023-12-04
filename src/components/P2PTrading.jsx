@@ -6,12 +6,11 @@ import socket from "../util/socket";
 import P2PTrading2 from "./P2PTrading2";
 import { useTranslation } from "react-i18next";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
-import { localStorageVariable } from "src/constant";
+import { currency, localStorageVariable } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { DOMAIN } from "src/util/service";
 import { coinSetCoin } from "src/redux/actions/coin.action";
-import { getCurrent } from "src/redux/constant/currency.constant";
-import { getExchange } from "src/util/userCallApi";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 //
 export default function P2PTrading({ history }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -21,8 +20,8 @@ export default function P2PTrading({ history }) {
   const [coinImage, setCoinImage] = useState(DOMAIN + "images/BTC.png");
   const { coin } = useSelector((root) => root.coinReducer);
   const userSelectedCurrency = useSelector(getCurrent);
+  const exChangeFromRedux = useSelector(getExchange);
   const exchange = useRef();
-  console.log(exchange);
   const [coinFullName, setCoinFullName] = useState();
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -45,20 +44,15 @@ export default function P2PTrading({ history }) {
   useEffect(() => {
     if (data.length !== 0) {
       const x = data.find((item) => item.name === coin);
-      setBuyPrice(x?.price);
-      setSellPrice(x?.price * 1.01);
+      setBuyPrice(x?.price * 1.01);
+      setSellPrice(x?.price);
       setCoinFullName(x?.token_key);
       setCoinImage(DOMAIN + x?.image);
     }
   }, [data, coin]);
   useEffect(() => {
-    getExchange()
-      .then((resp) => {
-        console.log(resp);
-        exchange.current = resp?.data?.data;
-      })
-      .catch((error) => console.log(error));
-  }, [userSelectedCurrency]);
+    exchange.current = exChangeFromRedux;
+  }, [exChangeFromRedux]);
   //
   const showModal = () => setIsModalVisible(true);
   const handleOk = () => setIsModalVisible(false);
@@ -117,7 +111,16 @@ export default function P2PTrading({ history }) {
       title: t("price"),
       key: "price",
       dataIndex: "price",
-      render: (_, { price }) => <span>${price}</span>,
+      render: (_, { price }) => {
+        return (
+          <span>
+            {userSelectedCurrency === currency.usd && "$"}
+            {userSelectedCurrency === currency.eur && "€"}
+            {userSelectedCurrency === currency.vnd && "đ"}
+            {price}
+          </span>
+        );
+      },
     },
     {
       title: t("24hVolume"),
@@ -126,12 +129,15 @@ export default function P2PTrading({ history }) {
     },
   ];
   const convertCurrency = function (usd) {
-    if (!exchange.current || !userSelectedCurrency) return;
-
-    const rate = exchange.current.filter(
-      (item) => item.title === userSelectedCurrency
-    )[0].rate;
-    console.log("converted ", usd, rate);
+    if (
+      !exchange.current ||
+      exchange.current.length <= 0 ||
+      !userSelectedCurrency
+    )
+      return;
+    const rate =
+      exchange.current.filter((item) => item.title === userSelectedCurrency)[0]
+        ?.rate || 0;
     return usd * rate;
   };
   //

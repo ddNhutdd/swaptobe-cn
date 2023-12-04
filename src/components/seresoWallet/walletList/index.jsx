@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +7,7 @@ import {
   swaptoveWalletShowDepositeActionCreator,
   swaptoveWalletShowWithdrawActionCreator,
 } from "src/redux/actions/seresoWallet.action";
-import { localStorageVariable, url } from "src/constant";
+import { currency, localStorageVariable, url } from "src/constant";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
@@ -18,12 +19,16 @@ import {
 } from "src/redux/actions/coin.action";
 import { useHistory } from "react-router-dom";
 import { getUserWallet } from "src/redux/constant/coin.constant";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 function SeresoWalletList() {
   //
   const history = useHistory();
   const [allCoin, setAllCoin] = useState();
   const userWallet = useSelector(getUserWallet);
   const [myListCoin, setMyListCoin] = useState(userWallet);
+  const [, setRe_renderComponent] = useState(0);
+  const userSelectedCurrency = useSelector(getCurrent);
+  const exchange = useSelector(getExchange);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -59,6 +64,10 @@ function SeresoWalletList() {
       //
     }
   }, [myListCoin, allCoin]);
+
+  useEffect(() => {
+    setRe_renderComponent((state) => ++state);
+  }, [userSelectedCurrency, exchange]);
   //
   const getMyCoin = function (coinName) {
     if (myListCoin) {
@@ -71,6 +80,13 @@ function SeresoWalletList() {
     dispatch(coinSetAmountCoin(amount));
     history.push(url.swap);
   };
+  const convertCurrency = function (usd, currency, exchange) {
+    if (!usd || !currency || !exchange || !exchange.length) return;
+    console.log(usd, currency, exchange);
+    const rate =
+      exchange.filter((item) => item.title === currency)[0]?.rate ?? 0;
+    return (usd * rate).toFixed(3);
+  };
   const renderListCurrency = (listCurrencyData) => {
     return listCurrencyData?.map((item) => (
       <li key={item.token_key} className="list-item">
@@ -80,7 +96,14 @@ function SeresoWalletList() {
           <div>{item.token_key}</div>
         </div>
         <div className="price">
-          <span>${formatStringNumberCultureUS(item.price.toString())}</span>
+          <span>
+            {formatStringNumberCultureUS(
+              convertCurrency(item.price, userSelectedCurrency, exchange)
+            )}
+            {userSelectedCurrency === currency.usd && " $"}
+            {userSelectedCurrency === currency.eur && " €"}
+            {userSelectedCurrency === currency.vnd && " đ"}
+          </span>
           <span>Own: {getMyCoin(item.name, myListCoin)} coins</span>
         </div>
         <div className="action">

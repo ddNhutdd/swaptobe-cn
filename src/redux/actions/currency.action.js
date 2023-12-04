@@ -6,3 +6,16 @@ export const currencySetCurrent = function (payload) {
     payload,
   };
 };
+
+export const currencySetExchange = function (payload) {
+  return {
+    type: currency.exchange,
+    payload,
+  };
+};
+
+export const currencySetFetchExchangeCount = function () {
+  return {
+    type: currency.fetchExchangeCount,
+  };
+};

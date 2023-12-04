@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import CreateBuy from "./components/CreateBuy";
@@ -14,7 +15,21 @@ import Profile from "./components/profile";
 import Dashboard from "./components/admin/dashboard";
 import AdminTemplate from "./templates/AdminTemplate";
 import Home from "./components/home/index.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { getExchange as getExchangeApi } from "./util/userCallApi";
+import { currencySetExchange } from "./redux/actions/currency.action";
+import { getFetchExchangeCount } from "./redux/constant/currency.constant";
 function App() {
+  const dispatch = useDispatch();
+  const fetchExchangeCount = useSelector(getFetchExchangeCount);
+  //
+  const getExchange = function () {
+    getExchangeApi()
+      .then((resp) => {
+        dispatch(currencySetExchange(resp.data.data));
+      })
+      .catch((error) => console.log(error));
+  };
   useEffect(() => {
     if (localStorage.getItem("user")) {
       const expiresInRefreshToken = JSON.parse(
@@ -26,7 +41,9 @@ function App() {
       }
     }
   }, []);
-
+  useEffect(() => {
+    getExchange();
+  }, [fetchExchangeCount]);
   return (
     <BrowserRouter>
       <ScrollToTop>

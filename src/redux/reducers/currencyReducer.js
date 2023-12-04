@@ -4,10 +4,22 @@ import { defaultState } from "../constant/currency.constant";
 export const currencyReducer = (state = defaultState, action) => {
   switch (action.type) {
     case currency.current: {
-      console.log(action.payload);
       return {
         ...state,
         current: action.payload,
+      };
+    }
+    case currency.exchange: {
+      return {
+        ...state,
+        exchange: action.payload,
+      };
+    }
+    case currency.fetchExchangeCount: {
+      const count = ++state.fetchExchangeCount;
+      return {
+        ...state,
+        fetchExchangeCount: count,
       };
     }
 
