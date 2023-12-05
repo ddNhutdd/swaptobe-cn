@@ -2,7 +2,7 @@ import axios from "axios";
 export const DOMAIN = "https://remitano.dk-tech.vn/";
 export const axiosService = axios.create({
   baseURL: DOMAIN,
-  timeout: 100000,
+  timeout: 180000,
 });
 const refreshToken = async () => {
   const refreshToken = JSON.parse(localStorage.getItem("user")).refreshToken;

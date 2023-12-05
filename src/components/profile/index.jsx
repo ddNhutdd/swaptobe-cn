@@ -3,11 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Card } from "antd";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
-import { localStorageVariable, url } from "src/constant";
+import { api_status, localStorageVariable, url } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { Modal } from "antd";
 import { getLocalStorage } from "src/util/common";
 import { useHistory } from "react-router-dom";
+import { uploadKyc } from "src/util/userCallApi";
 function Profile() {
   const kycControl = {
     fullName: "fullName",
@@ -25,6 +26,7 @@ function Profile() {
   const { t } = useTranslation();
   const history = useHistory();
   const [is2FAModalOpen, setIs2FAModalOpen] = useState(false);
+  const callApiKYCStatus = api_status.pending;
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
@@ -217,6 +219,7 @@ function Profile() {
     if (kycTourch[kycControl.frontID]) {
       if (!frontIDElementValue || frontIDElementValue.length <= 0) {
         kycError[kycControl.frontID] = "Cần thiết";
+        isValid &= false;
       } else {
         delete kycError[kycControl.frontID];
       }
@@ -227,6 +230,7 @@ function Profile() {
     if (kycTourch[kycControl.behindID]) {
       if (!behindIDElementValue || behindIDElementValue.length <= 0) {
         kycError[kycControl.behindID] = "Cần thiết";
+        isValid &= false;
       } else {
         delete kycError[kycControl.behindID];
       }
@@ -237,6 +241,7 @@ function Profile() {
     if (kycTourch[kycControl.portrait]) {
       if (!portraitElementValue || portraitElementValue.length <= 0) {
         kycError[kycControl.portrait] = "Cần thiết";
+        isValid &= false;
       } else {
         delete kycError[kycControl.portrait];
       }
@@ -245,6 +250,7 @@ function Profile() {
     return Object.keys(kycTourch).length <= 0 ? false : Boolean(isValid);
   };
   const kycHandleSubmit = function (e) {
+    if (callApiKYCStatus === api_status.fetching) return;
     e.preventDefault();
     for (let [key] of Object.entries(kycControl)) {
       kycTourch[key] = true;
@@ -255,6 +261,41 @@ function Profile() {
       return;
     }
     // submit
+    const formData = new FormData();
+    formData.append(
+      "fullname",
+      document.getElementById("profile__fullName").value
+    );
+    formData.append(
+      "address",
+      document.getElementById("profile__address").value
+    );
+    formData.append("phone", document.getElementById("profile__phone").value);
+    formData.append(
+      "company",
+      document.getElementById("profile__company").value
+    );
+    formData.append(
+      "passport",
+      document.getElementById("profile__passport").value
+    );
+    formData.append(
+      "photo",
+      document.getElementById("frontIdentityCardFile").files[0]
+    );
+    formData.append(
+      "photo",
+      document.getElementById("backOfIdentityCardFile").files[0]
+    );
+    formData.append("photo", document.getElementById("portraitFile").files[0]);
+    formData.append("userid", getLocalStorage(localStorageVariable.user).id);
+
+    console.log("click", formData);
+    uploadKyc(formData)
+      .then((resp) => {
+        console.log("upload thanh cong ", resp);
+      })
+      .catch((error) => console.log("looi ", error));
   };
   const kycControlHandleChange = function () {
     kycValidate();

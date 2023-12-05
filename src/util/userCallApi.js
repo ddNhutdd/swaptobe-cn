@@ -1,5 +1,4 @@
 import { axiosService } from "./service";
-
 export const createWalletApi = function (coinName) {
   try {
     return axiosService.post("/api/user/createWallet", {
@@ -9,7 +8,6 @@ export const createWalletApi = function (coinName) {
     console.log(error);
   }
 };
-
 export const getWalletApi = function () {
   try {
     return axiosService.post("/api/user/getWallet");
@@ -17,7 +15,6 @@ export const getWalletApi = function () {
     console.log(error);
   }
 };
-
 export const getHistorySwapApi = function (data) {
   try {
     return axiosService.post("/api/swap/historyswap", data);
@@ -25,7 +22,6 @@ export const getHistorySwapApi = function (data) {
     console.log(error);
   }
 };
-
 export const getDepositHistoryApi = function (data) {
   try {
     return axiosService.post("/api/blockico/getblocks", data);
@@ -33,7 +29,6 @@ export const getDepositHistoryApi = function (data) {
     console.log(error);
   }
 };
-
 export const swapCoinApi = function (data) {
   try {
     return axiosService.post("/api/swap/swap", data);
@@ -41,7 +36,6 @@ export const swapCoinApi = function (data) {
     console.log(error);
   }
 };
-
 export const transferToAddress = function (data) {
   try {
     return axiosService.post("/api/user/transferToAddress", data);
@@ -63,7 +57,6 @@ export const transferToUsername = function (data) {
     console.log(error);
   }
 };
-
 export const historytransfer = function (data) {
   try {
     return axiosService.post("/api/user/historytransfer", data);
@@ -71,7 +64,6 @@ export const historytransfer = function (data) {
     console.log(error);
   }
 };
-
 export const getExchange = function () {
   try {
     return axiosService.post("/api/exchange/getExchange");
@@ -79,10 +71,13 @@ export const getExchange = function () {
     console.log(error);
   }
 };
-
 export const uploadKyc = function (data) {
   try {
-    return axiosService.post("/api/uploadKyc", data);
+    return axiosService.post("/api/uploadKyc", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   } catch (error) {
     console.log(error);
   }
