@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import i18n, { availableLanguage } from "src/translation/i18n";
@@ -9,7 +9,6 @@ import {
 } from "src/redux/actions/seresoWallet.action";
 import { currency, localStorageVariable, url } from "src/constant";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
-import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
 import { Spin } from "antd";
 import {
@@ -20,13 +19,12 @@ import {
 import { useHistory } from "react-router-dom";
 import { getUserWallet } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 function SeresoWalletList() {
   //
   const history = useHistory();
-  const [allCoin, setAllCoin] = useState();
-  const userWallet = useSelector(getUserWallet);
-  const [myListCoin, setMyListCoin] = useState(userWallet);
-  const [, setRe_renderComponent] = useState(0);
+  const allCoin = useSelector(getListCoinRealTime);
+  const myListCoin = useSelector(getUserWallet);
   const userSelectedCurrency = useSelector(getCurrent);
   const exchange = useSelector(getExchange);
   const { t } = useTranslation();
@@ -36,17 +34,7 @@ function SeresoWalletList() {
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
     i18n.changeLanguage(language);
-    // lang nghe socket
-    socket.connect();
-    socket.on("listCoin", (res) => {
-      setAllCoin(res);
-    });
-    //
-    return () => socket.disconnect();
   }, []);
-  useEffect(() => {
-    setMyListCoin(userWallet);
-  }, [userWallet]);
   useEffect(() => {
     if (myListCoin && allCoin) {
       //
@@ -65,10 +53,6 @@ function SeresoWalletList() {
     }
   }, [myListCoin, allCoin]);
 
-  useEffect(() => {
-    setRe_renderComponent((state) => ++state);
-  }, [userSelectedCurrency, exchange]);
-  //
   const getMyCoin = function (coinName) {
     if (myListCoin) {
       const key = coinName.toLowerCase() + "_balance";
@@ -82,7 +66,6 @@ function SeresoWalletList() {
   };
   const convertCurrency = function (usd, currency, exchange) {
     if (!usd || !currency || !exchange || !exchange.length) return;
-    console.log(usd, currency, exchange);
     const rate =
       exchange.filter((item) => item.title === currency)[0]?.rate ?? 0;
     return (usd * rate).toFixed(3);
@@ -100,9 +83,9 @@ function SeresoWalletList() {
             {formatStringNumberCultureUS(
               convertCurrency(item.price, userSelectedCurrency, exchange)
             )}
-            {userSelectedCurrency === currency.usd && " $"}
-            {userSelectedCurrency === currency.eur && " €"}
-            {userSelectedCurrency === currency.vnd && " đ"}
+            {userSelectedCurrency === currency.usd && "$"}
+            {userSelectedCurrency === currency.eur && "€"}
+            {userSelectedCurrency === currency.vnd && "đ"}
           </span>
           <span>Own: {getMyCoin(item.name, myListCoin)} coins</span>
         </div>

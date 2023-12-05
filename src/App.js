@@ -16,12 +16,21 @@ import Dashboard from "./components/admin/dashboard";
 import AdminTemplate from "./templates/AdminTemplate";
 import Home from "./components/home/index.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { getExchange as getExchangeApi } from "./util/userCallApi";
+import {
+  getExchange as getExchangeApi,
+  getWalletApi,
+} from "./util/userCallApi";
 import { currencySetExchange } from "./redux/actions/currency.action";
 import { getFetchExchangeCount } from "./redux/constant/currency.constant";
+import socket from "./util/socket";
+import { setListCoinRealtime } from "./redux/actions/listCoinRealTime.action";
+import { userWalletFetchCount } from "./redux/constant/coin.constant";
+import { coinUserWallet } from "./redux/actions/coin.action";
+import { roundDecimalValues } from "./util/common";
 function App() {
   const dispatch = useDispatch();
   const fetchExchangeCount = useSelector(getFetchExchangeCount);
+  const userWalletFetch = useSelector(userWalletFetchCount);
   //
   const getExchange = function () {
     getExchangeApi()
@@ -30,6 +39,32 @@ function App() {
       })
       .catch((error) => console.log(error));
   };
+  const getUserWallet = function () {
+    const listAllCoinPromise = new Promise((resolve) => {
+      socket.once("listCoin", (res) => {
+        resolve(res);
+      });
+    });
+    //
+    listAllCoinPromise.then((listAllCoin) => {
+      getWalletApi()
+        .then((resp) => {
+          const apiResp = resp.data.data;
+          const result = {};
+          for (const [name, value] of Object.entries(apiResp)) {
+            let price =
+              listAllCoin.filter(
+                (item) =>
+                  item.name === name.replace("_balance", "").toUpperCase()
+              )[0]?.price ?? 0;
+            result[name] = roundDecimalValues(value, price);
+          }
+          if (Object.keys(result) > 0) dispatch(coinUserWallet(result));
+        })
+        .catch((error) => console.log(error));
+    });
+  };
+  //
   useEffect(() => {
     if (localStorage.getItem("user")) {
       const expiresInRefreshToken = JSON.parse(
@@ -40,10 +75,22 @@ function App() {
         localStorage.removeItem("user");
       }
     }
+    //
+    socket.connect();
+    socket.on("listCoin", (resp) => {
+      dispatch(setListCoinRealtime(resp));
+    });
+    //
+    return () => {
+      socket.disconnect();
+    };
   }, []);
   useEffect(() => {
     getExchange();
   }, [fetchExchangeCount]);
+  useEffect(() => {
+    getUserWallet();
+  }, [userWalletFetch]);
   return (
     <BrowserRouter>
       <ScrollToTop>

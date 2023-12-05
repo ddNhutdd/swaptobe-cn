@@ -79,3 +79,11 @@ export const getExchange = function () {
     console.log(error);
   }
 };
+
+export const uploadKyc = function (data) {
+  try {
+    return axiosService.post("/api/uploadKyc", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

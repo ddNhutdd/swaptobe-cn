@@ -6,6 +6,7 @@ import { loginReducer } from "./reducers/loginReducer";
 import { resReducer } from "./reducers/resReducer";
 import { seresoWalletReducer } from "./reducers/seresoWallet";
 import { currencyReducer } from "./reducers/currencyReducer";
+import { listCoinRealTimeReducer } from "./reducers/listCoinRealTimeReducer";
 
 const rootReducer = combineReducers({
   coinReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   resReducer,
   seresoWalletReducer,
   currencyReducer,
+  listCoinRealTimeReducer,
 });
 
 const middleWare = applyMiddleware(reduxThunk);

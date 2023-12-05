@@ -15,7 +15,6 @@ import {
 } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
-import socket from "src/util/socket";
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination, Spin } from "antd";
 import { DOMAIN } from "src/util/service";
@@ -30,14 +29,15 @@ import { showAlert } from "src/function/showAlert";
 import { showToast } from "src/function/showToast";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { showConfirm } from "src/function/showConfirm";
+import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 export default function Swap() {
   //
   const { isLogin } = useSelector((root) => root.loginReducer);
   const history = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
-  const [data, setData] = useState([]);
-  const [data2, setData2] = useState([]);
+  const data = useSelector(getListCoinRealTime);
+  const data2 = useSelector(getListCoinRealTime);
   const [swapFromCoin, setSwapFromCoin] = useState(useSelector(getCoin));
   const [swapToCoin, setSwapToCoin] = useState("USDT");
   const amountCoin = useSelector(getAmountCoin);
@@ -59,11 +59,6 @@ export default function Swap() {
   const [swapHistoryTotalPage, setSwapHistoryTotalPage] = useState(1);
   const dispatch = useDispatch();
   useEffect(() => {
-    socket.connect();
-    socket.on("listCoin", (res) => {
-      setData(res);
-      setData2(res);
-    });
     //
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
@@ -72,7 +67,6 @@ export default function Swap() {
     const element = document.querySelector(".swap");
     element.classList.add("fadeInBottomToTop");
     //
-    return () => socket.disconnect();
   }, []);
   useEffect(() => {}, [userWallet]);
   useEffect(() => {
@@ -375,6 +369,7 @@ export default function Swap() {
             <Pagination
               onChange={historyPagingOnChangeHandle}
               total={swapHistoryTotalPage}
+              showSizeChanger={false}
             />
           </div>
         </div>

@@ -59,25 +59,6 @@
           cursor: default;
         }
 
-        .header1__list-coin {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 3px;
-
-          .header1__coin-item {
-            display: inline-block;
-            padding: 5px 5px 5px 0;
-            border-radius: 5px;
-            color: $black;
-
-            .header1__coin-item-number {
-              font-weight: bold;
-              color: $header2-background;
-            }
-          }
-        }
-
         div {
           display: flex;
           align-items: center;

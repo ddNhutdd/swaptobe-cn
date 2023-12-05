@@ -32,7 +32,7 @@ function SwaptobeWallet() {
     element.classList.add("fadeInBottomToTop");
   }, []);
   useEffect(() => {
-    if (!exchange || !userSelectedCurrentcy) return;
+    if (!exchange || exchange.length <= 0 || !userSelectedCurrentcy) return;
     const rate =
       exchange.filter((item) => item.title === userSelectedCurrentcy)[0]
         ?.rate || 0;
@@ -78,7 +78,7 @@ function SwaptobeWallet() {
               }
               onClick={backToActionContentMainClickHandle}
             >
-              <img src="./img/left-arrow.png" alt="" />
+              <img src="./img/left-arrow.png" alt="left-arrow" />
               {t("withdraw")}
             </span>
             <span
@@ -89,7 +89,7 @@ function SwaptobeWallet() {
               }
               onClick={backToActionContentMainClickHandle}
             >
-              <img src="./img/left-arrow.png" alt="" />
+              <img src="./img/left-arrow.png" alt="left-arrow" />
               {t("deposit")} Cryto
             </span>
           </h5>
@@ -98,9 +98,9 @@ function SwaptobeWallet() {
               <div>{t("estimatedAssetsValue")}</div>
               <div>
                 <span id="showTotalValue"></span>
-                {userSelectedCurrentcy === currency.usd && " $"}
-                {userSelectedCurrentcy === currency.eur && " €"}
-                {userSelectedCurrentcy === currency.vnd && " đ"}
+                {userSelectedCurrentcy === currency.usd && "$"}
+                {userSelectedCurrentcy === currency.eur && "€"}
+                {userSelectedCurrentcy === currency.vnd && "đ"}
               </div>
             </div>
             <div className="right">

@@ -1,125 +1,91 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Card } from "antd";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
-import { localStorageVariable } from "src/constant";
-import { useFormik } from "formik";
+import { localStorageVariable, url } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { Modal } from "antd";
 import { getLocalStorage } from "src/util/common";
-import * as Yup from "yup";
+import { useHistory } from "react-router-dom";
 function Profile() {
-  //
-  const listGender = ["Male", "Female"];
-  const countries = [
-    "Việt Nam",
-    "English",
-    "한국",
-    "日本",
-    "中国",
-    "ไทย",
-    "កម្ពុជា",
-    "ພາສາລາວ",
-    "Indonesia",
-  ];
+  const kycControl = {
+    fullName: "fullName",
+    address: "address",
+    phone: "phone",
+    company: "company",
+    passport: "passport",
+    frontID: "frontID",
+    behindID: "behindID",
+    portrait: "portrait",
+  };
+  const kycTourch = {};
+  const kycError = {};
   //
   const { t } = useTranslation();
-  const [isShowGenderDropdown, setIsShowGenderDropdown] = useState(false);
-  const [gender, setGender] = useState(listGender[0]);
-  const [isShowCountryDropdown, setIsShowCountryDropdown] = useState(false);
-  const [contry, setCountry] = useState(countries[0]);
-  const [frontIdentifyCardValue, setFrontIdentifyCardValue] = useState();
-  const [backOfIdentifyCardValue, setBackOfIdentifyCardValue] = useState();
-  const [portraitValue, setPortraitValue] = useState();
+  const history = useHistory();
   const [is2FAModalOpen, setIs2FAModalOpen] = useState(false);
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
     i18n.changeLanguage(language);
-    // close all dropdown
-    window.addEventListener("click", closeAllDropdown);
     // them animation cho component khi nó được load
     const element = document.querySelector(".profile");
     element.classList.add("fadeInBottomToTop");
-    return () => {
-      window.removeEventListener("click", closeAllDropdown);
-    };
+    // load du lieu len cac control
+    const dataUser = getLocalStorage(localStorageVariable.user);
+    if (!dataUser) {
+      history.push(url.login);
+      return;
+    }
+    const { username, email } = dataUser;
+    document.getElementById("profile__info-email").value = email;
+    document.getElementById("profile__info-username").value = username;
+    document.getElementById("frontIdentifyCardValueText").innerHTML =
+      t("noFileSelected");
+    document.getElementById("backOfIdentityCardFileText").innerHTML =
+      t("noFileSelected");
+    document.getElementById("portraitFileText").innerHTML = t("noFileSelected");
+    return () => {};
   }, []);
-  const frontIdentityCardFile = useRef();
-  const backOfIdentityCardFile = useRef();
-  const portraitFile = useRef();
-  const inputFileLogo = useRef();
-  const formik = useFormik({
-    initialValues: {
-      profile__firstName: "",
-      profile__lastName: "",
-      profile__password: "",
-      profile__phone: "",
-    },
-    validationSchema: Yup.object({
-      profile__firstName: Yup.string().required(t("require")),
-      profile__lastName: Yup.string().required(t("require")),
-      profile__password: Yup.string(),
-      profile__phone: Yup.string()
-        .required(t("require"))
-        .matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/, t("invalidPhoneNumber")),
-    }),
-    onSubmit: (values) => {
-      console.log("form submit ", values);
-    },
-  });
+  const inputFileLogo = useRef(null);
   //
-  const dropdownGenderClickHandle = function (e) {
-    e.stopPropagation();
-    setIsShowCountryDropdown(() => false);
-    setIsShowGenderDropdown((s) => !s);
-  };
-  const dropdownCountryClickHandle = function (e) {
-    e.stopPropagation();
-    setIsShowGenderDropdown(() => false);
-    setIsShowCountryDropdown((s) => !s);
-  };
-  const closeAllDropdown = function () {
-    setIsShowCountryDropdown(() => false);
-    setIsShowGenderDropdown(() => false);
-  };
-  const renderDropdownMenu = function (list, itemClickHandle) {
-    return list.map((item) => (
-      <div
-        key={item}
-        onClick={() => itemClickHandle(item)}
-        className="profile__dropdown__menu-item"
-      >
-        {item}
-      </div>
-    ));
-  };
   const handleFileChange = function (e) {
     const file = e.target.files[0];
     switch (e.target.name) {
       case "frontIdentityCardFile":
-        setFrontIdentifyCardValue(file);
+        document.getElementById("frontIdentifyCardValueText").innerHTML =
+          file.name;
         break;
       case "backOfIdentityCardFile":
-        setBackOfIdentifyCardValue(file);
+        document.getElementById("backOfIdentityCardFileText").innerHTML =
+          file.name;
         break;
       case "portraitFile":
-        setPortraitValue(file);
+        document.getElementById("portraitFileText").innerHTML = file.name;
         break;
       default:
         break;
     }
+    kycValidate();
+    kycRenderError();
   };
   const openDailogChooseFile = function (e) {
     switch (e.target.name) {
       case "frontIdentityCardFile":
-        frontIdentityCardFile.current.click();
+        kycTourch[kycControl.frontID] = true;
+        kycRenderError();
+        document.getElementById("frontIdentityCardFile").click();
         break;
       case "backOfIdentityCardFile":
-        backOfIdentityCardFile.current.click();
+        kycTourch[kycControl.behindID] = true;
+        kycRenderError();
+        document.getElementById("backOfIdentityCardFile").click();
         break;
       case "portraitFile":
-        portraitFile.current.click();
+        kycTourch[kycControl.portrait] = true;
+        kycRenderError();
+        document.getElementById("portraitFile").click();
         break;
       default:
         break;
@@ -189,6 +155,142 @@ function Profile() {
       pElement.classList.remove(classEffect);
     }, 600);
   };
+  const kycValidate = function () {
+    let isValid = true;
+    // fullname
+    const fullNameElement = document.getElementById("profile__fullName");
+    if (!fullNameElement) return false;
+    const fullNameElementValue = fullNameElement.value;
+    if (!fullNameElementValue && kycTourch[kycControl.fullName] === true) {
+      isValid &= false;
+      kycError[kycControl.fullName] = "Cần thiết";
+    } else {
+      delete kycError[kycControl.fullName];
+    }
+    // address
+    const addressElement = document.getElementById("profile__address");
+    const addressElementValue = addressElement.value;
+    if (!addressElementValue && kycTourch[kycControl.address] === true) {
+      isValid &= false;
+      kycError[kycControl.address] = "Cần thiết";
+    } else {
+      delete kycError[kycControl.address];
+    }
+    //phone
+    const phoneElement = document.getElementById("profile__phone");
+    const phoneElementValue = phoneElement.value ?? "";
+    const phonePattern = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+    if (kycTourch[kycControl.phone]) {
+      if (!phonePattern.test(phoneElementValue)) {
+        isValid &= false;
+        kycError[kycControl.phone] = "Không đúng định dạng";
+      }
+      if (!phoneElementValue) {
+        isValid &= false;
+        kycError[kycControl.phone] = "Cần thiết";
+      }
+      if (phonePattern.test(phoneElementValue) && phoneElementValue) {
+        delete kycError[kycControl.phone];
+      }
+    }
+    //company
+    const companyElement = document.getElementById("profile__company");
+    const companyElementValue = companyElement.value;
+    if (!companyElementValue && kycTourch[kycControl.company]) {
+      isValid &= false;
+      kycError[kycControl.company] = "Cần thiết";
+    } else {
+      delete kycError[kycControl.company];
+    }
+    //passport
+    const passportElement = document.getElementById("profile__passport");
+    const passportElementValue = passportElement.value;
+    if (!passportElementValue && kycTourch[kycControl.passport]) {
+      isValid &= false;
+      kycError[kycControl.passport] = "Cần thiết";
+    } else {
+      delete kycError[kycControl.passport];
+    }
+    //frontID
+    const frontIDElement = document.getElementById("frontIdentityCardFile");
+    const frontIDElementValue = frontIDElement.files;
+    if (kycTourch[kycControl.frontID]) {
+      if (!frontIDElementValue || frontIDElementValue.length <= 0) {
+        kycError[kycControl.frontID] = "Cần thiết";
+      } else {
+        delete kycError[kycControl.frontID];
+      }
+    }
+    //behindID
+    const behindIDElement = document.getElementById("backOfIdentityCardFile");
+    const behindIDElementValue = behindIDElement.files;
+    if (kycTourch[kycControl.behindID]) {
+      if (!behindIDElementValue || behindIDElementValue.length <= 0) {
+        kycError[kycControl.behindID] = "Cần thiết";
+      } else {
+        delete kycError[kycControl.behindID];
+      }
+    }
+    //portrait
+    const portraitElement = document.getElementById("portraitFile");
+    const portraitElementValue = portraitElement.files;
+    if (kycTourch[kycControl.portrait]) {
+      if (!portraitElementValue || portraitElementValue.length <= 0) {
+        kycError[kycControl.portrait] = "Cần thiết";
+      } else {
+        delete kycError[kycControl.portrait];
+      }
+    }
+    //
+    return Object.keys(kycTourch).length <= 0 ? false : Boolean(isValid);
+  };
+  const kycHandleSubmit = function (e) {
+    e.preventDefault();
+    for (let [key] of Object.entries(kycControl)) {
+      kycTourch[key] = true;
+    }
+    let isValid = kycValidate();
+    if (!isValid) {
+      kycRenderError();
+      return;
+    }
+    // submit
+  };
+  const kycControlHandleChange = function () {
+    kycValidate();
+    kycRenderError();
+  };
+  const kycControlHandleFocus = function (control) {
+    kycTourch[control] = true;
+    kycValidate();
+    kycRenderError();
+  };
+  const kycRenderError = function () {
+    const fullname = document.getElementById("profile__fullName__error");
+    const address = document.getElementById("profile__address__error");
+    const phone = document.getElementById("profile__phone__error");
+    const company = document.getElementById("profile__company__error");
+    const passport = document.getElementById("profile__passport__error");
+    const frontID = document.getElementById("frontIdentityCardFileError");
+    const behindID = document.getElementById("behindIdentityCardFileError");
+    const portraitID = document.getElementById("portraitIdentityCardFileError");
+    if (kycTourch[kycControl.fullName])
+      fullname.innerHTML = kycError[kycControl.fullName] ?? "";
+    if (kycTourch[kycControl.address])
+      address.innerHTML = kycError[kycControl.address] ?? "";
+    if (kycTourch[kycControl.phone])
+      phone.innerHTML = kycError[kycControl.phone] ?? "";
+    if (kycTourch[kycControl.company])
+      company.innerHTML = kycError[kycControl.company] ?? "";
+    if (kycTourch[kycControl.passport])
+      passport.innerHTML = kycError[kycControl.passport] ?? "";
+    if (kycTourch[kycControl.frontID])
+      frontID.innerHTML = kycError[kycControl.frontID] ?? "";
+    if (kycTourch[kycControl.behindID])
+      behindID.innerHTML = kycError[kycControl.behindID] ?? "";
+    if (kycTourch[kycControl.portrait])
+      portraitID.innerHTML = kycError[kycControl.portrait] ?? "";
+  };
   //
   return (
     <div className="profile">
@@ -221,23 +323,13 @@ function Profile() {
               <div className="profile__info-user">
                 <div className="profile__input">
                   <label htmlFor="profile__info-email">{t("email")}</label>
-                  <input
-                    id="profile__info-email"
-                    disabled
-                    type="text"
-                    value={"dvkien"}
-                  />
+                  <input id="profile__info-email" disabled type="text" />
                 </div>
                 <div className="profile__input">
                   <label htmlFor="profile__info-username">
                     {t("username")}
                   </label>
-                  <input
-                    id="profile__info-username"
-                    disabled
-                    type="text"
-                    value={"dvkien"}
-                  />
+                  <input id="profile__info-username" disabled type="text" />
                 </div>
               </div>
             </div>
@@ -261,136 +353,93 @@ function Profile() {
                   </p>
                 </li>
               </ul>
-              <form onSubmit={formik.handleSubmit} className="profile__form">
+              <form onSubmit={kycHandleSubmit} className="profile__form">
                 <div className="profile__form-item">
                   <div className="profile__input">
-                    <label htmlFor="profile__firstName">{t("firstName")}</label>
+                    <label htmlFor="profile__fullName">{t("fullName")}</label>
                     <input
-                      id="profile__firstName"
-                      {...formik.getFieldProps("profile__firstName")}
+                      onFocus={() => {
+                        kycControlHandleFocus(kycControl.fullName);
+                      }}
+                      onChange={kycControlHandleChange}
+                      id="profile__fullName"
                       type="text"
                     />
                     <div
-                      className={`profile__input__error ${
-                        formik.errors.profile__firstName &&
-                        formik.touched.profile__firstName
-                          ? ""
-                          : "--visible-hidden"
-                      }`}
-                    >
-                      {formik.errors.profile__firstName}
-                    </div>
+                      id="profile__fullName__error"
+                      className={`profile__input__error`}
+                    ></div>
                   </div>
                 </div>
                 <div className="profile__form-item">
                   <div className="profile__input">
-                    <label htmlFor="profile__lastName">{t("lastName")}</label>
+                    <label htmlFor="profile__address">{t("address")}</label>
                     <input
-                      id="profile__lastName"
-                      {...formik.getFieldProps("profile__lastName")}
+                      onFocus={() => {
+                        kycControlHandleFocus(kycControl.address);
+                      }}
+                      onChange={kycControlHandleChange}
+                      id="profile__address"
                       type="text"
                     />
                     <div
-                      className={`profile__input__error ${
-                        formik.errors.profile__lastName &&
-                        formik.touched.profile__lastName
-                          ? ""
-                          : "--visible-hidden"
-                      }`}
-                    >
-                      {formik.errors.profile__lastName}
-                    </div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__dropdown">
-                    <label className="profile__dropdown__title">
-                      {t("gender")}
-                    </label>
-                    <div
-                      onClick={dropdownGenderClickHandle}
-                      className={`profile__dropdown__selected ${
-                        isShowGenderDropdown ? "active" : ""
-                      }`}
-                    >
-                      <span>{gender}</span>
-                      <i className="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <div
-                      className={`profile__dropdown__menu ${
-                        isShowGenderDropdown
-                          ? "profile__dropdown__menu__show"
-                          : ""
-                      }`}
-                    >
-                      {renderDropdownMenu(listGender, setGender)}
-                    </div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__input">
-                    <label htmlFor="profile__password">{t("password")}</label>
-                    <input
-                      id="profile__password"
-                      {...formik.getFieldProps("profile__password")}
-                    />
-                    <div
-                      className={`{profile__input__error ${
-                        formik.errors.profile__password &&
-                        formik.touched.profile__password
-                          ? ""
-                          : "--visible-hidden"
-                      }}`}
-                    >
-                      {formik.errors.profile__password}
-                    </div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__dropdown">
-                    <label className="profile__dropdown__title">
-                      {t("country")}
-                    </label>
-                    <div
-                      onClick={dropdownCountryClickHandle}
-                      className={`profile__dropdown__selected ${
-                        isShowCountryDropdown ? "active" : ""
-                      }`}
-                    >
-                      <span>{contry}</span>
-                      <i className="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <div
-                      className={`profile__dropdown__menu ${
-                        isShowCountryDropdown
-                          ? "profile__dropdown__menu__show"
-                          : ""
-                      }`}
-                    >
-                      {renderDropdownMenu(countries, setCountry)}
-                    </div>
+                      id="profile__address__error"
+                      className={`profile__input__error `}
+                    ></div>
                   </div>
                 </div>
                 <div className="profile__form-item">
                   <div className="profile__input">
                     <label htmlFor="profile__phone">{t("phone")}</label>
                     <input
+                      onFocus={() => {
+                        kycControlHandleFocus(kycControl.phone);
+                      }}
+                      onChange={kycControlHandleChange}
                       id="profile__phone"
-                      {...formik.getFieldProps("profile__phone")}
                       type="text"
                     />
                     <div
-                      className={`profile__input__error ${
-                        formik.errors.profile__phone &&
-                        formik.touched.profile__phone
-                          ? ""
-                          : "--visible-hidden"
-                      }`}
-                    >
-                      {formik.errors.profile__phone}
-                    </div>
+                      id="profile__phone__error"
+                      className={`profile__input__error`}
+                    ></div>
                   </div>
                 </div>
+                <div className="profile__form-item">
+                  <div className="profile__input">
+                    <label htmlFor="profile__company">{t("company")}</label>
+                    <input
+                      onFocus={() => {
+                        kycControlHandleFocus(kycControl.company);
+                      }}
+                      onChange={kycControlHandleChange}
+                      id="profile__company"
+                      type="text"
+                    />
+                    <div
+                      id="profile__company__error"
+                      className={`profile__input__error`}
+                    ></div>
+                  </div>
+                </div>
+                <div className="profile__form-item">
+                  <div className="profile__input">
+                    <label htmlFor="profile__passport">{t("passport")}</label>
+                    <input
+                      onFocus={() => {
+                        kycControlHandleFocus(kycControl.passport);
+                      }}
+                      onChange={kycControlHandleChange}
+                      id="profile__passport"
+                      type="text"
+                    />
+                    <div
+                      id="profile__passport__error"
+                      className={`profile__input__error`}
+                    ></div>
+                  </div>
+                </div>
+                <div className="profile__form-item"></div>
                 <div className="profile__form-item">
                   <div className="profile__fileInput">
                     <label>
@@ -400,7 +449,6 @@ function Profile() {
                       type="file"
                       id="frontIdentityCardFile"
                       className="--d-none"
-                      ref={frontIdentityCardFile}
                       onChange={handleFileChange}
                       name="frontIdentityCardFile"
                     />
@@ -412,10 +460,12 @@ function Profile() {
                       >
                         {t("chooseFile")}
                       </button>
-                      <span>
-                        {frontIdentifyCardValue?.name || t("noFileSelected")}
-                      </span>
+                      <span id="frontIdentifyCardValueText"></span>
                     </label>
+                    <div
+                      id="frontIdentityCardFileError"
+                      className="profile__fileInput__error "
+                    ></div>
                   </div>
                 </div>
                 <div className="profile__form-item">
@@ -427,7 +477,6 @@ function Profile() {
                       type="file"
                       className="--d-none"
                       id="backOfIdentityCardFile"
-                      ref={backOfIdentityCardFile}
                       name="backOfIdentityCardFile"
                       onChange={handleFileChange}
                     />
@@ -439,10 +488,12 @@ function Profile() {
                       >
                         {t("chooseFile")}
                       </button>
-                      <span>
-                        {backOfIdentifyCardValue?.name || t("noFileSelected")}
-                      </span>
+                      <span id="backOfIdentityCardFileText"></span>
                     </label>
+                    <div
+                      id="behindIdentityCardFileError"
+                      className="profile__fileInput__error "
+                    ></div>
                   </div>
                 </div>
                 <div className="profile__form-item">
@@ -452,7 +503,6 @@ function Profile() {
                       type="file"
                       className="--d-none"
                       id="portraitFile"
-                      ref={portraitFile}
                       name="portraitFile"
                       onChange={handleFileChange}
                     />
@@ -464,8 +514,12 @@ function Profile() {
                       >
                         {t("chooseFile")}
                       </button>
-                      <span>{portraitValue?.name || t("noFileSelected")}</span>
+                      <span id="portraitFileText"></span>
                     </label>
+                    <div
+                      id="portraitIdentityCardFileError"
+                      className="profile__fileInput__error "
+                    ></div>
                   </div>
                 </div>
                 <div className="profile__form-item profile__formSumit">

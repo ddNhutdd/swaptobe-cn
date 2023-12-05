@@ -2,7 +2,6 @@ import { Button, Card, Modal, Table } from "antd";
 import { Spin } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import socket from "../util/socket";
 import P2PTrading2 from "./P2PTrading2";
 import { useTranslation } from "react-i18next";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
@@ -11,10 +10,11 @@ import i18n, { availableLanguage } from "src/translation/i18n";
 import { DOMAIN } from "src/util/service";
 import { coinSetCoin } from "src/redux/actions/coin.action";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 //
 export default function P2PTrading({ history }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [data, setData] = useState([]);
+  const data = useSelector(getListCoinRealTime);
   const [sellPrice, setSellPrice] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
   const [coinImage, setCoinImage] = useState(DOMAIN + "images/BTC.png");
@@ -34,15 +34,9 @@ export default function P2PTrading({ history }) {
     const element = document.querySelector(".p2ptrading");
     element.classList.add("fadeInBottomToTop");
     //
-    socket.connect();
-    socket.on("listCoin", (res) => {
-      setData(res);
-    });
-    //
-    return () => socket.disconnect();
   }, []);
   useEffect(() => {
-    if (data.length !== 0) {
+    if (data && data.length !== 0) {
       const x = data.find((item) => item.name === coin);
       setBuyPrice(x?.price * 1.01);
       setSellPrice(x?.price);
@@ -111,13 +105,14 @@ export default function P2PTrading({ history }) {
       title: t("price"),
       key: "price",
       dataIndex: "price",
+      width: "25%",
       render: (_, { price }) => {
         return (
           <span>
+            {formatStringNumberCultureUS(convertCurrency(price).toFixed(3))}
             {userSelectedCurrency === currency.usd && "$"}
             {userSelectedCurrency === currency.eur && "€"}
             {userSelectedCurrency === currency.vnd && "đ"}
-            {price}
           </span>
         );
       },
@@ -177,7 +172,7 @@ export default function P2PTrading({ history }) {
                 {formatStringNumberCultureUS(
                   convertCurrency(buyPrice)?.toFixed(3) ?? ""
                 )}
-                <span> USD</span>
+                <span> {userSelectedCurrency}</span>
               </div>
               <Button className="sellNowBtn" size="large">
                 {t("sellNow")}

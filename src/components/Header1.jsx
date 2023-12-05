@@ -1,65 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useTranslation } from "react-i18next";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../function/showToast";
 import { useEffect, useRef } from "react";
-import { api_status, currency, localStorageVariable, url } from "src/constant";
-import { getWalletApi } from "src/util/userCallApi";
-import socket from "src/util/socket";
+import { currency, localStorageVariable, url } from "src/constant";
 import { Spin } from "antd";
-import { coinUserWallet } from "src/redux/actions/coin.action";
-import { userWalletFetchCount } from "src/redux/constant/coin.constant";
 import {
+  formatStringNumberCultureUS,
   removeLocalStorage,
-  roundDecimalValues,
   setLocalStorage,
 } from "src/util/common";
 import { currencySetCurrent } from "src/redux/actions/currency.action";
-import { getCurrent } from "src/redux/constant/currency.constant";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
+import { getUserWallet } from "src/redux/constant/coin.constant";
 export default function Header1({ history }) {
   //
   const { isLogin, username } = useSelector((root) => root.loginReducer);
-  const fetchUserWallet = useSelector(userWalletFetchCount);
   const userSelectedCurrency = useSelector(getCurrent);
+  const exchange = useSelector(getExchange);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
-  const [listOwnedCoins, setListOwnedCoins] = useState([]);
+  const listOwnedCoins = useSelector(getUserWallet);
   const userMenuElement = useRef();
   const walletMenuElement = useRef();
-  const listCoin = useRef();
-  const loadListMyCoin = function () {
-    setCallApiStatus(api_status.fetching);
-    const listOwnedCoins = getWalletApi();
-    listOwnedCoins
-      .then((resp) => {
-        const result = [];
-        const dataResp = resp.data.data;
-        if (dataResp) {
-          Object.keys(dataResp).forEach((item) => {
-            const price =
-              listCoin.current.filter(
-                (record) =>
-                  record.name.toLowerCase() === item.replace("_balance", "")
-              )[0]?.price || 0;
-            dataResp[item] = roundDecimalValues(dataResp[item], price);
-          });
-          dispatch(coinUserWallet(dataResp));
-          const value = dataResp["btc_balance"];
-          const newObj = {
-            btc: value,
-          };
-          result.push(newObj);
-        }
-        setListOwnedCoins(result);
-        setCallApiStatus(api_status.fulfilled);
-      })
-      .catch((error) => {
-        console.log(error);
-        setCallApiStatus(api_status.rejected);
-      });
-  };
+  const listOnCoinRealtime = useSelector(getListCoinRealTime);
   useEffect(() => {
     //
     const element = document.querySelector(".header1");
@@ -72,17 +38,27 @@ export default function Header1({ history }) {
     };
   }, []);
   useEffect(() => {
-    if (isLogin) {
-      if (!listCoin.current) {
-        socket.once("listCoin", (res) => {
-          listCoin.current = res;
-          loadListMyCoin();
-        });
-      } else if (listCoin.current) {
-        loadListMyCoin();
-      }
-    }
-  }, [fetchUserWallet]);
+    if (
+      !exchange ||
+      exchange.length <= 0 ||
+      !userSelectedCurrency ||
+      !listOwnedCoins ||
+      listOwnedCoins <= 0 ||
+      listOnCoinRealtime?.current ||
+      listOnCoinRealtime?.current <= 0
+    )
+      return;
+    const filterExchange =
+      exchange.filter((item) => item.title === userSelectedCurrency)[0]?.rate ??
+      0;
+    const price =
+      listOnCoinRealtime.filter((item) => item.name === "BTC")[0]?.price || 0;
+    const amountCoinBTC = listOwnedCoins["btc_balance"];
+    const result = filterExchange * amountCoinBTC * price;
+    document.getElementById("money").innerHTML = `${formatStringNumberCultureUS(
+      result.toFixed(3)
+    )} ${userSelectedCurrency}`;
+  }, [exchange, userSelectedCurrency, listOnCoinRealtime]);
   //
   const logout = () => {
     localStorage.removeItem("user");
@@ -123,6 +99,9 @@ export default function Header1({ history }) {
     dispatch(currencySetCurrent(value));
     setLocalStorage(localStorageVariable.currency, value);
   };
+  const amountCoinBTC = function () {
+    return listOwnedCoins["btc_balance"];
+  };
   return (
     <header className="header1">
       <div className="container">
@@ -135,35 +114,8 @@ export default function Header1({ history }) {
                   <div>
                     {t("totalValue")} <i className="fa-regular fa-eye"></i>
                   </div>
-                  <div className="header1__list-coin">
-                    {callApiStatus === api_status.fetching ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100px",
-                          width: "100%",
-                        }}
-                      >
-                        <Spin />
-                      </div>
-                    ) : (
-                      listOwnedCoins.map((item) => (
-                        <span
-                          className={`header1__coin-item`}
-                          key={Object.keys(item)[0]}
-                        >
-                          {Object.keys(item)[0].toUpperCase()}:{" "}
-                          <span className="header1__coin-item-number">
-                            {Object.values(item)[0]}{" "}
-                          </span>
-                          coins
-                        </span>
-                      ))
-                    )}
-                  </div>
-                  <div>0 VND</div>
+                  <div>BTC: {amountCoinBTC()} coins</div>
+                  <div id="money">00000</div>
                   <div className="header1__list-currency">
                     <span
                       className={
