@@ -141,10 +141,10 @@
             display: inline;
             padding: 3px 15px;
             font-weight: bold;
-            border: 1px solid $green-2;
+            border: 1px solid $blue;
             border-radius: 5px;
-            background-color: $green-light-2;
-            color: $green-2;
+            background-color: $blue-light;
+            color: $blue;
         }
 
         .admin-kyc-users__check {
@@ -218,7 +218,17 @@
             }
 
             .admin-kyc-user__modal-image-container {
+                width: 100%;
                 margin-top: 20px;
+                display: flex;
+                gap: 20px;
+                justify-content: space-between;
+
+
+                img {
+                    display: block;
+                    width: 30%;
+                }
             }
 
             .admin-kyc-users__modal-control {

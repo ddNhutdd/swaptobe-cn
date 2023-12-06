@@ -5,6 +5,7 @@ import { Pagination, Modal, Image } from "antd";
 import { getKycUserPendding } from "src/util/adminCallApi";
 import { api_status } from "src/constant";
 import { DOMAIN } from "src/util/service";
+import { zoomImage } from "src/util/common";
 function KYC() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [listKycUserData, setListKycUserData] = useState();
@@ -47,7 +48,7 @@ function KYC() {
         <td>{item.phone}</td>
         <td>{item.passport}</td>
         <td>
-          <div className="admin-kyc-users__status">Verifed</div>
+          <div className="admin-kyc-users__status">Pending</div>
         </td>
         <td>
           <button
@@ -73,16 +74,15 @@ function KYC() {
   };
   const setDataModal = function (data) {
     if (!data) return;
-
     const userIDElement = document.getElementById("model_userID");
     const userNameElement = document.getElementById("modal_username");
     const emailElement = document.getElementById("modal_email");
     const fullnameElement = document.getElementById("modal_fullname");
     const phoneElement = document.getElementById("modal_phone");
     const passportElement = document.getElementById("modal_passport");
-    const image1 = document.querySelector("#modal_image-1 .ant-image-img");
-    const image2 = document.getElementById("modal_image-2");
-    const image3 = document.getElementById("modal_image-3");
+    const imageContainer = document.querySelector(
+      ".admin-kyc-user__modal-image-container"
+    );
     if (
       !userIDElement ||
       !userNameElement ||
@@ -90,9 +90,7 @@ function KYC() {
       !fullnameElement ||
       !phoneElement ||
       !passportElement ||
-      !image1 ||
-      !image2 ||
-      !image3
+      !imageContainer
     )
       return;
     const { id, username, email, fullname, phone, passport } = data;
@@ -102,11 +100,19 @@ function KYC() {
     fullnameElement.innerHTML = fullname;
     phoneElement.innerHTML = phone;
     passportElement.innerHTML = passport;
-
-    const listImage = JSON.parse(`[${data.verified_images}]`);
-    console.log("re ", listImage);
-    image1.src = DOMAIN + listImage[0];
+    const listImage = JSON.parse(data.verified_images);
+    imageContainer.innerHTML = "";
+    for (let i = 0; i <= 2; i++) {
+      var imgElement = document.createElement("img");
+      imgElement.src = DOMAIN + listImage[i];
+      imgElement.alt = listImage[i];
+      imgElement.addEventListener("click", (e) => {
+        zoomImage(e);
+      });
+      imageContainer.appendChild(imgElement);
+    }
   };
+
   return (
     <div className="admin-kyc-users">
       <div className="admin-kyc-users__header">
@@ -219,29 +225,7 @@ function KYC() {
             </div>
             <div className="admin-kyc-users__modal-left-item"></div>
           </div>
-          <div className="admin-kyc-user__modal-image-container">
-            <Image.PreviewGroup>
-              <Image
-                id="modal_image-1"
-                width={200}
-                src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-              />
-              <Image
-                id="modal_image-2"
-                width={200}
-                src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-              />
-              <Image
-                id="modal_image-3"
-                width={200}
-                src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-              />
-            </Image.PreviewGroup>
-            <Image
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
-          </div>
+          <div className="admin-kyc-user__modal-image-container"></div>
           <div className="admin-kyc-users__modal-control">
             <button className="admin-kyc-users__modal-confirm confirm">
               confirm

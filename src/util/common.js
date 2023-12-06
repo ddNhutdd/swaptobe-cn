@@ -92,3 +92,97 @@ export const roundDecimalValues = function (value, coinValue) {
   const roundedValue = parseFloat(value.toFixed(decimalPlaces));
   return roundedValue;
 };
+//
+export const zoomImage = function (e) {
+  console.log("image click", e.target.src);
+  const body = document.body;
+  let angel = 0,
+    size = 1.2;
+  //img
+  var imgElement = document.createElement("img");
+  imgElement.src = e.target.src;
+  imgElement.style.transition = "transform 0.4s ease-in-out";
+  imgElement.style.width = "300px";
+  imgElement.style.objectFit = "cover";
+  imgElement.style.position = "fixed";
+  imgElement.style.top = "50%";
+  imgElement.style.left = "50%";
+  imgElement.style.transform = `translate(-50%, -50%) scale(0.1) rotate(${angel}deg)`;
+  imgElement.style.zIndex = 10000;
+  document.body.appendChild(imgElement);
+  setTimeout(function () {
+    imgElement.style.transform = `translate(-50%, -50%) scale(${size}) rotate(${angel}deg)`;
+  }, 100);
+  // control
+  const sizeUp = function () {
+    size += 0.1;
+    imgElement.style.transform = `translate(-50%, -50%) scale(${size}) rotate(${angel}deg)`;
+  };
+  const sizeDown = function () {
+    size -= 0.1;
+    if (size <= 0) size = 0;
+    imgElement.style.transform = `translate(-50%, -50%) scale(${size}) rotate(${angel}deg)`;
+  };
+  const rotateRight = function () {
+    angel += 18;
+    imgElement.style.transform = `translate(-50%, -50%) scale(${size}) rotate(${angel}deg)`;
+  };
+  const rotateLeft = function () {
+    angel -= 18;
+    imgElement.style.transform = `translate(-50%, -50%) scale(${size}) rotate(${angel}deg)`;
+  };
+  const gl_header = document.createElement("div");
+  gl_header.style.position = "fixed";
+  gl_header.style.top = 0;
+  gl_header.style.left = 0;
+  gl_header.style.right = 0;
+  gl_header.style.height = 80;
+  gl_header.style.zIndex = 10001;
+  gl_header.style.display = "flex";
+  gl_header.style.justifyContent = "flex-end";
+  gl_header.style.alignContent = "center";
+  const icons = ["↶", "↷", "+", "-"];
+  for (let icon of icons) {
+    const gl_span = document.createElement("div");
+    gl_span.innerHTML = icon;
+    gl_span.style.fontSize = "26px";
+    gl_span.style.color = "#fff";
+    gl_span.style.fontWeight = "bold";
+    gl_span.style.marginLeft = "10px";
+    gl_span.style.marginRight = "10px";
+    gl_span.style.cursor = "pointer";
+    gl_span.style.userSelect = "none";
+    if (icon === icons[2]) {
+      gl_span.addEventListener("click", sizeUp);
+    } else if (icon === icons[3]) {
+      gl_span.addEventListener("click", sizeDown);
+    } else if (icon === icons[1]) {
+      gl_span.addEventListener("click", rotateRight);
+    } else if (icon === icons[0]) {
+      gl_span.addEventListener("click", rotateLeft);
+    }
+    gl_header.appendChild(gl_span);
+  }
+  body.appendChild(gl_header);
+  //overlay
+  const gl_overlay = document.createElement("div");
+  gl_overlay.style.position = "fixed";
+  gl_overlay.style.top = 0;
+  gl_overlay.style.bottom = 0;
+  gl_overlay.style.left = 0;
+  gl_overlay.style.right = 0;
+  gl_overlay.style.zIndex = 9999;
+  gl_overlay.style.backgroundColor = "#000000b3";
+  gl_overlay.addEventListener("click", (e) => {
+    setTimeout(function () {
+      imgElement.style.transition = "transform 0.2s ease-in-out";
+      imgElement.style.transform = `translate(-50%, -50%) scale(0.1) rotate(${angel}deg)`;
+    }, 100);
+    setTimeout(function () {
+      e.target.remove();
+      imgElement.remove();
+      gl_header.remove();
+    }, 301);
+  });
+  body.appendChild(gl_overlay);
+};
