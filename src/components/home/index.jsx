@@ -348,7 +348,7 @@ function Home() {
             </div>
           </div>
         </div>
-        <div className="home__eco">
+        {/* <div className="home__eco">
           <div className="home__eco__content"></div>
           <div className="home__eco__bottom-content">
             <div className="container">
@@ -394,8 +394,8 @@ function Home() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="home__token">
+        </div> */}
+        {/* <div className="home__token">
           <div className="container">
             <div className="home__token__content">
               <h2>TBC Coin Allocation</h2>
@@ -405,7 +405,7 @@ function Home() {
               />
             </div>
           </div>
-        </div>
+        </div> */}
         <div id="home__road-map" className="home__road-map">
           <div className="container">
             <div className="home__road-map__header">
@@ -520,10 +520,12 @@ function Home() {
                 </div>
               </div>
               <div className="home__app__right">
-                <img
-                  src={process.env.PUBLIC_URL + "/img/home-16.png"}
-                  alt="phone"
-                />
+                <div className="home__app__right__image-container">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/home-16.png"}
+                    alt="phone"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -631,30 +633,6 @@ function Home() {
                       account step 1 with personal information, pictures of
                       government-issued ID card (2 sides), and a full face
                       photo.
-                    </div>
-                  </div>
-                  <div className="home__faqs-card">
-                    <div className="home__faqs-card-header">
-                      How to mine TBC (tobe coin) and extend trade capability on
-                      Sereso?
-                    </div>
-                    <div className="home__faqs-card-content">
-                      To mine TBC (tobe coin) and extend trade capability up to
-                      $50,000/day, users have to perform KYC level 2 on Sereso.
-                      Documents that are accepted for KYC level 2:
-                      <ul style={{ paddingLeft: "15px" }}>
-                        <li>Bank statements</li>
-                        <li>
-                          Utility bills (The documents that you provide should
-                          NOT be older than 03 months)
-                        </li>
-                        <li>Cable TV/house, phone line bills (with stamp)</li>
-                        <li>Tax returns</li>
-                        <li>Council tax bills</li>
-                        <li>
-                          Government-issued certification of residence, etc.
-                        </li>
-                      </ul>
                     </div>
                   </div>
                 </div>

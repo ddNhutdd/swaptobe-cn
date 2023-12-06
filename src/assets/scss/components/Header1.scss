@@ -2,6 +2,9 @@
   width: 100%;
   height: 40px;
   background-color: $header-background;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   .container {
     @include container;

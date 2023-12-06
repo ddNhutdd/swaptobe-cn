@@ -55,14 +55,18 @@ $background-color-14: #00000096;
 $background-color-15: #cdebf2;
 $background-color-16: #195875;
 $background-color-17: #195875;
+$background-color-18: #02142B;
+$background-color-19: #0C1D33;
 $boxShadown-color-1: #00c297;
 $boxShadown-color-2: #0000004d;
 $boxShadown-color-3: #0000001f;
 $boxShadown-color-4: #0000001a;
 //
 $green: #299d63;
+$green-2: green;
 $green-dark: #1c7749;
 $green-light: #3ec984;
+$green-light-2: #0080003b;
 $green-1: #3E917A;
 $red: #e65656;
 $red-dark: #c33838;
@@ -80,6 +84,7 @@ $yellow: #B9BC2F;
   margin-right: auto;
   margin-left: auto;
   max-width: 1200px;
+  // padding-top: 90px;
 
   @media screen and (max-width:1199px) {
     max-width: 960px;
@@ -245,4 +250,23 @@ h2.title {
 
 .fadeOut {
   animation: fadeOut 0.5s ease-out;
+}
+
+.loader {
+  border: 3px solid transparent;
+  border-top: 3px solid $white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

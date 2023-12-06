@@ -3,13 +3,19 @@ import { useTranslation } from "react-i18next";
 import { localStorageVariable } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { getLocalStorage } from "src/util/common";
+import { useLocation } from "react-router-dom";
 export default function Footer() {
   //
   const { t } = useTranslation();
+  const location = useLocation();
   useEffect(() => {
-    const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
-    i18n.changeLanguage(language);
+    if (location.pathname === "/") {
+      i18n.changeLanguage(availableLanguage.en);
+    } else {
+      const language =
+        getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      i18n.changeLanguage(language);
+    }
   }, []);
 
   //

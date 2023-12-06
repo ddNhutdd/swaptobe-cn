@@ -36,8 +36,8 @@ export default function Swap() {
   const history = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
-  const data = useSelector(getListCoinRealTime);
-  const data2 = useSelector(getListCoinRealTime);
+  const data = useSelector(getListCoinRealTime) ?? [];
+  const data2 = useSelector(getListCoinRealTime) ?? [];
   const [swapFromCoin, setSwapFromCoin] = useState(useSelector(getCoin));
   const [swapToCoin, setSwapToCoin] = useState("USDT");
   const amountCoin = useSelector(getAmountCoin);
@@ -312,7 +312,7 @@ export default function Swap() {
             <div>
               Số dư:{" "}
               {isLogin
-                ? userWallet[swapFromCoin.toLowerCase() + "_balance"]
+                ? userWallet[swapFromCoin.toLowerCase() + "_balance"] ?? 0
                 : ""}
             </div>
           </div>

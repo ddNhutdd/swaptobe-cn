@@ -137,7 +137,14 @@ export default function P2PTrading({ history }) {
   };
   //
   return (
-    <>
+    <div
+      style={{
+        background: "url(./img/background.jpg)",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
       <div className="p2ptrading">
         <div className="container">
           <div className="top box">
@@ -218,6 +225,6 @@ export default function P2PTrading({ history }) {
         </Modal>
       </div>
       <P2PTrading2 history={history} />
-    </>
+    </div>
   );
 }

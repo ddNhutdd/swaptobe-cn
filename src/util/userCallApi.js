@@ -82,3 +82,10 @@ export const uploadKyc = function (data) {
     console.log(error);
   }
 };
+export const getProfile = function () {
+  try {
+    return axiosService.post("/api/user/getProfile");
+  } catch (error) {
+    console.log(error);
+  }
+};

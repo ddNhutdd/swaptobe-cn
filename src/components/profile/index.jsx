@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Card } from "antd";
+import { Card, Spin } from "antd";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
 import { api_status, localStorageVariable, url } from "src/constant";
@@ -8,7 +8,7 @@ import i18n, { availableLanguage } from "src/translation/i18n";
 import { Modal } from "antd";
 import { getLocalStorage } from "src/util/common";
 import { useHistory } from "react-router-dom";
-import { uploadKyc } from "src/util/userCallApi";
+import { getProfile, uploadKyc } from "src/util/userCallApi";
 function Profile() {
   const kycControl = {
     fullName: "fullName",
@@ -22,12 +22,28 @@ function Profile() {
   };
   const kycTourch = {};
   const kycError = {};
+  const content = {
+    undefined: -1,
+    verifing: 2,
+    verified: 3,
+    notVerifiedYet: 4,
+  };
   //
   const { t } = useTranslation();
   const history = useHistory();
   const [is2FAModalOpen, setIs2FAModalOpen] = useState(false);
   const callApiKYCStatus = api_status.pending;
+  const [callApiLoadInfoUserStatus, setCallApiLoadInfoUserStatus] = useState(
+    api_status.pending
+  );
+  const [showContent, setShowConTent] = useState(content.undefined);
   useEffect(() => {
+    const dataUser = getLocalStorage(localStorageVariable.user);
+    if (!dataUser) {
+      history.push(url.login);
+      return;
+    }
+    //
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
     i18n.changeLanguage(language);
@@ -35,19 +51,7 @@ function Profile() {
     const element = document.querySelector(".profile");
     element.classList.add("fadeInBottomToTop");
     // load du lieu len cac control
-    const dataUser = getLocalStorage(localStorageVariable.user);
-    if (!dataUser) {
-      history.push(url.login);
-      return;
-    }
-    const { username, email } = dataUser;
-    document.getElementById("profile__info-email").value = email;
-    document.getElementById("profile__info-username").value = username;
-    document.getElementById("frontIdentifyCardValueText").innerHTML =
-      t("noFileSelected");
-    document.getElementById("backOfIdentityCardFileText").innerHTML =
-      t("noFileSelected");
-    document.getElementById("portraitFileText").innerHTML = t("noFileSelected");
+    fetchUserProfile();
     return () => {};
   }, []);
   const inputFileLogo = useRef(null);
@@ -289,7 +293,6 @@ function Profile() {
     );
     formData.append("photo", document.getElementById("portraitFile").files[0]);
     formData.append("userid", getLocalStorage(localStorageVariable.user).id);
-
     console.log("click", formData);
     uploadKyc(formData)
       .then((resp) => {
@@ -331,6 +334,239 @@ function Profile() {
       behindID.innerHTML = kycError[kycControl.behindID] ?? "";
     if (kycTourch[kycControl.portrait])
       portraitID.innerHTML = kycError[kycControl.portrait] ?? "";
+  };
+  const fetchUserProfile = function () {
+    if (callApiLoadInfoUserStatus === api_status.fetching) return;
+    else setCallApiLoadInfoUserStatus(api_status.fetching);
+    getProfile()
+      .then((resp) => {
+        const userInfo = resp?.data?.data;
+        if (userInfo) {
+          const { username, email, verified } = userInfo;
+          document.getElementById("profile__info-email").value = email;
+          document.getElementById("profile__info-username").value = username;
+          if (verified === 2) {
+            setShowConTent(content.verifing);
+          } else if (verified === 1) {
+            setShowConTent(content.verified);
+          } else if (verified !== 1 && verified !== 2) {
+            setShowConTent(content.notVerifiedYet);
+          }
+        }
+        setCallApiLoadInfoUserStatus(api_status.fulfilled);
+      })
+      .catch((error) => {
+        setCallApiLoadInfoUserStatus(api_status.rejected);
+        console.log(error);
+      });
+  };
+  const renderUserProfileControl = function () {
+    const style = {
+      width: "100%",
+      height: "100px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    };
+    if (callApiLoadInfoUserStatus === api_status.fetching) {
+      return (
+        <div style={style}>
+          <Spin />
+        </div>
+      );
+    } else if (showContent === content.undefined) return;
+    else if (showContent === content.verified)
+      return (
+        <div className="profile__verified">
+          <i className="fa-solid fa-circle-check"></i>
+          <span>{t("verified")}</span>
+        </div>
+      );
+    else if (showContent === content.verifing)
+      return (
+        <div className="profile__verifing">
+          <i className="fa-solid fa-circle-check"></i>
+          <span>Vui lòng chờ admin xác nhận.</span>
+        </div>
+      );
+    else if (showContent === content.notVerifiedYet)
+      return (
+        <form onSubmit={kycHandleSubmit} className="profile__form">
+          <div className="profile__form-item">
+            <div className="profile__input">
+              <label htmlFor="profile__fullName">{t("fullName")}</label>
+              <input
+                onFocus={() => {
+                  kycControlHandleFocus(kycControl.fullName);
+                }}
+                onChange={kycControlHandleChange}
+                id="profile__fullName"
+                type="text"
+              />
+              <div
+                id="profile__fullName__error"
+                className={`profile__input__error`}
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item">
+            <div className="profile__input">
+              <label htmlFor="profile__address">{t("address")}</label>
+              <input
+                onFocus={() => {
+                  kycControlHandleFocus(kycControl.address);
+                }}
+                onChange={kycControlHandleChange}
+                id="profile__address"
+                type="text"
+              />
+              <div
+                id="profile__address__error"
+                className={`profile__input__error `}
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item">
+            <div className="profile__input">
+              <label htmlFor="profile__phone">{t("phone")}</label>
+              <input
+                onFocus={() => {
+                  kycControlHandleFocus(kycControl.phone);
+                }}
+                onChange={kycControlHandleChange}
+                id="profile__phone"
+                type="text"
+              />
+              <div
+                id="profile__phone__error"
+                className={`profile__input__error`}
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item">
+            <div className="profile__input">
+              <label htmlFor="profile__company">{t("company")}</label>
+              <input
+                onFocus={() => {
+                  kycControlHandleFocus(kycControl.company);
+                }}
+                onChange={kycControlHandleChange}
+                id="profile__company"
+                type="text"
+              />
+              <div
+                id="profile__company__error"
+                className={`profile__input__error`}
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item">
+            <div className="profile__input">
+              <label htmlFor="profile__passport">{t("passport")}</label>
+              <input
+                onFocus={() => {
+                  kycControlHandleFocus(kycControl.passport);
+                }}
+                onChange={kycControlHandleChange}
+                id="profile__passport"
+                type="text"
+              />
+              <div
+                id="profile__passport__error"
+                className={`profile__input__error`}
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item"></div>
+          <div className="profile__form-item">
+            <div className="profile__fileInput">
+              <label>
+                {t("frontImageOfCitizenIdentificationCardOrIdentityCard")}
+              </label>
+              <input
+                type="file"
+                id="frontIdentityCardFile"
+                className="--d-none"
+                onChange={handleFileChange}
+                name="frontIdentityCardFile"
+              />
+              <label htmlFor="frontIdentityCardFile">
+                <button
+                  name="frontIdentityCardFile"
+                  type="button"
+                  onClick={openDailogChooseFile}
+                >
+                  {t("chooseFile")}
+                </button>
+                <span id="frontIdentifyCardValueText">No file</span>
+              </label>
+              <div
+                id="frontIdentityCardFileError"
+                className="profile__fileInput__error "
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item">
+            <div className="profile__fileInput">
+              <label>
+                {t("backOfCitizenIdentificationCardOrIdentityCard")}
+              </label>
+              <input
+                type="file"
+                className="--d-none"
+                id="backOfIdentityCardFile"
+                name="backOfIdentityCardFile"
+                onChange={handleFileChange}
+              />
+              <label htmlFor="backOfIdentityCardFile">
+                <button
+                  name="backOfIdentityCardFile"
+                  type="button"
+                  onClick={openDailogChooseFile}
+                >
+                  {t("chooseFile")}
+                </button>
+                <span id="backOfIdentityCardFileText">No file</span>
+              </label>
+              <div
+                id="behindIdentityCardFileError"
+                className="profile__fileInput__error "
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item">
+            <div className="profile__fileInput">
+              <label>{t("portrait")}</label>
+              <input
+                type="file"
+                className="--d-none"
+                id="portraitFile"
+                name="portraitFile"
+                onChange={handleFileChange}
+              />
+              <label htmlFor="portraitFile">
+                <button
+                  name="portraitFile"
+                  type="button"
+                  onClick={openDailogChooseFile}
+                >
+                  {t("chooseFile")}
+                </button>
+                <span id="portraitFileText">No file</span>
+              </label>
+              <div
+                id="portraitIdentityCardFileError"
+                className="profile__fileInput__error "
+              ></div>
+            </div>
+          </div>
+          <div className="profile__form-item profile__formSumit">
+            <button type="submit" className="profile__button">
+              {t("save")}
+            </button>
+          </div>
+        </form>
+      );
   };
   //
   return (
@@ -394,185 +630,7 @@ function Profile() {
                   </p>
                 </li>
               </ul>
-              <form onSubmit={kycHandleSubmit} className="profile__form">
-                <div className="profile__form-item">
-                  <div className="profile__input">
-                    <label htmlFor="profile__fullName">{t("fullName")}</label>
-                    <input
-                      onFocus={() => {
-                        kycControlHandleFocus(kycControl.fullName);
-                      }}
-                      onChange={kycControlHandleChange}
-                      id="profile__fullName"
-                      type="text"
-                    />
-                    <div
-                      id="profile__fullName__error"
-                      className={`profile__input__error`}
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__input">
-                    <label htmlFor="profile__address">{t("address")}</label>
-                    <input
-                      onFocus={() => {
-                        kycControlHandleFocus(kycControl.address);
-                      }}
-                      onChange={kycControlHandleChange}
-                      id="profile__address"
-                      type="text"
-                    />
-                    <div
-                      id="profile__address__error"
-                      className={`profile__input__error `}
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__input">
-                    <label htmlFor="profile__phone">{t("phone")}</label>
-                    <input
-                      onFocus={() => {
-                        kycControlHandleFocus(kycControl.phone);
-                      }}
-                      onChange={kycControlHandleChange}
-                      id="profile__phone"
-                      type="text"
-                    />
-                    <div
-                      id="profile__phone__error"
-                      className={`profile__input__error`}
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__input">
-                    <label htmlFor="profile__company">{t("company")}</label>
-                    <input
-                      onFocus={() => {
-                        kycControlHandleFocus(kycControl.company);
-                      }}
-                      onChange={kycControlHandleChange}
-                      id="profile__company"
-                      type="text"
-                    />
-                    <div
-                      id="profile__company__error"
-                      className={`profile__input__error`}
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__input">
-                    <label htmlFor="profile__passport">{t("passport")}</label>
-                    <input
-                      onFocus={() => {
-                        kycControlHandleFocus(kycControl.passport);
-                      }}
-                      onChange={kycControlHandleChange}
-                      id="profile__passport"
-                      type="text"
-                    />
-                    <div
-                      id="profile__passport__error"
-                      className={`profile__input__error`}
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item"></div>
-                <div className="profile__form-item">
-                  <div className="profile__fileInput">
-                    <label>
-                      {t("frontImageOfCitizenIdentificationCardOrIdentityCard")}
-                    </label>
-                    <input
-                      type="file"
-                      id="frontIdentityCardFile"
-                      className="--d-none"
-                      onChange={handleFileChange}
-                      name="frontIdentityCardFile"
-                    />
-                    <label htmlFor="frontIdentityCardFile">
-                      <button
-                        name="frontIdentityCardFile"
-                        type="button"
-                        onClick={openDailogChooseFile}
-                      >
-                        {t("chooseFile")}
-                      </button>
-                      <span id="frontIdentifyCardValueText"></span>
-                    </label>
-                    <div
-                      id="frontIdentityCardFileError"
-                      className="profile__fileInput__error "
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__fileInput">
-                    <label>
-                      {t("backOfCitizenIdentificationCardOrIdentityCard")}
-                    </label>
-                    <input
-                      type="file"
-                      className="--d-none"
-                      id="backOfIdentityCardFile"
-                      name="backOfIdentityCardFile"
-                      onChange={handleFileChange}
-                    />
-                    <label htmlFor="backOfIdentityCardFile">
-                      <button
-                        name="backOfIdentityCardFile"
-                        type="button"
-                        onClick={openDailogChooseFile}
-                      >
-                        {t("chooseFile")}
-                      </button>
-                      <span id="backOfIdentityCardFileText"></span>
-                    </label>
-                    <div
-                      id="behindIdentityCardFileError"
-                      className="profile__fileInput__error "
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item">
-                  <div className="profile__fileInput">
-                    <label>{t("portrait")}</label>
-                    <input
-                      type="file"
-                      className="--d-none"
-                      id="portraitFile"
-                      name="portraitFile"
-                      onChange={handleFileChange}
-                    />
-                    <label htmlFor="portraitFile">
-                      <button
-                        name="portraitFile"
-                        type="button"
-                        onClick={openDailogChooseFile}
-                      >
-                        {t("chooseFile")}
-                      </button>
-                      <span id="portraitFileText"></span>
-                    </label>
-                    <div
-                      id="portraitIdentityCardFileError"
-                      className="profile__fileInput__error "
-                    ></div>
-                  </div>
-                </div>
-                <div className="profile__form-item profile__formSumit">
-                  <button type="submit" className="profile__button">
-                    {t("save")}
-                  </button>
-                </div>
-              </form>
-              <div className="profile__verified --d-none">
-                <i className="fa-solid fa-circle-check"></i>
-                <span>{t("verified")}</span>
-              </div>
+              {renderUserProfileControl()}
             </div>
           </Card>
         </div>

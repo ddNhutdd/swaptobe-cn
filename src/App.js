@@ -27,6 +27,7 @@ import { setListCoinRealtime } from "./redux/actions/listCoinRealTime.action";
 import { userWalletFetchCount } from "./redux/constant/coin.constant";
 import { coinUserWallet } from "./redux/actions/coin.action";
 import { roundDecimalValues } from "./util/common";
+import KYC from "./components/admin/kycUsers";
 function App() {
   const dispatch = useDispatch();
   const fetchExchangeCount = useSelector(getFetchExchangeCount);
@@ -105,6 +106,7 @@ function App() {
           <MainTemplate path="/signup" component={Signup} />
           <MainTemplate path="/wallet" component={Wallet} />
           <AdminTemplate path="/admin/dashboard" component={Dashboard} />
+          <AdminTemplate path="/admin/kyc" component={KYC} />
           <Route exact path="/" component={Home} />
         </Switch>
       </ScrollToTop>
