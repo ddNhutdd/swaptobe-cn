@@ -3,7 +3,11 @@ export const localStorageVariable = {
   token: "token",
   user: "user",
   currency: "currency",
+  previousePage: null,
 };
+
+// export const deploy_domain = "https://demo.dk-technical.vn/";
+export const deploy_domain = "http://192.168.0.108:3000/wallet-2";
 
 export const url = {
   home: "/",

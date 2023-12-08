@@ -130,5 +130,19 @@
     "invalidBalance": "無効な残高。",
     "invalidQuantity": "無効な数量。",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "管理者の承認を待つ成功した送金注文を作成する！",
-    "transferSuccessful": "転送成功"
+    "transferSuccessful": "転送成功",
+    "loggedInSuccessfully": "ログインに成功しました！",
+    "invalidData": "無効なデータです。",
+    "turnOnSuccessfully": "正常にオンにしました",
+    "turnOffSuccessfully": "正常にオフにしました",
+    "turnOff2FA": "2FAをオフにする",
+    "incorrectCode": "不正確なコードです！",
+    "ok": "OK",
+    "pleaseWaitForAdminConfirmation": "管理者の確認をお待ちください。",
+    "fullName": "フルネーム",
+    "address": "住所",
+    "passport": "パスポート",
+    "company": "会社",
+    "success": "成功",
+    "signUpSuccess !": "サインアップ成功！"
 }

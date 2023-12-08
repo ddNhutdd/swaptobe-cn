@@ -130,5 +130,19 @@
     "invalidBalance": "잘못된 잔액입니다.",
     "invalidQuantity": "잘못된 수량입니다.",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "관리자 승인 대기 중인 성공적인 송금 주문 생성!",
-    "transferSuccessful": "송금 성공"
+    "transferSuccessful": "송금 성공",
+    "loggedInSuccessfully": "성공적으로 로그인했습니다!",
+    "invalidData": "잘못된 데이터입니다.",
+    "turnOnSuccessfully": "성공적으로 켰습니다",
+    "turnOffSuccessfully": "성공적으로 끄기했습니다",
+    "turnOff2FA": "2FA 끄기",
+    "incorrectCode": "잘못된 코드입니다!",
+    "ok": "확인",
+    "pleaseWaitForAdminConfirmation": "관리자 확인을 기다려주십시오.",
+    "fullName": "전체 이름",
+    "address": "주소",
+    "passport": "여권",
+    "company": "회사",
+    "success": "성공",
+    "signUpSuccess !": "가입 성공 !"
 }

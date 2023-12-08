@@ -19,6 +19,7 @@ export const seresoWalletReducer = (state = defaultState, action) => {
         showContent: actionContent.withdraw,
       };
     case swaptobeWallet.setShowDeposite:
+      console.log(action.payload);
       return {
         ...state,
         selectedCurrency: action.payload,

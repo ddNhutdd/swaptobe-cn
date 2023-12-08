@@ -2,27 +2,55 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import FormWithdraw from "./walletWithdraw";
 import SeresoWalletList from "./walletList";
+
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import {
   actionContent,
   getShowContent,
 } from "src/redux/constant/seresoWallet.constant";
-import { swaptoveWalletShowMainActionCreator as seresoWalletShowMainActionCreator } from "src/redux/actions/seresoWallet.action";
+import {
+  swaptoveWalletShowMainActionCreator as seresoWalletShowMainActionCreator,
+  swaptoveWalletShowWithdrawActionCreator,
+} from "src/redux/actions/seresoWallet.action";
 import SeresoWalletDeposit from "./walletDeposite";
-import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
-import { currency, localStorageVariable } from "src/constant";
+import {
+  formatStringNumberCultureUS,
+  getLocalStorage,
+  parseURLParameters,
+  setLocalStorage,
+} from "src/util/common";
+import { currency, localStorageVariable, url } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { getCoinTotalValue } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { coinSetCoin } from "src/redux/actions/coin.action";
 function SwaptobeWallet() {
   //
   const { t } = useTranslation();
+  const history = useHistory();
+  const location = useLocation();
   const showActionContent = useSelector(getShowContent);
+  const { search } = useLocation();
   const totalValue = useSelector(getCoinTotalValue);
   const userSelectedCurrentcy = useSelector(getCurrent);
   const exchange = useSelector(getExchange);
+  const isLogin = useSelector((root) => root.loginReducer.isLogin);
   const dispatch = useDispatch();
   useEffect(() => {
+    // check is login
+
+    if (!isLogin) {
+      setLocalStorage(localStorageVariable.previousePage, { ...location });
+
+      const { coin } = useParams;
+      dispatch(coinSetCoin(coin ?? "BTC"));
+      history.push(url.login);
+      return;
+    }
+    const { username, note, amountCoin } = parseURLParameters(search);
+    if (username) dispatch(swaptoveWalletShowWithdrawActionCreator());
+
     //
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
@@ -98,9 +126,10 @@ function SwaptobeWallet() {
               <div>{t("estimatedAssetsValue")}</div>
               <div>
                 <span id="showTotalValue"></span>
-                {userSelectedCurrentcy === currency.usd && "$"}
-                {userSelectedCurrentcy === currency.eur && "€"}
-                {userSelectedCurrentcy === currency.vnd && "đ"}
+
+                {userSelectedCurrentcy === currency.usd && " USD"}
+                {userSelectedCurrentcy === currency.eur && " EUR"}
+                {userSelectedCurrentcy === currency.vnd && " VND"}
               </div>
             </div>
             <div className="right">

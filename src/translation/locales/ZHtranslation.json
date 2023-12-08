@@ -130,5 +130,19 @@
     "invalidBalance": "无效余额。",
     "invalidQuantity": "无效数量。",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "创建成功的等待管理员批准的转账订单！",
-    "transferSuccessful": "转账成功"
+    "transferSuccessful": "转账成功",
+    "loggedInSuccessfully": "成功登录！",
+    "invalidData": "无效的数据。",
+    "turnOnSuccessfully": "成功开启",
+    "turnOffSuccessfully": "成功关闭",
+    "turnOff2FA": "关闭两步验证",
+    "incorrectCode": "错误的验证码！",
+    "ok": "确定",
+    "pleaseWaitForAdminConfirmation": "请等待管理员确认。",
+    "fullName": "全名",
+    "address": "地址",
+    "passport": "护照",
+    "company": "公司",
+    "success": "成功",
+    "signUpSuccess !": "注册成功！"
 }

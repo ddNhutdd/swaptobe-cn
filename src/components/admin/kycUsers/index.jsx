@@ -1,32 +1,36 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { Pagination, Modal, Image } from "antd";
-import { getKycUserPendding } from "src/util/adminCallApi";
-import { api_status } from "src/constant";
+import React, { useEffect, useRef, useState } from "react";
+import { Pagination, Modal, Spin } from "antd";
+import {
+  activeUserKyc,
+  cancelUserKyc,
+  getKycUserPendding,
+} from "src/util/adminCallApi";
+import { api_status, showAlertType } from "src/constant";
 import { DOMAIN } from "src/util/service";
 import { zoomImage } from "src/util/common";
+import { showToast } from "src/function/showToast";
+import { showAlert } from "src/function/showAlert";
 function KYC() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [listKycUserData, setListKycUserData] = useState();
-  const [listKycUserDataCurrentPage, setListKycUserDataCurrentPage] =
-    useState(1);
   const [listKycUserDataTotalPage, setListKycUserDataTotalPage] = useState(1);
   const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
+  const listKycUserDataCurrentPage = useRef(1);
   //
   useEffect(() => {
     // neus user chua dang nhap thi chuyen vef trang home
     //fetch kyc table
-    fetchKYCTable();
+    fetchKYCTable(1);
     // render kyc table
     renderKYCTable();
   }, []);
   //
-  const fetchKYCTable = function () {
+  const fetchKYCTable = function (page) {
     if (callApiStatus === api_status.fetching) return;
     else if (callApiStatus !== api_status.fetching)
       setCallApiStatus(api_status.fetching);
-    getKycUserPendding({ limit: "10", page: listKycUserDataCurrentPage })
+    getKycUserPendding({ limit: "10", page: page })
       .then((resp) => {
         setListKycUserData(resp.data.data.array);
         setListKycUserDataTotalPage(resp.data.data.total);
@@ -38,30 +42,42 @@ function KYC() {
       });
   };
   const renderKYCTable = function () {
-    if (!listKycUserData || listKycUserData.length <= 0) return;
-    return listKycUserData.map((item) => (
-      <tr key={item.id}>
-        <td>{item.id}</td>
-        <td>{item.username}</td>
-        <td>{item.email}</td>
-        <td>{item.fullname}</td>
-        <td>{item.phone}</td>
-        <td>{item.passport}</td>
-        <td>
-          <div className="admin-kyc-users__status">Pending</div>
-        </td>
-        <td>
-          <button
-            onClick={() => {
-              showModal(item);
-            }}
-            className="admin-kyc-users__check"
-          >
-            Check
-          </button>
-        </td>
-      </tr>
-    ));
+    if (callApiStatus === api_status.fetching) {
+      return (
+        <tr>
+          <td colSpan="8">
+            <div className="spin-container">
+              <Spin />
+            </div>
+          </td>
+        </tr>
+      );
+    } else {
+      if (!listKycUserData || listKycUserData.length <= 0) return;
+      return listKycUserData.map((item) => (
+        <tr key={item.id}>
+          <td>{item.id}</td>
+          <td>{item.username}</td>
+          <td>{item.email}</td>
+          <td>{item.fullname}</td>
+          <td>{item.phone}</td>
+          <td>{item.passport}</td>
+          <td>
+            <div className="admin-kyc-users__status">Pending</div>
+          </td>
+          <td>
+            <button
+              onClick={() => {
+                showModal(item);
+              }}
+              className="admin-kyc-users__check"
+            >
+              Check
+            </button>
+          </td>
+        </tr>
+      ));
+    }
   };
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -83,6 +99,8 @@ function KYC() {
     const imageContainer = document.querySelector(
       ".admin-kyc-user__modal-image-container"
     );
+    const buttonConfirm = document.getElementById("button-confirm");
+    const buttonReject = document.getElementById("button-reject");
     if (
       !userIDElement ||
       !userNameElement ||
@@ -90,9 +108,12 @@ function KYC() {
       !fullnameElement ||
       !phoneElement ||
       !passportElement ||
-      !imageContainer
+      !imageContainer ||
+      !buttonConfirm ||
+      !buttonReject
     )
       return;
+    //load data
     const { id, username, email, fullname, phone, passport } = data;
     userIDElement.innerHTML = id;
     userNameElement.innerHTML = username;
@@ -111,8 +132,60 @@ function KYC() {
       });
       imageContainer.appendChild(imgElement);
     }
+    buttonConfirm.addEventListener("click", () => {
+      acceptKyc(id);
+    });
+    buttonReject.addEventListener("click", () => {
+      rejectKyc(id);
+    });
   };
-
+  const acceptKyc = function (userid) {
+    if (callApiStatus === api_status.fetching) return;
+    else setCallApiStatus(api_status.fetching);
+    activeUserKyc({ userid: String(userid) })
+      .then((resp) => {
+        setCallApiStatus(api_status.fulfilled);
+        const message = resp.data.message;
+        showToast(showAlertType.success, message);
+        handleCancel();
+        fetchKYCTable(listKycUserDataCurrentPage.current);
+      })
+      .catch((error) => {
+        console.log(error);
+        const message = error?.response?.data?.message;
+        switch (message) {
+          case "The user is not in a waiting state":
+            showAlert(showAlertType.error, message);
+            break;
+          default:
+            showAlert(showAlertType.error, "có lõi xảy ra");
+            break;
+        }
+        setCallApiStatus(api_status.rejected);
+      });
+  };
+  const rejectKyc = function (userid) {
+    if (callApiStatus === api_status.fetching) return;
+    else setCallApiStatus(api_status.fetching);
+    cancelUserKyc({
+      userid: String(userid),
+    })
+      .then((resp) => {
+        setCallApiStatus(api_status.fulfilled);
+        const message = resp.data.message;
+        showToast(showAlertType.success, message);
+        handleCancel();
+        fetchKYCTable(listKycUserDataCurrentPage.current);
+      })
+      .catch((error) => {
+        console.log(error);
+        setCallApiStatus(api_status.rejected);
+      });
+  };
+  const pagingChangeHandle = function (page) {
+    fetchKYCTable(page);
+    listKycUserDataCurrentPage.current = page;
+  };
   return (
     <div className="admin-kyc-users">
       <div className="admin-kyc-users__header">
@@ -133,6 +206,7 @@ function KYC() {
             pageSize={10}
             total={listKycUserDataTotalPage}
             showSizeChanger={false}
+            onChange={pagingChangeHandle}
           />
         </div>
       </div>
@@ -227,10 +301,25 @@ function KYC() {
           </div>
           <div className="admin-kyc-user__modal-image-container"></div>
           <div className="admin-kyc-users__modal-control">
-            <button className="admin-kyc-users__modal-confirm confirm">
+            <button
+              id="button-confirm"
+              className={`admin-kyc-users__modal-confirm confirm  ${
+                callApiStatus === api_status.fetching ? "disable" : ""
+              }`}
+            >
+              <div
+                className={`loader ${
+                  callApiStatus === api_status.fetching ? "" : "--d-none"
+                }`}
+              ></div>
               confirm
             </button>
-            <button className="admin-kyc-users__modal-reject">reject</button>
+            <button
+              id="button-reject"
+              className="admin-kyc-users__modal-reject"
+            >
+              reject
+            </button>
             <button
               onClick={handleCancel}
               className="admin-kyc-users__modal-close"

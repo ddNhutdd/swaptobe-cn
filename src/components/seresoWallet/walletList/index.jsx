@@ -93,6 +93,7 @@ function SeresoWalletList() {
           <button
             onClick={() => {
               dispatch(swaptoveWalletShowDepositeActionCreator(item.name));
+              coinSetCoin(item.name);
               window.scrollTo(0, 0);
             }}
             className="primary-button"

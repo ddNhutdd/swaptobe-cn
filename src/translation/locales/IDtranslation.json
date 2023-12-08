@@ -130,5 +130,19 @@
     "invalidBalance": "Saldo tidak valid.",
     "invalidQuantity": "Jumlah tidak valid.",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "Membuat pesanan transfer uang yang berhasil menunggu persetujuan admin!",
-    "transferSuccessful": "Transfer berhasil"
+    "transferSuccessful": "Transfer berhasil",
+    "loggedInSuccessfully": "Berhasil masuk!",
+    "invalidData": "Data tidak valid.",
+    "turnOnSuccessfully": "Berhasil menyalakan",
+    "turnOffSuccessfully": "Berhasil mematikan",
+    "turnOff2FA": "Matikan 2FA",
+    "incorrectCode": "Kode tidak benar!",
+    "ok": "Oke",
+    "pleaseWaitForAdminConfirmation": "Mohon tunggu konfirmasi admin.",
+    "fullName": "Nama Lengkap",
+    "address": "Alamat",
+    "passport": "Paspor",
+    "company": "Perusahaan",
+    "success": "Berhasil",
+    "signUpSuccess !": "Pendaftaran Berhasil !"
 }

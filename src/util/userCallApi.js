@@ -89,3 +89,24 @@ export const getProfile = function () {
     console.log(error);
   }
 };
+export const generateOTPToken = function () {
+  try {
+    return axiosService.post("/api/user/generateOTPToken");
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const turnOn2FA = function (data) {
+  try {
+    return axiosService.post("/api/user/turnOn2FA", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const turnOff2FA = function (data) {
+  try {
+    return axiosService.post("/api/user/turnOff2FA", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

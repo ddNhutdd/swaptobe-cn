@@ -130,5 +130,19 @@
     "invalidBalance": "ទឹកប្រាក់មិនត្រឹមត្រូវ។",
     "invalidQuantity": "ចំនួនមិនត្រឹមត្រូវ។",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "បង្កើត​បញ្ជាទិញ​ទូទាត់​ប្រឡុក​ដោយជោគជ័យ​ដោយរូបស្ថានសិក្សា!",
-    "transferSuccessful": "បញ្ចូល​ប្រៀបធៀប"
+    "transferSuccessful": "បញ្ចូល​ប្រៀបធៀប",
+    "loggedInSuccessfully": "ចូលប្រើប្រាស់ដោយជោគជ័យ!",
+    "invalidData": "ទិន្នន័យមិនត្រឹមត្រូវ។",
+    "turnOnSuccessfully": "បើកដោយជោគជ័យ",
+    "turnOffSuccessfully": "បិទដោយជោគជ័យ",
+    "turnOff2FA": "បិទ 2FA",
+    "incorrectCode": "លេខកូដមិនត្រឹមត្រូវ!",
+    "ok": "ព្រម",
+    "pleaseWaitForAdminConfirmation": "សូមរងចាំការបញ្ជាទុកដែលត្រូវបានយល់ព្រម។",
+    "fullName": "ឈ្មោះ​ពេញ",
+    "address": "អាសយដ្ឋាន",
+    "passport": "លិខិតឆ្លងដែន",
+    "company": "ក្រុមហ៊ុន",
+    "success": "ជោគជ័យ",
+    "signUpSuccess !": "ចុះឈ្មោះជោគជ័យ !"
 }

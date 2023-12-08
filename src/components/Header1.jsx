@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../function/showToast";
 import { useEffect, useRef } from "react";
 import { currency, localStorageVariable, url } from "src/constant";
-import { Spin } from "antd";
 import {
   formatStringNumberCultureUS,
   removeLocalStorage,
@@ -29,7 +28,7 @@ export default function Header1({ history }) {
   useEffect(() => {
     //
     const element = document.querySelector(".header1");
-    element.classList.add("fadeInTopToBottom");
+    if (element) element.classList.add("fadeInTopToBottom");
     //
     window.addEventListener("click", closeAllSubMenu);
     //
@@ -55,9 +54,11 @@ export default function Header1({ history }) {
       listOnCoinRealtime.filter((item) => item.name === "BTC")[0]?.price || 0;
     const amountCoinBTC = listOwnedCoins["btc_balance"];
     const result = filterExchange * amountCoinBTC * price;
-    document.getElementById("money").innerHTML = `${formatStringNumberCultureUS(
-      result.toFixed(3)
-    )} ${userSelectedCurrency}`;
+    const showMoneyElement = document.getElementById("money");
+    if (showMoneyElement)
+      showMoneyElement.innerHTML = `${formatStringNumberCultureUS(
+        result.toFixed(3)
+      )} ${userSelectedCurrency}`;
   }, [exchange, userSelectedCurrency, listOnCoinRealtime]);
   //
   const logout = () => {

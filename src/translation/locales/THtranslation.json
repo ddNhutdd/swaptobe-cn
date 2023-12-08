@@ -130,5 +130,19 @@
     "invalidBalance": "ยอดเงินไม่ถูกต้อง",
     "invalidQuantity": "ปริมาณไม่ถูกต้อง",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "สร้างคำสั่งโอนเงินที่ประสบความสำเร็จรอการอนุมัติจากผู้ดูแล!",
-    "transferSuccessful": "โอนเงินสำเร็จ"
+    "transferSuccessful": "โอนเงินสำเร็จ",
+    "loggedInSuccessfully": "เข้าสู่ระบบสำเร็จ!",
+    "invalidData": "ข้อมูลไม่ถูกต้อง",
+    "turnOnSuccessfully": "เปิดเสร็จเรียบร้อย",
+    "turnOffSuccessfully": "ปิดเสร็จเรียบร้อย",
+    "turnOff2FA": "ปิด 2FA",
+    "incorrectCode": "รหัสไม่ถูกต้อง!",
+    "ok": "ตกลง",
+    "pleaseWaitForAdminConfirmation": "กรุณารอการยืนยันจากผู้ดูแลระบบ",
+    "fullName": "ชื่อเต็ม",
+    "address": "ที่อยู่",
+    "passport": "พาสปอร์ต",
+    "company": "บริษัท",
+    "success": "สำเร็จ",
+    "signUpSuccess !": "ลงทะเบียนสำเร็จ !"
 }

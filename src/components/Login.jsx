@@ -10,7 +10,7 @@ import { showToast } from "../function/showToast";
 import { axiosService } from "../util/service";
 import { localStorageVariable, showAlertType, url } from "src/constant";
 import { useEffect } from "react";
-import { getLocalStorage } from "src/util/common";
+import { getLocalStorage, removeLocalStorage } from "src/util/common";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 export default function Login({ history }) {
@@ -51,21 +51,30 @@ export default function Login({ history }) {
         userName: e,
         password: p,
       });
-      showToast(showAlertType.success, response.data.message);
+      showToast(showAlertType.success, t("loggedInSuccessfully"));
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.data));
       dispatch({ type: "USER_LOGIN" });
       // menu load list mycoin
       dispatch(userWalletFetchCount());
+      // search previos page and redirect
+      const previousPage = getLocalStorage(localStorageVariable.previousePage);
+      history.push("wallet-2");
+      if (previousPage) {
+        history.replace(previousPage.pathname + previousPage.search);
+        removeLocalStorage(localStorageVariable.previousePage);
+      } else {
+        history.push(url.p2pTrading);
+      }
     } catch (error) {
       showAlert("error", error?.response?.data?.message);
     } finally {
       setIsLoading(false);
     }
   };
-  if (isLogin) {
-    return <Redirect to={url.p2pTrading} />;
-  }
+  // if (isLogin) {
+  //   return <Redirect to={url.p2pTrading} />;
+  // }
   //
   return (
     <div className="login-register">

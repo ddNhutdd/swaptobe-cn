@@ -1,17 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import { Spin, Pagination, Empty } from "antd";
+import QRCode from "react-qr-code";
 import {
   convertStringToNumber,
   formatStringNumberCultureUS,
+  generateNewURL,
   getLocalStorage,
+  parseURLParameters,
 } from "src/util/common";
 import { useSelector } from "react-redux";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import {
   api_status,
   api_url,
+  deploy_domain,
   localStorageVariable,
   showAlertType,
 } from "src/constant";
@@ -24,6 +29,9 @@ import { getCoin, getUserWallet } from "src/redux/constant/coin.constant";
 import { showToast } from "src/function/showToast";
 import { showAlert } from "src/function/showAlert";
 import { historytransfer as historytransferApi } from "src/util/userCallApi";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { userWalletFetchCount } from "src/redux/actions/coin.action";
+
 function FormWithdraw() {
   //
   const form = {
@@ -42,11 +50,14 @@ function FormWithdraw() {
   const [inputAmountCurrency, setInputAmountCurrency] = useState("");
   const inputNoteValue = useRef();
   const formWallet = useRef();
+  const dispatch = useDispatch();
   const userNameInputElement = useRef();
   const withdrawHistoryCurrentPage = useRef(1);
   const transferHistoryCurrentPage = useRef(1);
   const addressElement = useRef();
   const messageElement = useRef();
+  const { search } = useLocation();
+  console.log();
   const coin = useSelector(getCoin);
   const userWallet = useSelector(getUserWallet);
   const [callApiSubmitStatus, setCallApiSubmitStatus] = useState(
@@ -60,12 +71,22 @@ function FormWithdraw() {
   const [historytransfer, setHistoryTransfer] = useState([]);
   const [withdrawHistoryTotalItems, setWithdrawHistoryTotalItems] = useState(1);
   const [transferHistoryTotalItems, setTransferHistoryTotalItems] = useState(1);
+  const qrValue = useRef(deploy_domain);
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
     i18n.changeLanguage(language);
     fetchWithdrawHistory();
     fetTransferHistory();
+    // if url have variable set value for control
+    const { username, note, amountCoin } = parseURLParameters(search);
+    if (username) {
+      setShowForm(form.Aliases);
+      setInputAmountCurrency(() => formatStringNumberCultureUS(amountCoin));
+      userNameInputElement.current.value = username;
+      messageElement.current.value = note;
+    }
+    //
     document
       .getElementsByClassName("FormWithdraw")[0]
       .classList.add("fadeInBottomToTop");
@@ -86,6 +107,15 @@ function FormWithdraw() {
       inputValueWithoutComma
     );
     setInputAmountCurrency(inputValueFormated);
+    //change qr
+    const { username, note } = parseURLParameters(qrValue.current);
+    qrValue.current = generateNewURL(
+      deploy_domain,
+      username,
+      coin,
+      inputValueWithoutComma,
+      note
+    );
   };
   const submitFormWalletHandle = function (e) {
     e.preventDefault();
@@ -200,7 +230,6 @@ function FormWithdraw() {
       return;
     }
     setCallApiSubmitStatus(api_status.fetching);
-
     transferToUsername({
       symbol: coin,
       userName: userNameInputElement.current.value,
@@ -214,6 +243,7 @@ function FormWithdraw() {
         messageElement.current.value = "";
         transferHistoryCurrentPage.current = 1;
         fetTransferHistory();
+        dispatch(userWalletFetchCount());
         setCallApiSubmitStatus(api_status.fulfilled);
       })
       .catch((error) => {
@@ -226,14 +256,13 @@ function FormWithdraw() {
           case "Invalid balance":
             showAlert(showAlertType.error, t("invalidBalance"));
             break;
-          case "Not be empty": {
+          case "Not be empty":
             const errorMessage = error?.response?.data?.errors[0];
             errorMessage === "userName is not empty" &&
               showAlert(showAlertType.error, t("userNameNotEmpty"));
             errorMessage === "amount is not empty" &&
-              showAlert(showAlertType.error, t("transferHistory"));
+              showAlert(showAlertType.error, t("amountNotEmpty"));
             break;
-          }
           default:
             showAlert(showAlertType.error, t("anErrorHasOccurred"));
             break;
@@ -277,8 +306,7 @@ function FormWithdraw() {
       return (
         <>
           <div className="formWithdraw__title">
-            lịch sử chuyển {t("transferHistory")}
-            {coin}
+            {t("transferHistory")} {coin}
           </div>
           <div className="formWithdraw__Wallet-list fadeInBottomToTop">
             {historytransfer.map((item) => (
@@ -307,6 +335,31 @@ function FormWithdraw() {
   const maxButtonClickHandle = function () {
     let valueString = getMaxAvailable()?.toString();
     setInputAmountCurrency(formatStringNumberCultureUS(valueString || ""));
+  };
+  const usernameInputChangeHandle = function (e) {
+    const username = e.target.value;
+    //change qr
+    const { note, amountCoin } = parseURLParameters(qrValue.current);
+    qrValue.current = generateNewURL(
+      deploy_domain,
+      username,
+      coin,
+      amountCoin,
+      note
+    );
+  };
+  const noteChangeHandle = function (e) {
+    const note = e.target.value;
+    //change qr
+    const { username, amountCoin } = parseURLParameters(qrValue.current);
+    qrValue.current = generateNewURL(
+      deploy_domain,
+      username,
+      coin,
+      amountCoin,
+      note
+    );
+    console.log(qrValue.current);
   };
   return (
     <div className="container">
@@ -449,7 +502,11 @@ function FormWithdraw() {
           >
             <div className="input">
               <p>{t("userName")}</p>
-              <input ref={userNameInputElement} type="text" />
+              <input
+                onChange={usernameInputChangeHandle}
+                ref={userNameInputElement}
+                type="text"
+              />
             </div>
             <div className="input">
               <p>
@@ -473,13 +530,14 @@ function FormWithdraw() {
             <div className="input">
               <p>{t("message")}</p>
               <textarea
+                className="textarea"
                 ref={messageElement}
                 placeholder="I'm fine, tks. And u!"
                 cols="30"
                 rows="10"
+                onChange={noteChangeHandle}
               ></textarea>
             </div>
-
             <div className="button-submit-container">
               <button
                 className={`${
@@ -492,28 +550,44 @@ function FormWithdraw() {
             </div>
           </form>
         </div>
-        <div className="right">
-          {showForm === form.Wallet ? (
-            <>
-              {renderWithdrawHistory()}
-              <div className="paging">
-                <Pagination
-                  onChange={withdrawHistoryPagingOnChangeHandle}
-                  total={withdrawHistoryTotalItems}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              {renderTransferHistory()}
-              <div className="paging">
-                <Pagination
-                  onChange={transferHistoryPagingOnChangeHandle}
-                  total={transferHistoryTotalItems}
-                />
-              </div>
-            </>
-          )}
+        <div className="FormWithdraw__right-container">
+          <div
+            className={`FormWithdraw__qr ${
+              showForm === form.Wallet ? "--d-none" : ""
+            }`}
+          >
+            <QRCode
+              style={{
+                height: "auto",
+                maxWidth: "200px",
+                width: "200px",
+              }}
+              value={qrValue.current}
+            />
+          </div>
+          <div className="right">
+            {showForm === form.Wallet ? (
+              <>
+                {renderWithdrawHistory()}
+                <div className="paging">
+                  <Pagination
+                    onChange={withdrawHistoryPagingOnChangeHandle}
+                    total={withdrawHistoryTotalItems}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                {renderTransferHistory()}
+                <div className="paging">
+                  <Pagination
+                    onChange={transferHistoryPagingOnChangeHandle}
+                    total={transferHistoryTotalItems}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

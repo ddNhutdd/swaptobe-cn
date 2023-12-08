@@ -60,7 +60,7 @@ function App() {
               )[0]?.price ?? 0;
             result[name] = roundDecimalValues(value, price);
           }
-          if (Object.keys(result) > 0) dispatch(coinUserWallet(result));
+          if (Object.keys(result)) dispatch(coinUserWallet(result));
         })
         .catch((error) => console.log(error));
     });

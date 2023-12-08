@@ -130,5 +130,19 @@
     "invalidBalance": "ຍັງບໍ່ຖືກຕ້ອງຄືນວິນາທີ.",
     "invalidQuantity": "ຈຳນວນຍັງບໍ່ຖືກຕ້ອງ.",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "ສ້າງການສົ່ງເຄື່ອງເຕັມທີ່ສົມກັບການອະນຸຍາດຂອງບໍລິຫານ!",
-    "transferSuccessful": "ສົ່ງເຄື່ອງສົມບັບ"
+    "transferSuccessful": "ສົ່ງເຄື່ອງສົມບັບ",
+    "loggedInSuccessfully": "ເຂົ້າສູ່ລະບົບສຳເລັດ!",
+    "invalidData": "ຂໍ້ມູນທີ່ຜິດພາດ.",
+    "turnOnSuccessfully": "ເປີດສຳເລັດ",
+    "turnOffSuccessfully": "ປິດສຳເລັດ",
+    "turnOff2FA": "ປິດ 2FA",
+    "incorrectCode": "ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ!",
+    "ok": "ຕົກລົງ",
+    "pleaseWaitForAdminConfirmation": "ກະລຸນາຖ້າການຢືນຢັນຈາກອາດມີລາຍງານ.",
+    "fullName": "ຊື່​ແທ້",
+    "address": "ທີ່​ຢູ່",
+    "passport": "ປືກກະຊຽນ",
+    "company": "ບໍລິສັດ",
+    "success": "ສຳ​ເລັດ",
+    "signUpSuccess !": "ລົງ​ທະ​ບຽນ​ສຳ​ເລັດ !"
 }

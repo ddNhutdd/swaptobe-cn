@@ -130,5 +130,19 @@
     "invalidBalance": "Số dư không hợp lệ.",
     "invalidQuantity": "Số lượng không hợp lệ.",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "Tạo đơn chuyển tiền thành công đang đợi sự phê duyệt của quản trị viên!",
-    "transferSuccessful": "Chuyển tiền thành công"
+    "transferSuccessful": "Chuyển tiền thành công",
+    "loggedInSuccessfully": "Đăng nhập thành công!",
+    "invalidData": "Dữ liệu không hợp lệ.",
+    "turnOnSuccessfully": "Bật thành công",
+    "turnOffSuccessfully": "Tắt thành công",
+    "turnOff2FA": "Tắt 2FA",
+    "incorrectCode": "Mã không chính xác!",
+    "ok": "Đồng ý",
+    "pleaseWaitForAdminConfirmation": "Vui lòng đợi xác nhận từ quản trị viên.",
+    "fullName": "Họ và Tên",
+    "address": "Địa chỉ",
+    "passport": "Hộ chiếu",
+    "company": "Công ty",
+    "success": "Thành công",
+    "signUpSuccess !": "Đăng ký thành công !"
 }

@@ -1,14 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Spin } from "antd";
+import { Card, Spin, Empty } from "antd";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
-import { api_status, localStorageVariable, url } from "src/constant";
+import {
+  api_status,
+  localStorageVariable,
+  showAlertType,
+  url,
+} from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { Modal } from "antd";
 import { getLocalStorage } from "src/util/common";
 import { useHistory } from "react-router-dom";
-import { getProfile, uploadKyc } from "src/util/userCallApi";
+import {
+  generateOTPToken,
+  getProfile,
+  turnOff2FA,
+  turnOn2FA,
+  uploadKyc,
+} from "src/util/userCallApi";
+import { showToast } from "src/function/showToast";
+import { showAlert } from "src/function/showAlert";
 function Profile() {
   const kycControl = {
     fullName: "fullName",
@@ -32,10 +45,19 @@ function Profile() {
   const { t } = useTranslation();
   const history = useHistory();
   const [is2FAModalOpen, setIs2FAModalOpen] = useState(false);
-  const callApiKYCStatus = api_status.pending;
+  const [callApiKYCStatus, setCallApiKYCStatus] = useState(api_status.pending);
   const [callApiLoadInfoUserStatus, setCallApiLoadInfoUserStatus] = useState(
     api_status.pending
   );
+  const [callApiTurnONOff2faStatus, setCallApiTurnONOff2faStatus] = useState(
+    api_status.pending
+  );
+  const [isEnabled_twofa, setIsEnabled_twofa] = useState(false); // 2fa status
+  const [qrValue, setQrvalue] = useState({
+    addressCode: null,
+    textCode: null,
+  });
+  const [callApi2FAStatus, setCallApi2FAStatus] = useState(api_status.pending);
   const [showContent, setShowConTent] = useState(content.undefined);
   useEffect(() => {
     const dataUser = getLocalStorage(localStorageVariable.user);
@@ -102,63 +124,61 @@ function Profile() {
     // upload server
   };
   const showModal2FA = () => {
+    // open modal
     setIs2FAModalOpen(true);
+    // fetch data for modal
+    setTimeout(() => {
+      fetchDataFor2Fa();
+    }, 0);
   };
   const modal2FAHandleCancel = () => {
+    //close modal
     setIs2FAModalOpen(false);
+    // set modal 2fa display
+    setTimeout(() => {
+      const hideClass = "--d-none";
+      document
+        .querySelector(".profile__2faModal .profile__2faModel__stepQR")
+        .classList.remove(hideClass);
+      document
+        .querySelector(".profile__2faModal .profile__2faModel__stepVerify")
+        .classList.add(hideClass);
+      document.getElementById("profile__modal-code").value = "";
+    }, 100);
   };
   const modal2FANextHandleCLick = function (e) {
-    const classDisplayNone = "--d-none";
-    //
-    const nextElement = document.getElementById("profile__modal__code");
-    nextElement.classList.add("fadeInRightToLeft");
-    nextElement.classList.remove(classDisplayNone);
-    document
-      .querySelector(".profile__2faModal .profile__2faModel__body p")
-      .classList.add(classDisplayNone);
-    document
-      .querySelector(
-        ".profile__2faModal .profile__2faModel__body .profile__2faModel__qr"
-      )
-      .classList.add(classDisplayNone);
-    //
-    document
-      .getElementById("profile__modalButton_turnOn2Fa")
-      .classList.remove(classDisplayNone);
-    document
-      .getElementById("profile__modalButton_previous")
-      .classList.remove(classDisplayNone);
-    e.target.classList.add(classDisplayNone);
+    const hideClass = "--d-none";
+    const effectClass = "fadeInRightToLeft";
+    // hide step 1
+    const step1Element = document.querySelector(
+      ".profile__2faModal .profile__2faModel__stepQR"
+    );
+    step1Element.classList.add(hideClass);
+    // show step 2
+    const step2Element = document.querySelector(
+      ".profile__2faModal .profile__2faModel__stepVerify"
+    );
+    step2Element.classList.add(effectClass);
+    step2Element.classList.remove(hideClass);
+    setTimeout(() => {
+      step2Element.classList.remove(effectClass);
+    }, 600);
   };
   const modal2FAPreviousHandleClick = function (e) {
-    const classDisplayNone = "--d-none";
-    const classEffect = "fadeInLeftToRight";
-    //
+    const hideClass = "--d-none";
+    const effectClass = "fadeInLeftToRight";
+    // hide step 2
     document
-      .getElementById("profile__modalButton_next")
-      .classList.remove(classDisplayNone);
-    document
-      .getElementById("profile__modalButton_turnOn2Fa")
-      .classList.add(classDisplayNone);
-    e.target.classList.add(classDisplayNone);
-    //
-    const pElement = document.querySelector(
-      ".profile__2faModal .profile__2faModel__body p"
+      .querySelector(".profile__2faModal .profile__2faModel__stepVerify")
+      .classList.add(hideClass);
+    // show step 1
+    const step1Element = document.querySelector(
+      ".profile__2faModal .profile__2faModel__stepQR"
     );
-    pElement.classList.remove(classDisplayNone);
-    pElement.classList.add(classEffect);
-    const qrElement = document.querySelector(
-      ".profile__2faModal .profile__2faModel__body .profile__2faModel__qr"
-    );
-    qrElement.classList.remove(classDisplayNone);
-    qrElement.classList.add(classEffect);
-    document
-      .getElementById("profile__modal__code")
-      .classList.add(classDisplayNone);
-    //
+    step1Element.classList.add(effectClass);
+    step1Element.classList.remove(hideClass);
     setTimeout(() => {
-      qrElement.classList.remove(classEffect);
-      pElement.classList.remove(classEffect);
+      step1Element.classList.remove(effectClass);
     }, 600);
   };
   const kycValidate = function () {
@@ -169,7 +189,7 @@ function Profile() {
     const fullNameElementValue = fullNameElement.value;
     if (!fullNameElementValue && kycTourch[kycControl.fullName] === true) {
       isValid &= false;
-      kycError[kycControl.fullName] = "Cần thiết";
+      kycError[kycControl.fullName] = t("require");
     } else {
       delete kycError[kycControl.fullName];
     }
@@ -178,7 +198,7 @@ function Profile() {
     const addressElementValue = addressElement.value;
     if (!addressElementValue && kycTourch[kycControl.address] === true) {
       isValid &= false;
-      kycError[kycControl.address] = "Cần thiết";
+      kycError[kycControl.address] = t("require");
     } else {
       delete kycError[kycControl.address];
     }
@@ -189,11 +209,11 @@ function Profile() {
     if (kycTourch[kycControl.phone]) {
       if (!phonePattern.test(phoneElementValue)) {
         isValid &= false;
-        kycError[kycControl.phone] = "Không đúng định dạng";
+        kycError[kycControl.phone] = t("invalidData");
       }
       if (!phoneElementValue) {
         isValid &= false;
-        kycError[kycControl.phone] = "Cần thiết";
+        kycError[kycControl.phone] = t("require");
       }
       if (phonePattern.test(phoneElementValue) && phoneElementValue) {
         delete kycError[kycControl.phone];
@@ -204,7 +224,7 @@ function Profile() {
     const companyElementValue = companyElement.value;
     if (!companyElementValue && kycTourch[kycControl.company]) {
       isValid &= false;
-      kycError[kycControl.company] = "Cần thiết";
+      kycError[kycControl.company] = t("require");
     } else {
       delete kycError[kycControl.company];
     }
@@ -213,7 +233,7 @@ function Profile() {
     const passportElementValue = passportElement.value;
     if (!passportElementValue && kycTourch[kycControl.passport]) {
       isValid &= false;
-      kycError[kycControl.passport] = "Cần thiết";
+      kycError[kycControl.passport] = t("require");
     } else {
       delete kycError[kycControl.passport];
     }
@@ -222,7 +242,7 @@ function Profile() {
     const frontIDElementValue = frontIDElement.files;
     if (kycTourch[kycControl.frontID]) {
       if (!frontIDElementValue || frontIDElementValue.length <= 0) {
-        kycError[kycControl.frontID] = "Cần thiết";
+        kycError[kycControl.frontID] = t("require");
         isValid &= false;
       } else {
         delete kycError[kycControl.frontID];
@@ -233,7 +253,7 @@ function Profile() {
     const behindIDElementValue = behindIDElement.files;
     if (kycTourch[kycControl.behindID]) {
       if (!behindIDElementValue || behindIDElementValue.length <= 0) {
-        kycError[kycControl.behindID] = "Cần thiết";
+        kycError[kycControl.behindID] = t("require");
         isValid &= false;
       } else {
         delete kycError[kycControl.behindID];
@@ -244,7 +264,7 @@ function Profile() {
     const portraitElementValue = portraitElement.files;
     if (kycTourch[kycControl.portrait]) {
       if (!portraitElementValue || portraitElementValue.length <= 0) {
-        kycError[kycControl.portrait] = "Cần thiết";
+        kycError[kycControl.portrait] = t("require");
         isValid &= false;
       } else {
         delete kycError[kycControl.portrait];
@@ -254,8 +274,8 @@ function Profile() {
     return Object.keys(kycTourch).length <= 0 ? false : Boolean(isValid);
   };
   const kycHandleSubmit = function (e) {
-    if (callApiKYCStatus === api_status.fetching) return;
     e.preventDefault();
+    //validate all control
     for (let [key] of Object.entries(kycControl)) {
       kycTourch[key] = true;
     }
@@ -293,12 +313,23 @@ function Profile() {
     );
     formData.append("photo", document.getElementById("portraitFile").files[0]);
     formData.append("userid", getLocalStorage(localStorageVariable.user).id);
-    console.log("click", formData);
+    if (callApiKYCStatus === api_status.fetching) return;
+    else setCallApiKYCStatus(api_status.fetching);
     uploadKyc(formData)
       .then((resp) => {
-        console.log("upload thanh cong ", resp);
+        //show notify
+        const mes = resp.data.message;
+        showToast(showAlertType.success, mes);
+        // reload component
+        setShowConTent(content.verifing);
+        //
+        setCallApiKYCStatus(api_status.fulfilled);
       })
-      .catch((error) => console.log("looi ", error));
+      .catch((error) => {
+        setCallApiKYCStatus(api_status.rejected);
+        showAlert(showAlertType.error, error.message, t("ok"));
+        console.log(error);
+      });
   };
   const kycControlHandleChange = function () {
     kycValidate();
@@ -342,7 +373,7 @@ function Profile() {
       .then((resp) => {
         const userInfo = resp?.data?.data;
         if (userInfo) {
-          const { username, email, verified } = userInfo;
+          const { username, email, verified, enabled_twofa } = userInfo;
           document.getElementById("profile__info-email").value = email;
           document.getElementById("profile__info-username").value = username;
           if (verified === 2) {
@@ -352,6 +383,7 @@ function Profile() {
           } else if (verified !== 1 && verified !== 2) {
             setShowConTent(content.notVerifiedYet);
           }
+          setIsEnabled_twofa(Boolean(enabled_twofa));
         }
         setCallApiLoadInfoUserStatus(api_status.fulfilled);
       })
@@ -498,7 +530,9 @@ function Profile() {
                 >
                   {t("chooseFile")}
                 </button>
-                <span id="frontIdentifyCardValueText">No file</span>
+                <span id="frontIdentifyCardValueText">
+                  {t("noFileSelected")}
+                </span>
               </label>
               <div
                 id="frontIdentityCardFileError"
@@ -526,7 +560,9 @@ function Profile() {
                 >
                   {t("chooseFile")}
                 </button>
-                <span id="backOfIdentityCardFileText">No file</span>
+                <span id="backOfIdentityCardFileText">
+                  {t("noFileSelected")}
+                </span>
               </label>
               <div
                 id="behindIdentityCardFileError"
@@ -552,7 +588,7 @@ function Profile() {
                 >
                   {t("chooseFile")}
                 </button>
-                <span id="portraitFileText">No file</span>
+                <span id="portraitFileText">{t("noFileSelected")}</span>
               </label>
               <div
                 id="portraitIdentityCardFileError"
@@ -561,12 +597,145 @@ function Profile() {
             </div>
           </div>
           <div className="profile__form-item profile__formSumit">
-            <button type="submit" className="profile__button">
+            <button
+              type="submit"
+              className={`profile__button ${
+                callApiKYCStatus === api_status.fetching ? "disable" : ""
+              } `}
+            >
+              <div
+                className={`loader ${
+                  callApiKYCStatus === api_status.fetching ? "" : "--d-none"
+                }`}
+              ></div>
               {t("save")}
             </button>
           </div>
         </form>
       );
+  };
+  const fetchDataFor2Fa = function () {
+    if (isEnabled_twofa === true) {
+      //set control cho 2fa modal
+      const hideClass = "--d-none";
+      const step1Element = document.querySelector(
+        ".profile__2faModal .profile__2faModel__stepQR"
+      );
+      step1Element.classList.add(hideClass);
+      const step2Element = document.querySelector(
+        ".profile__2faModal .profile__2faModel__stepVerify"
+      );
+      step2Element.classList.remove(hideClass);
+    } else if (isEnabled_twofa === false) {
+      //call api
+      if (callApi2FAStatus === api_status.fetching) return;
+      else setCallApi2FAStatus(api_status.fetching);
+      generateOTPToken()
+        .then((resp) => {
+          const { otpAuth, secret } = resp.data.data;
+          setQrvalue(() => ({
+            addressCode: otpAuth,
+            textCode: secret,
+          }));
+          setCallApi2FAStatus(api_status.fulfilled);
+        })
+        .catch((error) => {
+          setCallApi2FAStatus(api_status.rejected);
+          setQrvalue(() => ({
+            addressCode: null,
+            textCode: null,
+          }));
+          console.log(error);
+        });
+    }
+  };
+  const turnOnOff2faClickHandle = function () {
+    // validate
+    const inputCodeValue = document.getElementById("profile__modal-code").value;
+    const regularIsNumberString = /^[0-9]+$/;
+    if (
+      !inputCodeValue ||
+      !(inputCodeValue.length === 6) ||
+      !regularIsNumberString.test(inputCodeValue)
+    ) {
+      showAlert(showAlertType.error, t("invalidData"), t("ok"));
+      return;
+    }
+    //cal api
+    if (callApiTurnONOff2faStatus === api_status.fetching) return;
+    else setCallApiTurnONOff2faStatus(api_status.fetching);
+    if (isEnabled_twofa) {
+      // turn off twofa
+      turnOff2FA({ otp: inputCodeValue })
+        .then((resp) => {
+          setIsEnabled_twofa(() => false);
+          modal2FAHandleCancel();
+          showToast(showAlertType.success, t("turnOffSuccessfully"));
+          setCallApiTurnONOff2faStatus(api_status.fulfilled);
+        })
+        .catch((error) => {
+          console.log(error);
+          setCallApiTurnONOff2faStatus(api_status.rejected);
+        });
+    } else {
+      //turn on twofa
+      turnOn2FA({ otp: inputCodeValue })
+        .then((resp) => {
+          setIsEnabled_twofa(() => true); // get new user info
+          modal2FAHandleCancel();
+          showToast(showAlertType.success, t("turnOnSuccessfully"));
+          setCallApiTurnONOff2faStatus(api_status.fulfilled);
+        })
+        .catch((error) => {
+          console.log(error);
+          const message = error?.response?.data?.message;
+          switch (message) {
+            case "Incorrect code ! ":
+              showAlert(showAlertType.error, t("incorrectCode"), t("ok"));
+              break;
+            default:
+              showAlert(showAlertType.error, t("anErrorHasOccurred"), t("ok"));
+              break;
+          }
+          setCallApiTurnONOff2faStatus(api_status.rejected);
+        });
+    }
+  };
+  const renderContent2FaQr = function () {
+    const style = {
+      display: "flex",
+      with: "100%",
+      height: "100px",
+      alignItems: "center",
+      justifyContent: "center",
+    };
+    if (callApi2FAStatus === api_status.fetching) {
+      return (
+        <div className={style}>
+          <Spin />
+        </div>
+      );
+    } else if (qrValue.addressCode === null) {
+      return (
+        <div className={style}>
+          <Empty />
+        </div>
+      );
+    } else {
+      return (
+        <>
+          <QRCode
+            style={{
+              height: "auto",
+              maxWidth: "200px",
+              width: "100%",
+            }}
+            value={qrValue.addressCode}
+          />
+          <div>{qrValue.textCode}</div>
+        </>
+      );
+    }
   };
   //
   return (
@@ -657,7 +826,7 @@ function Profile() {
                 </div>
                 <div className="profile__right">
                   <button onClick={showModal2FA} className="profile__button">
-                    {t("turnOn2FA")}
+                    {isEnabled_twofa ? t("turnOff2FA") : t("turnOn2FA")}
                   </button>
                 </div>
               </div>
@@ -682,51 +851,59 @@ function Profile() {
               <i className="fa-solid fa-xmark"></i>
             </div>
           </div>
-          <div className="profile__2faModel__body">
-            <p>
-              {t("scanThisQRCodeInTheAuthenticatorApp") +
-                ", " +
-                t("orEnterTheCodeBelowManuallyIntoTheApp")}
-            </p>
-            <div className="profile__2faModel__qr">
-              <QRCode
-                style={{
-                  height: "auto",
-                  maxWidth: "200px",
-                  width: "100%",
-                }}
-                value={"addressCode"}
-              />
-              <div>HBWUA43DDBNUEWJR</div>
+          <div className="profile__2faModel__stepQR">
+            <div className="profile__2faModel__body">
+              <p>
+                {t("scanThisQRCodeInTheAuthenticatorApp") +
+                  ", " +
+                  t("orEnterTheCodeBelowManuallyIntoTheApp")}
+              </p>
+              <div className="profile__2faModel__qr">
+                {renderContent2FaQr()}
+              </div>
             </div>
-            <div id="profile__modal__code" className="profile__input --d-none">
-              <label htmlFor="profile__modal-code">
-                {t("enterThe6DigitCodeFromAuthenticatorApp")}
-              </label>
-              <input id="profile__modal-code" type="text" />
+            <div className="profile__2faModal__footer">
+              <button
+                id="profile__modalButton_next"
+                onClick={modal2FANextHandleCLick}
+                className="profile__button"
+              >
+                {t("next")}
+              </button>
             </div>
           </div>
-          <div className="profile__2faModal__footer">
-            <button
-              onClick={modal2FAPreviousHandleClick}
-              id="profile__modalButton_previous"
-              className="profile__button ghost --d-none"
-            >
-              {t("previous")}
-            </button>
-            <button
-              id="profile__modalButton_next"
-              onClick={modal2FANextHandleCLick}
-              className="profile__button"
-            >
-              {t("next")}
-            </button>
-            <button
-              id="profile__modalButton_turnOn2Fa"
-              className="profile__button --d-none"
-            >
-              {t("turnOn2FA")}
-            </button>
+          <div className="profile__2faModel__stepVerify --d-none">
+            <div className="profile__2faModel__body">
+              <div id="profile__modal__code" className="profile__input">
+                <label htmlFor="profile__modal-code">
+                  {t("enterThe6DigitCodeFromAuthenticatorApp")}
+                </label>
+                <input id="profile__modal-code" type="text" />
+              </div>
+            </div>
+            <div className="profile__2faModal__footer">
+              <button
+                onClick={modal2FAPreviousHandleClick}
+                id="profile__modalButton_previous"
+                className="profile__button ghost"
+              >
+                {t("previous")}
+              </button>
+              <button
+                onClick={turnOnOff2faClickHandle}
+                id="profile__modalButton_turnOn2Fa"
+                className={`profile__button ${
+                  callApi2FAStatus === api_status.fetching ? "disabled" : ""
+                } `}
+              >
+                <div
+                  className={`loader ${
+                    callApi2FAStatus === api_status.fetching ? "" : "--d-none"
+                  }`}
+                ></div>
+                {isEnabled_twofa ? t("turnOff2FA") : t("turnOn2FA")}
+              </button>
+            </div>
           </div>
         </div>
       </Modal>

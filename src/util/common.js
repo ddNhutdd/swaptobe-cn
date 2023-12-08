@@ -186,3 +186,31 @@ export const zoomImage = function (e) {
   });
   body.appendChild(gl_overlay);
 };
+export const generateNewURL = function (
+  baseUrl,
+  username,
+  coin,
+  amountCoin,
+  note
+) {
+  // Kiểm tra xem baseUrl có chứa dấu "?" hay không
+  const separator = baseUrl.includes("?") ? "&" : "?";
+  // Tạo URL mới bằng cách kết hợp baseUrl với các tham số
+  const newURL = `${baseUrl}${separator}username=${username}&coin=${coin}&amountCoin=${amountCoin}&note=${encodeURIComponent(
+    note
+  )}`;
+  return newURL;
+};
+export const parseURLParameters = function (url) {
+  const queryString = url.split("?")[1];
+  if (!queryString) {
+    return {};
+  }
+  const queryParams = queryString.split("&");
+  const result = {};
+  queryParams.forEach((param) => {
+    const [key, value] = param.split("=");
+    result[key] = decodeURIComponent(value);
+  });
+  return result;
+};

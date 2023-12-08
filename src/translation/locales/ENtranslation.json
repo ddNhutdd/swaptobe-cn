@@ -130,5 +130,19 @@
     "invalidBalance": "Invalid balance.",
     "invalidQuantity": "Invalid quantity.",
     "createASuccessfulMoneyTransferOrderWaitingForAdminApproval": "Create a successful money transfer order waiting for admin approval!",
-    "transferSuccessful": "Transfer successful"
+    "transferSuccessful": "Transfer successful",
+    "loggedInSuccessfully": "Logged in successfully !",
+    "invalidData": "Invalid data.",
+    "turnOnSuccessfully": "Turn on successfully",
+    "turnOffSuccessfully": "Turn off successfully",
+    "turnOff2FA": "Turn off 2FA",
+    "incorrectCode": "Incorrect code !",
+    "ok": "Ok",
+    "pleaseWaitForAdminConfirmation.": "Please wait for admin confirmation.",
+    "fullName": "Full Name",
+    "address": "Address",
+    "passport": "Passport",
+    "company": "Company",
+    "success": "Success",
+    "signUpSuccess !": "Sign Up Success !"
 }
