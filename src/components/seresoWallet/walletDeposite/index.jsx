@@ -1,74 +1,311 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
-import { Pagination } from "antd";
+import React, { useEffect, useRef } from "react";
+import { Pagination, Spin, Empty } from "antd";
 import socket from "src/util/socket";
 import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
+import { useSelector } from "react-redux";
+import { getCoin } from "src/redux/constant/coin.constant";
+import { DOMAIN } from "src/util/service";
+import {
+  getClassListFromElementById,
+  getElementById,
+  addClassToElementById,
+} from "src/util/common";
+import { createWalletApi, getDepositHistory } from "src/util/userCallApi";
+import { api_status, showAlertType } from "src/constant";
+import { showToast } from "src/function/showToast";
 function SeresoWalletDeposit() {
-  const showDropdownCoinMenu = function (e) {
+  //
+  const dropdownCoinMenuClickHandle = function (e) {
     e.stopPropagation();
-    document.getElementById("coin-dropdown-menu").classList.toggle("show");
+    if (
+      callApiCreateWalletStatus.current === api_status.fetching ||
+      callApiGetHistoryStatus.current === api_status.fetching
+    )
+      return;
+    dropdownCoinToggle();
+    dropdownNetworkClose();
   };
-  const showDropdownNetworkMenu = function (e) {
+  const dropdownNetworkMenuClickHandle = function (e) {
     e.stopPropagation();
+    dropdowNetWorkToggle();
+    dropdownCoinClose();
+  };
+  const dropdowNetWorkToggle = function () {
+    getClassListFromElementById("coin-dropdown-network").toggle("show");
+    getClassListFromElementById("dropdown-network-selected").toggle("active");
+  };
+  const dropdownCoinToggle = function () {
+    getClassListFromElementById("coin-dropdown-menu").toggle("show");
+    getClassListFromElementById("dropdown-coin-selected").toggle("active");
+  };
+  const dropdownNetworkClose = function () {
+    getClassListFromElementById("coin-dropdown-network").remove("show");
+    getClassListFromElementById("dropdown-network-selected").remove("active");
+  };
+  const dropdownCoinClose = function () {
+    getClassListFromElementById("coin-dropdown-menu").remove("show");
+    getClassListFromElementById("dropdown-coin-selected").remove("active");
   };
   const closeAllDropdownMenu = function () {
-    document.getElementById("coin-dropdown-menu").classList.remove("show");
+    dropdownNetworkClose();
+    dropdownCoinClose();
   };
+  const renderDropdownCoinMenu = function (listCoin) {
+    const dropdownCoinMenu = document.getElementById("coin-dropdown-menu");
+    if (dropdownCoinMenu) {
+      dropdownCoinMenu.innerHTML = "";
+      for (const item of listCoin) {
+        dropdownCoinMenu.innerHTML += `
+          <div class='dropdown-item-coin'>
+            <img src='${DOMAIN + item.image}' alt="${item.image}" />
+            <span class="dropdown-item-key">${item.name}</span>
+            <span>${item.token_key}</span>
+          </div>
+          `;
+      }
+      const allDropDownItem = document.querySelectorAll(
+        ".wallet-deposit .dropdown-item-coin"
+      );
+      for (const item of allDropDownItem) {
+        item.addEventListener("click", dropdownCoinMenuItemCLickHandle);
+      }
+    }
+  };
+  const dropdownCoinMenuItemCLickHandle = function (e) {
+    const element = e.target.closest(".dropdown-item-coin");
+    let spans = element.querySelectorAll("span");
+    let coinName = spans[0].innerHTML;
+    // display html
+    renderDropdownCoinSelected(coinName, listAllCoin.current);
+    // store value in to memory
+    selectedCoin.current = coinName;
+    // create wallet reload qr
+    renderQRCode();
+    //renderHistory
+    renderHistory(coinName, 1);
+  };
+  const renderQRCode = async function () {
+    addressCloseEmpty();
+    addressCloseQr();
+    addressShowSpinner();
+    const responFromApi = await fetchApiCreateWallet(
+      selectedCoin.current || coinFromRedux
+    );
+    addressCloseSpinner();
+    address.current = responFromApi;
+    if (responFromApi) {
+      getElementById("addressCode").innerHTML = responFromApi;
+      addressShowQr();
+      addressCloseEmpty();
+    } else {
+      addressCloseQr();
+      addressShowEmpty();
+    }
+  };
+  const addressShowSpinner = function () {
+    getClassListFromElementById("addressSpinner").remove("--d-none");
+  };
+  const addressCloseSpinner = function () {
+    addClassToElementById("addressSpinner", "--d-none");
+  };
+  const addressShowEmpty = function () {
+    getClassListFromElementById("addressEmpty").remove("--d-none");
+  };
+  const addressCloseEmpty = function () {
+    addClassToElementById("addressEmpty", "--d-none");
+  };
+  const addressShowQr = function () {
+    getClassListFromElementById("address").remove("--d-none");
+    getClassListFromElementById("addressCodeButton").remove("--d-none");
+    getClassListFromElementById("addressCodeContainer").remove("--d-none");
+  };
+  const addressCloseQr = function () {
+    addClassToElementById("address", "--d-none");
+    addClassToElementById("addressCodeButton", "--d-none");
+    addClassToElementById("addressCodeContainer", "--d-none");
+  };
+  const fetchApiCreateWallet = function (coin) {
+    return new Promise((resolve) => {
+      if (callApiCreateWalletStatus.current === api_status.fetching || !coin) {
+        return resolve(null);
+      }
+      callApiCreateWalletStatus.current = api_status.fetching;
+      createWalletApi(coin)
+        .then((resp) => {
+          callApiCreateWalletStatus.current = api_status.fulfilled;
+          return resolve(resp.data.data.address);
+        })
+        .catch((error) => {
+          console.log(error);
+          callApiCreateWalletStatus.current = api_status.rejected;
+          return resolve(null);
+        });
+    });
+  };
+  const copyAddressClickHandle = function () {
+    const addressCode = getElementById("addressCode").innerHTML;
+    const writeTexttoClipboard = navigator.clipboard.writeText(addressCode);
+    writeTexttoClipboard.then(() => {
+      showToast(showAlertType.success, t("copySuccess"));
+    });
+  };
+  const renderDropdownCoinSelected = function (coinName, listAllCoin) {
+    if (!coinName || !listAllCoin || listAllCoin.length <= 0) return;
+    //find in list all coin
+    const selectedCoin = listAllCoin.filter(
+      (item) => item.name === coinName
+    )[0];
+    if (!selectedCoin) return;
+    //render html
+    const coinDropdownSelectedElement = document.querySelector(
+      "#dropdown-coin-selected"
+    );
+    const image = coinDropdownSelectedElement.querySelector("img");
+    image.src = DOMAIN + selectedCoin.image;
+    image.alt = selectedCoin.image;
+    const newSpan = document.createElement("span");
+    newSpan.classList.add("main-content");
+    newSpan.innerHTML = selectedCoin.name;
+    coinDropdownSelectedElement.querySelector(".content").innerHTML =
+      newSpan.outerHTML + selectedCoin.token_key;
+  };
+  const showLeftContentSpinner = function () {
+    getClassListFromElementById("leftContentSpinner").remove("--d-none");
+  };
+  const closeLeftContentSpinner = function () {
+    addClassToElementById("leftContentSpinner", "--d-none");
+  };
+  const showLeftContent = function () {
+    getClassListFromElementById("leftContent").remove("--d-none");
+  };
+  const closeLeftContent = function () {
+    addClassToElementById("leftContent", "--d-none");
+  };
+  const fetchApiGetHistory = function (coinName, page) {
+    return new Promise((resolve) => {
+      //
+      if (callApiGetHistoryStatus === api_status.fetching || !coinName || !page)
+        resolve(null);
+      getDepositHistory({
+        limit: 10,
+        page: page,
+        symbol: coinName,
+      })
+        .then((resp) => {
+          resolve(resp.data.data.array);
+        })
+        .catch((error) => {
+          console.log(error);
+          resolve(null);
+        });
+    });
+  };
+  const renderHistory = async function (coinName, page) {
+    closeHistory();
+    closeHistoryEmpty();
+    showHistorySpinner();
+    const apiresp = await fetchApiGetHistory(coinName, page);
+    closeHistorySpinner();
+    if (apiresp && apiresp.length > 0) {
+      //render html
+      const renderEle = getElementById("historyContent");
+      renderEle.innerHTML = ``;
+      for (const item of apiresp) {
+        renderEle.innerHTML += `<div class="wallet-deposite__history-item">
+        <div class="wallet-deposite__history-time">
+          <i class="fa-solid fa-calendar"></i> ${item.created_at}
+        </div>
+        <div class="wallet-deposite__history-name">
+          ${item.coin_key.toUpperCase()}
+        </div>
+        <div class="wallet-deposite__history-amount">
+          +${item.amount} coins
+        </div>
+        <div class="wallet-deposite__history-final">
+          <span>Final Amount:</span>
+          <span>${item.before_amount} coins</span>
+        </div>
+      </div>`;
+      }
+      //
+      showHistory();
+      closeHistoryEmpty();
+    } else {
+      showHistoryEmpty();
+      closeHistory();
+    }
+  };
+  const closeHistory = function () {
+    addClassToElementById("historyContent", "--d-none");
+  };
+  const showHistory = function () {
+    getClassListFromElementById("historyContent").remove("--d-none");
+  };
+  const closeHistorySpinner = function () {
+    addClassToElementById("historySpinner", "--d-none");
+  };
+  const showHistorySpinner = function () {
+    getClassListFromElementById("historySpinner").remove("--d-none");
+  };
+  const showHistoryEmpty = function () {
+    getClassListFromElementById("historyEmpty").remove("--d-none");
+  };
+  const closeHistoryEmpty = function () {
+    addClassToElementById("historyEmpty", "--d-none");
+  };
+  //
+  const address = useRef("");
   const { t } = useTranslation();
+  const coinFromRedux = useSelector(getCoin);
+  const selectedCoin = useRef("");
+  const listAllCoin = useRef(null);
+  const historyPage = useRef(1);
+  const callApiCreateWalletStatus = useRef(api_status.pending);
+  const callApiGetHistoryStatus = useRef(api_status.pending);
   useEffect(() => {
-    // socket.once("listCoin", (resp) => {});
+    closeLeftContent();
+    showLeftContentSpinner();
+    //add event
     document.addEventListener("click", closeAllDropdownMenu);
+    getElementById("addressCodeButton").addEventListener(
+      "click",
+      copyAddressClickHandle
+    );
+    // getAllCoin
+    socket.once("listCoin", (resp) => {
+      showLeftContent();
+      closeLeftContentSpinner();
+      // save list coin
+      listAllCoin.current = resp;
+      // render
+      renderDropdownCoinMenu(resp);
+      //selected coin
+      renderDropdownCoinSelected(selectedCoin.current || coinFromRedux, resp);
+    });
+    // call api create wallet get qr
+    renderQRCode();
+    //
+    renderHistory(selectedCoin.current || coinFromRedux, historyPage.current);
+    //
     return () => {
       document.removeEventListener("click", closeAllDropdownMenu);
     };
   }, []);
-  // const copyAddressClickHandle = () => {
-  //   const addressCode = addressCodeElement.current.innerHTML;
-  //   const writeTexttoClipboard = navigator.clipboard.writeText(addressCode);
-  //   writeTexttoClipboard.then(() => {
-  //     showToast(showAlertType.success, t("copySuccess"));
-  //   });
-  // };
-  const renderHistoryDeposit = function (arrData) {
-    return (
-      <div className="wallet-deposit__history fadeInBottomToTop">
-        {arrData && arrData.length ? (
-          arrData.map((item) => (
-            <div key={item.coin_key} className="wallet-deposite__history-item">
-              <div className="wallet-deposite__history-time">
-                <i className="fa-solid fa-calendar"></i> {item.created_at}
-              </div>
-              <div className="wallet-deposite__history-name">
-                {(item.coin_key ?? "").toUpperCase()}
-              </div>
-              <div className="wallet-deposite__history-amount">
-                +{item.amount} coins
-              </div>
-              <div className="wallet-deposite__history-final">
-                <span>Final Amount:</span>
-                <span>{item.before_amount} coins</span>
-              </div>
-            </div>
-          ))
-        ) : (
-          <></>
-        )}
-      </div>
-    );
-  };
   //
   return (
     <div className="container">
       <div className="wallet-deposit fadeInBottomToTop">
         <div className="wallet-deposit-left">
-          <ul>
+          <ul id="leftContent" className="d-none">
             <li>
               <span className="number">1</span>
-              <div className="wallet-deposit-input">
+              <div id="" className="wallet-deposit-input">
                 <p>{t("select")} Coin</p>
                 <div
-                  onClick={showDropdownCoinMenu}
+                  id="dropdown-coin-selected"
+                  onClick={dropdownCoinMenuClickHandle}
                   className="dropdown-content-selected"
                 >
                   <img
@@ -82,22 +319,7 @@ function SeresoWalletDeposit() {
                   <i className="fa-solid fa-caret-down"></i>
                 </div>
                 <div id="coin-dropdown-menu" className="dropdown-menu">
-                  <div className={`dropdown-item-coin`}>
-                    <img
-                      src="https://remitano.dk-tech.vn/images/BTC.png"
-                      alt="..."
-                    />
-                    <span className="dropdown-item-key">BTC</span>
-                    <span>bitcoint</span>
-                  </div>
-                  <div className={`dropdown-item-coin active}`}>
-                    <img
-                      src="https://remitano.dk-tech.vn/images/BTC.png"
-                      alt="..."
-                    />
-                    <span className="dropdown-item-key">BTC</span>
-                    <span>Bitcoin</span>
-                  </div>
+                  {/* js render here */}
                 </div>
               </div>
             </li>
@@ -106,7 +328,8 @@ function SeresoWalletDeposit() {
               <div className="wallet-deposit-input">
                 <p>{t("select")} Network</p>
                 <div
-                  onClick={showDropdownNetworkMenu}
+                  id="dropdown-network-selected"
+                  onClick={dropdownNetworkMenuClickHandle}
                   className="dropdown-content-selected"
                 >
                   <span className="content">
@@ -115,7 +338,7 @@ function SeresoWalletDeposit() {
                   </span>
                   <i className="fa-solid fa-caret-down"></i>
                 </div>
-                <div className="dropdown-menu">
+                <div id="coin-dropdown-network" className="dropdown-menu">
                   <div className="dropdown-item-network">
                     <div className="dropdown-item-network-left">
                       <span>key</span>
@@ -129,7 +352,7 @@ function SeresoWalletDeposit() {
                 </div>
               </div>
             </li>
-            <li className="--d-none">
+            <li>
               <span className="number">3</span>
               <div className="address">
                 <p>
@@ -138,36 +361,67 @@ function SeresoWalletDeposit() {
                     <i className="fa-solid fa-pen-to-square"></i>
                   </span>
                 </p>
-                {
-                  <>
-                    <div className="address-content">
-                      <div className={`fadeInBottomToTop`}>
-                        <QRCode
-                          style={{
-                            height: "auto",
-                            maxWidth: "100%",
-                            width: "100%",
-                          }}
-                          value={""}
-                        />
-                      </div>
-                      <div className="address-code fadeInBottomToTop">
-                        <div className="address-code-title">address</div>
-                        <div className="code"></div>
-                      </div>
-                      <span className="address-copy fadeInBottomToTop">
-                        <i className="fa-regular fa-copy"></i>
-                      </span>
-                    </div>
-                  </>
-                }
+                <div id="qrContainer" className="address-content">
+                  <div
+                    id="addressSpinner"
+                    className={`fadeInBottomToTop spin-container --d-none`}
+                  >
+                    <Spin />
+                  </div>
+                  <div
+                    id="addressEmpty"
+                    className={`fadeInBottomToTop spin-container --d-none`}
+                  >
+                    <Empty />
+                  </div>
+                  <div id="address" className={`fadeInBottomToTop --d-done`}>
+                    <QRCode
+                      style={{
+                        height: "auto",
+                        maxWidth: "100%",
+                        width: "100%",
+                      }}
+                      value={address.current}
+                    />
+                  </div>
+                  <div
+                    id="addressCodeContainer"
+                    className="address-code fadeInBottomToTop --d-none"
+                  >
+                    <div className="address-code-title">address</div>
+                    <div id="addressCode" className="code"></div>
+                  </div>
+                  <span
+                    id="addressCodeButton"
+                    className="address-copy --d-none fadeInBottomToTop"
+                  >
+                    <i className="fa-regular fa-copy"></i>
+                  </span>
+                </div>
               </div>
             </li>
           </ul>
+          <div
+            id="leftContentSpinner"
+            className="spin-container fadeInBottomToTop"
+          >
+            <Spin />
+          </div>
         </div>
         <div className="wallet-deposit-right">
-          <h3>Desposite BTC history</h3>
-          renderHistoryDeposit(depositeHistory)
+          <h3 id="historyTitle">Desposite {coinFromRedux} history</h3>
+          <div
+            id="historyContent"
+            className=" wallet-deposit__history fadeInBottomToTop"
+          >
+            {/* js render  */}
+          </div>
+          <div id="historySpinner" className="spin-container fadeInBottomToTop">
+            <Spin />
+          </div>
+          <div id="historyEmpty" className="fadeInBottomToTop">
+            <Empty />
+          </div>
           <div className="wallet-deposite-paging">
             <Pagination defaultCurrent={1} total={10} />
           </div>

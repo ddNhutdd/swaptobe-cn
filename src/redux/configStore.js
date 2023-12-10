@@ -4,18 +4,18 @@ import { chartReducer } from "./reducers/chartReducer";
 import { coinReducer } from "./reducers/coinReducer";
 import { loginReducer } from "./reducers/loginReducer";
 import { resReducer } from "./reducers/resReducer";
-import { seresoWalletReducer } from "./reducers/seresoWallet";
 import { currencyReducer } from "./reducers/currencyReducer";
 import { listCoinRealTimeReducer } from "./reducers/listCoinRealTimeReducer";
+import wallet2Reducer from "./reducers/wallet2Slice";
 
 const rootReducer = combineReducers({
   coinReducer,
   loginReducer,
   chartReducer,
   resReducer,
-  seresoWalletReducer,
   currencyReducer,
   listCoinRealTimeReducer,
+  wallet2Reducer,
 });
 
 const middleWare = applyMiddleware(reduxThunk);

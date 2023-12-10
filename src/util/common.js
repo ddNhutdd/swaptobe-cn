@@ -214,3 +214,18 @@ export const parseURLParameters = function (url) {
   });
   return result;
 };
+
+//
+export const getClassListFromElementById = function (id) {
+  return document.getElementById(id).classList;
+};
+export const getElementById = function (id) {
+  return document.getElementById(id);
+};
+
+export const addClassToElementById = function (id, classname) {
+  let element = document.getElementById(id);
+  if (!element.classList.contains(classname)) {
+    element.classList.add(classname);
+  }
+};

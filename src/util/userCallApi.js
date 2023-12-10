@@ -22,7 +22,7 @@ export const getHistorySwapApi = function (data) {
     console.log(error);
   }
 };
-export const getDepositHistoryApi = function (data) {
+export const getDepositHistory = function (data) {
   try {
     return axiosService.post("/api/blockico/getblocks", data);
   } catch (error) {

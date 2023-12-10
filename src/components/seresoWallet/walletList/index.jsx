@@ -3,10 +3,6 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import i18n, { availableLanguage } from "src/translation/i18n";
-import {
-  swaptoveWalletShowDepositeActionCreator,
-  swaptoveWalletShowWithdrawActionCreator,
-} from "src/redux/actions/seresoWallet.action";
 import { currency, localStorageVariable, url } from "src/constant";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
 import { DOMAIN } from "src/util/service";
@@ -20,6 +16,7 @@ import { useHistory } from "react-router-dom";
 import { getUserWallet } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
+import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
 function SeresoWalletList() {
   //
   const history = useHistory();
@@ -92,8 +89,8 @@ function SeresoWalletList() {
         <div className="action">
           <button
             onClick={() => {
-              dispatch(swaptoveWalletShowDepositeActionCreator(item.name));
-              coinSetCoin(item.name);
+              dispatch(coinSetCoin(item.name));
+              dispatch(setShow(actionContent.desposite));
               window.scrollTo(0, 0);
             }}
             className="primary-button"
@@ -102,8 +99,8 @@ function SeresoWalletList() {
           </button>
           <button
             onClick={() => {
-              dispatch(swaptoveWalletShowWithdrawActionCreator(item.key));
               dispatch(coinSetCoin(item.name));
+              dispatch(setShow(actionContent.withdraw));
               window.scrollTo(0, 0);
             }}
             className="seconary-button"

@@ -7,7 +7,7 @@ export const localStorageVariable = {
 };
 
 // export const deploy_domain = "https://demo.dk-technical.vn/";
-export const deploy_domain = "http://192.168.0.108:3000/wallet-2";
+export const deploy_domain = "http://192.168.1.15:3000/wallet-2";
 
 export const url = {
   home: "/",
