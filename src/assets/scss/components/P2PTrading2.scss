@@ -1,9 +1,9 @@
 .p2ptrading2 {
   margin: auto;
+  padding: 30px;
 
   .container {
-    @include container1;
-    padding-top: 0;
+    @include container;
 
     .buy {
       background-color: whitesmoke;

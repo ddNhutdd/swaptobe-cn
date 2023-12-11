@@ -1,6 +1,10 @@
 .p2ptrading {
   width: 100%;
   padding-top: 90px;
+  background: url(../../../../public/img/background.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 
   .container {
     @include container1;

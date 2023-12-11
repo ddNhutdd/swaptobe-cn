@@ -43,7 +43,8 @@ function SwaptobeWallet() {
       history.push(url.login);
       return;
     }
-    const { username } = parseURLParameters(search); // have params into url
+    const { username, coin } = parseURLParameters(search); // have params into url
+    if (coin) dispatch(coinSetCoin(coin));
     if (username) dispatch(setShow(actionContent.withdraw));
     //
     const language =
