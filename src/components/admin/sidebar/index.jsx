@@ -1,10 +1,21 @@
-import React, { useRef } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useRef, useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { url } from "src/constant";
+import { addClassToElementById, getElementById } from "src/util/common";
 function Sidebar() {
   const rightIconFunding = useRef();
   const submenuFunding = useRef();
   const rightIconHistory = useRef();
   const submenuHistory = useRef();
-  //
+  const history = useHistory();
+  const location = useLocation();
+  useEffect(() => {
+    const urlList = location.pathname.split("/");
+    const page = urlList[urlList.length - 1];
+    selectItem(page);
+  }, []);
+
   const fundingItemClickHandle = function () {
     rightIconFunding.current.classList.toggle("up");
     submenuFunding.current.classList.toggle("show");
@@ -17,27 +28,58 @@ function Sidebar() {
     rightIconFunding.current.classList.remove("up");
     submenuFunding.current.classList.remove("show");
   };
+  const redirectkyc = function (e) {
+    clearSelectedItem();
+    const element = e.target.closest("#kyc");
+    element.classList.add("active");
+    history.push(url.admin_kyc);
+  };
+  const clearSelectedItem = function () {
+    const element = getElementById("listItem");
+    for (const item of element.children) {
+      item.classList.remove("active");
+    }
+  };
+  const selectItem = function (page) {
+    clearSelectedItem();
+    switch (page) {
+      case "kyc":
+        addClassToElementById("kyc", "active");
+        break;
+      case "exchange-rate-disparity":
+        addClassToElementById("exchangeRateDisparity", "active");
+        break;
+      default:
+        break;
+    }
+  };
+  const redirectExchangeRateDisparity = function (e) {
+    clearSelectedItem();
+    const element = e.target.closest("#exchangeRateDisparity");
+    element.classList.add("active");
+    history.push(url.admin_exchangeRateDisparity);
+  };
   //
   return (
     <div className="admin-sidebar">
-      <ul>
+      <ul id="listItem">
         <li className="active">
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-house"></i>
           </span>
           <span className="admin-sidebar__item">Dashboard</span>
         </li>
-        <li>
+        <li onClick={redirectkyc} id="kyc">
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-user-shield"></i>
           </span>
           <span className="admin-sidebar__item">KYC users</span>
         </li>
-        <li>
+        <li onClick={redirectExchangeRateDisparity} id="exchangeRateDisparity">
           <span className="admin-sidebar__icon">
-            <i className="fa-solid fa-user-group"></i>
+            <i className="fa-solid fa-percent"></i>
           </span>
-          <span className="admin-sidebar__item">All users</span>
+          <span className="admin-sidebar__item">Exchange Rate Disparity</span>
         </li>
         <li id="funding-item" onClick={fundingItemClickHandle}>
           <span className="admin-sidebar__icon">

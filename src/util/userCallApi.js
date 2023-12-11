@@ -110,3 +110,10 @@ export const turnOff2FA = function (data) {
     console.log(error);
   }
 };
+export const exchangeRateDisparity = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getConfig", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

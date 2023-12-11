@@ -6,12 +6,13 @@ import P2PTrading2 from "./P2PTrading2";
 import { useTranslation } from "react-i18next";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
 import { currency, defaultLanguage, localStorageVariable } from "src/constant";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import { DOMAIN } from "src/util/service";
 import { coinSetCoin } from "src/redux/actions/coin.action";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import PhoneApps from "./PhoneApps";
+import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
 //
 export default function P2PTrading({ history }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -22,6 +23,7 @@ export default function P2PTrading({ history }) {
   const { coin } = useSelector((root) => root.coinReducer);
   const userSelectedCurrency = useSelector(getCurrent);
   const exChangeFromRedux = useSelector(getExchange);
+  const exchangeRateDisparityFromRedux = useSelector(getExchangeRateDisparity);
   const exchange = useRef();
   const [coinFullName, setCoinFullName] = useState();
   const dispatch = useDispatch();
@@ -39,8 +41,10 @@ export default function P2PTrading({ history }) {
   useEffect(() => {
     if (data && data.length !== 0) {
       const x = data.find((item) => item.name === coin);
-      setBuyPrice(x?.price * 1.01);
-      setSellPrice(x?.price);
+      setBuyPrice(x?.price + (x?.price / 100) * exchangeRateDisparityFromRedux);
+      setSellPrice(
+        x?.price - (x?.price / 100) * exchangeRateDisparityFromRedux
+      );
       setCoinFullName(x?.token_key);
       setCoinImage(DOMAIN + x?.image);
     }

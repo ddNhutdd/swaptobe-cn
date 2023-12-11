@@ -7,6 +7,7 @@ import { resReducer } from "./reducers/resReducer";
 import { currencyReducer } from "./reducers/currencyReducer";
 import { listCoinRealTimeReducer } from "./reducers/listCoinRealTimeReducer";
 import wallet2Reducer from "./reducers/wallet2Slice";
+import exchangeRateDisparityReducer from "./reducers/exchangeRateDisparitySlice";
 
 const rootReducer = combineReducers({
   coinReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   currencyReducer,
   listCoinRealTimeReducer,
   wallet2Reducer,
+  exchangeRateDisparityReducer,
 });
 
 const middleWare = applyMiddleware(reduxThunk);

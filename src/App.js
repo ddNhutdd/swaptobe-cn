@@ -28,10 +28,21 @@ import { userWalletFetchCount } from "./redux/constant/coin.constant";
 import { coinUserWallet } from "./redux/actions/coin.action";
 import { roundDecimalValues } from "./util/common";
 import KYC from "./components/admin/kycUsers";
+import {
+  getExchangeRateDisparityFetchCount,
+  setExchangeRateDisparity,
+  setExchangeRateDisparityApiStatus,
+} from "./redux/reducers/exchangeRateDisparitySlice";
+import { exchangeRateDisparity as exchangeRateDisparityCallApi } from "src/util/userCallApi";
+import ExchangeRateDisparity from "./components/admin/exchangeRateDisparity";
+import { api_status, url } from "./constant";
 function App() {
   const dispatch = useDispatch();
   const fetchExchangeCount = useSelector(getFetchExchangeCount);
   const userWalletFetch = useSelector(userWalletFetchCount);
+  const getExchangeRateDisparityFetch = useSelector(
+    getExchangeRateDisparityFetchCount
+  );
   //
   const getExchange = function () {
     getExchangeApi()
@@ -65,6 +76,20 @@ function App() {
         .catch((error) => console.log(error));
     });
   };
+  const getExchangeRateDisparityApi = function () {
+    dispatch(setExchangeRateDisparityApiStatus(api_status.fetching));
+    exchangeRateDisparityCallApi({
+      name: "exchangeRate",
+    })
+      .then((resp) => {
+        const rate = resp.data.data[0].value;
+        dispatch(setExchangeRateDisparity(rate));
+      })
+      .catch((error) => {
+        dispatch(setExchangeRateDisparityApiStatus(api_status.rejected));
+        console.log(error);
+      });
+  };
   //
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -92,6 +117,9 @@ function App() {
   useEffect(() => {
     getUserWallet();
   }, [userWalletFetch]);
+  useEffect(() => {
+    getExchangeRateDisparityApi();
+  }, [getExchangeRateDisparityFetch]);
   return (
     <BrowserRouter>
       <ScrollToTop>
@@ -107,6 +135,10 @@ function App() {
           <MainTemplate path="/wallet" component={Wallet} />
           <AdminTemplate path="/admin/dashboard" component={Dashboard} />
           <AdminTemplate path="/admin/kyc" component={KYC} />
+          <AdminTemplate
+            path={url.admin_exchangeRateDisparity}
+            component={ExchangeRateDisparity}
+          />
           <Route exact path="/" component={Home} />
         </Switch>
       </ScrollToTop>

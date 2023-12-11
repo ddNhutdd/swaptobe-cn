@@ -19,6 +19,8 @@ export const url = {
   swap: "/swap",
   login: "/login",
   p2pTrading: "/p2p-trading",
+  admin_kyc: "/admin/kyc",
+  admin_exchangeRateDisparity: "/admin/exchange-rate-disparity",
 };
 
 export const api_url = {

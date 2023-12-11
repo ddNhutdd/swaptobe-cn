@@ -656,55 +656,57 @@ function Home() {
               maintain an outstanding level of expertise in the Health, Wealth
               and fitness fields.
             </div>
-            <div className="home__our-team__list">
-              <div className="home__our-team__item">
-                <img
-                  src={process.env.PUBLIC_URL + "/img/team1.png"}
-                  alt="team1"
-                />
-                <div className="home__our-team__name">Mrs. Jyoti Swarup</div>
-                <div className="homme__our-team__description">
-                  Chief Advisor Of South India
+            <div>
+              <div className="home__our-team__list">
+                <div className="home__our-team__item">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/team1.png"}
+                    alt="team1"
+                  />
+                  <div className="home__our-team__name">Mrs. Jyoti Swarup</div>
+                  <div className="homme__our-team__description">
+                    Chief Advisor Of South India
+                  </div>
                 </div>
-              </div>
-              <div className="home__our-team__item">
-                <img
-                  src={process.env.PUBLIC_URL + "/img/team2.png"}
-                  alt="team1"
-                />
-                <div className="home__our-team__name">Mr. Krishna Swarup</div>
-                <div className="homme__our-team__description">
-                  Chief Advisor Of North India
+                <div className="home__our-team__item">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/team2.png"}
+                    alt="team1"
+                  />
+                  <div className="home__our-team__name">Mr. Krishna Swarup</div>
+                  <div className="homme__our-team__description">
+                    Chief Advisor Of North India
+                  </div>
                 </div>
-              </div>
-              <div className="home__our-team__item">
-                <img
-                  src={process.env.PUBLIC_URL + "/img/team3.png"}
-                  alt="team1"
-                />
-                <div className="home__our-team__name">Mr. Robert Joyce</div>
-                <div className="homme__our-team__description">
-                  Chief Advisor Of USA and Canada
+                <div className="home__our-team__item">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/team3.png"}
+                    alt="team1"
+                  />
+                  <div className="home__our-team__name">Mr. Robert Joyce</div>
+                  <div className="homme__our-team__description">
+                    Chief Advisor Of USA and Canada
+                  </div>
                 </div>
-              </div>
-              <div className="home__our-team__item">
-                <img
-                  src={process.env.PUBLIC_URL + "/img/team4.png"}
-                  alt="team1"
-                />
-                <div className="home__our-team__name">Mr. Lucky Le</div>
-                <div className="homme__our-team__description">
-                  Chief Advisor of Vietnam
+                <div className="home__our-team__item">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/team4.png"}
+                    alt="team1"
+                  />
+                  <div className="home__our-team__name">Mr. Lucky Le</div>
+                  <div className="homme__our-team__description">
+                    Chief Advisor of Vietnam
+                  </div>
                 </div>
-              </div>
-              <div className="home__our-team__item">
-                <img
-                  src={process.env.PUBLIC_URL + "/img/team5.jpeg"}
-                  alt="team1"
-                />
-                <div className="home__our-team__name">Mr. Kay Leak</div>
-                <div className="homme__our-team__description">
-                  Chief Advisor of Cambodia
+                <div className="home__our-team__item">
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/team5.jpeg"}
+                    alt="team1"
+                  />
+                  <div className="home__our-team__name">Mr. Kay Leak</div>
+                  <div className="homme__our-team__description">
+                    Chief Advisor of Cambodia
+                  </div>
                 </div>
               </div>
             </div>

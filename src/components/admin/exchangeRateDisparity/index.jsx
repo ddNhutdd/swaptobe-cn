@@ -1,0 +1,139 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef } from "react";
+import { Empty, Spin } from "antd";
+import {
+  addClassToElementById,
+  getClassListFromElementById,
+  getElementById,
+} from "src/util/common";
+import { useSelector } from "react-redux";
+import {
+  exchangeRateDisparityApiStatus,
+  getExchangeRateDisparity,
+} from "src/redux/reducers/exchangeRateDisparitySlice";
+import { api_status } from "src/constant";
+function ExchangeRateDisparity() {
+  const rateFromRedux = useSelector(getExchangeRateDisparity);
+  const rateStatusFromRedux = useSelector(exchangeRateDisparityApiStatus);
+  const controls = useRef({ newValueInput: "newValueInput" });
+  const controlTourched = useRef({});
+  const controlErrors = useRef({});
+  useEffect(() => {
+    setRate();
+  }, [rateFromRedux, rateStatusFromRedux]);
+  //
+  const showSpinner = function () {
+    getClassListFromElementById("spinner").remove("--d-none");
+  };
+  const closeSpinner = function () {
+    addClassToElementById("spinner", "--d-none");
+  };
+  const showEmpty = function () {
+    getClassListFromElementById("empty").remove("--d-none");
+  };
+  const closeEmpty = function () {
+    addClassToElementById("empty", "--d-none");
+  };
+  const closeContent = function () {
+    addClassToElementById("content", "--d-none");
+  };
+  const showContent = function () {
+    getClassListFromElementById("content").remove("--d-none");
+  };
+  const setRate = async function () {
+    closeEmpty();
+    closeContent();
+    closeSpinner();
+    if (rateStatusFromRedux === api_status.fetching) {
+      showSpinner();
+    } else if (!rateFromRedux) {
+      showEmpty();
+    } else if (rateFromRedux) {
+      showContent();
+      getElementById("rateInput").value = rateFromRedux;
+    }
+  };
+  const validate = function () {
+    let valid = true;
+    const newValueInputElement = getElementById("newValueInput");
+    if (
+      newValueInputElement &&
+      controlTourched.current[controls.current.newValueInput]
+    ) {
+      const checkNumber = /^(?:(?=.*\d)\d+(?:\/\d+)?|\s*)$/;
+      if (!checkNumber.test(newValueInputElement.value)) {
+        valid &= false;
+        controlErrors.current[controls.current.newValueInput] =
+          "Format incorect";
+      } else if (!newValueInputElement.value) {
+        valid &= false;
+        controlErrors.current[controls.current.newValueInput] = "Require";
+      } else {
+        delete controlErrors.current[controls.current.newValueInput];
+      }
+    }
+    console.log(controlErrors.current[controls.current.newValueInput]);
+    return Object.keys(controlTourched.current).length <= 0 ? false : valid;
+  };
+  const newValueInputFocusHandle = function () {
+    controlTourched.current[controls.current.newValueInput] = true;
+    validate();
+    renderError();
+  };
+  const newValueInputChangeHandle = function () {
+    validate();
+    renderError();
+  };
+  const renderError = function () {
+    if (
+      controlTourched.current[controls.current.newValueInput] &&
+      controlErrors.current[controls.current.newValueInput]
+    ) {
+      const inputValueErrorElement = getElementById("newInputValueError");
+      inputValueErrorElement.innerHTML =
+        controlErrors.current[controls.current.newValueInput];
+      inputValueErrorElement.classList.remove("--visible-hidden");
+    } else {
+      addClassToElementById("newInputValueError", "--visible-hidden");
+    }
+  };
+  return (
+    <div className="admin-exchange-rate-disparity">
+      <div className="admin-exchange-rate-disparity__header">
+        <h3 className="admin-exchange-rate-disparity__title">
+          Exchange Rate Disparity
+        </h3>
+      </div>
+      <div id="content" className="admin-exchange-rate-disparity__content">
+        <div className="admin-exchange-rate-disparity__control-inupt">
+          <label htmlFor="">Current Value:</label>
+          <input id="rateInput" disabled type="text" className="disabled" />
+        </div>
+        <form>
+          <div className="admin-exchange-rate-disparity__control-inupt">
+            <label htmlFor="newValueInput">New Value:</label>
+            <input
+              onFocus={newValueInputFocusHandle}
+              onChange={newValueInputChangeHandle}
+              id="newValueInput"
+              type="text"
+            />
+            <small id="newInputValueError" className="--visible-hidden">
+              error
+            </small>
+          </div>
+          <div className="admin-exchange-rate-disparity__action">
+            <button type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+      <div id="spinner" className="spin-container --d-none">
+        <Spin />
+      </div>
+      <div id="empty" className="spin-container --d-none">
+        <Empty />
+      </div>
+    </div>
+  );
+}
+export default ExchangeRateDisparity;
