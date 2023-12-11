@@ -117,3 +117,25 @@ export const exchangeRateDisparity = function (data) {
     console.log(error);
   }
 };
+export const updateExchangeRateDisparity = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/updateConfig", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListAdsBuy = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListAdsBuy", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getListAdsSell = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListAdsSell", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

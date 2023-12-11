@@ -6,18 +6,29 @@ import {
   getClassListFromElementById,
   getElementById,
 } from "src/util/common";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   exchangeRateDisparityApiStatus,
+  fetchExchangeRateDisparity,
   getExchangeRateDisparity,
 } from "src/redux/reducers/exchangeRateDisparitySlice";
-import { api_status } from "src/constant";
+import { api_status, showAlertType } from "src/constant";
+import { updateExchangeRateDisparity } from "src/util/userCallApi";
+import { showAlert } from "src/function/showAlert";
+import { showToast } from "src/function/showToast";
 function ExchangeRateDisparity() {
   const rateFromRedux = useSelector(getExchangeRateDisparity);
   const rateStatusFromRedux = useSelector(exchangeRateDisparityApiStatus);
   const controls = useRef({ newValueInput: "newValueInput" });
   const controlTourched = useRef({});
   const controlErrors = useRef({});
+  const dispatch = useDispatch();
+  const callApiStatus = useRef(api_status.pending);
+  useEffect(() => {
+    return () => {
+      dispatch(fetchExchangeRateDisparity());
+    };
+  }, []);
   useEffect(() => {
     setRate();
   }, [rateFromRedux, rateStatusFromRedux]);
@@ -60,7 +71,7 @@ function ExchangeRateDisparity() {
       newValueInputElement &&
       controlTourched.current[controls.current.newValueInput]
     ) {
-      const checkNumber = /^(?:(?=.*\d)\d+(?:\/\d+)?|\s*)$/;
+      const checkNumber = /^\s*[+-]?(\d+|\d*\.\d+|\d+\.\d*)([Ee][+-]?\d+)?\s*$/;
       if (!checkNumber.test(newValueInputElement.value)) {
         valid &= false;
         controlErrors.current[controls.current.newValueInput] =
@@ -72,7 +83,6 @@ function ExchangeRateDisparity() {
         delete controlErrors.current[controls.current.newValueInput];
       }
     }
-    console.log(controlErrors.current[controls.current.newValueInput]);
     return Object.keys(controlTourched.current).length <= 0 ? false : valid;
   };
   const newValueInputFocusHandle = function () {
@@ -97,6 +107,59 @@ function ExchangeRateDisparity() {
       addClassToElementById("newInputValueError", "--visible-hidden");
     }
   };
+  const submitHandle = function (event) {
+    event.preventDefault();
+    controlTourched.current[controls.current.newValueInput] = true;
+    const valid = validate();
+    if (!valid) {
+      renderError();
+    } else {
+      // call api
+      if (callApiStatus.current === api_status.fetching) return;
+      else callApiStatus.current = api_status.fetching;
+      openButtonSubmitLoader();
+      const newValueElement = getElementById("newValueInput");
+      if (!newValueElement) return;
+      updateExchangeRateDisparity({
+        name: "exchangeRate",
+        value: newValueElement.value,
+      })
+        .then((resp) => {
+          callApiStatus.current = api_status.fulfilled;
+          showToast(showAlertType.success, "Thành Công");
+          const value = getElementById("newValueInput").value;
+          getElementById("rateInput").value = value;
+          closeButtonSubmitLoader();
+        })
+        .catch((error) => {
+          closeButtonSubmitLoader();
+          callApiStatus.current = api_status.rejected;
+          console.log(error);
+          const mess = error?.response?.data?.message;
+          switch (mess) {
+            case "User does not have access":
+              showAlert(showAlertType.error, mess, "OK");
+              break;
+            default:
+              showAlert(
+                showAlertType.error,
+                "Có lỗi trong quá trình xử lí",
+                "OK"
+              );
+              break;
+          }
+        });
+    }
+  };
+  const openButtonSubmitLoader = function () {
+    console.log("here ");
+    addClassToElementById("buttonSubmit", "disabled");
+    getClassListFromElementById("buttonSubmitLoader").remove("--d-none");
+  };
+  const closeButtonSubmitLoader = function () {
+    getClassListFromElementById("buttonSubmit").remove("disabled");
+    addClassToElementById("buttonSubmitLoader", "--d-none");
+  };
   return (
     <div className="admin-exchange-rate-disparity">
       <div className="admin-exchange-rate-disparity__header">
@@ -105,12 +168,12 @@ function ExchangeRateDisparity() {
         </h3>
       </div>
       <div id="content" className="admin-exchange-rate-disparity__content">
-        <div className="admin-exchange-rate-disparity__control-inupt">
+        <div className="admin-exchange-rate-disparity__control-input">
           <label htmlFor="">Current Value:</label>
           <input id="rateInput" disabled type="text" className="disabled" />
         </div>
-        <form>
-          <div className="admin-exchange-rate-disparity__control-inupt">
+        <form className="admin-exchange-rate-disparity__form">
+          <div className="admin-exchange-rate-disparity__control-input">
             <label htmlFor="newValueInput">New Value:</label>
             <input
               onFocus={newValueInputFocusHandle}
@@ -123,7 +186,10 @@ function ExchangeRateDisparity() {
             </small>
           </div>
           <div className="admin-exchange-rate-disparity__action">
-            <button type="submit">Save</button>
+            <button id="buttonSubmit" onClick={submitHandle} type="submit">
+              <div id="buttonSubmitLoader" className="loader --d-none"></div>
+              Save
+            </button>
           </div>
         </form>
       </div>

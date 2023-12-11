@@ -32,7 +32,8 @@ import { showAlert } from "src/function/showAlert";
 import { historytransfer as historytransferApi } from "src/util/userCallApi";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
-
+{
+}
 function FormWithdraw() {
   //
   const form = {
@@ -58,7 +59,6 @@ function FormWithdraw() {
   const addressElement = useRef();
   const messageElement = useRef();
   const { search } = useLocation();
-  console.log();
   const coin = useSelector(getCoin);
   const userWallet = useSelector(getUserWallet);
   const [callApiSubmitStatus, setCallApiSubmitStatus] = useState(
@@ -81,6 +81,7 @@ function FormWithdraw() {
     fetTransferHistory();
     // if url have variable set value for control
     const { username, note, amountCoin } = parseURLParameters(search);
+    // console.log
     if (username) {
       setShowForm(form.Aliases);
       setInputAmountCurrency(() => formatStringNumberCultureUS(amountCoin));

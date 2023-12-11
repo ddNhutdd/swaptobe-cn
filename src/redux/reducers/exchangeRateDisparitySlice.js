@@ -15,8 +15,9 @@ const exchangeRateDisparitySlice = createSlice({
     setExchangeRateDisparityApiStatus: (state, action) => {
       state.exchangeRateDisparityApiStatus = action.payload;
     },
-    fetchExchangeRateDisparity: (state) =>
-      (state.exchangeRateDisparityFetchCount += 1),
+    fetchExchangeRateDisparity: (state) => {
+      state.exchangeRateDisparityFetchCount += 1;
+    },
   },
 });
 export default exchangeRateDisparitySlice.reducer;
