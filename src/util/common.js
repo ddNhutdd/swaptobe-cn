@@ -217,10 +217,14 @@ export const parseURLParameters = function (url) {
 
 //
 export const getClassListFromElementById = function (id) {
-  return document.getElementById(id).classList;
+  const element = document.getElementById(id);
+  if (element) return element.classList;
 };
 export const getElementById = function (id) {
   return document.getElementById(id);
+};
+export const querySelector = function (cssSelector) {
+  return document.querySelector(cssSelector);
 };
 
 export const addClassToElementById = function (id, classname) {

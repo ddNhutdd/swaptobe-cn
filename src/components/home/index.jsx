@@ -3,6 +3,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import Footer from "../Footer";
 import { url } from "src/constant";
 import { useSelector } from "react-redux";
+import PhoneApps from "../PhoneApps";
 function Home() {
   const history = useHistory();
   useEffect(() => {
@@ -348,64 +349,6 @@ function Home() {
             </div>
           </div>
         </div>
-        {/* <div className="home__eco">
-          <div className="home__eco__content"></div>
-          <div className="home__eco__bottom-content">
-            <div className="container">
-              <div className="home__eco__left">
-                <img
-                  src={process.env.PUBLIC_URL + "/img/home-9.svg"}
-                  alt="home-9"
-                />
-                <p>
-                  TOBE COIN is the coin used in TOBE CHAIN - a multi-industry
-                  eco-system that helps to deepen the application of
-                  cryptocurrencies to each business and as an alternative to
-                  traditional exchanges.
-                </p>
-              </div>
-              <div className="home__eco__right">
-                <ul>
-                  <li>
-                    <span>Name</span>
-                    <span>Tobe Coin</span>
-                  </li>
-                  <li>
-                    <span>Type</span>
-                    <span>Private BlockChain (Coin Mineble - Mainnet)</span>
-                  </li>
-                  <li>
-                    <span>Symbol</span>
-                    <span>TBC</span>
-                  </li>
-                  <li>
-                    <span>Platform</span>
-                    <span>Tobe Coin</span>
-                  </li>
-                  <li>
-                    <span>General release</span>
-                    <span>66.000.000</span>
-                  </li>
-                  <li>
-                    <span>Explorer</span>
-                    <span>www.tobescan.com</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div> */}
-        {/* <div className="home__token">
-          <div className="container">
-            <div className="home__token__content">
-              <h2>TBC Coin Allocation</h2>
-              <img
-                src={process.env.PUBLIC_URL + "/img/home-10.svg"}
-                alt="token"
-              />
-            </div>
-          </div>
-        </div> */}
         <div id="home__road-map" className="home__road-map">
           <div className="container">
             <div className="home__road-map__header">
@@ -491,45 +434,7 @@ function Home() {
             </div>
           </div>
         </div>
-        <div id="home__app" className="home__app">
-          <div className="container">
-            <div className="home__app__content">
-              <div className="home__app__left">
-                <h3>Sereso Apps</h3>
-                <p className="home__app__small-header">
-                  Trading whenever and wherever you are!
-                </p>
-                <p>
-                  Sereso is compatible with iOS, Android, Website, intuitive
-                  user interface and easy navigation. Easily pair your web
-                  wallet with a mobile device by scanning a QR code
-                </p>
-                <p>
-                  Click to download app store for ios operating system, click
-                  download google play for android OS
-                </p>
-                <div className="home__app__image-container">
-                  <img
-                    src={process.env.PUBLIC_URL + "/img/ios.png"}
-                    alt="ios"
-                  />
-                  <img
-                    src={process.env.PUBLIC_URL + "/img/android.png"}
-                    alt="android"
-                  />
-                </div>
-              </div>
-              <div className="home__app__right">
-                <div className="home__app__right__image-container">
-                  <img
-                    src={process.env.PUBLIC_URL + "/img/home-16.png"}
-                    alt="phone"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PhoneApps />
         <div id="home__faqs" className="home__faqs">
           <div className="container">
             <div className="home__faqs-content">
@@ -738,6 +643,71 @@ function Home() {
               </div>
             </div>
             <div className="home__faqs-background"></div>
+          </div>
+        </div>
+        <div className="home__our-team">
+          <div className="container">
+            <div className="home__our-team__title">Our Team</div>
+            <div className="home__our-team__text">
+              We collaborate with premier gaming studios, accomplished financial
+              experts and professionals trained at working blockchain and
+              e-commerce. We have tapped into dynamic young confident
+              individuals who adapt quickly to advances in technology and
+              maintain an outstanding level of expertise in the Health, Wealth
+              and fitness fields.
+            </div>
+            <div className="home__our-team__list">
+              <div className="home__our-team__item">
+                <img
+                  src={process.env.PUBLIC_URL + "/img/team1.png"}
+                  alt="team1"
+                />
+                <div className="home__our-team__name">Mrs. Jyoti Swarup</div>
+                <div className="homme__our-team__description">
+                  Chief Advisor Of South India
+                </div>
+              </div>
+              <div className="home__our-team__item">
+                <img
+                  src={process.env.PUBLIC_URL + "/img/team2.png"}
+                  alt="team1"
+                />
+                <div className="home__our-team__name">Mr. Krishna Swarup</div>
+                <div className="homme__our-team__description">
+                  Chief Advisor Of North India
+                </div>
+              </div>
+              <div className="home__our-team__item">
+                <img
+                  src={process.env.PUBLIC_URL + "/img/team3.png"}
+                  alt="team1"
+                />
+                <div className="home__our-team__name">Mr. Robert Joyce</div>
+                <div className="homme__our-team__description">
+                  Chief Advisor Of USA and Canada
+                </div>
+              </div>
+              <div className="home__our-team__item">
+                <img
+                  src={process.env.PUBLIC_URL + "/img/team4.png"}
+                  alt="team1"
+                />
+                <div className="home__our-team__name">Mr. Lucky Le</div>
+                <div className="homme__our-team__description">
+                  Chief Advisor of Vietnam
+                </div>
+              </div>
+              <div className="home__our-team__item">
+                <img
+                  src={process.env.PUBLIC_URL + "/img/team5.jpeg"}
+                  alt="team1"
+                />
+                <div className="home__our-team__name">Mr. Kay Leak</div>
+                <div className="homme__our-team__description">
+                  Chief Advisor of Cambodia
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

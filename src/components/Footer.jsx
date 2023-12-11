@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { localStorageVariable } from "src/constant";
+import { defaultLanguage, localStorageVariable } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { getLocalStorage } from "src/util/common";
 import { useLocation } from "react-router-dom";
@@ -13,7 +13,7 @@ export default function Footer() {
       i18n.changeLanguage(availableLanguage.en);
     } else {
       const language =
-        getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+        getLocalStorage(localStorageVariable.lng) || defaultLanguage;
       i18n.changeLanguage(language);
     }
   }, []);

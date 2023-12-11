@@ -1,3 +1,5 @@
+import { availableLanguage } from "src/translation/i18n";
+
 export const localStorageVariable = {
   lng: "lng",
   token: "token",
@@ -41,3 +43,5 @@ export const currency = {
   eur: "EUR",
   usd: "USD",
 };
+
+export const defaultLanguage = availableLanguage.en;

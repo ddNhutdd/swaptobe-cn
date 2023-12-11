@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import P2PTrading2 from "./P2PTrading2";
 import { useTranslation } from "react-i18next";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
-import { currency, localStorageVariable } from "src/constant";
+import { currency, defaultLanguage, localStorageVariable } from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { DOMAIN } from "src/util/service";
 import { coinSetCoin } from "src/redux/actions/coin.action";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
+import PhoneApps from "./PhoneApps";
 //
 export default function P2PTrading({ history }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -28,7 +29,7 @@ export default function P2PTrading({ history }) {
   useEffect(() => {
     //
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     //
     const element = document.querySelector(".p2ptrading");
@@ -218,7 +219,7 @@ export default function P2PTrading({ history }) {
         </Modal>
       </div>
       <P2PTrading2 history={history} />
-      <div className="p2p-app"></div>
+      <PhoneApps />
     </>
   );
 }

@@ -8,7 +8,12 @@ import * as Yup from "yup";
 import { showAlert } from "../function/showAlert";
 import { showToast } from "../function/showToast";
 import { axiosService } from "../util/service";
-import { localStorageVariable, showAlertType, url } from "src/constant";
+import {
+  defaultLanguage,
+  localStorageVariable,
+  showAlertType,
+  url,
+} from "src/constant";
 import { useEffect } from "react";
 import { getLocalStorage, removeLocalStorage } from "src/util/common";
 import i18n, { availableLanguage } from "src/translation/i18n";
@@ -31,13 +36,12 @@ export default function Login({ history }) {
       login(values.username, values.password);
     },
   });
-  const { isLogin } = useSelector((root) => root.loginReducer);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [typeInputPassword, setTypeInputPassword] = useState("password");
   useEffect(() => {
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     //
     const element = document.querySelector(".login-register");
@@ -45,6 +49,7 @@ export default function Login({ history }) {
   }, []);
   //
   const login = async (e, p) => {
+    console.log("login");
     setIsLoading(true);
     try {
       let response = await axiosService.post("/api/user/login", {
@@ -72,10 +77,7 @@ export default function Login({ history }) {
       setIsLoading(false);
     }
   };
-  // if (isLogin) {
-  //   return <Redirect to={url.p2pTrading} />;
-  // }
-  //
+
   return (
     <div className="login-register">
       <div className="container">

@@ -47,10 +47,6 @@
         z-index: 2;
       }
 
-      &.wallet {
-        min-width: 350px;
-      }
-
       .header1__subMenu__user-info {
         padding: 5px 10px;
         border-bottom: 1px solid $background-color-4;
@@ -66,54 +62,6 @@
           display: flex;
           align-items: center;
           gap: 5px;
-        }
-
-        .header1__list-currency {
-          display: flex;
-          gap: 10px;
-
-          span {
-            padding: 8px 16px;
-            border-radius: 5px;
-            border: 1px solid $background-color-4;
-            transition: .2s;
-            position: relative;
-            overflow: hidden;
-
-            &:hover {
-              cursor: pointer;
-            }
-
-            &.active {
-              border-color: $header2-background;
-
-              div {
-                display: block;
-                position: absolute;
-                background-color: $header2-background;
-                top: -32px;
-                right: -21px;
-                background-color: #255965;
-                padding: 6px;
-                width: 42px;
-                height: 42px;
-                transform: rotateZ(-45deg);
-
-                i {
-                  color: white;
-                  transform: rotateZ(45deg) translate(-9px, 2px);
-                  position: absolute;
-                  top: 29px;
-                  left: 9px;
-                  font-size: 9px;
-                }
-              }
-            }
-
-            div {
-              display: none;
-            }
-          }
         }
       }
 

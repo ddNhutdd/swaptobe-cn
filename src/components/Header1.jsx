@@ -4,9 +4,15 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../function/showToast";
 import { useEffect, useRef } from "react";
-import { currency, localStorageVariable, url } from "src/constant";
+import {
+  currency,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import {
   formatStringNumberCultureUS,
+  getLocalStorage,
   removeLocalStorage,
   setLocalStorage,
 } from "src/util/common";
@@ -14,6 +20,7 @@ import { currencySetCurrent } from "src/redux/actions/currency.action";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getUserWallet } from "src/redux/constant/coin.constant";
+import i18n from "src/translation/i18n";
 export default function Header1({ history }) {
   //
   const { isLogin, username } = useSelector((root) => root.loginReducer);
@@ -26,6 +33,9 @@ export default function Header1({ history }) {
   const walletMenuElement = useRef();
   const listOnCoinRealtime = useSelector(getListCoinRealTime);
   useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
     //
     const element = document.querySelector(".header1");
     if (element) element.classList.add("fadeInTopToBottom");
@@ -66,6 +76,7 @@ export default function Header1({ history }) {
     localStorage.removeItem("token");
     removeLocalStorage(localStorageVariable.currency);
     dispatch(currencySetCurrent(currency.usd));
+    removeLocalStorage(localStorageVariable.lng);
     history.push("/");
     dispatch({ type: "USER_LOGOUT" });
     showToast("success", "Logged out");
@@ -86,20 +97,7 @@ export default function Header1({ history }) {
       walletMenuElement.current.classList.remove("show");
     }
   };
-  const currencyOnClickHandle = function (e, value) {
-    e.stopPropagation();
-    const listCurrentcy = document.querySelectorAll(
-      ".header1 .header1__list-currency span"
-    );
-    if (listCurrentcy) {
-      for (const item of listCurrentcy) {
-        item.classList.remove("active");
-      }
-    }
-    e.target.classList.add("active");
-    dispatch(currencySetCurrent(value));
-    setLocalStorage(localStorageVariable.currency, value);
-  };
+
   const amountCoinBTC = function () {
     return listOwnedCoins["btc_balance"];
   };
@@ -117,41 +115,6 @@ export default function Header1({ history }) {
                   </div>
                   <div>BTC: {amountCoinBTC()} coins</div>
                   <div id="money">00000</div>
-                  <div className="header1__list-currency">
-                    <span
-                      className={
-                        userSelectedCurrency === currency.vnd ? "active" : ""
-                      }
-                      onClick={(e) => currencyOnClickHandle(e, currency.vnd)}
-                    >
-                      VND
-                      <div>
-                        <i className="fa-solid fa-check"></i>
-                      </div>
-                    </span>
-                    <span
-                      className={
-                        userSelectedCurrency === currency.eur ? "active" : ""
-                      }
-                      onClick={(e) => currencyOnClickHandle(e, currency.eur)}
-                    >
-                      EUR
-                      <div>
-                        <i className="fa-solid fa-check"></i>
-                      </div>
-                    </span>
-                    <span
-                      className={
-                        userSelectedCurrency === currency.usd ? "active" : ""
-                      }
-                      onClick={(e) => currencyOnClickHandle(e, currency.usd)}
-                    >
-                      USD
-                      <div>
-                        <i className="fa-solid fa-check"></i>
-                      </div>
-                    </span>
-                  </div>
                 </div>
                 <div
                   onClick={(e) => {

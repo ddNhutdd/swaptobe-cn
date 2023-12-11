@@ -9,7 +9,7 @@ import { showAlert } from "../function/showAlert";
 import { useState } from "react";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { getLocalStorage } from "src/util/common";
-import { localStorageVariable } from "src/constant";
+import { defaultLanguage, localStorageVariable } from "src/constant";
 import { useTranslation } from "react-i18next";
 
 export default function Signup({ history }) {
@@ -56,7 +56,7 @@ export default function Signup({ history }) {
     element.classList.add("fadeInBottomToTop");
     //
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
   }, []);
   //

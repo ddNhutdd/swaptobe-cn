@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { showAlert } from "../function/showAlert";
 import { axiosService } from "../util/service";
-import { localStorageVariable } from "src/constant";
+import { defaultLanguage, localStorageVariable } from "src/constant";
 import { getLocalStorage } from "src/util/common";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
@@ -59,7 +59,7 @@ export default function Wallet() {
     getAllCoins();
     createWallet("BTC.TRC20");
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
   }, []);
   const deposit = (item) => {

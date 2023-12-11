@@ -16,6 +16,7 @@ import i18n, { availableLanguage } from "src/translation/i18n";
 import {
   api_status,
   api_url,
+  defaultLanguage,
   deploy_domain,
   localStorageVariable,
   showAlertType,
@@ -74,7 +75,7 @@ function FormWithdraw() {
   const qrValue = useRef(deploy_domain);
   useEffect(() => {
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     fetchWithdrawHistory();
     fetTransferHistory();

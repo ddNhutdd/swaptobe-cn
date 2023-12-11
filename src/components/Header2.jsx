@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from "../translation/i18n";
@@ -6,31 +6,31 @@ import {
   availableLanguage,
   availableLanguageMapper,
 } from "../translation/i18n";
-import { getLocalStorage, setLocalStorage } from "../util/common";
-import { localStorageVariable } from "../constant";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  getClassListFromElementById,
+  addClassToElementById,
+  querySelector,
+  getElementById,
+} from "../util/common";
+import { defaultLanguage, localStorageVariable } from "../constant";
 import { Modal } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { getExchange } from "src/redux/constant/currency.constant";
+import { currencySetCurrent } from "src/redux/actions/currency.action";
 export default function Header2({ history }) {
-  //
-  const [currentLanguage, setCurrentLanguage] = useState();
-  const { t } = useTranslation();
-  const [isModalSettingsOpen, setIsModalSettingsOpen] = useState(false);
-  const checkboxShowLanguageMenu = useRef();
-  useEffect(() => {
-    const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
-    i18n.changeLanguage(language);
-    setCurrentLanguage(language);
-
-    const element = document.querySelector(".header2");
-    element.classList.add("fadeInTopToBottom");
-  }, []);
   //
   const showModalSettings = () => {
     setIsModalSettingsOpen(true);
+    setTimeout(() => {
+      renderDropdownCurrencyMenu(listExChange);
+    }, 0);
   };
   const handleCancel = () => {
     setIsModalSettingsOpen(false);
-    checkboxShowLanguageMenu.current.checked = false;
+    closeAllDropdown();
+    document.removeEventListener("click", closeAllDropdown);
   };
   const renderListLanguage = (availableLanguage) =>
     Object.keys(availableLanguage).map((item) => (
@@ -53,6 +53,73 @@ export default function Header2({ history }) {
         </span>
       </li>
     ));
+  const toggleDropdownLanguage = function (event) {
+    event.stopPropagation();
+    getClassListFromElementById("dropdownLanguageSelected").toggle("active");
+    getClassListFromElementById("dropdownLanguageMenu").toggle("show");
+    closeDropdownCurrency();
+  };
+  const toggleDropdownCurrency = function (e) {
+    e.stopPropagation();
+    getClassListFromElementById("dropdownCurrencySelected").toggle("active");
+    getClassListFromElementById("dropdownCurrencyMenuContainer").toggle("show");
+    closeDropdownLanguage();
+  };
+  const closeAllDropdown = function () {
+    closeDropdownLanguage();
+    closeDropdownCurrency();
+  };
+  const closeDropdownLanguage = function () {
+    getClassListFromElementById("dropdownLanguageSelected") &&
+      getClassListFromElementById("dropdownLanguageSelected").remove("active");
+    getClassListFromElementById("dropdownLanguageMenu") &&
+      getClassListFromElementById("dropdownLanguageMenu").remove("show");
+  };
+  const closeDropdownCurrency = function () {
+    getClassListFromElementById("dropdownCurrencySelected") &&
+      getClassListFromElementById("dropdownCurrencySelected").remove("active");
+    getClassListFromElementById("dropdownCurrencyMenuContainer") &&
+      getClassListFromElementById("dropdownCurrencyMenuContainer").remove(
+        "show"
+      );
+  };
+  const selectCurrency = function (currency) {
+    if (!currency) return;
+    closeAllDropdown();
+    // edit html
+    getElementById("dropdownCurrencySelectedText").innerHTML =
+      currency.toUpperCase();
+    // dispatch seleted currency to redux
+    dispatch(currencySetCurrent(currency));
+  };
+  const renderDropdownCurrencyMenu = function (listExChange) {
+    if (!listExChange || listExChange.length <= 0) return;
+    const containerElement = getElementById("dropdonwCurrencyMenyList");
+    if (!containerElement) return;
+    containerElement.innerHTML = "";
+    for (const item of listExChange) {
+      containerElement.innerHTML += `<li class="header2__model-dropdown-item">${item.title}</li>`;
+    }
+    for (const item of containerElement.children) {
+      console.log(item);
+      item.addEventListener("click", selectCurrency.bind(null, item.innerHTML));
+    }
+  };
+  //
+  const [currentLanguage, setCurrentLanguage] = useState();
+  const { t } = useTranslation();
+  const listExChange = useSelector(getExchange);
+  const dispatch = useDispatch();
+  const [isModalSettingsOpen, setIsModalSettingsOpen] = useState(false);
+  useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    setCurrentLanguage(language);
+    //
+    const element = document.querySelector(".header2");
+    element.classList.add("fadeInTopToBottom");
+  }, []);
   //
   return (
     <>
@@ -97,23 +164,18 @@ export default function Header2({ history }) {
       </header>
       <Modal open={isModalSettingsOpen} onCancel={handleCancel} footer={false}>
         <div className="header2__modal">
-          <input
-            type="checkbox"
-            id="checkBoxShowMenuLanguage"
-            className="--d-none"
-            ref={checkboxShowLanguageMenu}
-          />
           <div className="header2__modal-title">{t("settings")}</div>
-          <div className="header2__modal-language">
-            <div className="header2__modal-language-left">
+          <div className="header2__modal-record">
+            <div className="header2__modal-record-left">
               <i className="fa-solid fa-globe"></i>
               <span>{t("language")}</span>
             </div>
-            <label
-              className="header2__modal-language-right"
-              htmlFor="checkBoxShowMenuLanguage"
-            >
-              <div className="header2__modal-dropdown-selected">
+            <div className="header2__modal-record-right">
+              <div
+                id="dropdownLanguageSelected"
+                className="header2__modal-dropdown-selected"
+                onClick={toggleDropdownLanguage}
+              >
                 <span>
                   <img
                     src={`./img/icon${currentLanguage}.png`}
@@ -125,12 +187,46 @@ export default function Header2({ history }) {
                   <i className="fa-solid fa-chevron-down"></i>
                 </span>
               </div>
-              <div className="header2__modal-dropdown-menu-container">
+              <div
+                id="dropdownLanguageMenu"
+                className="header2__modal-dropdown-menu-container"
+              >
                 <ul className="header2__model-dropdown-menu">
                   {renderListLanguage(availableLanguage)}
                 </ul>
               </div>
-            </label>
+            </div>
+          </div>
+          <div className="header2__modal-record">
+            <div className="header2__modal-record-left">
+              <i className="fa-solid fa-coins"></i>
+              <span>Currency</span>
+            </div>
+            <div className="header2__modal-record-right">
+              <div
+                id="dropdownCurrencySelected"
+                className="header2__modal-dropdown-selected"
+                onClick={toggleDropdownCurrency}
+              >
+                <span id="dropdownCurrencySelectedText">USD</span>
+                <span>
+                  <i className="fa-solid fa-chevron-down"></i>
+                </span>
+              </div>
+              <div
+                id="dropdownCurrencyMenuContainer"
+                className="header2__modal-dropdown-menu-container"
+              >
+                <ul
+                  id="dropdonwCurrencyMenyList"
+                  className="header2__model-dropdown-menu"
+                >
+                  <li className="header2__model-dropdown-item">USD</li>
+                  <li className="header2__model-dropdown-item">EUR</li>
+                  <li className="header2__model-dropdown-item">CVB</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </Modal>

@@ -9,6 +9,7 @@ import {
 } from "src/util/common";
 import {
   api_status,
+  defaultLanguage,
   localStorageVariable,
   showAlertType,
   url,
@@ -61,7 +62,7 @@ export default function Swap() {
   useEffect(() => {
     //
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     //
     const element = document.querySelector(".swap");

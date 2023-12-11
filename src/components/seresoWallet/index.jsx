@@ -12,7 +12,12 @@ import {
   parseURLParameters,
   setLocalStorage,
 } from "src/util/common";
-import { currency, localStorageVariable, url } from "src/constant";
+import {
+  currency,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import { getCoinTotalValue } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
@@ -48,7 +53,7 @@ function SwaptobeWallet() {
     if (username) dispatch(setShow(actionContent.withdraw));
     //
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     //
     const element = document.querySelector(".swaptobe-wallet");

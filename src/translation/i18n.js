@@ -70,7 +70,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: availableLanguage.vi,
+    fallbackLng: availableLanguage.en,
     interpolation: {
       escapeValue: false,
     },

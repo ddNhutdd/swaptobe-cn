@@ -146,34 +146,23 @@
 
 .header2__modal {
   padding: 20px;
-
-  input#checkBoxShowMenuLanguage[type="checkbox"]:checked~.header2__modal-language {
-    .header2__modal-language-right {
-      .header2__modal-dropdown-menu-container {
-        max-height: 1000px;
-        opacity: 1;
-      }
-
-      .header2__modal-dropdown-selected {
-        border-color: $header2-background;
-        outline: 1px solid $header2-background;
-      }
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
   .header2__modal-title {
     font-size: 20px;
     font-weight: 600;
     margin-top: 0;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
   }
 
-  .header2__modal-language {
+  .header2__modal-record {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    .header2__modal-language-left {
+    .header2__modal-record-left {
       display: flex;
       align-items: center;
 
@@ -187,7 +176,7 @@
       }
     }
 
-    .header2__modal-language-right {
+    .header2__modal-record-right {
       position: relative;
       width: 193px;
 
@@ -203,6 +192,11 @@
         margin-bottom: 0;
         user-select: none;
         transition: .2s;
+
+        &.active {
+          border-color: $header2-background;
+          outline: 1px solid $header2-background;
+        }
 
         &:hover {
           border-color: $header2-background;
@@ -234,6 +228,12 @@
         width: 100%;
         opacity: 0;
         transition: all .2s;
+        z-index: 9;
+
+        &.show {
+          max-height: 1000px;
+          opacity: 1;
+        }
 
         .header2__model-dropdown-menu {
           margin-top: 5px;
