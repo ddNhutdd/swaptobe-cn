@@ -1,150 +1,120 @@
-import { Button, Input, Modal, Select } from "antd";
-import React, { useEffect, useState } from "react";
-import { axiosService } from "../util/service";
-const { Option } = Select;
-const { TextArea } = Input;
-
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button, Modal } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
+import { formatStringNumberCultureUS, getElementById } from "src/util/common";
+import { DOMAIN } from "src/util/service";
 export default function CreateBuy({ history }) {
-  const [data, setData] = useState([]);
+  const data = useRef([]);
   const [currentCoin, setCurrentCoin] = useState("BTC");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const getAllCoins = async () => {
-    try {
-      let response = await axiosService.post("api/crypto/getListCoinAll");
-      setData(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
+  const [isModalCoinVisible, setIsModalCoinVisible] = useState(false);
+  const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
+  const listCoinRealTime = useSelector(getListCoinRealTime);
+  const showCoinModal = () => setIsModalCoinVisible(true);
+  const modalCoinHandleOk = () => setIsModalCoinVisible(false);
+  const modalCoinHandleCancel = () => setIsModalCoinVisible(false);
+  const showModalPreview = () => {
+    setIsModalPreviewOpen(true);
   };
-
-  const showModal = () => setIsModalVisible(true);
-  const handleOk = () => setIsModalVisible(false);
-  const handleCancel = () => setIsModalVisible(false);
-
+  const modalPreviewHandleOk = () => {
+    setIsModalPreviewOpen(false);
+  };
+  const modalPreviewHandleCancel = () => {
+    setIsModalPreviewOpen(false);
+  };
+  const currentCurrency = useSelector(getCurrent);
+  const exchage = useSelector(getExchange);
   useEffect(() => {
-    getAllCoins();
-  }, []);
-
+    data.current = listCoinRealTime ?? [];
+    renderMarketBuyPrice();
+  }, [listCoinRealTime]);
+  //
+  const renderMarketBuyPrice = function () {
+    if (data.length <= 0 || exchage.length <= 0) return;
+    // find current price
+    let ccCoin = data.current.filter((item) => item.name === currentCoin)[0]
+      ?.price;
+    if (!ccCoin) return;
+    // process price
+    const rate = exchage.filter((item) => item.title === currentCurrency)[0]
+      ?.rate;
+    ccCoin *= rate;
+    // set html
+    getElementById("marketBuyPrice").innerHTML =
+      formatStringNumberCultureUS(String(ccCoin)) + " " + currentCurrency;
+  };
+  //
   return (
     <div className="create-buy-ads">
       <div className="container">
         <div className="box">
           <h2 className="title">Create new buying advertisement</h2>
-
           <span
             className="switch"
             onClick={() => history.replace("/create-ads/sell")}
           >
             Do you want to sell?
           </span>
-
           <div className="head-area">
             <h2>Ads to buy {currentCoin}</h2>
-            <div>Market buy price: ---</div>
-            <i className="fa-solid fa-pen-to-square" onClick={showModal}></i>
+            <div>
+              Market buy price:{" "}
+              <span
+                id="marketBuyPrice"
+                className="create-buy-ads__head-area-price"
+              >
+                ---
+              </span>
+            </div>
+            <i
+              className="fa-solid fa-pen-to-square"
+              onClick={showCoinModal}
+            ></i>
           </div>
-
-          <div className="price-area">
-            <h2>Price</h2>
-
-            <div className="field">
-              <label>Fixed price:</label>
-              <Input addonAfter="USD" size="large" />
-            </div>
-
-            <div className="field">
-              <label>{currentCoin} price that sellers see:</label>
-              <Input addonAfter={`USD/${currentCoin}`} size="large" />
-            </div>
-
-            <div className="field">
-              <label>{currentCoin} price that you pay:</label>
-              <Input addonAfter={`USD/${currentCoin}`} size="large" />
-            </div>
-          </div>
-
           <div className="amount-area">
             <h2>Amount</h2>
-
             <div className="field">
               <label>Amount of {currentCoin}:</label>
-              <Input addonAfter={currentCoin} size="large" />
+              <input key={"a1va"} />
             </div>
-
             <div className="field">
               <label>Minimum {currentCoin} amount:</label>
-              <Input addonAfter={currentCoin} size="large" />
-            </div>
-
-            <div className="field">
-              <label>Maximum {currentCoin} amount in one trade:</label>
-              <Input addonAfter={currentCoin} size="large" />
+              <input key={"a2va"} />
             </div>
           </div>
-
           <div className="payment-area">
             <h2>Payment details</h2>
-
             <div className="field">
               <label>Payment method:</label>
-              <Select
-                size="large"
-                style={{
-                  width: "100%",
-                }}
-              >
-                <Option>Bank transfer</Option>
-                <Option>Bank transfer</Option>
-                <Option>Bank transfer</Option>
-                <Option>Bank transfer</Option>
-              </Select>
             </div>
-
             <div className="field">
               <label>Bank name:</label>
-              <Select
-                size="large"
-                style={{
-                  width: "100%",
-                }}
+              <div
+                id="dropdownBankSelected"
+                className="field__dropdown-selected"
               >
-                <Option>ABC</Option>
-                <Option>ABC</Option>
-                <Option>ABC</Option>
-                <Option>ABC</Option>
-              </Select>
-            </div>
-
-            <div className="field">
-              <label>Payment window:</label>
-              <Select
-                size="large"
-                style={{
-                  width: "100%",
-                }}
-              >
-                <Option>15 minutes</Option>
-                <Option>15 minutes</Option>
-                <Option>15 minutes</Option>
-                <Option>15 minutes</Option>
-              </Select>
-            </div>
-
-            <div className="field">
-              <label>Terms of trade:</label>
-              <TextArea
-                rows={3}
-                placeholder="Other information you wish to tell about your advertisement"
-              />
+                <span>
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/iconen.png"}
+                    alt={"currentLanguage"}
+                  />
+                </span>
+                <span>thien</span>
+                <span>an</span>
+                <span>
+                  <i className="fa-solid fa-chevron-down"></i>
+                </span>
+              </div>
             </div>
           </div>
-
           <div className="review-area">
-            <i className="fa-solid fa-eye"></i>
-            <span>Review your ad</span>
+            <span onClick={showModalPreview}>
+              <i className="fa-solid fa-eye"></i>
+              <span>Review your ad</span>
+            </span>
           </div>
-
           <div className="button-area">
             <Button>Cancel</Button>
             <button className="button-area-primary">
@@ -153,18 +123,16 @@ export default function CreateBuy({ history }) {
           </div>
         </div>
       </div>
-
-      {/* Modal */}
       <Modal
         title="Choose your coin"
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        visible={isModalCoinVisible}
+        onOk={modalCoinHandleOk}
+        onCancel={modalCoinHandleCancel}
         footer={null}
         width={400}
       >
-        <div style={{ padding: 20 }}>
-          {data.map((item, i) => {
+        <div className="create-buy-ads__modal-coin" style={{ padding: 20 }}>
+          {data.current.map((item, i) => {
             return (
               <Button
                 className="btn-choice-coin"
@@ -172,16 +140,31 @@ export default function CreateBuy({ history }) {
                 key={i}
                 onClick={() => {
                   setCurrentCoin(item.name);
-                  setIsModalVisible(false);
+                  setIsModalCoinVisible(false);
                 }}
               >
+                <img
+                  className="create-buy-ads__modal-image"
+                  src={DOMAIN + item.image}
+                  alt={item.image}
+                />
                 {item.name}
               </Button>
             );
           })}
         </div>
       </Modal>
-      {/* Modal */}
+      <Modal
+        // title="Preview"
+        open={isModalPreviewOpen}
+        onOk={modalPreviewHandleOk}
+        onCancel={modalPreviewHandleCancel}
+        footer={null}
+      >
+        <div className="create-buy-ads__modal-preview-content">
+          fdafdsafdsafdafdasfdsafd fdsafhdsjlkafhdsjalfd
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { t } from "i18next";
 import {
   addClassToElementById,
   getClassListFromElementById,
+  getElementById,
 } from "src/util/common";
 import { api_status } from "src/constant";
 import { getListAdsBuy } from "src/util/userCallApi";
@@ -53,38 +54,94 @@ export default function P2PTrading2({ history }) {
     getClassListFromElementById("sellEmpty").remove("--d-none");
   };
   const fetchListAdsSell = function () {};
-  const fetchListAdsBuy = function () {
+  const fetchListAdsBuy = function (data) {
     return new Promise((resolve, reject) => {
-      if (callApiBuyListStatus.current === api_status.fetching) resolve(null);
+      if (callApiBuyListStatus.current === api_status.fetching) resolve({});
       else callApiBuyListStatus.current = api_status.fetching;
-      if (!coin) resolve(null);
-      getListAdsBuy({
-        limit: 10,
-        page: buyListCurrentPage.current,
-        symbol: coin,
-      })
+      if (!coin) resolve({});
+      getListAdsBuy(data)
         .then((resp) => {
           callApiBuyListStatus.current = api_status.fulfilled;
-          return resp.data.data;
+          resolve(resp.data.data);
         })
         .catch((error) => {
           callApiBuyListStatus.current = api_status.rejected;
           console.log(error);
+          resolve({});
         });
     });
   };
-  const renderListAdsBuy = async function () {
+  const renderListAdsBuy = async function (data) {
     closeBuyContent();
     closeBuyEmpty();
     showBuyLoader();
-    const [array, total] = await fetchListAdsBuy();
+    const { array, total } = await fetchListAdsBuy(data);
     closeBuyLoader();
     if (!array || array.lenght <= 0) {
       showBuyEmpty();
     } else {
+      //render html
+      const containerElement = getElementById("buyContent");
+      containerElement.innerHTML = "";
+      for (const item of array) {
+        containerElement.innerHTML += `<div class="buy-content box fadeInBottomToTop">
+        <div class="item1">
+          <span>User Name: ${item.userName}</span>
+        </div>
+        <div class="item2">
+          <table>
+          <tbody>
+          <tr>
+          <td>Amount:</td>
+          <td class="item2-amount-number">${item.amount}</td>
+        </tr>
+        <tr>
+          <td>Amount Minimum:</td>
+          <td>${item.amountMinimum}</td>
+        </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item3">
+          <table>
+          <tbody>
+          <tr>
+          <td>Created At:</td>
+          <td>${item.created_at}</td>
+        </tr>
+        <tr>
+          <td>AddressWallet:</td>
+          <td>${item.addressWallet}</td>
+        </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item4">
+          <button name="${item.id}">${"Buy"}</button>
+        </div>
+      </div>`;
+      }
+      // add event
+      for (const item of containerElement.children) {
+        const button = item.querySelector("button");
+        const id = button.name;
+        button.addEventListener("click", buyClickHandle.bind(null, id));
+      }
+      // show
       showBuyContent();
     }
     setBuyListTotalItems(() => total);
+  };
+  const buyClickHandle = function (id) {
+    console.log(id);
+  };
+  const onChange = function (page) {
+    buyListCurrentPage.current = page;
+    renderListAdsBuy({
+      limit: 5,
+      page: buyListCurrentPage.current,
+      symbol: coin,
+    });
   };
   //
   useEffect(() => {
@@ -92,7 +149,11 @@ export default function P2PTrading2({ history }) {
     const element = document.querySelector(".p2ptrading2");
     element.classList.add("fadeInBottomToTop");
     //
-    renderListAdsBuy();
+    renderListAdsBuy({
+      limit: 5,
+      page: buyListCurrentPage.current,
+      symbol: coin,
+    });
   }, []);
   return (
     <div className="p2ptrading2">
@@ -107,24 +168,25 @@ export default function P2PTrading2({ history }) {
           <div id="buyContent">
             <div className="buy-content box">
               <div className="item1">
-                <span>
-                  <span>1.3119</span> USD/USDT
-                </span>
-                <span>
-                  {t("maximum")}: {t("unlimited")}
-                </span>
+                <span>User Name: test5</span>
               </div>
-              <div className="item2">Visa, Mastercard</div>
-              <div className="item3">Simplex</div>
+              <div className="item2"></div>
+              <div className="item3"></div>
               <div className="item4">
                 <Button type="primary">{t("buy")}</Button>
               </div>
             </div>
           </div>
-          <div id="buyLoader" className="spin-container --d-none">
+          <div
+            id="buyLoader"
+            className="spin-container fadeInBottomToTop --d-none"
+          >
             <Spin />
           </div>
-          <div id="buyEmpty" className="spin-container --d-none">
+          <div
+            id="buyEmpty"
+            className="spin-container fadeInBottomToTop --d-none"
+          >
             <Empty />
           </div>
           <div className="p2ptrading2__footer">
@@ -140,6 +202,8 @@ export default function P2PTrading2({ history }) {
             </div>
             <Pagination
               defaultCurrent={1}
+              pageSize={5}
+              onChange={onChange}
               total={buyListTotalItems}
               showSizeChanger={false}
             />

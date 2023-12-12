@@ -10,8 +10,6 @@ import {
   getLocalStorage,
   setLocalStorage,
   getClassListFromElementById,
-  addClassToElementById,
-  querySelector,
   getElementById,
 } from "../util/common";
 import { defaultLanguage, localStorageVariable } from "../constant";
@@ -40,13 +38,17 @@ export default function Header2({ history }) {
           setCurrentLanguage(item);
           setLocalStorage(localStorageVariable.lng, item);
           i18n.changeLanguage(item);
+          closeDropdownLanguage();
         }}
         className={`header2__model-dropdown-item ${
           item === currentLanguage ? "active" : ""
         }`}
       >
         <span>
-          <img src={`./img/icon${item}.png`} alt={item} />
+          <img
+            src={process.env.PUBLIC_URL + "/img/icon" + item + ".png"}
+            alt={item}
+          />
         </span>
         <span className="header2__model-dropdown-content">
           {availableLanguageMapper[item]}
@@ -101,7 +103,6 @@ export default function Header2({ history }) {
       containerElement.innerHTML += `<li class="header2__model-dropdown-item">${item.title}</li>`;
     }
     for (const item of containerElement.children) {
-      console.log(item);
       item.addEventListener("click", selectCurrency.bind(null, item.innerHTML));
     }
   };
@@ -178,7 +179,12 @@ export default function Header2({ history }) {
               >
                 <span>
                   <img
-                    src={`./img/icon${currentLanguage}.png`}
+                    src={
+                      process.env.PUBLIC_URL +
+                      "/img/icon" +
+                      currentLanguage +
+                      ".png"
+                    }
                     alt={currentLanguage}
                   />
                 </span>
