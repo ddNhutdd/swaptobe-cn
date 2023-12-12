@@ -72,7 +72,10 @@ function ExchangeRateDisparity() {
       controlTourched.current[controls.current.newValueInput]
     ) {
       const checkNumber = /^\s*[+-]?(\d+|\d*\.\d+|\d+\.\d*)([Ee][+-]?\d+)?\s*$/;
-      if (!checkNumber.test(newValueInputElement.value)) {
+      if (
+        !checkNumber.test(newValueInputElement.value) &&
+        newValueInputElement.value
+      ) {
         valid &= false;
         controlErrors.current[controls.current.newValueInput] =
           "Format incorect";

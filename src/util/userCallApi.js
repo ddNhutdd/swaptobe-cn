@@ -131,10 +131,16 @@ export const getListAdsBuy = function (data) {
     console.log(error);
   }
 };
-
 export const getListAdsSell = function (data) {
   try {
     return axiosService.post("/api/p2pBank/getListAdsSell", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const companyAddAds = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/companyAddAds", data);
   } catch (error) {
     console.log(error);
   }
