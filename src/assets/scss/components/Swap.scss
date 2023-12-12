@@ -17,6 +17,18 @@
         border-radius: 5px;
         border: none;
         height: 85%;
+
+        @media screen and (max-width:576px) {
+          position: absolute;
+          top: 6%;
+          right: 4px;
+          transform: none;
+          padding: 0 10px;
+          background: #eaeaea;
+          border-radius: 5px;
+          border: none;
+          height: 32%;
+        }
       }
 
       .input-area {
@@ -24,6 +36,11 @@
         justify-content: space-between;
         align-items: center;
         position: relative;
+
+        @media screen and (max-width: 576px) {
+          flex-direction: column;
+          gap: 10px;
+        }
 
         .swap__input {
           border: 1px solid $background-color-4;
@@ -139,6 +156,11 @@
           display: flex;
           gap: 15px;
 
+          @media screen and (max-width:576px) {
+            flex-direction: column;
+            gap: 5px;
+          }
+
           .swap__history-add {
             color: $green;
             font-weight: bolder;
@@ -162,6 +184,10 @@
             &:last-child {
               font-weight: bold;
               color: $green-1;
+
+              @media screen and (max-width:576px) {
+                word-break: break-all;
+              }
             }
           }
         }

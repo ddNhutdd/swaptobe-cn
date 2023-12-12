@@ -14,9 +14,9 @@ import {
 } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { companyAddAds, getProfile } from "src/util/userCallApi";
-import { api_status, showAlertType } from "src/constant";
+import { api_status, regularExpress, showAlertType } from "src/constant";
 import { showToast } from "src/function/showToast";
-export default function CreateBuy({ history }) {
+export default function CreateBuy() {
   const data = useRef([]);
   const [currentCoin, setCurrentCoin] = useState("BTC");
   const [isModalCoinVisible, setIsModalCoinVisible] = useState(false);
@@ -42,7 +42,12 @@ export default function CreateBuy({ history }) {
   const exchangeRateDisparity = useSelector(getExchangeRateDisparity);
   const selectedBank = useRef("OCB");
   const userName = useRef("");
-  const controls = useRef({ amount: "amount", mini: "mini" });
+  const controls = useRef({
+    amount: "amount",
+    mini: "mini",
+    fullname: "fullname",
+    accountNumber: "accountNumber",
+  });
   const controlsTourched = useRef({});
   const controlsErrors = useRef({});
   const callApiStatus = useRef(api_status.pending);
@@ -144,7 +149,6 @@ export default function CreateBuy({ history }) {
   const fetchUserNameProfile = function () {
     return getProfile()
       .then((resp) => {
-        console.log(resp.data.data.username);
         return resp.data.data.username;
       })
       .catch((error) => {
@@ -153,12 +157,16 @@ export default function CreateBuy({ history }) {
       });
   };
   const validate = function () {
-    const checkNumber = /^\s*[+-]?(\d+|\d*\.\d+|\d+\.\d*)([Ee][+-]?\d+)?\s*$/;
     let valid = true;
     const amountElement = getElementById("amoutInput");
     const miniElement = getElementById("minimumAmoutInput");
+    const fullnameElement = getElementById("fullnameInput");
+    const accountNumberElement = getElementById("accountNumberInput");
     if (controlsTourched.current[controls.current.amount]) {
-      if (!checkNumber.test(amountElement.value) && amountElement.value) {
+      if (
+        !regularExpress.checkNumber.test(amountElement.value) &&
+        amountElement.value
+      ) {
         valid &= false;
         controlsErrors.current[controls.current.amount] = "Format Incorrect";
       } else if (!amountElement.value) {
@@ -169,7 +177,10 @@ export default function CreateBuy({ history }) {
       }
     }
     if (controlsTourched.current[controls.current.mini]) {
-      if (!checkNumber.test(miniElement.value) && miniElement.value) {
+      if (
+        !regularExpress.checkNumber.test(miniElement.value) &&
+        miniElement.value
+      ) {
         valid &= false;
         controlsErrors.current[controls.current.mini] = "Format Incorrect";
       } else if (!miniElement.value) {
@@ -177,6 +188,22 @@ export default function CreateBuy({ history }) {
         controlsErrors.current[controls.current.mini] = "Require";
       } else {
         delete controlsErrors.current[controls.current.mini];
+      }
+    }
+    if (controlsTourched.current[controls.current.fullname]) {
+      if (!fullnameElement.value) {
+        valid &= false;
+        controlsErrors.current[controls.current.fullname] = "require";
+      } else {
+        delete controlsErrors.current[controls.current.fullname];
+      }
+    }
+    if (controlsTourched.current[controls.current.accountNumber]) {
+      if (!accountNumberElement.value) {
+        valid &= false;
+        controlsErrors.current[controls.current.accountNumber] = "require";
+      } else {
+        delete controlsErrors.current[controls.current.accountNumber];
       }
     }
     return Object.keys(controlsTourched.current).length <= 0
@@ -187,6 +214,8 @@ export default function CreateBuy({ history }) {
     //hide all
     addClassToElementById("amountError", "--visible-hidden");
     addClassToElementById("miniError", "--visible-hidden");
+    addClassToElementById("fullnameError", "--visible-hidden");
+    addClassToElementById("accountNumberError", "--visible-hidden");
     // check
     if (
       controlsErrors.current[controls.current.amount] &&
@@ -203,6 +232,24 @@ export default function CreateBuy({ history }) {
       getClassListFromElementById("miniError").remove("--visible-hidden");
       getElementById("miniError").innerHTML =
         controlsErrors.current[controls.current.mini];
+    }
+    if (
+      controlsErrors.current[controls.current.fullname] &&
+      controlsTourched.current[controls.current.fullname]
+    ) {
+      getClassListFromElementById("fullnameError").remove("--visible-hidden");
+      getElementById("fullnameError").innerHTML =
+        controlsErrors.current[controls.current.fullname];
+    }
+    if (
+      controlsErrors.current[controls.current.accountNumber] &&
+      controlsTourched.current[controls.current.accountNumber]
+    ) {
+      getClassListFromElementById("accountNumberError").remove(
+        "--visible-hidden"
+      );
+      getElementById("accountNumberError").innerHTML =
+        controlsErrors.current[controls.current.accountNumber];
     }
   };
   const controlOnfocusHandle = function (e) {
@@ -234,20 +281,31 @@ export default function CreateBuy({ history }) {
   };
   const submitHandle = async function (event) {
     event.preventDefault();
+    //validation
+    for (const item of Object.entries(controls.current)) {
+      controlsTourched.current[item.at(0)] = true;
+    }
+    const isValid = validate();
+    renderControlsError();
+    if (!isValid) return;
+    // get data
     showLoadingButtonSubmit();
     const amout = getElementById("amoutInput").value;
     const mini = getElementById("minimumAmoutInput").value;
-    const apiResult = await callApiCreateAds({
+    const fullname = getElementById("fullnameInput").value;
+    const accountNumber = getElementById("accountNumberInput").value;
+    await callApiCreateAds({
       amount: Number(amout),
       amountMinimum: Number(mini),
       symbol: currentCoin,
-      side: "sell",
+      side: "buy",
       bankName: selectedBank.current,
-      ownerAccount: "DIEP VINH KIEN",
-      numberBank: "155711561",
+      ownerAccount: fullname,
+      numberBank: accountNumber,
     });
-    console.log(apiResult);
+
     closeLoadingButtonSubmit();
+    getElementById("buyAdsForm").reset();
   };
   const showLoadingButtonSubmit = function () {
     addClassToElementById("buttonSubmit", "disable");
@@ -263,12 +321,7 @@ export default function CreateBuy({ history }) {
       <div className="container">
         <div className="box">
           <h2 className="title">Create New Buying Advertisement</h2>
-          <span
-            className="switch"
-            onClick={() => history.replace("/create-ads/sell")}
-          >
-            Do you want to sell?
-          </span>
+          <span className="switch">Do you want to sell?</span>
           <div className="head-area">
             <h2>Ads to buy {currentCoin}</h2>
             <div>
@@ -285,7 +338,7 @@ export default function CreateBuy({ history }) {
               onClick={showCoinModal}
             ></i>
           </div>
-          <form>
+          <form id="buyAdsForm">
             <div className="amount-area">
               <h2>Amount</h2>
               <div className="field">
@@ -345,6 +398,32 @@ export default function CreateBuy({ history }) {
                   <ul className="field-dropdown-menu"></ul>
                 </div>
               </div>
+              <div className="field">
+                <label htmlFor="fullnameInput">Full name:</label>
+                <input
+                  onChange={controlOnChangeHandle}
+                  onFocus={controlOnfocusHandle}
+                  id="fullnameInput"
+                  name="fullname"
+                  type="text"
+                />
+                <small id="fullnameError" className="--visible-hidden">
+                  2
+                </small>
+              </div>
+              <div className="field">
+                <label htmlFor="accountNumberInput">Account number: </label>
+                <input
+                  onChange={controlOnChangeHandle}
+                  onFocus={controlOnfocusHandle}
+                  id="accountNumberInput"
+                  name="accountNumber"
+                  type="text"
+                />
+                <small id="accountNumberError" className="--visible-hidden">
+                  2
+                </small>
+              </div>
             </div>
             <div className="review-area">
               <span onClick={showModalPreview}>
@@ -353,7 +432,6 @@ export default function CreateBuy({ history }) {
               </span>
             </div>
             <div className="button-area">
-              <Button>Cancel</Button>
               <button
                 id="buttonSubmit"
                 onClick={submitHandle}

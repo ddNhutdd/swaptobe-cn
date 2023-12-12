@@ -14,7 +14,7 @@ import {
   showAlertType,
   url,
 } from "src/constant";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination, Spin } from "antd";
@@ -31,6 +31,7 @@ import { showToast } from "src/function/showToast";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { showConfirm } from "src/function/showConfirm";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
+import socket from "src/util/socket";
 export default function Swap() {
   //
   const { isLogin } = useSelector((root) => root.loginReducer);
@@ -58,6 +59,7 @@ export default function Swap() {
   );
   const [swapHistoryCurrentPage, setSwapHistoryCurrentPage] = useState(1);
   const [swapHistoryTotalPage, setSwapHistoryTotalPage] = useState(1);
+  const allCoinPrice = useRef([]);
   const dispatch = useDispatch();
   useEffect(() => {
     //
@@ -68,6 +70,9 @@ export default function Swap() {
     const element = document.querySelector(".swap");
     element.classList.add("fadeInBottomToTop");
     //
+    socket.once("listCoin", (resp) => {
+      if (resp && resp.length > 0) allCoinPrice.current = resp;
+    });
   }, []);
   useEffect(() => {}, [userWallet]);
   useEffect(() => {
@@ -264,12 +269,26 @@ export default function Swap() {
                 </span>
                 <span>{item.wallet}: </span>
                 <span className="swap__history-add">
-                  +{item.wallet_amount} coins
+                  +
+                  {roundDecimalValues(
+                    item.wallet_amount,
+                    allCoinPrice.current.filter(
+                      (it) => it.name === item.wallet
+                    )[0]?.price
+                  )}{" "}
+                  coins
                 </span>
               </div>
               <div className="swap__history-final">
                 <span>Rate {item.wallet}:</span>
-                <span>{item.rate}</span>
+                <span>
+                  {roundDecimalValues(
+                    item.rate,
+                    allCoinPrice.current.filter(
+                      (it) => it.name === item.wallet
+                    )[0]?.price
+                  )}
+                </span>
               </div>
             </div>
           ))}
@@ -290,15 +309,14 @@ export default function Swap() {
               {t("amountOf")} {swapFromCoin}
             </label>
             <div className="input-area">
-              <div style={{ flex: 1 }}>
-                <input
-                  style={{ paddingRight: "55px" }}
-                  className="swap__input"
-                  value={fromCoinValueString}
-                  onChange={fromCoinOnChange}
-                />
-                <button className="max">{t("max")}</button>
-              </div>
+              <input
+                style={{ paddingRight: "55px" }}
+                className="swap__input"
+                value={fromCoinValueString}
+                onChange={fromCoinOnChange}
+              />
+              <button className="max">{t("max")}</button>
+
               <button className="selectBtn" onClick={showModal}>
                 <div className="selectBtn-container">
                   <img

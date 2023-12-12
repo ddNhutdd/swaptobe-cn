@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import CreateBuy from "./components/CreateBuy";
-import CreateSell from "./components/CreateSell";
+import CreateBuy from "./components/CreateBuySell";
 import Login from "./components/Login";
 import P2PTrading from "./components/P2PTrading";
 import Signup from "./components/Signup";
@@ -129,7 +128,6 @@ function App() {
           <MainTemplate path="/p2p-trading" component={P2PTrading} />
           <MainTemplate path="/swap" component={Swap} />
           <MainTemplate path="/create-ads/buy" component={CreateBuy} />
-          <MainTemplate path="/create-ads/sell" component={CreateSell} />
           <MainTemplate path="/login" component={Login} />
           <MainTemplate path="/signup" component={Signup} />
           <MainTemplate path="/wallet" component={Wallet} />
