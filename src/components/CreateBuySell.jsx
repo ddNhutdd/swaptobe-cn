@@ -2,6 +2,8 @@
 import { Button, Modal } from "antd";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { useLocation, useHistory } from "react-router-dom";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
@@ -14,29 +16,23 @@ import {
 } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { companyAddAds, getProfile } from "src/util/userCallApi";
-import { api_status, regularExpress, showAlertType } from "src/constant";
+import { api_status, regularExpress, showAlertType, url } from "src/constant";
 import { showToast } from "src/function/showToast";
+import { showAlert } from "src/function/showAlert";
 export default function CreateBuy() {
+  const actionType = {
+    sell: "sell",
+    buy: "buy",
+  };
+  const history = useHistory();
+  const location = useLocation();
+  const { t } = useTranslation();
+  const action = location.pathname.split("/").at(-1);
   const data = useRef([]);
   const [currentCoin, setCurrentCoin] = useState("BTC");
   const [isModalCoinVisible, setIsModalCoinVisible] = useState(false);
   const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
   const listCoinRealTime = useSelector(getListCoinRealTime);
-  const showCoinModal = () => setIsModalCoinVisible(true);
-  const modalCoinHandleOk = () => setIsModalCoinVisible(false);
-  const modalCoinHandleCancel = () => setIsModalCoinVisible(false);
-  const showModalPreview = () => {
-    setIsModalPreviewOpen(true);
-    setTimeout(() => {
-      renderModalReview();
-    }, 0);
-  };
-  const modalPreviewHandleOk = () => {
-    setIsModalPreviewOpen(false);
-  };
-  const modalPreviewHandleCancel = () => {
-    setIsModalPreviewOpen(false);
-  };
   const currentCurrency = useSelector(getCurrent);
   const exchage = useSelector(getExchange);
   const exchangeRateDisparity = useSelector(getExchangeRateDisparity);
@@ -70,7 +66,21 @@ export default function CreateBuy() {
       document.removeEventListener("click", closeDropdownBank);
     };
   }, []);
-  //
+  const showCoinModal = () => setIsModalCoinVisible(true);
+  const modalCoinHandleOk = () => setIsModalCoinVisible(false);
+  const modalCoinHandleCancel = () => setIsModalCoinVisible(false);
+  const showModalPreview = () => {
+    setIsModalPreviewOpen(true);
+    setTimeout(() => {
+      renderModalReview();
+    }, 0);
+  };
+  const modalPreviewHandleOk = () => {
+    setIsModalPreviewOpen(false);
+  };
+  const modalPreviewHandleCancel = () => {
+    setIsModalPreviewOpen(false);
+  };
   const renderMarketBuyPrice = function () {
     const result = calcBuyPrice();
     // set html
@@ -100,6 +110,7 @@ export default function CreateBuy() {
     getElementById("modalPreviewMinimumAmount").innerHTML =
       getElementById("minimumAmoutInput").value;
     getElementById("modalBankName").innerHTML = selectedBank.current;
+    getElementById("modalAction").innerHTML = String(action).toUpperCase();
   };
   const toggleDropdownBank = function (e) {
     e.stopPropagation();
@@ -190,20 +201,22 @@ export default function CreateBuy() {
         delete controlsErrors.current[controls.current.mini];
       }
     }
-    if (controlsTourched.current[controls.current.fullname]) {
-      if (!fullnameElement.value) {
-        valid &= false;
-        controlsErrors.current[controls.current.fullname] = "require";
-      } else {
-        delete controlsErrors.current[controls.current.fullname];
+    if (action === actionType.sell) {
+      if (controlsTourched.current[controls.current.fullname]) {
+        if (!fullnameElement.value) {
+          valid &= false;
+          controlsErrors.current[controls.current.fullname] = "require";
+        } else {
+          delete controlsErrors.current[controls.current.fullname];
+        }
       }
-    }
-    if (controlsTourched.current[controls.current.accountNumber]) {
-      if (!accountNumberElement.value) {
-        valid &= false;
-        controlsErrors.current[controls.current.accountNumber] = "require";
-      } else {
-        delete controlsErrors.current[controls.current.accountNumber];
+      if (controlsTourched.current[controls.current.accountNumber]) {
+        if (!accountNumberElement.value) {
+          valid &= false;
+          controlsErrors.current[controls.current.accountNumber] = "require";
+        } else {
+          delete controlsErrors.current[controls.current.accountNumber];
+        }
       }
     }
     return Object.keys(controlsTourched.current).length <= 0
@@ -270,17 +283,30 @@ export default function CreateBuy() {
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
           showToast(showAlertType.success, resp.data.message);
+          getElementById("buyAdsForm").reset();
           resolve(resp);
         })
         .catch((error) => {
           callApiStatus.current = api_status.rejected;
           console.log(error);
+          const mess = error?.response?.data?.message;
+          switch (mess) {
+            case "Insufficient balance":
+              showAlert(showAlertType.error, mess);
+              break;
+
+            default:
+              showAlert(showAlertType, t("anErrorHasOccurred"));
+              break;
+          }
           resolve(null);
         });
     });
   };
   const submitHandle = async function (event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     //validation
     for (const item of Object.entries(controls.current)) {
       controlsTourched.current[item.at(0)] = true;
@@ -294,18 +320,18 @@ export default function CreateBuy() {
     const mini = getElementById("minimumAmoutInput").value;
     const fullname = getElementById("fullnameInput").value;
     const accountNumber = getElementById("accountNumberInput").value;
-    await callApiCreateAds({
-      amount: Number(amout),
-      amountMinimum: Number(mini),
-      symbol: currentCoin,
-      side: "buy",
-      bankName: selectedBank.current,
-      ownerAccount: fullname,
-      numberBank: accountNumber,
-    });
-
+    const sendData = {};
+    sendData.amount = Number(amout);
+    sendData.amountMinimum = Number(mini);
+    sendData.symbol = currentCoin;
+    sendData.side = action;
+    if (action === actionType.sell) {
+      sendData.bankName = selectedBank.current;
+      sendData.ownerAccount = fullname;
+      sendData.numberBank = accountNumber;
+    }
+    await callApiCreateAds(sendData);
     closeLoadingButtonSubmit();
-    getElementById("buyAdsForm").reset();
   };
   const showLoadingButtonSubmit = function () {
     addClassToElementById("buttonSubmit", "disable");
@@ -315,13 +341,32 @@ export default function CreateBuy() {
     getClassListFromElementById("buttonSubmit").remove("disable");
     addClassToElementById("buttonSubmitLoader", "--d-none");
   };
+  const buyOrSellDirect = function () {
+    if (action === actionType.buy) {
+      history.push(url.create_ads_sell);
+    } else {
+      history.push(url.create_ads_buy);
+    }
+  };
+  const modalButtonCreateClickHandle = function () {
+    modalPreviewHandleCancel();
+    submitHandle();
+  };
   //
   return (
-    <div className="create-buy-ads">
+    <div className="create-buy-ads fadeInBottomToTop">
       <div className="container">
         <div className="box">
-          <h2 className="title">Create New Buying Advertisement</h2>
-          <span className="switch">Do you want to sell?</span>
+          <h2 className="title">
+            {action === actionType.buy
+              ? "Create New Buy Advertisement"
+              : "Create New Sell Advertisement"}
+          </h2>
+          <span onClick={buyOrSellDirect} className="switch">
+            {action === actionType.buy
+              ? "Do you want to sell?"
+              : "Do you want to buy?"}
+          </span>
           <div className="head-area">
             <h2>Ads to buy {currentCoin}</h2>
             <div>
@@ -368,7 +413,11 @@ export default function CreateBuy() {
                 </small>
               </div>
             </div>
-            <div className="payment-area">
+            <div
+              className={`payment-area ${
+                action === actionType.buy ? "--d-none" : ""
+              }`}
+            >
               <h2>Payment details</h2>
               <div className="field --d-none">
                 <label>Payment method:</label>
@@ -515,11 +564,15 @@ export default function CreateBuy() {
                   <td>Bank name: </td>
                   <td id="modalBankName">test</td>
                 </tr>
+                <tr>
+                  <td>Action: </td>
+                  <td id="modalAction">test</td>
+                </tr>
               </tbody>
             </table>
           </div>
           <div className="create-buy-ads__modal-preview-footer">
-            <button>Create</button>
+            <button onClick={modalButtonCreateClickHandle}>Create</button>
           </div>
         </div>
       </Modal>

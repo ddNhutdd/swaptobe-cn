@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import CreateBuy from "./components/CreateBuySell";
+import CreateBuySell from "./components/CreateBuySell";
 import Login from "./components/Login";
 import P2PTrading from "./components/P2PTrading";
 import Signup from "./components/Signup";
@@ -35,6 +35,7 @@ import {
 import { exchangeRateDisparity as exchangeRateDisparityCallApi } from "src/util/userCallApi";
 import ExchangeRateDisparity from "./components/admin/exchangeRateDisparity";
 import { api_status, url } from "./constant";
+import Ads from "./components/admin/ads";
 function App() {
   const dispatch = useDispatch();
   const fetchExchangeCount = useSelector(getFetchExchangeCount);
@@ -42,7 +43,6 @@ function App() {
   const getExchangeRateDisparityFetch = useSelector(
     getExchangeRateDisparityFetchCount
   );
-  //
   const getExchange = function () {
     getExchangeApi()
       .then((resp) => {
@@ -89,7 +89,6 @@ function App() {
         console.log(error);
       });
   };
-  //
   useEffect(() => {
     if (localStorage.getItem("user")) {
       const expiresInRefreshToken = JSON.parse(
@@ -127,11 +126,13 @@ function App() {
           <MainTemplate path="/wallet-2" component={SwaptobeWallet} />
           <MainTemplate path="/p2p-trading" component={P2PTrading} />
           <MainTemplate path="/swap" component={Swap} />
-          <MainTemplate path="/create-ads/buy" component={CreateBuy} />
+          <MainTemplate path="/create-ads/buy" component={CreateBuySell} />
+          <MainTemplate path="/create-ads/sell" component={CreateBuySell} />
           <MainTemplate path="/login" component={Login} />
           <MainTemplate path="/signup" component={Signup} />
           <MainTemplate path="/wallet" component={Wallet} />
           <AdminTemplate path="/admin/dashboard" component={Dashboard} />
+          <AdminTemplate path="/admin/ads" component={Ads} />
           <AdminTemplate path="/admin/kyc" component={KYC} />
           <AdminTemplate
             path={url.admin_exchangeRateDisparity}

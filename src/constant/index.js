@@ -21,6 +21,8 @@ export const url = {
   p2pTrading: "/p2p-trading",
   admin_kyc: "/admin/kyc",
   admin_exchangeRateDisparity: "/admin/exchange-rate-disparity",
+  create_ads_sell: "/create-ads/sell",
+  create_ads_buy: "/create-ads/buy",
 };
 
 export const api_url = {
