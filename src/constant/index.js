@@ -23,6 +23,7 @@ export const url = {
   admin_exchangeRateDisparity: "/admin/exchange-rate-disparity",
   create_ads_sell: "/create-ads/sell",
   create_ads_buy: "/create-ads/buy",
+  admin_ads: "/admin/ads",
 };
 
 export const api_url = {

@@ -49,6 +49,10 @@ function Sidebar() {
       case "exchange-rate-disparity":
         addClassToElementById("exchangeRateDisparity", "active");
         break;
+      case "ads":
+        addClassToElementById("ads", "active");
+        break;
+
       default:
         break;
     }
@@ -58,6 +62,12 @@ function Sidebar() {
     const element = e.target.closest("#exchangeRateDisparity");
     element.classList.add("active");
     history.push(url.admin_exchangeRateDisparity);
+  };
+  const redirectAds = function (e) {
+    clearSelectedItem();
+    const element = e.target.closest("#ads");
+    element.classList.add("active");
+    history.push(url.admin_ads);
   };
   //
   return (
@@ -81,6 +91,14 @@ function Sidebar() {
           </span>
           <span className="admin-sidebar__item">Exchange Rate Disparity</span>
         </li>
+
+        <li onClick={redirectAds} id="ads">
+          <span className="admin-sidebar__icon">
+            <i className="fa-solid fa-rectangle-ad"></i>
+          </span>
+          <span className="admin-sidebar__item">Advertise</span>
+        </li>
+
         <li id="funding-item" onClick={fundingItemClickHandle}>
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-coins"></i>
@@ -105,12 +123,7 @@ function Sidebar() {
           </span>
           <span className="admin-sidebar__item">Trade</span>
         </li>
-        <li>
-          <span className="admin-sidebar__icon">
-            <i className="fa-solid fa-rocket"></i>
-          </span>
-          <span className="admin-sidebar__item">Prize Pool</span>
-        </li>
+
         <li id="history-item" onClick={historyItemClickHandle}>
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-clock-rotate-left"></i>

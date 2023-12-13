@@ -1,6 +1,7 @@
 .adminTemplate {
     background-color: $admin-background;
     min-height: 100vh;
+    padding-top: 50px;
 
     .adminTemplate__content {
         .adminTemplate__content-main {
@@ -9,6 +10,10 @@
 
             &.small {
                 margin-left: 300px;
+
+                @media screen and (max-width:768px) {
+                    margin-left: 67px;
+                }
             }
         }
     }

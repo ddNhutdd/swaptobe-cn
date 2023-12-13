@@ -3,15 +3,22 @@
 
     .ads__header {
         display: flex;
-        justify-content: space-between;
+        flex-wrap: wrap;
         align-items: center;
         margin-bottom: 20px;
+        gap: 20px;
+        justify-content: flex-start;
 
         .ads__title {
             color: $white;
             margin-bottom: 0;
             font-size: 24px;
             font-weight: bold;
+            width: 50px;
+
+            @media screen and (max-width:1200px) {
+                width: 100%;
+            }
         }
 
         .ads__filter {
@@ -19,6 +26,17 @@
             justify-content: space-between;
             gap: 20px;
             align-items: center;
+            margin-right: auto;
+
+            @media screen and (max-width:1200px) {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            @media screen and (max-width:992px) {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
             .ads__dropdown {
                 @include adminDropdown;
@@ -29,6 +47,12 @@
                 align-items: center;
                 gap: .3125rem;
 
+                .admin__dropdown-selected {
+                    @media screen and (max-width: 576px) {
+                        width: 100px;
+                    }
+                }
+
                 label {
                     margin-bottom: 0;
                 }
@@ -38,7 +62,7 @@
                 .ads__checkbox-item {
                     display: flex;
                     align-items: center;
-                    gap: 3px;
+                    gap: 5px;
                     position: relative;
                     margin-bottom: 0;
 
@@ -84,6 +108,9 @@
         }
 
         .ads__paging {
+            text-align: right;
+            margin-left: -12px;
+            margin-right: -12px;
 
             .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-link-icon,
             .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-link-icon {
@@ -118,9 +145,22 @@
 
     .ads__content {
         width: 100%;
+        overflow-x: auto;
 
         .ads__table {
             @include adminTable;
+
+            .ads_pending {
+                color: $blue;
+            }
+
+            .ads_accepted {
+                color: $green-2;
+            }
+
+            .ads_rejected {
+                color: $red-light;
+            }
 
             .ads__content-action {
                 display: flex;

@@ -9,6 +9,10 @@
     left: -300px;
     transition: .6s;
 
+    @media screen and (max-width:768px) {
+        width: 66px;
+    }
+
     &.show {
         left: 0px;
         cursor: pointer;
@@ -32,6 +36,7 @@
             flex-wrap: wrap;
             border-radius: 5px;
 
+
             &:hover {
                 background-color: $admin-background-light;
             }
@@ -40,9 +45,21 @@
                 background-color: $header2-background;
             }
 
+            span {
+                &:nth-of-type(2) {
+                    @media screen and (max-width:768px) {
+                        display: none;
+                    }
+                }
+            }
+
             .admin-sidebar__right-icon-down {
                 margin-left: auto;
                 transition: .2s;
+
+                @media screen and (max-width:768px) {
+                    display: none;
+                }
 
                 &.up {
                     transform: rotateZ(-180deg);

@@ -261,10 +261,17 @@ function Ads() {
     showContentSpin();
     disableFilter();
     const respApi = await fetchData();
-    if (respApi == null) return;
+    if (respApi == null) {
+      setTotalItem(() => 1);
+      showContentEmpty();
+      enableFilter();
+      return;
+    }
     const { array: data, total } = respApi;
     closeContentSpin();
     if (!data || data.length <= 0) {
+      setTotalItem(() => 1);
+      enableFilter();
       showContentEmpty();
       return;
     } else {
@@ -276,17 +283,27 @@ function Ads() {
     const renderStatus = function (number) {
       switch (number) {
         case 1:
-          return "Pending";
+          return "<span class='ads_accepted'>Accepted</span>";
         case 2:
-          return "Accepted";
+          return "<span class='ads_pending'>Pending</span>";
         case 3:
-          return "Rejected";
+          return "<span class='ads_rejected'>Rejected</span>";
         default:
           return;
       }
     };
     const element = getElementById("ids_content_body");
     element.innerHTML = "";
+    const visible = (number) => {
+      switch (number) {
+        case 1:
+          return "--visible-hidden";
+        case 3:
+          return "--visible-hidden";
+        default:
+          break;
+      }
+    };
     for (const item of data) {
       element.innerHTML += `<tr>
         <td>${item.userName}</td>
@@ -300,13 +317,14 @@ function Ads() {
         <td>${item.symbol}</td>
         <td>${item.side.at(0).toUpperCase() + item.side.slice(1)}</td>
         <td>${renderStatus(item.type)}</td>
-        <td class="ads__content-action">
-          <button name="${item.id}" class="ads__content-reject ${
-        item.type !== 2 ? "--visible-hidden" : ""
-      }">Reject</button>
-          <button name="${item.id}" class="ads__content-accept ${
-        item.type !== 2 ? "--visible-hidden" : ""
-      }">Accept</button>
+        <td>
+        <div class="ads__content-action">
+          <button name="${item.id}" class="ads__content-reject ${visible(
+        item.type
+      )}"><div class="loader --d-none"></div>Reject</button>
+          <button name="${item.id}" class="ads__content-accept ${visible(
+        item.type
+      )}"><div class="loader --d-none"></div>Accept</button></div>
         </td>
       </tr>`;
     }
@@ -326,28 +344,66 @@ function Ads() {
   const acceptHandle = function (id) {
     if (callApiConfirmAdsStatus.current === api_status.fetching) return;
     else callApiConfirmAdsStatus.current = api_status.fetching;
+    disableFilter();
+    tableShowLoaderButton(id, 1);
     confirmAds({
       id,
     })
       .then((resp) => {
         showToast(showAlertType.success, "Success");
+        callApiConfirmAdsStatus.current = api_status.fulfilled;
+        enableFilter();
+        tableCloseLoaderButton();
         loadData();
       })
       .catch((error) => {
+        enableFilter();
+        callApiConfirmAdsStatus.current = api_status.rejected;
+        tableCloseLoaderButton();
         showAlert(showAlertType.error, "Fail");
         console.log(error);
       });
   };
+  /**
+   * Function show button loader for table
+   * @param {number|string} id: id to identify row
+   * @param {number} type: 0 is reject button, 1 is accept button
+   */
+  const tableShowLoaderButton = function (id, type) {
+    const buttons =
+      getElementById("ids_content_body").querySelectorAll("button");
+    const trueButtons = Array.from(buttons).filter((item) => item.name === id);
+    const trueBtn = trueButtons.at(type);
+    trueBtn.querySelector(".loader").classList.remove("--d-none");
+  };
+  const tableCloseLoaderButton = function () {
+    const buttons =
+      getElementById("ids_content_body").querySelectorAll("button");
+    const classHide = "--d-none";
+    for (const item of buttons) {
+      const loader = item.querySelector(".loader");
+      const itemClass = loader.classList;
+      if (!itemClass.contains(classHide)) itemClass.add(classHide);
+    }
+  };
   const rejectHandle = function (id) {
+    if (callApiConfirmAdsStatus.current === api_status.fetching) return;
+    else callApiConfirmAdsStatus.current = api_status.fetching;
+    disableFilter();
+    tableShowLoaderButton(id, 0);
     refuseAds({
       id,
     })
       .then((resp) => {
+        callApiConfirmAdsStatus.current = api_status.fulfilled;
         showToast(showAlertType.success, "Success");
         loadData();
+        tableCloseLoaderButton();
       })
       .catch((error) => {
+        callApiConfirmAdsStatus.current = api_status.rejected;
         showAlert(showAlertType.error, "Fail");
+        tableCloseLoaderButton();
         console.log(error);
       });
   };
@@ -397,7 +453,6 @@ function Ads() {
   };
   return (
     <div className="ads">
-      {console.log("render ")}
       <div className="ads__header">
         <h3 className="ads__title">Ads</h3>
         <div className="ads__filter">

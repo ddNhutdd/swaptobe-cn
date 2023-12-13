@@ -11,6 +11,8 @@ import {
 import { api_status } from "src/constant";
 import { getListAdsBuy } from "src/util/userCallApi";
 export default function P2PTrading2({ history }) {
+  // The list of users selling coins must be placed in the buy section on the interface.
+  // The list of users buying coins must be placed in the sell section on the interface.
   const { coin } = useSelector((root) => root.coinReducer);
   const callApiSellListStatus = useRef(api_status.pending);
   const callApiBuyListStatus = useRef(api_status.pending);
@@ -77,11 +79,11 @@ export default function P2PTrading2({ history }) {
     showBuyLoader();
     const { array, total } = await fetchListAdsBuy(data);
     closeBuyLoader();
-    if (!array || array.lenght <= 0) {
+    if (!array || array.length <= 0) {
       showBuyEmpty();
     } else {
       //render html
-      const containerElement = getElementById("buyContent");
+      const containerElement = getElementById("sellContent");
       containerElement.innerHTML = "";
       for (const item of array) {
         containerElement.innerHTML += `<div class="buy-content box fadeInBottomToTop">
@@ -216,7 +218,7 @@ export default function P2PTrading2({ history }) {
               {t("youWantTo")} <span>{t("sell")}</span> {coin}?
             </span>
           </div>
-          <div id="c">
+          <div id="sellContent">
             <div className="sell-content box">
               <div className="item1">
                 <span>

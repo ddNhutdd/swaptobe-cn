@@ -1,11 +1,16 @@
 .admin-header {
-    height: 60px;
-    padding-left: 20px;
+    height: 70px;
+    padding-left: 30px;
     padding-right: 5px;
     display: flex;
     align-items: center;
     width: 100%;
     overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    background-color: $admin-background;
 
     .admin-header__bar {
         padding: 10px;
