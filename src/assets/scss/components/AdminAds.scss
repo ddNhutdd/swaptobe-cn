@@ -121,6 +121,24 @@
 
         .ads__table {
             @include adminTable;
+
+            .ads__content-action {
+                display: flex;
+                gap: 10px;
+
+                .ads__content-reject {
+                    @include adminButtonGhost;
+
+                    &:hover {
+                        color: $red-1;
+                        border-color: $red-1;
+                    }
+                }
+
+                .ads__content-accept {
+                    @include adminButtonGhost;
+                }
+            }
         }
     }
 }

@@ -50,31 +50,7 @@
         .admin-exchange-rate-disparity__action {
             button {
                 width: 150px;
-                padding: 6px 10px;
-                border: none;
-                border-radius: 5px;
-                outline: none;
-                background-color: $background-color-4;
-                transition: .2s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 5px;
-                position: relative;
-
-                &:hover {
-                    opacity: 0.7;
-                    cursor: pointer;
-                }
-
-                &.disabled {
-                    opacity: 0.3;
-
-                    &:hover {
-                        opacity: 0.3;
-                        cursor: not-allowed;
-                    }
-                }
+                @include adminButtonPrimary;
 
                 .loader {
                     position: absolute;

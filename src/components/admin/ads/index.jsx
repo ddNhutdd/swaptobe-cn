@@ -8,28 +8,56 @@ import {
 } from "src/util/common";
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
+import { api_status, showAlertType } from "src/constant";
+import {
+  confirmAds,
+  getAdsToWhere,
+  getAllAds,
+  getAllAdsPending,
+  refuseAds,
+} from "src/util/adminCallApi";
+import { showToast } from "src/function/showToast";
+import { showAlert } from "src/function/showAlert";
 function Ads() {
+  const actionType = {
+    all: "All",
+    buy: "Buy",
+    sell: "Sell",
+  };
   const [isModalCoinOpen, setIsModalCoinOpen] = useState(false);
-  const action = useRef("All");
+  const [totalItem, setTotalItem] = useState(1);
+  const action = useRef("All"); //filter
   const listCoin = useRef([]);
-  const selectedCoin = useRef("BTC");
+  const selectedCoin = useRef("All");
+  const callApiLoadTableStatus = useRef(api_status.pending);
+  const callApiConfirmAdsStatus = useRef(api_status.pending);
+  const limit = useRef(10);
+  const [page, setPage] = useState(1);
   useEffect(() => {
     document.addEventListener("click", closeDropdownAction);
     //
     disableDropdownCoin();
     //
     socket.once("listCoin", (resp) => {
-      listCoin.current = resp;
+      listCoin.current = [{ name: "All" }, ...resp];
+      const element = getElementById("modalCoinContent"); // check modal rendered
+      if (element) {
+        renderListCoin(listCoin);
+      }
     });
+    //
+    renderTable(fetchAllAds);
     return () => {
       document.removeEventListener("click", closeDropdownAction);
     };
   }, []);
-  useEffect(() => {
-    console.log("kkkk");
-  }, [listCoin.current]);
   const toggleDropdownAction = function (e) {
     e.stopPropagation();
+    if (
+      getClassListFromElementById("dropdownActionSelected").contains("disabled")
+    ) {
+      return;
+    }
     getClassListFromElementById("dropdownActionMenu").toggle("show");
     getClassListFromElementById("dropdownActionSelected").toggle("active");
   };
@@ -40,6 +68,8 @@ function Ads() {
   const dropdownActionItemClickHandle = function (e) {
     action.current = e.target.innerHTML;
     dropdownActionSelect(action.current);
+    setPage(1);
+    loadData();
   };
   const dropdownActionSelect = function (action) {
     const classActive = "active";
@@ -77,11 +107,36 @@ function Ads() {
   const enableDropdownCoin = function () {
     getClassListFromElementById("dropdownCoinSelected").remove("disabled");
   };
+  const disableDropdownAction = function () {
+    addClassToElementById("dropdownActionSelected", "disabled");
+  };
+  const enableDropdownAction = function () {
+    getClassListFromElementById("dropdownActionSelected").remove("disabled");
+  };
+  const disablePendingCheckBox = function () {
+    getElementById("pendingCheckbox").disabled = true;
+  };
+  const enablePendingCheckBox = function () {
+    getElementById("pendingCheckbox").disabled = false;
+  };
+  const disableFilter = function () {
+    disableDropdownAction();
+    disablePendingCheckBox();
+    disableDropdownCoin();
+  };
+  const enableFilter = function () {
+    enableDropdownAction();
+    enablePendingCheckBox();
+    if (action.current === actionType.all) {
+      disableDropdownCoin();
+    } else {
+      enableDropdownCoin();
+    }
+  };
   const renderListCoin = function (listCoin) {
     const element = getElementById("modalCoinContent");
     element.innerHTML = "";
     if (!listCoin.current || listCoin.current.length <= 0) {
-      console.log("here");
       showModalSpinner();
       return;
     } else {
@@ -91,12 +146,15 @@ function Ads() {
       element.innerHTML += `<span class="ads-modal-coin-content__item ${
         selectedCoin.current === name ? "active" : ""
       }">
-        <span class="ads-modal-coin-content__img">
+        <span class="ads-modal-coin-content__img ${
+          name === "All" ? "--d-none" : ""
+        }">
           <img src="${DOMAIN + image}" alt="${name}" />
         </span>
         <span class="ads-modal-coin-content__text">${name}</span>
       </span>`;
     }
+    //add event
     for (const item of element.children) {
       const name = item.querySelector(
         ".ads-modal-coin-content__text"
@@ -106,6 +164,11 @@ function Ads() {
   };
   const coinSelectHandle = function (coinName) {
     selectedCoin.current = coinName;
+    getElementById("dropdownCoinSelected").querySelector(
+      ".admin__dropdown-text"
+    ).innerHTML = coinName;
+    setPage(1);
+    loadData();
     handleCancelModalCoin();
   };
   const showModalSpinner = function () {
@@ -118,8 +181,223 @@ function Ads() {
       addClassToElementById("modalSpinner", "--d-none");
     }
   };
+  const fetchAllAds = function () {
+    return new Promise((resolve) => {
+      if (callApiLoadTableStatus.current === api_status.fetching) resolve(null);
+      else callApiLoadTableStatus.current = api_status.fetching;
+      getAllAds({
+        limit: limit.current,
+        page: page,
+      })
+        .then((resp) => {
+          callApiLoadTableStatus.current = api_status.fulfilled;
+          resolve(resp.data.data);
+        })
+        .catch((error) => {
+          callApiLoadTableStatus.current = api_status.rejected;
+          console.log(error);
+          resolve(null);
+        });
+    });
+  };
+  const fetchAllAdsPending = function () {
+    return new Promise((resolve) => {
+      if (callApiLoadTableStatus.current === api_status.fetching) resolve(null);
+      else callApiLoadTableStatus.current = api_status.fetching;
+      getAllAdsPending({
+        limit: limit.current,
+        page: page,
+      })
+        .then((resp) => {
+          callApiLoadTableStatus.current = api_status.fulfilled;
+          console.log(resp);
+          resolve(resp.data.data);
+        })
+        .catch((error) => {
+          callApiLoadTableStatus.current = api_status.rejected;
+          console.log(error);
+          resolve(null);
+        });
+    });
+  };
+  const fetchAdsByWhere = function () {
+    return new Promise((resolve) => {
+      if (callApiLoadTableStatus.current === api_status.fetching) resolve(null);
+      else callApiLoadTableStatus.current = api_status.fetching;
+      const whereString = whereStringBuilder();
+      getAdsToWhere({
+        limit: limit.current,
+        page: page,
+        where: whereString,
+      })
+        .then((resp) => {
+          callApiLoadTableStatus.current = api_status.fulfilled;
+          resolve(resp.data.data);
+        })
+        .catch((error) => {
+          callApiLoadTableStatus.current = api_status.rejected;
+          console.log(error);
+          resolve(null);
+        });
+    });
+  };
+  const whereStringBuilder = function () {
+    const result = [];
+    if (action.current !== actionType.all) {
+      result.push(`side='${action.current}'`);
+    }
+    if (selectedCoin.current !== "All") {
+      result.push(`symbol='${selectedCoin.current}'`);
+    }
+    const pending = getElementById("pendingCheckbox").checked;
+    if (pending) {
+      result.push(`type=2`);
+    }
+    return result.join(" AND ");
+  };
+  const renderTable = async function (fetchData) {
+    closeContentTable();
+    closeContentEmpty();
+    showContentSpin();
+    disableFilter();
+    const respApi = await fetchData();
+    if (respApi == null) return;
+    const { array: data, total } = respApi;
+    closeContentSpin();
+    if (!data || data.length <= 0) {
+      showContentEmpty();
+      return;
+    } else {
+      closeContentEmpty();
+    }
+    // fetData
+    await fetchData();
+    //render html
+    const renderStatus = function (number) {
+      switch (number) {
+        case 1:
+          return "Pending";
+        case 2:
+          return "Accepted";
+        case 3:
+          return "Rejected";
+        default:
+          return;
+      }
+    };
+    const element = getElementById("ids_content_body");
+    element.innerHTML = "";
+    for (const item of data) {
+      element.innerHTML += `<tr>
+        <td>${item.userName}</td>
+        <td>${item.created_at}</td>
+        <td>${item.amount}</td>
+        <td>${item.amountMinimum}</td>
+        <td>${item.addressWallet}</td>
+        <td>${item.bankName}</td>
+        <td>${item.ownerAccount}</td>
+        <td>${item.numberBank}</td>
+        <td>${item.symbol}</td>
+        <td>${item.side.at(0).toUpperCase() + item.side.slice(1)}</td>
+        <td>${renderStatus(item.type)}</td>
+        <td class="ads__content-action">
+          <button name="${item.id}" class="ads__content-reject ${
+        item.type !== 2 ? "--visible-hidden" : ""
+      }">Reject</button>
+          <button name="${item.id}" class="ads__content-accept ${
+        item.type !== 2 ? "--visible-hidden" : ""
+      }">Accept</button>
+        </td>
+      </tr>`;
+    }
+    // add event
+    for (const item of element.children) {
+      const [buttonReject, buttonAccept] = item.querySelectorAll("button");
+      const id = buttonReject.name;
+      buttonReject.addEventListener("click", rejectHandle.bind(null, id));
+      buttonAccept.addEventListener("click", acceptHandle.bind(null, id));
+    }
+    //
+    setTotalItem(() => total);
+    //
+    showContentTable();
+    enableFilter();
+  };
+  const acceptHandle = function (id) {
+    if (callApiConfirmAdsStatus.current === api_status.fetching) return;
+    else callApiConfirmAdsStatus.current = api_status.fetching;
+    confirmAds({
+      id,
+    })
+      .then((resp) => {
+        showToast(showAlertType.success, "Success");
+        loadData();
+      })
+      .catch((error) => {
+        showAlert(showAlertType.error, "Fail");
+        console.log(error);
+      });
+  };
+  const rejectHandle = function (id) {
+    refuseAds({
+      id,
+    })
+      .then((resp) => {
+        showToast(showAlertType.success, "Success");
+        loadData();
+      })
+      .catch((error) => {
+        showAlert(showAlertType.error, "Fail");
+        console.log(error);
+      });
+  };
+  const showContentTable = function () {
+    getClassListFromElementById("ads_content_table").remove("--d-none");
+  };
+  const closeContentTable = function () {
+    addClassToElementById("ads_content_table", "--d-none");
+  };
+  const showContentSpin = function () {
+    getClassListFromElementById("ads_content_spin").remove("--d-none");
+  };
+  const closeContentSpin = function () {
+    addClassToElementById("ads_content_spin", "--d-none");
+  };
+  const showContentEmpty = function () {
+    getClassListFromElementById("ads_content_empty").remove("--d-none");
+  };
+  const closeContentEmpty = function () {
+    addClassToElementById("ads_content_empty", "--d-none");
+  };
+  const pendingChangeHandle = function (e) {
+    setPage(1);
+    loadData();
+  };
+  const pageChangeHandle = function (newPage = 1) {
+    if (
+      callApiConfirmAdsStatus.current === api_status.fetching ||
+      callApiLoadTableStatus.current === api_status.fetching
+    ) {
+      return false;
+    }
+    setPage(newPage);
+    loadData();
+  };
+  const loadData = function () {
+    const pending = getElementById("pendingCheckbox").checked;
+    if (action.current === actionType.all) {
+      if (pending) {
+        renderTable(fetchAllAdsPending);
+      } else {
+        renderTable(fetchAllAds);
+      }
+    } else {
+      renderTable(fetchAdsByWhere);
+    }
+  };
   return (
     <div className="ads">
+      {console.log("render ")}
       <div className="ads__header">
         <h3 className="ads__title">Ads</h3>
         <div className="ads__filter">
@@ -159,7 +437,12 @@ function Ads() {
             </div>
           </div>
           <div className="ads__checkbox">
-            <input id="pendingCheckbox" type="checkbox" className="--d-none" />
+            <input
+              id="pendingCheckbox"
+              onChange={pendingChangeHandle}
+              type="checkbox"
+              className="--d-none"
+            />
             <label className="ads__checkbox-item" htmlFor="pendingCheckbox">
               <div className="ads__checkbox__label">Pending: </div>
               <div className="ads__checkbox__control"></div>
@@ -186,14 +469,16 @@ function Ads() {
             defaultCurrent={1}
             pageSize={10}
             showSizeChanger={false}
+            current={page}
+            total={totalItem}
+            onChange={pageChangeHandle}
           />
         </div>
       </div>
       <div className="ads__content">
-        <table className="ads__table">
+        <table id="ads_content_table" className="ads__table">
           <thead>
             <tr>
-              <th>Id</th>
               <th>User Name</th>
               <th>Created At</th>
               <th>Amount</th>
@@ -205,11 +490,13 @@ function Ads() {
               <th>Symbol</th>
               <th>Action</th>
               <th>Status</th>
+              <th>
+                <i className="fa-solid fa-gears"></i>
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="ids_content_body">
             <tr>
-              <td>1</td>
               <td>daingo</td>
               <td>29-4</td>
               <td>1</td>
@@ -221,13 +508,23 @@ function Ads() {
               <td>BTC</td>
               <td>Buy</td>
               <td>pending</td>
+              <td className="ads__content-action">
+                <button className="ads__content-reject">Reject</button>
+                <button className="ads__content-accept">Accept</button>
+              </td>
             </tr>
           </tbody>
         </table>
-        <div className="ads__content-spinner spin-container --d-none">
+        <div
+          id="ads_content_spin"
+          className="ads__content-spinner spin-container --d-none"
+        >
           <Spin />
         </div>
-        <div className="ads__content-empty spin-container --d-none">
+        <div
+          id="ads_content_empty"
+          className="ads__content-empty spin-container --d-none"
+        >
           <Empty />
         </div>
       </div>

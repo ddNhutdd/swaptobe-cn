@@ -179,19 +179,7 @@
         }
 
         .admin-kyc-users__check {
-            display: inline;
-            padding: 3px 15px;
-            border: 1px solid $background-color-4;
-            border-radius: 5px;
-            color: $white;
-            background-color: $transparent;
-            transition: .4s;
-
-            &:hover {
-                cursor: pointer;
-                color: $green-2;
-                border-color: $green-2;
-            }
+            @include adminButtonGhost;
         }
     }
 }

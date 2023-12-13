@@ -369,6 +369,50 @@ $blue-light: #ceceff;
   }
 }
 
+@mixin adminButtonPrimary {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  background-color: $background-color-4;
+  transition: .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  position: relative;
+
+  &:hover {
+    opacity: 0.7;
+    cursor: pointer;
+  }
+
+  &.disabled {
+    opacity: 0.3;
+
+    &:hover {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@mixin adminButtonGhost {
+  display: inline;
+  padding: 3px 15px;
+  border: 1px solid $background-color-4;
+  border-radius: 5px;
+  color: $white;
+  background-color: $transparent;
+  transition: .4s;
+
+  &:hover {
+    cursor: pointer;
+    color: $green-2;
+    border-color: $green-2;
+  }
+}
+
 .box {
   background-color: whitesmoke;
   border-radius: 5px;
