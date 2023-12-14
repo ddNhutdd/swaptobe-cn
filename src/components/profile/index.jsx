@@ -437,7 +437,7 @@ function Profile() {
               />
               <div
                 id="profile__fullName__error"
-                className={`profile__input__error`}
+                className={`input__error`}
               ></div>
             </div>
           </div>
@@ -454,7 +454,7 @@ function Profile() {
               />
               <div
                 id="profile__address__error"
-                className={`profile__input__error `}
+                className={`input__error`}
               ></div>
             </div>
           </div>
@@ -469,12 +469,10 @@ function Profile() {
                 id="profile__phone"
                 type="text"
               />
-              <div
-                id="profile__phone__error"
-                className={`profile__input__error`}
-              ></div>
+              <div id="profile__phone__error" className={`input__error`}></div>
             </div>
           </div>
+
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__company">{t("company")}</label>
@@ -488,10 +486,11 @@ function Profile() {
               />
               <div
                 id="profile__company__error"
-                className={`profile__input__error`}
+                className={`input__error `}
               ></div>
             </div>
           </div>
+
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__passport">{t("passport")}</label>
@@ -505,10 +504,11 @@ function Profile() {
               />
               <div
                 id="profile__passport__error"
-                className={`profile__input__error`}
+                className={`input__error`}
               ></div>
             </div>
           </div>
+
           <div className="profile__form-item"></div>
           <div className="profile__form-item">
             <div className="profile__fileInput">

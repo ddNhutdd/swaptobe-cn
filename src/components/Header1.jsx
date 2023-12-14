@@ -14,7 +14,6 @@ import {
   formatStringNumberCultureUS,
   getLocalStorage,
   removeLocalStorage,
-  setLocalStorage,
 } from "src/util/common";
 import { currencySetCurrent } from "src/redux/actions/currency.action";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
@@ -77,6 +76,7 @@ export default function Header1({ history }) {
     removeLocalStorage(localStorageVariable.currency);
     dispatch(currencySetCurrent(currency.usd));
     removeLocalStorage(localStorageVariable.lng);
+    removeLocalStorage(localStorageVariable.coin);
     history.push("/");
     dispatch({ type: "USER_LOGOUT" });
     showToast("success", "Logged out");

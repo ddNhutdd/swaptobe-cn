@@ -6,6 +6,7 @@ export const localStorageVariable = {
   user: "user",
   currency: "currency",
   previousePage: null,
+  coin: "coin",
 };
 
 // export const deploy_domain = "https://demo.dk-technical.vn/";

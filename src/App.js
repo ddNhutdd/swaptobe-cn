@@ -36,8 +36,10 @@ import { exchangeRateDisparity as exchangeRateDisparityCallApi } from "src/util/
 import ExchangeRateDisparity from "./components/admin/exchangeRateDisparity";
 import { api_status, url } from "./constant";
 import Ads from "./components/admin/ads";
+import Transaction from "./components/transaction";
 function App() {
   const dispatch = useDispatch();
+  const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const fetchExchangeCount = useSelector(getFetchExchangeCount);
   const userWalletFetch = useSelector(userWalletFetchCount);
   const getExchangeRateDisparityFetch = useSelector(
@@ -113,8 +115,8 @@ function App() {
     getExchange();
   }, [fetchExchangeCount]);
   useEffect(() => {
-    getUserWallet();
-  }, [userWalletFetch]);
+    isLogin && getUserWallet();
+  }, [userWalletFetch, isLogin]);
   useEffect(() => {
     getExchangeRateDisparityApi();
   }, [getExchangeRateDisparityFetch]);
@@ -122,6 +124,7 @@ function App() {
     <BrowserRouter>
       <ScrollToTop>
         <Switch>
+          <MainTemplate path="/transaction" component={Transaction} />
           <MainTemplate path="/profile" component={Profile} />
           <MainTemplate path="/wallet-2" component={SwaptobeWallet} />
           <MainTemplate path="/p2p-trading" component={P2PTrading} />

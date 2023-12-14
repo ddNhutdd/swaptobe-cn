@@ -294,7 +294,6 @@ export default function CreateBuy() {
             case "Insufficient balance":
               showAlert(showAlertType.error, mess);
               break;
-
             default:
               showAlert(showAlertType, t("anErrorHasOccurred"));
               break;
@@ -368,7 +367,9 @@ export default function CreateBuy() {
               : "Do you want to buy?"}
           </span>
           <div className="head-area">
-            <h2>Ads to buy {currentCoin}</h2>
+            <h2>
+              Ads to {action === actionType.buy ? "buy" : "sell"} {currentCoin}
+            </h2>
             <div>
               Market buy price:{" "}
               <span

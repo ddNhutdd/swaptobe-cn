@@ -10,6 +10,85 @@
   .container {
     @include container;
 
+    .record-content {
+      margin-top: 12px;
+      background-color: white;
+      padding: 20px;
+      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+
+      @media screen and(max-width:992px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      @media screen and(max-width:576px) {
+        align-items: stretch;
+      }
+
+      table {
+        @media screen and (max-width:576px) {
+          width: 100%;
+        }
+
+        tbody {
+          @media screen and (max-width:576px) {
+            width: 100%;
+          }
+
+          tr {
+            td {
+              @media screen and (max-width:576px) {
+                border: 1px solid $background-color-4;
+              }
+
+              &:first-child {
+                font-style: italic;
+                font-weight: bold;
+                vertical-align: top;
+                text-align: right;
+
+                @media screen and (max-width:576px) {
+                  width: 50%;
+                }
+              }
+
+              vertical-align: bottom;
+              padding: 0 5px;
+            }
+          }
+        }
+      }
+
+      .item2 {
+        .item2-amount-number {
+          font-weight: bold;
+        }
+      }
+
+      .item4 {
+        button {
+          padding: 8px 20px;
+          color: $white;
+          background-color: $header2-background;
+          border: none;
+          border-radius: 5px;
+          transition: .2s;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+
+          &:hover {
+            background-color: $header2-background-light;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
     .buy {
       background-color: whitesmoke;
       padding: 30px;
@@ -34,135 +113,6 @@
             color: $green;
             font-weight: bold;
           }
-        }
-      }
-
-      .buy-content {
-        margin-top: 12px;
-        background-color: white;
-        padding: 20px;
-        font-size: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-
-        @media screen and (max-width:992px) {
-          flex-wrap: wrap;
-          position: relative;
-        }
-
-        @media screen and (max-width:576px) {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0px;
-        }
-
-
-        tr {
-          @media screen and (max-width: 576px) {
-            display: block;
-          }
-
-          td {
-            padding: 0 5px;
-
-            &:first-child {
-              width: 170px;
-
-              @media screen and (max-width:576px) {
-                font-style: italic;
-              }
-            }
-
-            @media screen and (max-width: 992px) {
-              padding-left: 0;
-              width: 50%;
-            }
-
-            @media screen and (max-width: 576px) {
-              display: block;
-              width: 100%;
-            }
-          }
-        }
-
-
-        .item1 {
-          display: flex;
-          flex-direction: column;
-          width: 15%;
-
-          @media screen and (max-width:992px) {
-            width: 100%;
-          }
-        }
-
-        .item2 {
-          display: flex;
-          flex-direction: column;
-          width: 30%;
-
-          @media screen and (max-width:992px) {
-            width: 100%;
-          }
-
-          .item2-amount-number {
-            font-weight: bold;
-          }
-        }
-
-        .item3 {
-          display: flex;
-          width: 30%;
-          flex-direction: column;
-
-          @media screen and (max-width:992px) {
-            width: 100%;
-          }
-        }
-
-        .item4 {
-
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          width: 80px;
-
-          @media screen and (max-width:992px) {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 18px;
-            width: 75px;
-            height: 42px;
-          }
-
-          @media screen and (max-width:576px) {
-            position: static;
-            transform: none;
-            justify-content: flex-start;
-          }
-
-          button {
-            padding: 8px 20px;
-            color: $white;
-            background-color: $header2-background;
-            border: none;
-            border-radius: 5px;
-            transition: .2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-
-            &:hover {
-              background-color: $header2-background-light;
-              cursor: pointer;
-            }
-
-
-          }
-
         }
       }
 
@@ -207,37 +157,9 @@
         }
       }
 
-      .sell-content {
-        margin-top: 12px;
-        background-color: white;
-        padding: 20px;
-        font-size: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        @media screen and (max-width:576px) {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 15px;
-        }
-
-        .item1 {
-          display: flex;
-          flex-direction: column;
-
-          span {
-            span {
-              color: $red;
-              font-weight: bold;
-              font-size: 18px;
-            }
-          }
-        }
-      }
+      .sell-content {}
 
       .sell-ad {
-
         .sellAdBtn {
           background-color: $red;
           border: none;

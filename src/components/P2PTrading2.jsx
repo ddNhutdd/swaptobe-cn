@@ -8,54 +8,71 @@ import {
   getClassListFromElementById,
   getElementById,
 } from "src/util/common";
-import { api_status } from "src/constant";
-import { getListAdsBuy } from "src/util/userCallApi";
+import { api_status, url } from "src/constant";
+import { getListAdsBuy, getListAdsSell } from "src/util/userCallApi";
 export default function P2PTrading2({ history }) {
   // The list of users selling coins must be placed in the buy section on the interface.
   // The list of users buying coins must be placed in the sell section on the interface.
   const { coin } = useSelector((root) => root.coinReducer);
   const callApiSellListStatus = useRef(api_status.pending);
   const callApiBuyListStatus = useRef(api_status.pending);
-  const [buyListTotalItems, setBuyListTotalItems] = useState(1);
-  const buyListCurrentPage = useRef(1);
+  const [buyListSectionTotalItems, setBuyListSectionTotalItems] = useState(1);
+  const [sellListSectionTotalItems, setSellListSectionTotalItems] = useState(1);
+  const buySectionPage = useRef(1);
+  const sellSectionPage = useRef(1);
   //
-  const closeBuyContent = function () {
+  const closeBuySectionContent = function () {
     addClassToElementById("buyContent", "--d-none");
   };
-  const showBuyContent = function () {
+  const showBuySectionContent = function () {
     getClassListFromElementById("buyContent").remove("--d-none");
   };
-  const closeBuyLoader = function () {
+  const closeBuySectionLoader = function () {
     addClassToElementById("buyLoader", "--d-none");
   };
-  const showBuyLoader = function () {
+  const showBuySectionLoader = function () {
     getClassListFromElementById("buyLoader").remove("--d-none");
   };
-  const closeBuyEmpty = function () {
+  const closeBuySectionEmpty = function () {
     addClassToElementById("buyEmpty", "--d-none");
   };
-  const showBuyEmpty = function () {
+  const showBuySectionEmpty = function () {
     getClassListFromElementById("buyEmpty").remove("--d-none");
   };
-  const closeSellContent = function () {
+  const closeSellSectionContent = function () {
     addClassToElementById("sellContent", "--d-none");
   };
-  const showSellContent = function () {
+  const showSellSectionContent = function () {
     getClassListFromElementById("sellContent").remove("--d-none");
   };
-  const closeSellLoader = function () {
+  const closeSellSectionLoader = function () {
     addClassToElementById("sellLoader", "--d-none");
   };
-  const showSellLoader = function () {
+  const showSellSectionLoader = function () {
     getClassListFromElementById("sellLoader").remove("--d-none");
   };
-  const closeSellEmpty = function () {
+  const closeSellSectionEmpty = function () {
     addClassToElementById("sellEmpty", "--d-none");
   };
-  const showSellEmpty = function () {
+  const showSellSectionEmpty = function () {
     getClassListFromElementById("sellEmpty").remove("--d-none");
   };
-  const fetchListAdsSell = function () {};
+  const fetchListAdsSell = function (data) {
+    return new Promise((resolve) => {
+      if (callApiSellListStatus.current === api_status.fetching) resolve(null);
+      else callApiSellListStatus.current = api_status.fetching;
+      getListAdsSell(data)
+        .then((resp) => {
+          callApiSellListStatus.current = api_status.fulfilled;
+          resolve(resp.data.data);
+        })
+        .catch((error) => {
+          callApiSellListStatus.current = api_status.rejected;
+          console.log(error);
+          resolve(null);
+        });
+    });
+  };
   const fetchListAdsBuy = function (data) {
     return new Promise((resolve, reject) => {
       if (callApiBuyListStatus.current === api_status.fetching) resolve({});
@@ -73,22 +90,41 @@ export default function P2PTrading2({ history }) {
         });
     });
   };
-  const renderListAdsBuy = async function (data) {
-    closeBuyContent();
-    closeBuyEmpty();
-    showBuyLoader();
-    const { array, total } = await fetchListAdsBuy(data);
-    closeBuyLoader();
+  const renderSectionBuy = async function (data) {
+    closeBuySectionContent();
+    closeBuySectionEmpty();
+    showBuySectionLoader();
+    const { array, total } = await fetchListAdsSell(data);
+    closeBuySectionLoader();
+    const containerElement = getElementById("buyContent");
+    containerElement.innerHTML = "";
     if (!array || array.length <= 0) {
-      showBuyEmpty();
+      showBuySectionEmpty();
     } else {
       //render html
-      const containerElement = getElementById("sellContent");
-      containerElement.innerHTML = "";
       for (const item of array) {
-        containerElement.innerHTML += `<div class="buy-content box fadeInBottomToTop">
-        <div class="item1">
-          <span>User Name: ${item.userName}</span>
+        containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
+        <div>
+          <table>
+          <tbody>
+          <tr>
+            <td>User Name:</td>
+            <td>${item.userName}</td>
+          </tr>
+          <tr>
+          <td>Bank Name:</td>
+          <td>${item.bankName}</td>
+         </tr>
+         <tr>
+          <td>Name:</td>
+          <td>${item.ownerAccount}</td>
+         </tr>
+         <tr>
+          <td>Account Number:</td>
+          <td>${item.numberBank}</td>
+         </tr>
+          </tbody>
+        </table>
         </div>
         <div class="item2">
           <table>
@@ -101,13 +137,7 @@ export default function P2PTrading2({ history }) {
           <td>Amount Minimum:</td>
           <td>${item.amountMinimum}</td>
         </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="item3">
-          <table>
-          <tbody>
-          <tr>
+        <tr>
           <td>Created At:</td>
           <td>${item.created_at}</td>
         </tr>
@@ -130,18 +160,82 @@ export default function P2PTrading2({ history }) {
         button.addEventListener("click", buyClickHandle.bind(null, id));
       }
       // show
-      showBuyContent();
+      showBuySectionContent();
     }
-    setBuyListTotalItems(() => total);
+    setBuyListSectionTotalItems(() => total);
+  };
+  const renderSectionSell = async function (data) {
+    closeSellSectionContent();
+    closeSellSectionEmpty();
+    showSellSectionLoader();
+    const { array, total } = await fetchListAdsBuy(data);
+    closeSellSectionLoader();
+    const containerElement = getElementById("sellContent");
+    containerElement.innerHTML = "";
+    if (!array || array.length <= 0) {
+      showSellSectionEmpty();
+    } else {
+      for (const item of array) {
+        containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
+          <div>
+            <table>
+              <tbody>
+                <tr>
+                  <td>User Name:</td>
+                  <td>${item.userName}</td>
+                </tr>
+                <tr class="item2">
+                  <td>Amount:</td>
+                  <td class="item2-amount-number">${item.amount}</td>
+                </tr>
+                <tr>
+                  <td>Amount Minimum:</td>
+                  <td>${item.amountMinimum}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Created At:</td>
+                  <td>${item.created_at}</td>
+                </tr>
+                <tr>
+                  <td>Address Wallet:</td>
+                  <td>${item.addressWallet}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="item4">
+            <button name="${item.id}">${"Sell"}</button>
+          </div>
+        </div>`;
+      }
+      // add
+    }
+    // show
+    showSellSectionContent();
+    setSellListSectionTotalItems(() => total);
   };
   const buyClickHandle = function (id) {
     console.log(id);
   };
-  const onChange = function (page) {
-    buyListCurrentPage.current = page;
-    renderListAdsBuy({
+  const onChangeSectionBuyPaging = function (page) {
+    buySectionPage.current = page;
+    renderSectionBuy({
       limit: 5,
-      page: buyListCurrentPage.current,
+      page: buySectionPage.current,
+      symbol: coin,
+    });
+  };
+  const onChangeSectionSellPaging = function (page) {
+    sellSectionPage.current = page;
+    renderSectionSell({
+      limit: 5,
+      page: sellSectionPage.current,
       symbol: coin,
     });
   };
@@ -150,13 +244,19 @@ export default function P2PTrading2({ history }) {
     //
     const element = document.querySelector(".p2ptrading2");
     element.classList.add("fadeInBottomToTop");
-    //
-    renderListAdsBuy({
+  }, []);
+  useEffect(() => {
+    renderSectionBuy({
       limit: 5,
-      page: buyListCurrentPage.current,
+      page: buySectionPage.current,
       symbol: coin,
     });
-  }, []);
+    renderSectionSell({
+      limit: 5,
+      page: sellSectionPage.current,
+      symbol: coin,
+    });
+  }, [coin]);
   return (
     <div className="p2ptrading2">
       <div className="container">
@@ -194,7 +294,7 @@ export default function P2PTrading2({ history }) {
           <div className="p2ptrading2__footer">
             <div className="buy-ad">
               <button
-                onClick={() => history.push("/create-ads/buy")}
+                onClick={() => history.push(url.create_ads_sell)}
                 type="primary"
                 size="large"
                 className="buyAdBtn"
@@ -205,8 +305,8 @@ export default function P2PTrading2({ history }) {
             <Pagination
               defaultCurrent={1}
               pageSize={5}
-              onChange={onChange}
-              total={buyListTotalItems}
+              onChange={onChangeSectionBuyPaging}
+              total={buyListSectionTotalItems}
               showSizeChanger={false}
             />
           </div>
@@ -215,7 +315,11 @@ export default function P2PTrading2({ history }) {
           <div className="sell-title">
             <i className="fa-solid fa-flag"></i>
             <span>
-              {t("youWantTo")} <span>{t("sell")}</span> {coin}?
+              {t("youWantTo")}{" "}
+              <span>
+                {t("sell").at(0).toLocaleUpperCase() + t("sell").slice(1)}
+              </span>{" "}
+              {coin}?
             </span>
           </div>
           <div id="sellContent">
@@ -255,7 +359,7 @@ export default function P2PTrading2({ history }) {
           <div className="p2ptrading2__footer">
             <div className="sell-ad">
               <button
-                onClick={() => history.push("/create-ads/sell")}
+                onClick={() => history.push(url.create_ads_buy)}
                 type="primary"
                 size="large"
                 className="sellAdBtn"
@@ -265,8 +369,10 @@ export default function P2PTrading2({ history }) {
             </div>
             <Pagination
               defaultCurrent={1}
-              total={500}
+              pageSize={5}
+              total={sellListSectionTotalItems}
               showSizeChanger={false}
+              onChange={onChangeSectionSellPaging}
             />
           </div>
         </div>

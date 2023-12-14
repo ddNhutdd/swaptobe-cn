@@ -1,3 +1,6 @@
+import { localStorageVariable } from "src/constant";
+import { getLocalStorage } from "src/util/common";
+
 export const coin = {
   userWalletFetchCount: "coin/userWalletFetchCount",
   totalValue: "coin/totalValue",
@@ -7,7 +10,7 @@ export const coin = {
 };
 
 export const defaultState = {
-  coin: "BTC",
+  coin: getLocalStorage(localStorageVariable.coin) || "BTC",
   amountCoin: 0,
   userWalletFetchCount: 0, // mỗi lần muốn làm mới thông tin ví của user thì tăng biến này lên 1, component header1 call api và fetch data vào userWallet
   userWallet: [], // duoc load du lieu tu header 1

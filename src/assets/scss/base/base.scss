@@ -86,7 +86,6 @@ $blue-light: #ceceff;
   margin-left: auto;
   max-width: 1200px;
 
-  // padding-top: 90px;
   @media screen and (max-width:1199px) {
     max-width: 960px;
   }
@@ -118,6 +117,61 @@ $blue-light: #ceceff;
   height: 100%;
   margin: 0 auto;
   padding: 40px 30px;
+
+  @media screen and (max-width:767px) {
+    padding-right: 15px;
+    padding-left: 15px;
+    max-width: 400px;
+  }
+
+  @media screen and (max-width:575px) {
+    max-width: 100%;
+  }
+}
+
+@mixin userInput {
+  width: 100%;
+
+  label {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+    border: 1px solid $background-color-4;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: .2s;
+
+    &:disabled {
+      background-color: $background-color-4;
+
+      &:hover {
+        border-color: $background-color-4;
+        cursor: not-allowed;
+      }
+    }
+
+    &:hover {
+      border-color: $header2-background;
+    }
+
+    &:focus {
+      border-color: $header2-background;
+    }
+
+    &:focus-visible {
+      outline: 1px solid $header2-background;
+    }
+  }
+
+  .input__error {
+    display: block;
+    color: $red-1;
+    height: 22px;
+    min-width: 1px;
+  }
 }
 
 @mixin userMainButton {

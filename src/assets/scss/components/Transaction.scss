@@ -1,0 +1,54 @@
+.transaction {
+    margin-top: 90px;
+
+    .transaction--green {
+        color: $green-2
+    }
+
+    .container {
+        @include container2;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .transaction__box {
+            .transaction__input-container {
+                display: flex;
+                gap: 15px;
+
+                .transaction__input {
+                    @include userInput;
+                    position: relative;
+
+                    .transaction__unit {
+                        position: absolute;
+                        top: 38px;
+                        right: 6px;
+                    }
+                }
+            }
+
+            .transaction__checkbox {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                .transaction__checkbox-square {
+                    width: 15px;
+                    height: 15px;
+                    border: 1px solid $black;
+                    border-radius: 3px;
+                }
+
+                .transaction__checkbox-text {
+                    user-select: none;
+                }
+            }
+        }
+
+        .transaction__header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    }
+}

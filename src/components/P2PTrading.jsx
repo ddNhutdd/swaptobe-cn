@@ -5,7 +5,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import P2PTrading2 from "./P2PTrading2";
 import { useTranslation } from "react-i18next";
-import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
+import {
+  formatStringNumberCultureUS,
+  getLocalStorage,
+  setLocalStorage,
+} from "src/util/common";
 import { currency, defaultLanguage, localStorageVariable } from "src/constant";
 import i18n from "src/translation/i18n";
 import { DOMAIN } from "src/util/service";
@@ -59,6 +63,7 @@ export default function P2PTrading({ history }) {
   const handleCancel = () => setIsModalVisible(false);
   const handleSelectedRow = (record) => {
     setIsModalVisible(false);
+    setLocalStorage(localStorageVariable.coin, record.name);
     dispatch(coinSetCoin(record.name));
   };
   const columns = [
@@ -73,8 +78,7 @@ export default function P2PTrading({ history }) {
               cursor: "pointer",
               display: "flex",
               gap: "5px",
-              alignItems: "center",
-              flexWrap: "wrap",
+              alignItems: "flex-start",
             }}
             onClick={() => handleSelectedRow(record)}
           >
@@ -84,6 +88,7 @@ export default function P2PTrading({ history }) {
                 width: "20px",
                 height: "20px",
                 objectFit: "cover",
+                marginTop: "1px",
               }}
               src={DOMAIN + record.image}
               alt={record.token_key}
