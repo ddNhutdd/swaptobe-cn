@@ -25,6 +25,7 @@ export const url = {
   create_ads_sell: "/create-ads/sell",
   create_ads_buy: "/create-ads/buy",
   admin_ads: "/admin/ads",
+  ads_history: "/ads-history",
 };
 
 export const api_url = {

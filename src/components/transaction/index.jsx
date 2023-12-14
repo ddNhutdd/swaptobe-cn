@@ -4,8 +4,10 @@ function Transaction() {
     <div className="transaction">
       <div className="container">
         <div className="box transaction__box transaction__header">
-          <span className="transaction--green">Buy</span> Tether USDT via Bank
-          transfer (VND)
+          <div>
+            <span className="transaction--green">Buy</span> Tether USDT via Bank
+            transfer (VND)
+          </div>
         </div>
         <div className="box transaction__box">
           <form>
@@ -22,18 +24,21 @@ function Transaction() {
                 <span className="transaction__unit">VND</span>
               </div>
             </div>
-            <input
-              id="greeCheckBoxTransaction"
-              type="checkbox"
-              className="--d-none"
-            />
+            <input id="agreeCheckBox" type="checkbox" className="--d-none" />
             <label className="transaction__checkbox" htmlFor="agreeCheckBox">
-              <div className="transaction__checkbox-square"></div>
+              <div className="transaction__checkbox-square">
+                <i className="fa-solid fa-check"></i>
+              </div>
               <div className="transaction__checkbox-text">
-                By clicking Continue, you agree to Sereso's P2P Terms of Service
+                By clicking Continue, you agree to Sereso's{" "}
+                <sapn className="transaction--green-header">
+                  P2P Terms of Service
+                </sapn>
               </div>
             </label>
-            <button>Buy now</button>
+            <button>
+              <div className="loader --d-none"></div>Buy now
+            </button>
           </form>
         </div>
         <h3 className="transaction--bold">Advertisement informations</h3>
@@ -44,14 +49,14 @@ function Transaction() {
               <span className="transaction__box-price">25,515.63</span> VND/USDT
             </span>
           </div>
-          <div className="transaction__box-item">
+          <div className="transaction__box-item amount">
             <span>Amount limits:</span>
-            <span>
+            <span className="transaction__box-amount-container">
               <span className="transaction__box-amount">
                 <span className="transaction--bold">4.95</span>USDT
               </span>{" "}
-              -{" "}
-              <span>
+              <span className="transaction__box-amount-dash">-</span>{" "}
+              <span className="transaction__box-amount">
                 <span className="transaction--bold">439.08</span>USDT
               </span>
             </span>
@@ -87,23 +92,34 @@ function Transaction() {
             <span>KYC:</span>
             <span className="transaction__kyc">
               <span>
-                <span>tick</span> Phone number verified
+                <span>
+                  <i className="fa-solid fa-check"></i>
+                </span>{" "}
+                Phone number verified
               </span>
               <span>
-                <span>tick</span> Identity and Residence Proof verified
+                <span>
+                  <i className="fa-solid fa-check"></i>
+                </span>{" "}
+                Identity and Residence Proof verified
               </span>
               <span>
-                <span>tick</span> Bank verified
+                <span>
+                  <i className="fa-solid fa-check"></i>
+                </span>{" "}
+                Bank verified
               </span>
             </span>
           </div>
-          <div className="transaction__box-item">
+        </div>
+        <div className="box transaction__box">
+          <div className="transaction__chat-container">
             <div className="transaction__chat-icon">
               <i className="fa-solid fa-comments"></i>
             </div>
             <div className="transaction__chat">
               <div className="transaction__chat-header">Need more help?</div>
-              <div className="transaction__chat-header">
+              <div className="transaction__chat-text">
                 Contact Customer support via{" "}
                 <span className="transaction--green">Online support.</span> We
                 are always ready to help

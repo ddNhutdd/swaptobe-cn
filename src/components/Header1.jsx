@@ -71,13 +71,13 @@ export default function Header1({ history }) {
   }, [exchange, userSelectedCurrency, listOnCoinRealtime]);
   //
   const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    localStorage.removeItem(localStorageVariable.user);
+    localStorage.removeItem(localStorageVariable.token);
     removeLocalStorage(localStorageVariable.currency);
     dispatch(currencySetCurrent(currency.usd));
     removeLocalStorage(localStorageVariable.lng);
     removeLocalStorage(localStorageVariable.coin);
-    history.push("/");
+    history.push(url.home);
     dispatch({ type: "USER_LOGOUT" });
     showToast("success", "Logged out");
   };
@@ -127,12 +127,15 @@ export default function Header1({ history }) {
                   {t("wallets")}
                 </div>
                 <div className="header1__subMenu-item">{t("p2PHistory")} </div>
-                <div className="header1__subMenu-item">
-                  {t("instantTradeHistory")}
-                </div>
-                <div className="header1__subMenu-item">{t("swapHistory")}</div>
-                <div className="header1__subMenu-item">
-                  {t("waveRidingHistory")}
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    walletMenuElement.current.classList.remove("show");
+                    history.push(url.ads_history);
+                  }}
+                  className="header1__subMenu-item"
+                >
+                  Lich su dang Ads
                 </div>
               </div>
             </div>
@@ -158,7 +161,10 @@ export default function Header1({ history }) {
             </div>
           </>
         ) : (
-          <div className="header1__item" onClick={() => history.push("/login")}>
+          <div
+            className="header1__item"
+            onClick={() => history.push(url.login)}
+          >
             {t("login")} / {t("register")}
           </div>
         )}

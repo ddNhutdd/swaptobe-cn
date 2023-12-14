@@ -1,0 +1,166 @@
+.confirm {
+    margin-top: 90px;
+
+    .confirm--green {
+        color: $green-2;
+        font-weight: bold;
+    }
+
+    .confirm--red {
+        color: $red-1;
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    .confirm--blue {
+        color: $blue;
+        font-weight: bold;
+    }
+
+    .confirm--break {
+        word-break: break-all
+    }
+
+    .container {
+        @include container2;
+
+        table {
+            @include adminTable;
+
+            .confirm__header {
+                td {
+                    padding: 15px;
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+            }
+
+            tbody {
+                tr {
+                    td {
+                        &:first-child {
+                            width: 112px;
+                            min-width: 112px;
+                            font-weight: bold;
+
+                            @media screen and (max-width:576px) {
+                                min-width: auto;
+                            }
+                        }
+                    }
+                }
+
+                .confirm__rating {
+                    @include userInput;
+
+                    @media screen and (max-width:768px) {
+                        flex-direction: column;
+                        align-items: flex-start;
+                    }
+
+                    button {
+                        @media screen and (max-width:576px) {
+                            margin-right: auto;
+                        }
+                    }
+                }
+
+                .confirm__trander-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+
+                    .confirm__trader {
+                        display: flex;
+                        align-items: center;
+                        gap: 15px;
+
+                        span {
+                            @media screen and (max-width:576px) {
+                                margin-right: auto;
+                            }
+                        }
+
+                        @media screen and (max-width: 576px) {
+                            flex-direction: column;
+                        }
+
+                        .confirm__list-socials {
+                            display: flex;
+                            gap: 10px;
+
+                            @media screen and (max-width:576px) {
+                                flex-wrap: wrap;
+                            }
+
+                            i {
+                                font-size: 35px;
+
+                                &:hover {
+                                    cursor: pointer;
+                                }
+
+                                img {
+                                    display: block;
+                                    width: 35px;
+                                    height: 35px;
+                                    object-fit: cover;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .confirm__status {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+
+                    .confirm__status-text {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-start;
+                        gap: 5px;
+
+                        .loader {
+                            border-top-color: $blue;
+                        }
+                    }
+
+                    .confirm__status-time {
+                        font-size: 18px;
+
+                        .confirm__status-small {
+                            font-size: 12px;
+                        }
+                    }
+                }
+
+                .confirm__payment {
+                    button {
+                        display: inline-flex;
+                    }
+
+                    span {
+                        margin-left: 5px;
+                    }
+                }
+
+                .confirm__rating {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                ul {
+                    // padding: 0 15px
+                }
+
+                button {
+                    @include userMainButton;
+                    padding: 5px 10px;
+                }
+            }
+        }
+    }
+}

@@ -184,6 +184,10 @@ $blue-light: #ceceff;
   display: flex;
   align-items: center;
   gap: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 
   &.disable {
     background-color: $header2-background-light;
@@ -253,7 +257,7 @@ $blue-light: #ceceff;
     opacity: 1;
   }
 
-  .field-dropdown-menu {
+  .dropdown-menu {
     margin-top: 5px;
     padding: 3px 0;
     color: $black;
@@ -261,9 +265,9 @@ $blue-light: #ceceff;
     background-color: $white;
     border: 1px solid $background-color-4;
     max-height: 350px;
-    overflow-y: scroll;
+    overflow-y: auto;
 
-    .field-dropdown-item {
+    .dropdown-item {
       padding: 5px 10px;
       display: flex;
       transition: .2s;
@@ -286,7 +290,7 @@ $blue-light: #ceceff;
         }
       }
 
-      .field-dropdown-content {
+      .dropdown-content {
         margin-left: 10px;
       }
     }

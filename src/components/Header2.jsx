@@ -106,6 +106,9 @@ export default function Header2({ history }) {
       item.addEventListener("click", selectCurrency.bind(null, item.innerHTML));
     }
   };
+  const closeMenu = function () {
+    getElementById("checkboxShowMenu").checked = false;
+  };
   //
   const [currentLanguage, setCurrentLanguage] = useState();
   const { t } = useTranslation();
@@ -133,6 +136,7 @@ export default function Header2({ history }) {
           <div className="menu">
             <NavLink
               exact
+              onClick={closeMenu}
               className="navlink"
               activeClassName="navlink-active"
               to="/swap"
@@ -141,6 +145,7 @@ export default function Header2({ history }) {
             </NavLink>
             <NavLink
               exact
+              onClick={closeMenu}
               className="navlink"
               activeClassName="navlink-active"
               to="/p2p-trading"

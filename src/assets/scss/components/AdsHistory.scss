@@ -1,0 +1,100 @@
+.ads-history {
+    margin-top: 90px;
+    padding: 30px 0;
+
+    .container {
+        @include container;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .ads-history__filter {
+            h3 {
+                font-size: 22px;
+                font-weight: bold;
+            }
+
+            table {
+                width: 100%;
+
+                tr {
+                    td {
+                        .ads-history__dropdown-selected {
+                            @include userDropdownSelected;
+                            width: 200px;
+                        }
+
+                        .ads-history__dropdown-menu-container {
+                            @include userDropdownMenu;
+                        }
+
+                        input[type='checkbox']#pendingCheckbox:checked+label {
+                            i {
+                                display: block;
+                            }
+                        }
+
+                        .ads-history__checkbox {
+                            display: flex;
+                            gap: 5px;
+                            align-items: center;
+
+                            .ads-history__square {
+                                width: 15px;
+                                height: 15px;
+                                border: 1px solid $background-color-4;
+                                background-color: $white;
+                                border-radius: 3px;
+                                position: relative;
+
+                                i {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    display: none;
+                                }
+                            }
+                        }
+
+                        label {
+                            margin-bottom: 0;
+                        }
+
+                        &:first-child {
+                            width: 62px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .ads-history__content {
+            .ads-history__record {
+                margin-top: 12px;
+                background-color: white;
+                padding: 20px;
+                font-size: 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 15px;
+
+                tr {
+                    td {
+                        &:first-child {
+                            padding: 0 5px;
+                            font-weight: bold;
+                            font-style: italic;
+                            text-align: right;
+                        }
+                    }
+                }
+            }
+        }
+
+        .ads-history__paging {
+            text-align: right;
+            margin-top: 20px;
+        }
+    }
+}

@@ -37,6 +37,8 @@ import ExchangeRateDisparity from "./components/admin/exchangeRateDisparity";
 import { api_status, url } from "./constant";
 import Ads from "./components/admin/ads";
 import Transaction from "./components/transaction";
+import Confirm from "./components/confirm";
+import AdsHistory from "./components/adsHistory";
 function App() {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -124,6 +126,8 @@ function App() {
     <BrowserRouter>
       <ScrollToTop>
         <Switch>
+          <MainTemplate path={url.ads_history} component={AdsHistory} />
+          <MainTemplate path="/confirm" component={Confirm} />
           <MainTemplate path="/transaction" component={Transaction} />
           <MainTemplate path="/profile" component={Profile} />
           <MainTemplate path="/wallet-2" component={SwaptobeWallet} />
