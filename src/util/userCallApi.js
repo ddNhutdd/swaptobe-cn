@@ -145,3 +145,31 @@ export const companyAddAds = function (data) {
     console.log(error);
   }
 };
+export const getListAdsSellToUser = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListAdsSellToUser", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListAdsBuyToUser = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListAdsBuyToUser", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListAdsBuyPenddingToUser = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListAdsBuyPenddingToUser", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListAdsSellPenddingToUser = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListAdsSellPenddingToUser", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

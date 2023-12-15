@@ -280,13 +280,19 @@ export default function Swap() {
                 </span>
               </div>
               <div className="swap__history-final">
-                <span>Rate {item.wallet}:</span>
                 <span>
-                  {roundDecimalValues(
-                    item.rate,
-                    allCoinPrice.current.filter(
-                      (it) => it.name === item.wallet
-                    )[0]?.price
+                  {t("rate")} {item.wallet}:
+                </span>
+                <span>
+                  {formatStringNumberCultureUS(
+                    String(
+                      roundDecimalValues(
+                        item.rate,
+                        allCoinPrice.current.filter(
+                          (it) => it.name === item.wallet
+                        )[0]?.price
+                      )
+                    )
                   )}
                 </span>
               </div>
@@ -316,7 +322,6 @@ export default function Swap() {
                 onChange={fromCoinOnChange}
               />
               <button className="max">{t("max")}</button>
-
               <button className="selectBtn" onClick={showModal}>
                 <div className="selectBtn-container">
                   <img
@@ -329,7 +334,7 @@ export default function Swap() {
               </button>
             </div>
             <div>
-              Số dư:{" "}
+              {t("balance")}:{" "}
               {isLogin
                 ? userWallet[swapFromCoin.toLowerCase() + "_balance"] ?? 0
                 : ""}

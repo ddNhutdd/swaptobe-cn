@@ -108,19 +108,19 @@ export default function P2PTrading2({ history }) {
           <table>
           <tbody>
           <tr>
-            <td>User Name:</td>
+            <td>${t("userName")}:</td>
             <td>${item.userName}</td>
           </tr>
           <tr>
-          <td>Bank Name:</td>
+          <td>${t("bankName")}:</td>
           <td>${item.bankName}</td>
          </tr>
          <tr>
-          <td>Name:</td>
+          <td>${t("fullName")}:</td>
           <td>${item.ownerAccount}</td>
          </tr>
          <tr>
-          <td>Account Number:</td>
+          <td>${t("accountNumber")}:</td>
           <td>${item.numberBank}</td>
          </tr>
           </tbody>
@@ -130,26 +130,26 @@ export default function P2PTrading2({ history }) {
           <table>
           <tbody>
           <tr>
-          <td>Amount:</td>
+          <td>${t("amount")}:</td>
           <td class="item2-amount-number">${item.amount}</td>
         </tr>
         <tr>
-          <td>Amount Minimum:</td>
+          <td>${t("amountMinimum")}:</td>
           <td>${item.amountMinimum}</td>
         </tr>
         <tr>
-          <td>Created At:</td>
+          <td>${t("createdAt")}:</td>
           <td>${item.created_at}</td>
         </tr>
         <tr>
-          <td>AddressWallet:</td>
+          <td>${t("addressWallet")}:</td>
           <td>${item.addressWallet}</td>
         </tr>
             </tbody>
           </table>
         </div>
         <div class="item4">
-          <button name="${item.id}">${"Buy"}</button>
+          <button name="${item.id}">${t("buy")}</button>
         </div>
       </div>`;
       }
@@ -181,15 +181,15 @@ export default function P2PTrading2({ history }) {
             <table>
               <tbody>
                 <tr>
-                  <td>User Name:</td>
+                  <td>${t("userName")}:</td>
                   <td>${item.userName}</td>
                 </tr>
                 <tr class="item2">
-                  <td>Amount:</td>
+                  <td>${t("amount")}:</td>
                   <td class="item2-amount-number">${item.amount}</td>
                 </tr>
                 <tr>
-                  <td>Amount Minimum:</td>
+                  <td>${t("amountMinimum")}:</td>
                   <td>${item.amountMinimum}</td>
                 </tr>
               </tbody>
@@ -199,11 +199,11 @@ export default function P2PTrading2({ history }) {
             <table>
               <tbody>
                 <tr>
-                  <td>Created At:</td>
+                  <td>${t("createdAt")}:</td>
                   <td>${item.created_at}</td>
                 </tr>
                 <tr>
-                  <td>Address Wallet:</td>
+                  <td>${t("addressWallet")}:</td>
                   <td>${item.addressWallet}</td>
                 </tr>
               </tbody>

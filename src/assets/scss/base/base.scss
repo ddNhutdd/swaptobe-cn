@@ -214,6 +214,15 @@ $blue-light: #ceceff;
   background-color: $white;
   gap: 10px;
 
+  &.disabled {
+    color: $background-color-4;
+    opacity: 0.3;
+
+    &:hover {
+      border-color: $background-color-4;
+    }
+  }
+
   &.active {
     border-color: $header2-background;
     outline: 1px solid $header2-background;

@@ -116,16 +116,6 @@ export default function Header1({ history }) {
                   <div>BTC: {amountCoinBTC()} coins</div>
                   <div id="money">00000</div>
                 </div>
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    walletMenuElement.current.classList.remove("show");
-                    history.push(url.wallet);
-                  }}
-                  className="header1__subMenu-item"
-                >
-                  {t("wallets")}
-                </div>
                 <div className="header1__subMenu-item">{t("p2PHistory")} </div>
                 <div
                   onClick={(e) => {
@@ -135,7 +125,7 @@ export default function Header1({ history }) {
                   }}
                   className="header1__subMenu-item"
                 >
-                  Lich su dang Ads
+                  {t("advertisingHistory")}
                 </div>
               </div>
             </div>
