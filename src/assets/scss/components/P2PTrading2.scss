@@ -176,9 +176,21 @@
             font-weight: bold;
           }
         }
-      }
 
-      .sell-content {}
+        button {
+          background-color: $transparent;
+          border-radius: 5px;
+          border: 1px solid $background-color-4;
+          padding: 0 5px;
+          transition: .2s;
+
+          &:hover {
+            background-color: $header2-background;
+            color: $white;
+            cursor: pointer;
+          }
+        }
+      }
 
       .sell-ad {
         .sellAdBtn {
@@ -195,6 +207,13 @@
             opacity: 0.8;
           }
         }
+      }
+
+      .sell__filter {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        @include userInput;
+        width: 200px;
       }
     }
 

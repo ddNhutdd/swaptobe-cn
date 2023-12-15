@@ -49,7 +49,6 @@ export default function Login({ history }) {
   }, []);
   //
   const login = async (e, p) => {
-    console.log("login");
     setIsLoading(true);
     try {
       let response = await axiosService.post("/api/user/login", {
