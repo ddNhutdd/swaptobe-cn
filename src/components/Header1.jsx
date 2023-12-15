@@ -97,7 +97,6 @@ export default function Header1({ history }) {
       walletMenuElement.current.classList.remove("show");
     }
   };
-
   const amountCoinBTC = function () {
     return listOwnedCoins["btc_balance"];
   };
@@ -116,7 +115,16 @@ export default function Header1({ history }) {
                   <div>BTC: {amountCoinBTC()} coins</div>
                   <div id="money">00000</div>
                 </div>
-                <div className="header1__subMenu-item">{t("p2PHistory")} </div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    walletMenuElement.current.classList.remove("show");
+                    history.push(url.wallet);
+                  }}
+                  className="header1__subMenu-item"
+                >
+                  {t("wallet")}
+                </div>
                 <div
                   onClick={(e) => {
                     e.stopPropagation();

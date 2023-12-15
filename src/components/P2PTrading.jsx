@@ -34,6 +34,7 @@ export default function P2PTrading({ history }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   useEffect(() => {
+    setLocalStorage(localStorageVariable.coin, coin);
     //
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;

@@ -34,6 +34,7 @@ export const formatStringNumberCultureUS = (numberString) => {
   return parts.join(".");
 };
 export const convertStringToNumber = function (str) {
+  if (!str) return NaN;
   var noCommas = str.replace(/,/g, "");
   var number = Number(noCommas);
   if (isNaN(number)) {
@@ -214,7 +215,6 @@ export const parseURLParameters = function (url) {
   });
   return result;
 };
-
 //
 export const getClassListFromElementById = function (id) {
   const element = document.getElementById(id);
@@ -226,10 +226,17 @@ export const getElementById = function (id) {
 export const querySelector = function (cssSelector) {
   return document.querySelector(cssSelector);
 };
-
 export const addClassToElementById = function (id, classname) {
   let element = document.getElementById(id);
   if (!element.classList.contains(classname)) {
     element.classList.add(classname);
   }
+};
+//
+export const debounce = (func, ms) => {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), ms);
+  };
 };

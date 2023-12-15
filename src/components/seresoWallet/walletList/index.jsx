@@ -49,7 +49,6 @@ function SeresoWalletList() {
       //
     }
   }, [myListCoin, allCoin]);
-
   const getMyCoin = function (coinName) {
     if (myListCoin) {
       const key = coinName.toLowerCase() + "_balance";
@@ -62,7 +61,8 @@ function SeresoWalletList() {
     history.push(url.swap);
   };
   const convertCurrency = function (usd, currency, exchange) {
-    if (!usd || !currency || !exchange || !exchange.length) return;
+    if (usd === 0) return 0;
+    if (!usd || !currency || !exchange || !exchange.length) return -1;
     const rate =
       exchange.filter((item) => item.title === currency)[0]?.rate ?? 0;
     return (usd * rate).toFixed(3);
@@ -78,7 +78,9 @@ function SeresoWalletList() {
         <div className="price">
           <span>
             {formatStringNumberCultureUS(
-              convertCurrency(item.price, userSelectedCurrency, exchange)
+              String(
+                convertCurrency(item.price, userSelectedCurrency, exchange)
+              )
             )}
             {userSelectedCurrency === currency.usd && "$"}
             {userSelectedCurrency === currency.eur && "€"}

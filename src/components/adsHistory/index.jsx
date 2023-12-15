@@ -1,12 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Pagination, Empty, Spin } from "antd";
+import i18n from "src/translation/i18n";
+import { useTranslation } from "react-i18next";
 import {
   addClassToElementById,
   getClassListFromElementById,
   getElementById,
+  getLocalStorage,
 } from "src/util/common";
-import { api_status } from "src/constant";
+import {
+  api_status,
+  defaultLanguage,
+  localStorageVariable,
+} from "src/constant";
 import {
   getListAdsBuyPenddingToUser,
   getListAdsBuyToUser,
@@ -14,10 +21,28 @@ import {
   getListAdsSellToUser,
 } from "src/util/userCallApi";
 function AdsHistory() {
+  useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
+    document.addEventListener("click", closeActionMenu);
+    renderTable(fetchListAdsBuyToUser);
+    return () => {
+      document.removeEventListener("click", closeActionMenu);
+    };
+  }, []);
+  const callApiStatus = useRef(api_status.pending);
+  const page = useRef(1);
+  const limit = useRef(10);
+  const [totalItem, setTotalItem] = useState(0);
+  const { t } = useTranslation();
   const actionType = {
-    buy: "Buy",
-    sell: "Sell",
+    buy: t("buy"),
+    sell: t("sell"),
   };
+  const action = useRef("");
+  action.current = actionType.buy;
   const closeEmpty = function () {
     addClassToElementById("adsHistoryEmpty", "--d-none");
   };
@@ -161,15 +186,15 @@ function AdsHistory() {
           <table>
             <tbody>
               <tr>
-                <td>User Name:</td>
+                <td>${t("userName")}:</td>
                 <td>${item.userName}</td>
               </tr>
               <tr>
-                <td>Bank Name:</td>
+                <td>${t("bankName")}:</td>
                 <td>${item.bankName}</td>
               </tr>
               <tr>
-                <td>Account Name:</td>
+                <td>${t("accountName")}:</td>
                 <td>${item.ownerAccount}</td>
               </tr>
             </tbody>
@@ -179,15 +204,15 @@ function AdsHistory() {
           <table>
             <tbody>
               <tr>
-                <td>Account Number:</td>
+                <td>${t("accountNumber")}:</td>
                 <td>${item.numberBank}</td>
               </tr>
               <tr>
-                <td>Amount:</td>
+                <td>${t("amount")}:</td>
                 <td>${item.amount}</td>
               </tr>
               <tr>
-                <td>Amount Minimum:</td>
+                <td>${t("amountMinimum")}:</td>
                 <td>${item.amountMinimum}</td>
               </tr>
             </tbody>
@@ -197,11 +222,11 @@ function AdsHistory() {
           <table>
             <tbody>
               <tr>
-                <td>Created At:</td>
+                <td>${t("createdAt")}:</td>
                 <td>${item.created_at}</td>
               </tr>
               <tr>
-                <td>Address Wallet:</td>
+                <td>${t("addressWallet")}:</td>
                 <td>${item.addressWallet}</td>
               </tr>
             </tbody>
@@ -217,6 +242,7 @@ function AdsHistory() {
   const dropdownActionItemSelect = function (act) {
     action.current = act;
     getElementById("adsHistoryDropdownSelectedText").innerHTML = act;
+    getElementById("adsTypeList").innerHTML = act;
     page.current = 1;
     loadData();
   };
@@ -244,28 +270,16 @@ function AdsHistory() {
   const pendingCheckboxChangeHandle = function () {
     loadData();
   };
-  useEffect(() => {
-    document.addEventListener("click", closeActionMenu);
-    renderTable(fetchListAdsBuyToUser);
-    return () => {
-      document.removeEventListener("click", closeActionMenu);
-    };
-  }, []);
-  const callApiStatus = useRef(api_status.pending);
-  const page = useRef(1);
-  const limit = useRef(10);
-  const [totalItem, setTotalItem] = useState(0);
-  const action = useRef(actionType.buy);
   return (
     <div className="ads-history">
       <div className="container">
         <div className="box ads-history__filter">
-          <h3>Filter</h3>
+          <h3>{t("filter")}</h3>
           <table>
             <tbody>
               <tr>
                 <td>
-                  <div>Action: </div>
+                  <div>{t("action")}: </div>
                 </td>
                 <td>
                   <div
@@ -273,7 +287,7 @@ function AdsHistory() {
                     onClick={toggleActionMenu}
                     className="ads-history__dropdown-selected"
                   >
-                    <span id="adsHistoryDropdownSelectedText">Buy</span>
+                    <span id="adsHistoryDropdownSelectedText">{t("buy")}</span>
                     <span>
                       <i className="fa-solid fa-angle-down"></i>
                     </span>
@@ -290,7 +304,7 @@ function AdsHistory() {
                         )}
                         className="dropdown-item"
                       >
-                        Sell
+                        {t("sell")}
                       </div>
                       <div
                         onClick={dropdownActionItemSelect.bind(
@@ -299,7 +313,7 @@ function AdsHistory() {
                         )}
                         className="dropdown-item"
                       >
-                        Buy
+                        {t("buy")}
                       </div>
                     </div>
                   </div>
@@ -307,7 +321,7 @@ function AdsHistory() {
               </tr>
               <tr>
                 <td>
-                  <label htmlFor="pendingCheckbox">Pending:</label>
+                  <label htmlFor="pendingCheckbox">{t("pending")}:</label>
                 </td>
                 <td>
                   <input
@@ -331,7 +345,7 @@ function AdsHistory() {
         </div>
         <div className="box ads-history__content">
           <h3>
-            List <span>Sell</span>
+            {t("list")} <span id="adsTypeList">{action.current}</span>
           </h3>
           <div id="ads-history__content">
             <div className="box fadeInBottomToTop ads-history__record">

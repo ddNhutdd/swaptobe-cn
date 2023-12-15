@@ -5,11 +5,12 @@ import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
 import {
   api_status,
+  defaultLanguage,
   localStorageVariable,
   showAlertType,
   url,
 } from "src/constant";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import { Modal } from "antd";
 import { getLocalStorage } from "src/util/common";
 import { useHistory } from "react-router-dom";
@@ -67,7 +68,7 @@ function Profile() {
     }
     //
     const language =
-      getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     // them animation cho component khi nó được load
     const element = document.querySelector(".profile");

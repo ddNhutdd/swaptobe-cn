@@ -173,3 +173,17 @@ export const getListAdsSellPenddingToUser = function (data) {
     console.log(error);
   }
 };
+export const searchBuyQuick = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/sreachBuyQuick", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const searchSellQuick = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/sreachSellQuick", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

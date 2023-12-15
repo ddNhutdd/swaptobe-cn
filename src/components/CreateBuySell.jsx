@@ -8,15 +8,24 @@ import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
 import { getBankListV2 } from "src/assets/resource/getBankListV2";
+import i18n from "src/translation/i18n";
 import {
   addClassToElementById,
   formatStringNumberCultureUS,
   getClassListFromElementById,
   getElementById,
+  getLocalStorage,
 } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { companyAddAds, getProfile } from "src/util/userCallApi";
-import { api_status, regularExpress, showAlertType, url } from "src/constant";
+import {
+  api_status,
+  defaultLanguage,
+  localStorageVariable,
+  regularExpress,
+  showAlertType,
+  url,
+} from "src/constant";
 import { showToast } from "src/function/showToast";
 import { showAlert } from "src/function/showAlert";
 export default function CreateBuy() {
@@ -52,6 +61,10 @@ export default function CreateBuy() {
     renderMarketBuyPrice();
   }, [listCoinRealTime]);
   useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
     document.addEventListener("click", closeDropdownBank);
     bankDropdownSelect(selectedBank.current);
     renderBankDropdown();
@@ -182,7 +195,7 @@ export default function CreateBuy() {
         controlsErrors.current[controls.current.amount] = "Format Incorrect";
       } else if (!amountElement.value) {
         valid &= false;
-        controlsErrors.current[controls.current.amount] = "Require";
+        controlsErrors.current[controls.current.amount] = t("require");
       } else {
         delete controlsErrors.current[controls.current.amount];
       }
@@ -196,7 +209,7 @@ export default function CreateBuy() {
         controlsErrors.current[controls.current.mini] = "Format Incorrect";
       } else if (!miniElement.value) {
         valid &= false;
-        controlsErrors.current[controls.current.mini] = "Require";
+        controlsErrors.current[controls.current.mini] = t("require");
       } else {
         delete controlsErrors.current[controls.current.mini];
       }
@@ -205,7 +218,7 @@ export default function CreateBuy() {
       if (controlsTourched.current[controls.current.fullname]) {
         if (!fullnameElement.value) {
           valid &= false;
-          controlsErrors.current[controls.current.fullname] = "require";
+          controlsErrors.current[controls.current.fullname] = t("require");
         } else {
           delete controlsErrors.current[controls.current.fullname];
         }
@@ -213,7 +226,7 @@ export default function CreateBuy() {
       if (controlsTourched.current[controls.current.accountNumber]) {
         if (!accountNumberElement.value) {
           valid &= false;
-          controlsErrors.current[controls.current.accountNumber] = "require";
+          controlsErrors.current[controls.current.accountNumber] = t("require");
         } else {
           delete controlsErrors.current[controls.current.accountNumber];
         }
@@ -282,7 +295,7 @@ export default function CreateBuy() {
       companyAddAds(data)
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, resp.data.message);
+          showToast(showAlertType.success, t("success"));
           getElementById("buyAdsForm").reset();
           resolve(resp);
         })
@@ -292,7 +305,7 @@ export default function CreateBuy() {
           const mess = error?.response?.data?.message;
           switch (mess) {
             case "Insufficient balance":
-              showAlert(showAlertType.error, mess);
+              showAlert(showAlertType.error, t("insufficientBalance"));
               break;
             default:
               showAlert(showAlertType, t("anErrorHasOccurred"));
@@ -358,17 +371,19 @@ export default function CreateBuy() {
         <div className="box">
           <h2 className="title">
             {action === actionType.buy
-              ? "Create New Buy Advertisement"
-              : "Create New Sell Advertisement"}
+              ? t("createNewBuyAdvertisement")
+              : t("createNewSellAdvertisement")}
           </h2>
           <span onClick={buyOrSellDirect} className="switch">
             {action === actionType.buy
-              ? "Do you want to sell?"
-              : "Do you want to buy?"}
+              ? t("doYouWantToSell")
+              : t("doYouWantToBuy")}
           </span>
           <div className="head-area">
             <h2>
-              Ads to {action === actionType.buy ? "buy" : "sell"} {currentCoin}
+              {action === actionType.buy
+                ? "Ads to  buy"
+                : t("adsToSellBTC").replace("BTC", currentCoin)}
             </h2>
             <div>
               Market buy price:{" "}
@@ -386,9 +401,11 @@ export default function CreateBuy() {
           </div>
           <form id="buyAdsForm">
             <div className="amount-area">
-              <h2>Amount</h2>
+              <h2>{t("amount")}</h2>
               <div className="field">
-                <label>Amount of {currentCoin}:</label>
+                <label>
+                  {t("amountOf")} {currentCoin}:
+                </label>
                 <input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
@@ -401,7 +418,9 @@ export default function CreateBuy() {
                 </small>
               </div>
               <div className="field">
-                <label>Minimum {currentCoin} amount:</label>
+                <label>
+                  {t("minimumBTCAmount").replace("BTC", currentCoin)}:
+                </label>
                 <input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
@@ -419,12 +438,9 @@ export default function CreateBuy() {
                 action === actionType.buy ? "--d-none" : ""
               }`}
             >
-              <h2>Payment details</h2>
-              <div className="field --d-none">
-                <label>Payment method:</label>
-              </div>
+              <h2>{t("paymentDetails")}</h2>
               <div className="field">
-                <label>Bank name:</label>
+                <label>{t("bankName")}:</label>
                 <div
                   id="dropdownBankSelected"
                   onClick={toggleDropdownBank}
@@ -449,7 +465,7 @@ export default function CreateBuy() {
                 </div>
               </div>
               <div className="field">
-                <label htmlFor="fullnameInput">Full name:</label>
+                <label htmlFor="fullnameInput">{t("fullName")}:</label>
                 <input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
@@ -462,7 +478,9 @@ export default function CreateBuy() {
                 </small>
               </div>
               <div className="field">
-                <label htmlFor="accountNumberInput">Account number: </label>
+                <label htmlFor="accountNumberInput">
+                  {t("accountNumber")}:{" "}
+                </label>
                 <input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
@@ -478,7 +496,7 @@ export default function CreateBuy() {
             <div className="review-area">
               <span onClick={showModalPreview}>
                 <i className="fa-solid fa-eye"></i>
-                <span>Review your ad</span>
+                <span>{t("reviewYourAd")}</span>
               </span>
             </div>
             <div className="button-area">
@@ -546,27 +564,27 @@ export default function CreateBuy() {
             <table>
               <tbody>
                 <tr>
-                  <td>User name: </td>
+                  <td>{t("userName")}: </td>
                   <td id="modalPreviewUserName">123</td>
                 </tr>
                 <tr>
-                  <td>Price: </td>
+                  <td>{t("price")}: </td>
                   <td id="modalPreviewPrice">test</td>
                 </tr>
                 <tr>
-                  <td>Amount: </td>
+                  <td>{t("amount")}: </td>
                   <td id="modalPreviewAmount">test</td>
                 </tr>
                 <tr>
-                  <td>Amount Minimum: </td>
+                  <td>{t("amountMinimum")}: </td>
                   <td id="modalPreviewMinimumAmount">test</td>
                 </tr>
                 <tr>
-                  <td>Bank name: </td>
+                  <td>{t("bankName")}: </td>
                   <td id="modalBankName">test</td>
                 </tr>
                 <tr>
-                  <td>Action: </td>
+                  <td>{t("action")}: </td>
                   <td id="modalAction">test</td>
                 </tr>
               </tbody>
