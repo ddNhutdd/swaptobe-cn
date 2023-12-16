@@ -232,6 +232,12 @@ export const addClassToElementById = function (id, classname) {
     element.classList.add(classname);
   }
 };
+export const hideElement = function (element) {
+  !element.classList.contains("--d-none") && element.classList.add("--d-none");
+};
+export const showElement = function (element) {
+  element.classList.remove("--d-none");
+};
 //
 export const debounce = (func, ms) => {
   let timeout;

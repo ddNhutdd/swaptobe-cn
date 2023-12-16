@@ -19,7 +19,10 @@ import {
   getExchange as getExchangeApi,
   getWalletApi,
 } from "./util/userCallApi";
-import { currencySetExchange } from "./redux/actions/currency.action";
+import {
+  currencySetExchange,
+  currencySetExchangeFetchStatus,
+} from "./redux/actions/currency.action";
 import { getFetchExchangeCount } from "./redux/constant/currency.constant";
 import socket from "./util/socket";
 import { setListCoinRealtime } from "./redux/actions/listCoinRealTime.action";
@@ -39,6 +42,7 @@ import Ads from "./components/admin/ads";
 import Transaction from "./components/transaction";
 import Confirm from "./components/confirm";
 import AdsHistory from "./components/adsHistory";
+import Exchange from "./components/admin/exchange";
 function App() {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -48,11 +52,16 @@ function App() {
     getExchangeRateDisparityFetchCount
   );
   const getExchange = function () {
+    dispatch(currencySetExchangeFetchStatus(api_status.fetching));
     getExchangeApi()
       .then((resp) => {
+        dispatch(currencySetExchangeFetchStatus(api_status.fulfilled));
         dispatch(currencySetExchange(resp.data.data));
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        dispatch(currencySetExchangeFetchStatus(api_status.rejected));
+        console.log(error);
+      });
   };
   const getUserWallet = function () {
     const listAllCoinPromise = new Promise((resolve) => {
@@ -140,6 +149,7 @@ function App() {
           <MainTemplate path="/wallet" component={Wallet} />
           <AdminTemplate path="/admin/dashboard" component={Dashboard} />
           <AdminTemplate path="/admin/ads" component={Ads} />
+          <AdminTemplate path={url.admin_exchange} component={Exchange} />
           <AdminTemplate path="/admin/kyc" component={KYC} />
           <AdminTemplate
             path={url.admin_exchangeRateDisparity}

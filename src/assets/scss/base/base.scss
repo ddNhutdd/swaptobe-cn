@@ -473,12 +473,22 @@ $blue-light: #ceceff;
   color: $white;
   background-color: $transparent;
   transition: .4s;
+  align-items: center;
   gap: 5px;
 
   &:hover {
     cursor: pointer;
     color: $green-2;
     border-color: $green-2;
+  }
+
+  &.disabled {
+    color: $background-color-4;
+
+    &:hover {
+      color: $background-color-4;
+      border-color: $background-color-4;
+    }
   }
 }
 

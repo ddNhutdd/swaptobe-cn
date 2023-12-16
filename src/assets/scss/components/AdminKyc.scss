@@ -29,7 +29,6 @@
 
             @media screen and (max-width:768px) {
                 width: auto;
-
             }
 
             @media screen and (max-width:576px) {
@@ -254,6 +253,7 @@
                 margin-top: 20px;
                 width: 100%;
                 justify-content: flex-end;
+                align-items: flex-end;
                 gap: 15px;
                 display: flex;
 

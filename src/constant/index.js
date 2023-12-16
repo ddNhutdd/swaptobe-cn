@@ -7,6 +7,7 @@ export const localStorageVariable = {
   currency: "currency",
   previousePage: null,
   coin: "coin",
+  adsItem: "adsItem",
 };
 
 // export const deploy_domain = "https://demo.dk-technical.vn/";
@@ -25,7 +26,9 @@ export const url = {
   create_ads_sell: "/create-ads/sell",
   create_ads_buy: "/create-ads/buy",
   admin_ads: "/admin/ads",
+  admin_exchange: "/admin/exchange",
   ads_history: "/ads-history",
+  transaction: "/transaction",
 };
 
 export const api_url = {

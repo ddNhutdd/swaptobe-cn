@@ -15,6 +15,11 @@ export const currencyReducer = (state = defaultState, action) => {
         exchange: action.payload,
       };
     }
+    case currency.exchangeFetchStatus:
+      return {
+        ...state,
+        exchangeFetchStatus: action.payload,
+      };
     case currency.fetchExchangeCount: {
       const count = ++state.fetchExchangeCount;
       return {

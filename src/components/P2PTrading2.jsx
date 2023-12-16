@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Empty, Pagination, Spin, Modal } from "antd";
+import { useDispatch } from "react-redux";
 import { t } from "i18next";
 import {
   addClassToElementById,
-  convertStringToNumber,
-  debounce,
   getClassListFromElementById,
   getElementById,
   getLocalStorage,
@@ -19,10 +18,12 @@ import {
 } from "src/util/userCallApi";
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
+import { setAdsItem } from "src/redux/reducers/adsSlice";
 export default function P2PTrading2({ history }) {
   // The list of users selling coins must be placed in the buy section on the interface.
   // The list of users buying coins must be placed in the sell section on the interface.
   const coin = getLocalStorage(localStorageVariable.coin);
+  const dispatch = useDispatch();
   const callApiSellListStatus = useRef(api_status.pending);
   const callApiBuyListStatus = useRef(api_status.pending);
   const [buyListSectionTotalItems, setBuyListSectionTotalItems] = useState(1);
@@ -159,7 +160,7 @@ export default function P2PTrading2({ history }) {
       }
       callApiSellListStatus.current = api_status.fetching;
       searchSellQuick({
-        limit: 10,
+        limit: 5,
         page: page,
         symbol: buyCoin.current,
         amount: Number(amountSectionBuyFilter.current),
@@ -241,12 +242,19 @@ export default function P2PTrading2({ history }) {
       for (const item of containerElement.children) {
         const button = item.querySelector("button");
         const id = button.name;
-        button.addEventListener("click", buyClickHandle.bind(null, id));
+        button.addEventListener(
+          "click",
+          buyClickHandle.bind(
+            null,
+            array.filter((it) => it.id === Number(id))[0]
+          )
+        );
       }
       // show
       showBuySectionContent();
     }
     setBuyListSectionTotalItems(() => total);
+    setBuySectionPage(() => page);
   };
   const renderSectionSell = async function (fnFetch, page) {
     closeSellSectionContent();
@@ -299,10 +307,22 @@ export default function P2PTrading2({ history }) {
         </div>`;
       }
       // add
+      for (const item of containerElement.children) {
+        const button = item.querySelector("button");
+        const id = button.name;
+        button.addEventListener(
+          "click",
+          sellClickHandle.bind(
+            null,
+            array.filter((it) => it.id === Number(id))[0]
+          )
+        );
+      }
     }
     // show
     showSellSectionContent();
     setSellListSectionTotalItems(() => total);
+    setSellSectionPage(() => page);
   };
   const loadSectionSell = function (page) {
     if (amountSectionSellFilter.current) {
@@ -318,17 +338,26 @@ export default function P2PTrading2({ history }) {
       renderSectionBuy(fetchListAdsSell, page);
     }
   };
-  const loadSectionBuyDebounce = debounce(loadSectionBuy, 1500);
-  const loadSectionSellDebounce = debounce(loadSectionSell, 1500);
-  const buyClickHandle = function (id) {
-    console.log(id);
+  const sectionBuyButtonFilterClickHandle = function () {
+    if (callApiSellListStatus.current === api_status.fetching) return;
+    loadSectionBuy(1);
+  };
+  const sectionSellButtonFilterClickHandle = function () {
+    if (callApiBuyListStatus.current === api_status.fetching) return;
+    loadSectionSell(1);
+  };
+  const buyClickHandle = function (item) {
+    dispatch(setAdsItem(item));
+    history.push(url.transaction);
+  };
+  const sellClickHandle = function (item) {
+    dispatch(setAdsItem(item));
+    history.push(url.transaction);
   };
   const onChangeSectionBuyPaging = function (page) {
-    setBuySectionPage(page);
     loadSectionBuy(page);
   };
   const onChangeSectionSellPaging = function (page) {
-    setSellSectionPage(() => page);
     loadSectionSell(page);
   };
   /**
@@ -409,7 +438,6 @@ export default function P2PTrading2({ history }) {
       }
     }
     amountSectionBuyFilterClear();
-    setBuySectionPage(() => 1);
     loadSectionBuy(1);
     chooseCoinBuyCancelHandle();
   };
@@ -427,14 +455,11 @@ export default function P2PTrading2({ history }) {
       }
     }
     amountSectionSellFilterClear();
-    setSellSectionPage(() => 1);
     loadSectionSell(1);
     chooseCoinSellCancelHandle();
   };
   const amountSectionBuyFilterChangeHandle = function (e) {
     amountSectionBuyFilter.current = e.target.value;
-    setBuySectionPage(() => 1);
-    loadSectionBuyDebounce(1);
   };
   const amountSectionBuyFilterClear = function () {
     amountSectionBuyFilter.current = "";
@@ -462,8 +487,6 @@ export default function P2PTrading2({ history }) {
   };
   const amountSectionSellFilterChangeHandle = function (e) {
     amountSectionSellFilter.current = e.target.value;
-    setSellSectionPage(() => 1);
-    loadSectionSellDebounce(1);
   };
   //
   useEffect(() => {
@@ -508,6 +531,7 @@ export default function P2PTrading2({ history }) {
             </span>
           </div>
           <div className="buy__filter">
+            <button onClick={sectionBuyButtonFilterClickHandle}>Search</button>
             <input
               id="amountSectionBuyFilterInput"
               onChange={amountSectionBuyFilterChangeHandle}
@@ -578,6 +602,7 @@ export default function P2PTrading2({ history }) {
             </span>
           </div>
           <div className="sell__filter">
+            <button onClick={sectionSellButtonFilterClickHandle}>search</button>
             <input
               id="amountSectionSellFilterInput"
               onChange={amountSectionSellFilterChangeHandle}

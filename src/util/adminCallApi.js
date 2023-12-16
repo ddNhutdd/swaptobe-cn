@@ -48,10 +48,23 @@ export const confirmAds = function (data) {
     console.log(error);
   }
 };
-
 export const refuseAds = function (data) {
   try {
     return axiosService.post("/api/p2pBank/refuseAds", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const addExchange = function (data) {
+  try {
+    return axiosService.post("/api/exchange/addExchange", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const editExchange = function (data) {
+  try {
+    return axiosService.post("/api/exchange/editExchange", data);
   } catch (error) {
     console.log(error);
   }

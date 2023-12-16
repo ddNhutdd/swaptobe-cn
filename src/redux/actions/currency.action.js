@@ -14,6 +14,13 @@ export const currencySetExchange = function (payload) {
   };
 };
 
+export const currencySetExchangeFetchStatus = function (payload) {
+  return {
+    type: currency.exchangeFetchStatus,
+    payload,
+  };
+};
+
 export const currencySetFetchExchangeCount = function () {
   return {
     type: currency.fetchExchangeCount,

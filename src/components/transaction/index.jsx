@@ -1,13 +1,76 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { url } from "src/constant";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
+import { getAdsItem } from "src/redux/reducers/adsSlice";
+import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
+import { getElementById } from "src/util/common";
 function Transaction() {
+  const history = useHistory();
+  const listCoinRealtime = useSelector(getListCoinRealTime);
+  const currency = useSelector(getCurrent);
+  const exchangeRateDisparity = useSelector(getExchangeRateDisparity);
+  const exchange = useSelector(getExchange);
+  const selectedAds = useSelector(getAdsItem);
+  const amount = useRef();
+  const amountMinimum = useRef();
+  const bankName = useRef();
+  const userName = useRef();
+  const side = useRef();
+  const symbol = useRef();
+  useEffect(() => {
+    loadDataFirstTime();
+  }, []);
+  useEffect(() => {
+    renderPrice();
+  }, [listCoinRealtime, currency, exchangeRateDisparity, exchange]);
+  const renderPrice = function () {
+    const priceUSd = listCoinRealtime
+      .filter((item) => item.name === symbol.current)
+      .at(0);
+    console.log(priceUSd);
+    console.log(listCoinRealtime, currency, exchangeRateDisparity);
+  };
+  const loadDataFirstTime = function () {
+    if (!selectedAds) {
+      history.push(url.p2pTrading);
+      return;
+    }
+    amount.current = selectedAds.amount;
+    amountMinimum.current = selectedAds.amountMinimum;
+    bankName.current = selectedAds.bankName;
+    userName.current = selectedAds.userName;
+    side.current = selectedAds.side;
+    symbol.current = selectedAds.symbol;
+    getElementById(
+      "transactionTitle"
+    ).innerHTML = `<span class="transaction--green">${
+      side.current.at(0).toUpperCase() + side.current.slice(1)
+    }</span> Tether ${symbol.current} via Bank
+    transfer (VND)`;
+    getElementById(
+      "transactionAmountMini"
+    ).innerHTML = `<span class="transaction--bold">
+    ${amountMinimum.current}
+  </span>
+  ${symbol.current}`;
+    getElementById(
+      "transactionAmount"
+    ).innerHTML = `<span  class="transaction--bold">
+  ${amount.current}
+</span>
+${symbol.current}`;
+    getElementById("transactionBankName").innerHTML = bankName.current;
+    getElementById("transactionUserName").innerHTML = userName.current;
+  };
   return (
     <div className="transaction">
       <div className="container">
         <div className="box transaction__box transaction__header">
-          <div>
-            <span className="transaction--green">Buy</span> Tether USDT via Bank
-            transfer (VND)
-          </div>
+          <div id="transactionTitle"></div>
         </div>
         <div className="box transaction__box">
           <form>
@@ -31,9 +94,9 @@ function Transaction() {
               </div>
               <div className="transaction__checkbox-text">
                 By clicking Continue, you agree to Sereso's{" "}
-                <sapn className="transaction--green-header">
+                <span className="transaction--green-header">
                   P2P Terms of Service
-                </sapn>
+                </span>
               </div>
             </label>
             <button>
@@ -52,18 +115,22 @@ function Transaction() {
           <div className="transaction__box-item amount">
             <span>Amount limits:</span>
             <span className="transaction__box-amount-container">
-              <span className="transaction__box-amount">
-                <span className="transaction--bold">4.95</span>USDT
-              </span>{" "}
+              <span
+                id="transactionAmountMini"
+                className="transaction__box-amount"
+              ></span>{" "}
               <span className="transaction__box-amount-dash">-</span>{" "}
-              <span className="transaction__box-amount">
-                <span className="transaction--bold">439.08</span>USDT
-              </span>
+              <span
+                id="transactionAmount"
+                className="transaction__box-amount"
+              ></span>
             </span>
           </div>
           <div className="transaction__box-item">
             <span>Method:</span>
-            <span className="transaction--bold">Vietcombank</span>
+            <span id="transactionBankName" className="transaction--bold">
+              Vietcombank
+            </span>
           </div>
           <div className="transaction__box-item">
             <span>Payment window:</span>
@@ -74,7 +141,9 @@ function Transaction() {
         <div className="box transaction__box">
           <div className="transaction__box-item">
             <span>Username:</span>
-            <span className="transaction--green">queencoin9999</span>
+            <span id="transactionUserName" className="transaction--green">
+              queencoin9999
+            </span>
           </div>
           <div className="transaction__box-item">
             <span>Status:</span>

@@ -1,0 +1,70 @@
+.admin-exchange {
+    color: $white;
+
+    .admin-exchange__header {
+        margin-bottom: 20px;
+
+        .admin-exchange__title {
+            color: $white;
+            margin-bottom: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .admin-exchange__create-button {
+            @include adminButtonPrimary;
+        }
+    }
+
+    .admin-exchange__content {
+        overflow-x: auto;
+
+        table {
+            @include adminTable;
+            min-width: 500px;
+
+            input {
+                outline: none;
+                border: 1px solid $background-color-4;
+                border-radius: 5px;
+                padding: 3px 5px;
+                background: $transparent;
+
+
+                &:hover {
+                    outline: none;
+                }
+
+                &:focus-visible {
+                    outline: none;
+                }
+            }
+
+            .exchange__action {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                button {
+
+                    &:last-child {
+                        &:hover {
+                            color: $red-dark;
+                            border-color: $red-dark;
+                        }
+                    }
+
+                    @include adminButtonGhost;
+
+                    .loader {
+                        width: 16px;
+                        height: 16px;
+                        opacity: 0.3;
+                    }
+                }
+            }
+
+
+        }
+    }
+}

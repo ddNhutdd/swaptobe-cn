@@ -28,12 +28,6 @@ function Sidebar() {
     rightIconFunding.current.classList.remove("up");
     submenuFunding.current.classList.remove("show");
   };
-  const redirectkyc = function (e) {
-    clearSelectedItem();
-    const element = e.target.closest("#kyc");
-    element.classList.add("active");
-    history.push(url.admin_kyc);
-  };
   const clearSelectedItem = function () {
     const element = getElementById("listItem");
     for (const item of element.children) {
@@ -52,10 +46,18 @@ function Sidebar() {
       case "ads":
         addClassToElementById("ads", "active");
         break;
-
+      case "exchange":
+        addClassToElementById("exchange", "active");
+        break;
       default:
         break;
     }
+  };
+  const redirectkyc = function (e) {
+    clearSelectedItem();
+    const element = e.target.closest("#kyc");
+    element.classList.add("active");
+    history.push(url.admin_kyc);
   };
   const redirectExchangeRateDisparity = function (e) {
     clearSelectedItem();
@@ -68,6 +70,12 @@ function Sidebar() {
     const element = e.target.closest("#ads");
     element.classList.add("active");
     history.push(url.admin_ads);
+  };
+  const redirectExchange = function (e) {
+    clearSelectedItem();
+    const element = e.target.closest("#exchange");
+    element.classList.add("active");
+    history.push(url.admin_exchange);
   };
   //
   return (
@@ -98,7 +106,12 @@ function Sidebar() {
           </span>
           <span className="admin-sidebar__item">Advertise</span>
         </li>
-
+        <li onClick={redirectExchange} id="exchange">
+          <span className="admin-sidebar__icon">
+            <i className="fa-solid fa-money-bill-transfer"></i>
+          </span>
+          <span className="admin-sidebar__item">Exchange</span>
+        </li>
         <li id="funding-item" onClick={fundingItemClickHandle}>
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-coins"></i>
@@ -117,12 +130,6 @@ function Sidebar() {
           <li>Withdraw</li>
           <li>Transfer</li>
         </ul>
-        <li>
-          <span className="admin-sidebar__icon">
-            <i className="fa-solid fa-money-bill-transfer"></i>
-          </span>
-          <span className="admin-sidebar__item">Trade</span>
-        </li>
 
         <li id="history-item" onClick={historyItemClickHandle}>
           <span className="admin-sidebar__icon">
