@@ -7,7 +7,7 @@ import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getAdsItem } from "src/redux/reducers/adsSlice";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
-import { getElementById } from "src/util/common";
+import { formatStringNumberCultureUS, getElementById } from "src/util/common";
 function Transaction() {
   const history = useHistory();
   const listCoinRealtime = useSelector(getListCoinRealTime);
@@ -28,11 +28,20 @@ function Transaction() {
     renderPrice();
   }, [listCoinRealtime, currency, exchangeRateDisparity, exchange]);
   const renderPrice = function () {
+    if (!selectedAds) {
+      history.push(url.p2pTrading);
+      return;
+    }
     const priceUSd = listCoinRealtime
       .filter((item) => item.name === symbol.current)
-      .at(0);
-    console.log(priceUSd);
-    console.log(listCoinRealtime, currency, exchangeRateDisparity);
+      .at(0)?.price;
+    const exch = exchange.filter((item) => item.title === currency).at(0).rate;
+    const result = priceUSd * exch * exchangeRateDisparity;
+    getElementById(
+      "transaction__price"
+    ).innerHTML = `<span class="transaction__box-price">${formatStringNumberCultureUS(
+      String(result.toFixed(3))
+    )}</span> ${currency}`;
   };
   const loadDataFirstTime = function () {
     if (!selectedAds) {
@@ -65,6 +74,9 @@ function Transaction() {
 ${symbol.current}`;
     getElementById("transactionBankName").innerHTML = bankName.current;
     getElementById("transactionUserName").innerHTML = userName.current;
+  };
+  const buyNowSubmitHandle = function (e) {
+    e.stopPropagation();
   };
   return (
     <div className="transaction">
@@ -99,7 +111,7 @@ ${symbol.current}`;
                 </span>
               </div>
             </label>
-            <button>
+            <button type="submit" onClick={buyNowSubmitHandle}>
               <div className="loader --d-none"></div>Buy now
             </button>
           </form>
@@ -108,9 +120,7 @@ ${symbol.current}`;
         <div className="box transaction__box">
           <div className="transaction__box-item">
             <span>Price:</span>
-            <span>
-              <span className="transaction__box-price">25,515.63</span> VND/USDT
-            </span>
+            <span id="transaction__price"></span>
           </div>
           <div className="transaction__box-item amount">
             <span>Amount limits:</span>
