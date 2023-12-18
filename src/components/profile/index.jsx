@@ -12,9 +12,17 @@ import {
 } from "src/constant";
 import i18n from "src/translation/i18n";
 import { Modal } from "antd";
-import { getLocalStorage } from "src/util/common";
+import {
+  addClassToElementById,
+  getClassListFromElementById,
+  getElementById,
+  getLocalStorage,
+  hideElement,
+  showElement,
+} from "src/util/common";
 import { useHistory } from "react-router-dom";
 import {
+  addListBanking,
   generateOTPToken,
   getProfile,
   turnOff2FA,
@@ -42,6 +50,13 @@ function Profile() {
     verified: 3,
     notVerifiedYet: 4,
   };
+  const paymentControl = useRef({
+    bankName: "bankName",
+    accountName: "accountName",
+    accountNumber: "accountNumber",
+  });
+  const paymentTourched = useRef({});
+  const paymentError = useRef({});
   //
   const { t } = useTranslation();
   const history = useHistory();
@@ -60,6 +75,7 @@ function Profile() {
   });
   const [callApi2FAStatus, setCallApi2FAStatus] = useState(api_status.pending);
   const [showContent, setShowConTent] = useState(content.undefined);
+  const callApiBankingUserStatus = useRef(api_status.pending);
   useEffect(() => {
     const dataUser = getLocalStorage(localStorageVariable.user);
     if (!dataUser) {
@@ -473,7 +489,6 @@ function Profile() {
               <div id="profile__phone__error" className={`input__error`}></div>
             </div>
           </div>
-
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__company">{t("company")}</label>
@@ -491,7 +506,6 @@ function Profile() {
               ></div>
             </div>
           </div>
-
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__passport">{t("passport")}</label>
@@ -509,7 +523,6 @@ function Profile() {
               ></div>
             </div>
           </div>
-
           <div className="profile__form-item"></div>
           <div className="profile__form-item">
             <div className="profile__fileInput">
@@ -738,6 +751,140 @@ function Profile() {
       );
     }
   };
+  const addBankingSubmitHandle = async function (e) {
+    e.preventDefault();
+    // validate
+    for (const item of Object.keys(paymentControl)) {
+      paymentTourched.current[item] = true;
+    }
+    const valid = paymentValidate();
+    paymentErrorRender();
+    if (!valid) return;
+    //
+    disablePaymentButton();
+    await fetApiUserAddBanking({
+      numberBanking: getElementById("profile__payment-account-number").value,
+      nameBanking: getElementById("profile__payment-bank-name").value,
+      ownerBanking: getElementById("profile__payment-account-name").value,
+    });
+    enablePaymentButton();
+
+    // render list
+  };
+  const fetApiUserAddBanking = function (data) {
+    return new Promise((resolve) => {
+      if (callApiBankingUserStatus.current === api_status.fetching) {
+        return resolve(null);
+      }
+      callApiBankingUserStatus.current = api_status.fetching;
+      addListBanking(data)
+        .then((resp) => {
+          callApiBankingUserStatus.current = api_status.fulfilled;
+          showToast(showAlertType.success, "Success");
+          return resolve(resp.data.data);
+        })
+        .catch((error) => {
+          callApiBankingUserStatus.current = api_status.rejected;
+          showToast(showAlertType.error, "Fail");
+          return resolve(null);
+        });
+    });
+  };
+  const paymentValidate = function () {
+    let valid = true;
+    const bankNameValue = getElementById("profile__payment-bank-name").value;
+    const accountNumberValue = getElementById(
+      "profile__payment-account-number"
+    ).value;
+    const accountNameValue = getElementById(
+      "profile__payment-account-number"
+    ).value;
+    if (paymentTourched.current[paymentControl.current.bankName]) {
+      if (!bankNameValue) {
+        valid &= false;
+        paymentError.current[paymentControl.current.bankName] = t("require");
+      } else {
+        delete paymentError.current[paymentControl.current.bankName];
+      }
+    }
+    if (paymentTourched.current[paymentControl.current.accountNumber]) {
+      if (!accountNumberValue) {
+        valid &= false;
+        paymentError.current[paymentControl.current.accountNumber] =
+          t("require");
+      } else {
+        delete paymentError.current[paymentControl.current.accountNumber];
+      }
+    }
+    if (paymentTourched.current[paymentControl.current.accountName]) {
+      if (!accountNameValue) {
+        valid &= false;
+        paymentError.current[paymentControl.current.accountName] = t("require");
+      } else {
+        delete paymentError.current[paymentControl.current.accountName];
+      }
+    }
+    return Object.keys(paymentTourched).length <= 0 || Boolean(valid);
+  };
+  const paymentErrorRender = function () {
+    const bankName = getElementById("profile__payment-bank-name__error");
+    const accountName = getElementById("profile__payment-account-name__error");
+    const accountNumber = getElementById(
+      "profile__payment-account-number__error"
+    );
+    if (
+      paymentTourched.current[paymentControl.current.bankName] &&
+      paymentError.current[paymentControl.current.bankName]
+    ) {
+      bankName.innerHTML =
+        paymentError.current[paymentControl.current.bankName];
+    } else {
+      bankName.innerHTML = "";
+    }
+    if (
+      paymentTourched.current[paymentControl.current.accountNumber] &&
+      paymentError.current[paymentControl.current.accountNumber]
+    ) {
+      accountNumber.innerHTML =
+        paymentError.current[paymentControl.current.accountNumber];
+    } else {
+      accountNumber.innerHTML = "";
+    }
+    if (
+      paymentTourched.current[paymentControl.current.accountName] &&
+      paymentError.current[paymentControl.current.accountName]
+    ) {
+      accountName.innerHTML =
+        paymentError.current[paymentControl.current.accountName];
+    } else {
+      accountName.innerHTML = "";
+    }
+  };
+  const paymentControlFocusHandle = function (e) {
+    const name = e.target.name;
+    paymentTourched.current[name] = true;
+    paymentValidate();
+    paymentErrorRender();
+  };
+  const paymentControlChangeHandle = function () {
+    paymentValidate();
+    paymentErrorRender();
+  };
+  /**
+   * disable button and show loader
+   */
+  const disablePaymentButton = function () {
+    addClassToElementById("paymentButtonSubmit", "disable");
+    const btn = getElementById("paymentButtonSubmit");
+    const loader = btn.querySelector(".loader");
+    showElement(loader);
+  };
+  const enablePaymentButton = function () {
+    getClassListFromElementById("paymentButtonSubmit").remove("disable");
+    const btn = getElementById("paymentButtonSubmit");
+    const loader = btn.querySelector(".loader");
+    hideElement(loader);
+  };
   //
   return (
     <div className="profile">
@@ -801,6 +948,76 @@ function Profile() {
                 </li>
               </ul>
               {renderUserProfileControl()}
+            </div>
+          </Card>
+        </div>
+        <div className="profile__payment">
+          <Card bodyStyle={{ backgroundColor: "#f5f5f5" }}>
+            <div className="profile__card-container">
+              <div className="profile__title">Payment</div>
+              <div className="profile__payment-content">
+                <form>
+                  <div className="profile__input">
+                    <label htmlFor="profile__payment-bank-name">
+                      {t("bankName")}
+                    </label>
+                    <input
+                      onFocus={paymentControlFocusHandle}
+                      onChange={paymentControlChangeHandle}
+                      name="bankName"
+                      id="profile__payment-bank-name"
+                      type="text"
+                    />
+                    <div
+                      id="profile__payment-bank-name__error"
+                      className={`input__error`}
+                    ></div>
+                  </div>
+                  <div className="profile__input">
+                    <label htmlFor="profile__payment-account-number">
+                      {t("accountNumber")}
+                    </label>
+                    <input
+                      onChange={paymentControlChangeHandle}
+                      onFocus={paymentControlFocusHandle}
+                      name="accountNumber"
+                      id="profile__payment-account-number"
+                      type="text"
+                    />
+                    <div
+                      id="profile__payment-account-number__error"
+                      className={`input__error`}
+                    ></div>
+                  </div>
+                  <div className="profile__input">
+                    <label htmlFor="profile__payment-account-name">
+                      {t("accountName")}
+                    </label>
+                    <input
+                      onChange={paymentControlChangeHandle}
+                      onFocus={paymentControlFocusHandle}
+                      name="accountName"
+                      id="profile__payment-account-name"
+                      type="text"
+                    />
+                    <div
+                      id="profile__payment-account-name__error"
+                      className={`input__error`}
+                    ></div>
+                  </div>
+                  <div className="profile__payment-action">
+                    <button
+                      id="paymentButtonSubmit"
+                      onClick={addBankingSubmitHandle}
+                      className="profile__payment-button"
+                    >
+                      <div className="loader --d-none"></div>
+                      Add banking
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div className="profile__title">Your list bank:</div>
             </div>
           </Card>
         </div>

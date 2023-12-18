@@ -25,16 +25,26 @@
             gap: 15px;
 
             .transaction__input-container {
-                display: flex;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
 
                 @media screen and (max-width:576px) {
-                    flex-direction: column;
+                    grid-template-columns: repeat(1, 1fr);
                 }
 
                 .transaction__input {
                     @include userInput;
                     position: relative;
+
+
+                    &.payment {
+                        grid-column: 1 / span 2;
+
+                        @media screen and (max-width:576px) {
+                            grid-column: 1 / span 1;
+                        }
+                    }
 
                     .transaction__unit {
                         position: absolute;

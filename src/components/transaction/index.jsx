@@ -2,13 +2,24 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { url } from "src/constant";
+import { regularExpress, showAlertType, url } from "src/constant";
+import { showAlert } from "src/function/showAlert";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getAdsItem } from "src/redux/reducers/adsSlice";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
-import { formatStringNumberCultureUS, getElementById } from "src/util/common";
+import {
+  convertStringToNumber,
+  formatStringNumberCultureUS,
+  getElementById,
+  roundDecimalValues,
+} from "src/util/common";
 function Transaction() {
+  const controlTouched = useRef({});
+  const controlError = useRef({});
+  const control = useRef({
+    amountInput: "amountInput",
+  });
   const history = useHistory();
   const listCoinRealtime = useSelector(getListCoinRealTime);
   const currency = useSelector(getCurrent);
@@ -21,12 +32,42 @@ function Transaction() {
   const userName = useRef();
   const side = useRef();
   const symbol = useRef();
+  const amountInput = useRef(null); // input element
   useEffect(() => {
     loadDataFirstTime();
   }, []);
   useEffect(() => {
     renderPrice();
   }, [listCoinRealtime, currency, exchangeRateDisparity, exchange]);
+  useEffect(() => {
+    setValueInputReceive();
+  }, [listCoinRealtime, exchange]);
+  const validate = function () {
+    let valid = true;
+    if (controlTouched.current[control.amountInput]) {
+      if (!amountInput.current.value) {
+        controlError.current[control.amountInput] = "Require";
+        valid &= false;
+      } else if (Number(amountInput.current.value) <= 0) {
+        controlError.current[control.amountInput] = "Invalid";
+        valid &= false;
+      } else {
+        delete controlError.current[control.amountInput];
+      }
+    }
+    return Object.keys(controlError).length <= 0 ? false : valid;
+  };
+  const renderError = function () {
+    const ele = getElementById("amountInputError");
+    if (
+      controlTouched.current[control.amountInput] &&
+      controlError.current[control.amountInput]
+    ) {
+      ele.innerHTML = controlError.current[control.amountInput];
+    } else {
+      ele.innerHTML = "";
+    }
+  };
   const renderPrice = function () {
     if (!selectedAds) {
       history.push(url.p2pTrading);
@@ -74,10 +115,74 @@ function Transaction() {
 ${symbol.current}`;
     getElementById("transactionBankName").innerHTML = bankName.current;
     getElementById("transactionUserName").innerHTML = userName.current;
+    getElementById("receiveUnitTransaction").innerHTML = symbol.current;
   };
   const buyNowSubmitHandle = function (e) {
-    e.stopPropagation();
+    e.preventDefault();
+    //
+    for (const item of Object.keys(control)) {
+      controlTouched.current[item] = true;
+    }
+    const valid = validate();
+    if (!valid) {
+      return;
+    }
+    const acceptEula = getElementById("agreeCheckBox").checked;
+    if (!acceptEula) {
+      showAlert(showAlertType.error, "not yet accept Eula");
+      return;
+    }
+    console.log("submit");
   };
+  const setValueInputReceive = function () {
+    const inputReceive = getElementById("receiveInputTransaction");
+    if (
+      !amountInput.current.value ||
+      !listCoinRealtime ||
+      listCoinRealtime.length <= 0 ||
+      !exchange ||
+      exchange.length <= 0
+    ) {
+      inputReceive.value = 0;
+      amountInput.current.value = "";
+      return;
+    }
+    const amountInputValue = convertStringToNumber(amountInput.current.value);
+    const rateDollar = exchange.find((item) => item.title === "VND").rate;
+    const inputValueDollar = amountInputValue / rateDollar;
+    const coinPrice = listCoinRealtime.find(
+      (item) => item.name === symbol.current
+    ).price;
+    let amountCoin = Number(inputValueDollar) / coinPrice;
+    inputReceive.value = roundDecimalValues(amountCoin, coinPrice);
+  };
+  const amountInputChangeHandle = function (e) {
+    const inputValue = e.target.value;
+    const inputValueNumber = convertStringToNumber(inputValue);
+    if (!regularExpress.checkNumber.test(inputValueNumber)) {
+      amountInput.current.value = amountInput.current.value.slice(
+        0,
+        amountInput.current.value.length - 1
+      );
+    } else {
+      amountInput.current.value = formatStringNumberCultureUS(
+        String(inputValueNumber)
+      );
+    }
+    setValueInputReceive();
+    //
+    validate();
+    renderError();
+  };
+  const amountInputFocusHandle = function () {
+    controlTouched.current[control.amountInput] = true;
+    validate();
+    renderError();
+  };
+  /**
+   * disable button submi
+   */
+  const disableButtonSubmit = function () {};
   return (
     <div className="transaction">
       <div className="container">
@@ -89,14 +194,27 @@ ${symbol.current}`;
             <div className="transaction__input-container">
               <div className="transaction__input">
                 <label htmlFor="amountInput">I will pay:</label>
-                <input id="amountInputTransaction" type="text" />
+                <input
+                  ref={amountInput}
+                  onFocus={amountInputFocusHandle}
+                  onChange={amountInputChangeHandle}
+                  id="amountInputTransaction"
+                  type="text"
+                />
                 <span className="transaction__unit">VND</span>
                 <span id="amountInputError" className="input__error"></span>
               </div>
               <div className="transaction__input">
-                <label htmlFor="receiveInput">I will pay:</label>
-                <input id="receiveInputTransaction" type="text" />
-                <span className="transaction__unit">VND</span>
+                <label htmlFor="receiveInput">to receive:</label>
+                <input disabled id="receiveInputTransaction" type="text" />
+                <span id="receiveUnitTransaction" className="transaction__unit">
+                  USDT
+                </span>
+              </div>
+              <div className="transaction__input payment">
+                <label htmlFor="amountInput">Choose your payment:</label>
+                <input type="text" />
+                <span className="input__error"></span>
               </div>
             </div>
             <input id="agreeCheckBox" type="checkbox" className="--d-none" />

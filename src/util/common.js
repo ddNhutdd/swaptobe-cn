@@ -90,7 +90,7 @@ export const roundDecimalValues = function (value, coinValue) {
   } else {
     decimalPlaces = 2;
   }
-  const roundedValue = parseFloat(value.toFixed(decimalPlaces));
+  const roundedValue = value.toFixed(decimalPlaces);
   return roundedValue;
 };
 //

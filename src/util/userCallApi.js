@@ -187,3 +187,10 @@ export const searchSellQuick = function (data) {
     console.log(error);
   }
 };
+export const addListBanking = function (data) {
+  try {
+    return axiosService.post("/api/user/addListBanking", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
