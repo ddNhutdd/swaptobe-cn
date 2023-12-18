@@ -136,10 +136,10 @@ function App() {
       <ScrollToTop>
         <Switch>
           <MainTemplate path={url.ads_history} component={AdsHistory} />
-          <MainTemplate path="/confirm" component={Confirm} />
-          <MainTemplate path="/transaction" component={Transaction} />
-          <MainTemplate path="/profile" component={Profile} />
-          <MainTemplate path="/wallet-2" component={SwaptobeWallet} />
+          <MainTemplate path={url.confirm} component={Confirm} />
+          <MainTemplate path={url.transaction} component={Transaction} />
+          <MainTemplate path={url.profile} component={Profile} />
+          <MainTemplate path={url.wallet} component={SwaptobeWallet} />
           <MainTemplate path="/p2p-trading" component={P2PTrading} />
           <MainTemplate path="/swap" component={Swap} />
           <MainTemplate path="/create-ads/buy" component={CreateBuySell} />

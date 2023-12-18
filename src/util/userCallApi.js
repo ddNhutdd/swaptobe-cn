@@ -208,3 +208,10 @@ export const createP2p = function (data) {
     console.log(error);
   }
 };
+export const getInfoP2p = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getInfoP2p", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -43,6 +43,8 @@ function Transaction() {
   const idAds = useRef();
   const callApiStatus = useRef(api_status.pending);
   useEffect(() => {
+    //If the profile has not confirmed KYC, then transfer it to the profile page
+    //
     loadDataFirstTime();
     //
     document.addEventListener("click", closeDropdownPayment);
@@ -155,7 +157,7 @@ ${symbol.current}`;
       return;
     }
     disableButtonSubmit();
-    await fetchApiCreateP2p({
+    const apiRes = await fetchApiCreateP2p({
       amount: convertStringToNumber(
         getElementById("receiveInputTransaction").value
       ),
@@ -163,6 +165,9 @@ ${symbol.current}`;
       idBankingUser: idUserBanking.current,
     });
     enableButtonSubmit();
+    if (apiRes) {
+      history.push(url.confirm.replace(":id", idAds.current));
+    }
   };
   const fetchApiCreateP2p = function (data) {
     return new Promise((resolve) => {

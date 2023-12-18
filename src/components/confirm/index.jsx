@@ -1,5 +1,92 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef, useState } from "react";
+import { api_status, showAlertType } from "src/constant";
+import { useParams } from "react-router-dom";
+import { getInfoP2p } from "src/util/userCallApi";
+import { showAlert } from "src/function/showAlert";
+import { Modal } from "antd";
+import { formatStringNumberCultureUS, getElementById } from "src/util/common";
 function Confirm() {
+  useEffect(() => {
+    loadDataFirstLoading();
+  }, []);
+  const idAds = useParams().id;
+  const callApiStatus = useRef(api_status.pending);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const bankName = useRef();
+  const ownerAccount = useRef();
+  const numberBank = useRef();
+  const showModalPayment = () => {
+    setIsModalOpen(true);
+    setTimeout(() => {
+      renderModalPayment();
+    }, 0);
+  };
+  const renderModalPayment = function () {
+    getElementById("bankNamePaymentModal").innerHTML = bankName.current;
+    getElementById("accountPaymentModal").innerHTML = ownerAccount.current;
+    getElementById("accountNumberPaymentModal").innerHTML = numberBank.current;
+  };
+  const handleCancelModalPayment = () => {
+    setIsModalOpen(false);
+  };
+  const fetchApiGetInfoP2p = function () {
+    return new Promise((resolve) => {
+      if (callApiStatus.current === api_status.fetching) {
+        return resolve(false);
+      }
+      getInfoP2p({
+        idP2p: idAds,
+      })
+        .then((resp) => {
+          callApiStatus.current = api_status.fulfilled;
+          return resolve(resp.data.data);
+        })
+        .catch((error) => {
+          callApiStatus.current = api_status.rejected;
+          return resolve(false);
+        });
+    });
+  };
+  /**
+   * fetch data and render html
+   */
+  const loadDataFirstLoading = async function () {
+    const apiRes = await fetchApiGetInfoP2p();
+    if (!apiRes) {
+      showAlert(showAlertType.error, "Load data fail");
+      return;
+    }
+    const {
+      code,
+      amount,
+      symbol,
+      rate,
+      pay,
+      created_at,
+      bankName: bankN,
+      ownerAccount: account,
+      numberBank: numAcc,
+    } = apiRes.at(0);
+    console.log(typeof pay);
+    getElementById("transactionCode").innerHTML = code;
+    getElementById("youReceive").innerHTML = `${amount} ${symbol}`;
+    getElementById("rate").innerHTML = rate;
+    getElementById(
+      "pay"
+    ).innerHTML = `<span class="confirm--red">${formatStringNumberCultureUS(
+      pay.toFixed(3)
+    )} VND</span>
+    <span>
+      (Đã bao gồm phí giao dịch: 0 VNĐ và phí chuyển: 48,000 VNĐ)
+    </span>`;
+    const date = created_at.split("T");
+    const time = date.at(-1).split(".");
+    getElementById("createdAt").innerHTML = date.at(0) + " " + time.at(0);
+    bankName.current = bankN;
+    ownerAccount.current = account;
+    numberBank.current = numAcc;
+  };
   return (
     <div className="confirm">
       <div className="container">
@@ -12,41 +99,8 @@ function Confirm() {
           <tbody>
             <tr>
               <td>Mã GD</td>
-              <td className="confirm--green">JXEX1702459766</td>
-            </tr>
-            <tr>
-              <td>Thương Nhân</td>
-              <td>
-                <div className="confirm__trander-container">
-                  <div className="confirm__trader">
-                    <span className="confirm--green">Hoang Long</span>
-                    <div className="confirm__list-socials">
-                      <i className="fa-brands fa-telegram"></i>
-                      <i className="fa-solid fa-phone"></i>
-                      <i>
-                        <img
-                          src={process.env.PUBLIC_URL + "/img/zalo.webp"}
-                          alt="zalo"
-                        />
-                      </i>
-                    </div>
-                  </div>
-                  <div className="confirm--red">
-                    Vui lòng liên hệ ngay zalo, phone thương nhân hoặc chat
-                    Messenger support ở góc phải nếu cần hỗ trợ
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Địa chỉ ví</td>
-              <td>
-                <div className="confirm__address">
-                  <span className="confirm--break confirm--red">
-                    0xecBE1ef64D79EA93d22E4cd3DDe6d8ef2Dcf975D
-                  </span>
-                  <span className="confirm--blue">(Giao Thức: BEP20)</span>
-                </div>
+              <td id="transactionCode" className="confirm--green">
+                JXEX1702459766
               </td>
             </tr>
             <tr>
@@ -70,8 +124,8 @@ function Confirm() {
               <td>Thanh Toán</td>
               <td>
                 <div className="confirm__payment">
-                  <button>
-                    <div className="loader "></div>Mở màn hình thanh toán
+                  <button onClick={showModalPayment}>
+                    Mở màn hình thanh toán
                   </button>
                   <span className="confirm--green">
                     Bạn xác nhận đã chuyển khoản, vui lòng đợi chúng tôi kiểm
@@ -82,16 +136,20 @@ function Confirm() {
             </tr>
             <tr>
               <td>Bạn nhận</td>
-              <td className="confirm--red">1100 USDT</td>
+              <td id="youReceive" className="confirm--red">
+                1100 USDT
+              </td>
             </tr>
             <tr>
               <td>Tỉ giá</td>
-              <td className="confirm--red">24,898.00 VND</td>
+              <td id="rate" className="confirm--red">
+                24,898.00 VND
+              </td>
             </tr>
             <tr>
               <td>Số tiền</td>
               <td>
-                <div className="confirm__money">
+                <div id="pay" className="confirm__money">
                   <span className="confirm--red">27,435,800 VND</span>
                   <span>
                     (Đã bao gồm phí giao dịch: 0 VNĐ và phí chuyển: 48,000 VNĐ)
@@ -100,19 +158,8 @@ function Confirm() {
               </td>
             </tr>
             <tr>
-              <td>Đánh giá</td>
-              <td>
-                <div className="confirm__rating">
-                  <input type="text" placeholder="Đánh giá" />
-                  <button>
-                    <div className="loader"></div>Gửi
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
               <td>Thời gian</td>
-              <td className="confirm--green confirm__time">
+              <td id="createdAt" className="confirm--green confirm__time">
                 13-12-2023 | 04:29
               </td>
             </tr>
@@ -141,6 +188,32 @@ function Confirm() {
           </tbody>
         </table>
       </div>
+      <Modal
+        title="Payment Info"
+        open={isModalOpen}
+        onOk={handleCancelModalPayment}
+        onCancel={handleCancelModalPayment}
+        cancelButtonProps={{ style: { display: "none" } }}
+      >
+        <div className="paymentModalContent">
+          <table className="paymentModalContent">
+            <tbody>
+              <tr>
+                <td>Bank name: </td>
+                <td id="bankNamePaymentModal">OCB</td>
+              </tr>
+              <tr>
+                <td>Account: </td>
+                <td id="accountPaymentModal">Van Den</td>
+              </tr>
+              <tr>
+                <td>Accout Number: </td>
+                <td id="accountNumberPaymentModal">789567456354</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Modal>
     </div>
   );
 }

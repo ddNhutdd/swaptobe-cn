@@ -50,67 +50,6 @@
                     }
                 }
 
-                .confirm__rating {
-                    @include userInput;
-
-                    @media screen and (max-width:768px) {
-                        flex-direction: column;
-                        align-items: flex-start;
-                    }
-
-                    button {
-                        @media screen and (max-width:576px) {
-                            margin-right: auto;
-                        }
-                    }
-                }
-
-                .confirm__trander-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 15px;
-
-                    .confirm__trader {
-                        display: flex;
-                        align-items: center;
-                        gap: 15px;
-
-                        span {
-                            @media screen and (max-width:576px) {
-                                margin-right: auto;
-                            }
-                        }
-
-                        @media screen and (max-width: 576px) {
-                            flex-direction: column;
-                        }
-
-                        .confirm__list-socials {
-                            display: flex;
-                            gap: 10px;
-
-                            @media screen and (max-width:576px) {
-                                flex-wrap: wrap;
-                            }
-
-                            i {
-                                font-size: 35px;
-
-                                &:hover {
-                                    cursor: pointer;
-                                }
-
-                                img {
-                                    display: block;
-                                    width: 35px;
-                                    height: 35px;
-                                    object-fit: cover;
-                                }
-                            }
-                        }
-                    }
-                }
-
                 .confirm__status {
                     display: flex;
                     flex-direction: column;
@@ -146,21 +85,23 @@
                     }
                 }
 
-                .confirm__rating {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-
-                ul {
-                    // padding: 0 15px
-                }
-
                 button {
                     @include userMainButton;
                     padding: 5px 10px;
                 }
             }
+        }
+    }
+}
+
+.paymentModalContent {
+    padding: 16px 24px;
+
+    td {
+        padding: 5px 20px 5px 0;
+
+        &:first-child {
+            font-weight: bold;
         }
     }
 }

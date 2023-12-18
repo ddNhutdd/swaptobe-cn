@@ -29,6 +29,7 @@ export const url = {
   admin_exchange: "/admin/exchange",
   ads_history: "/ads-history",
   transaction: "/transaction",
+  confirm: "/confirm/:id",
 };
 
 export const api_url = {
