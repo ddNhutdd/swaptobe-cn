@@ -209,7 +209,7 @@ $blue-light: #ceceff;
   border: 1px solid $background-color-4;
   padding: 5px 10px;
   border-radius: 5px;
-  transition: .2s;
+  transition: border-color 0.2s, outline 0.2s;
   display: flex;
   background-color: $white;
   gap: 10px;

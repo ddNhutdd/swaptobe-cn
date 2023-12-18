@@ -1018,6 +1018,23 @@ function Profile() {
                 </form>
               </div>
               <div className="profile__title">Your list bank:</div>
+              <div className="profile__payment-list">
+                <div className="profile__payment-record">
+                  <div className="profile__payment-cell">Vietcombank</div>
+                  <div className="profile__payment-cell">Trinh Minh Dung</div>
+                  <div className="profile__payment-cell">123456789</div>
+                </div>
+                <div className="profile__payment-record">
+                  <div className="profile__payment-cell">Vietcombank</div>
+                  <div className="profile__payment-cell">Trinh Minh Dung</div>
+                  <div className="profile__payment-cell">123456789</div>
+                </div>
+                <div className="profile__payment-record">
+                  <div className="profile__payment-cell">Vietcombank</div>
+                  <div className="profile__payment-cell">Trinh Minh Dung</div>
+                  <div className="profile__payment-cell">123456789</div>
+                </div>
+              </div>
             </div>
           </Card>
         </div>

@@ -194,3 +194,17 @@ export const addListBanking = function (data) {
     console.log(error);
   }
 };
+export const getListBanking = function (data) {
+  try {
+    return axiosService.post("/api/user/getListBankingUser", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const createP2p = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/createP2p", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

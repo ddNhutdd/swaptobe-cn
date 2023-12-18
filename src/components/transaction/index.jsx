@@ -2,18 +2,24 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { regularExpress, showAlertType, url } from "src/constant";
+import { api_status, regularExpress, showAlertType, url } from "src/constant";
 import { showAlert } from "src/function/showAlert";
+import { showToast } from "src/function/showToast";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getAdsItem } from "src/redux/reducers/adsSlice";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
 import {
+  addClassToElementById,
   convertStringToNumber,
   formatStringNumberCultureUS,
+  getClassListFromElementById,
   getElementById,
+  hideElement,
   roundDecimalValues,
+  showElement,
 } from "src/util/common";
+import { createP2p, getListBanking } from "src/util/userCallApi";
 function Transaction() {
   const controlTouched = useRef({});
   const controlError = useRef({});
@@ -32,9 +38,19 @@ function Transaction() {
   const userName = useRef();
   const side = useRef();
   const symbol = useRef();
+  const idUserBanking = useRef();
   const amountInput = useRef(null); // input element
+  const idAds = useRef();
+  const callApiStatus = useRef(api_status.pending);
   useEffect(() => {
     loadDataFirstTime();
+    //
+    document.addEventListener("click", closeDropdownPayment);
+    setElementWidth();
+    window.addEventListener("resize", setElementWidth);
+    return () => {
+      document.removeEventListener("click", closeDropdownPayment);
+    };
   }, []);
   useEffect(() => {
     renderPrice();
@@ -77,7 +93,7 @@ function Transaction() {
       .filter((item) => item.name === symbol.current)
       .at(0)?.price;
     const exch = exchange.filter((item) => item.title === currency).at(0).rate;
-    const result = priceUSd * exch * exchangeRateDisparity;
+    const result = priceUSd * exch;
     getElementById(
       "transaction__price"
     ).innerHTML = `<span class="transaction__box-price">${formatStringNumberCultureUS(
@@ -95,6 +111,7 @@ function Transaction() {
     userName.current = selectedAds.userName;
     side.current = selectedAds.side;
     symbol.current = selectedAds.symbol;
+    idAds.current = selectedAds.id;
     getElementById(
       "transactionTitle"
     ).innerHTML = `<span class="transaction--green">${
@@ -116,8 +133,13 @@ ${symbol.current}`;
     getElementById("transactionBankName").innerHTML = bankName.current;
     getElementById("transactionUserName").innerHTML = userName.current;
     getElementById("receiveUnitTransaction").innerHTML = symbol.current;
+    //
+    if (!renderPaymentDropdown()) {
+      showToast(showAlertType.error, "load thong tin ngan hang that bai");
+      return;
+    }
   };
-  const buyNowSubmitHandle = function (e) {
+  const buyNowSubmitHandle = async function (e) {
     e.preventDefault();
     //
     for (const item of Object.keys(control)) {
@@ -132,7 +154,49 @@ ${symbol.current}`;
       showAlert(showAlertType.error, "not yet accept Eula");
       return;
     }
-    console.log("submit");
+    disableButtonSubmit();
+    await fetchApiCreateP2p({
+      amount: convertStringToNumber(
+        getElementById("receiveInputTransaction").value
+      ),
+      idP2p: idAds.current,
+      idBankingUser: idUserBanking.current,
+    });
+    enableButtonSubmit();
+  };
+  const fetchApiCreateP2p = function (data) {
+    return new Promise((resolve) => {
+      if (callApiStatus.current === api_status.fetching) {
+        return resolve(false);
+      }
+      callApiStatus.current = api_status.fetching;
+      createP2p(data)
+        .then((resp) => {
+          callApiStatus.current = api_status.fulfilled;
+          showToast(showAlertType.success, "create success");
+          return resolve(true);
+        })
+        .catch((error) => {
+          callApiStatus.current = api_status.rejected;
+          showToast(showAlertType.error, "create fail");
+          console.log(error);
+          const mess = error.message;
+          switch (mess) {
+            case "The quantity is too much and the order cannot be created":
+              showAlert(showAlertType.error, mess);
+              break;
+            case "The quantity is too small to create an order":
+              showAlert(showAlertType.error, mess);
+              break;
+            case "You have a transaction order that has not yet been processed":
+              showAlert(showAlertType.error, mess);
+              break;
+            default:
+              break;
+          }
+          return resolve(false);
+        });
+    });
   };
   const setValueInputReceive = function () {
     const inputReceive = getElementById("receiveInputTransaction");
@@ -179,10 +243,82 @@ ${symbol.current}`;
     validate();
     renderError();
   };
+  const dropdownPaymentToggle = function (e) {
+    e.stopPropagation();
+    getClassListFromElementById("paymentDropdownSelected").toggle("active");
+    getClassListFromElementById("paymentDropdownMenu").toggle("show");
+  };
+  const closeDropdownPayment = function () {
+    getClassListFromElementById("paymentDropdownMenu").remove("show");
+  };
+  const setElementWidth = function () {
+    const windowWidth =
+      window.innerWidth || document.documentElement.clientWidth;
+    const dropdownPaymentSelected = getElementById("paymentDropdownSelected");
+    if (windowWidth <= 576) {
+      dropdownPaymentSelected.style.width = windowWidth - 100 + "px";
+    } else {
+      dropdownPaymentSelected.style.width = null;
+    }
+  };
   /**
    * disable button submi
    */
-  const disableButtonSubmit = function () {};
+  const disableButtonSubmit = function () {
+    const btn = getElementById("buyNowButton");
+    addClassToElementById("buyNowButton", "disable");
+    const loader = btn.querySelector(".loader");
+    showElement(loader);
+  };
+  const enableButtonSubmit = function () {
+    const btn = getElementById("buyNowButton");
+    getClassListFromElementById("buyNowButton").remove("disable");
+    const loader = btn.querySelector(".loader");
+    hideElement(loader);
+  };
+  const fetApiGetListBanking = function (data) {
+    return new Promise((resolve) => {
+      getListBanking(data)
+        .then((resp) => {
+          return resolve(resp.data.data.array);
+        })
+        .catch((error) => {
+          console.log(error);
+          return resolve([]);
+        });
+    });
+  };
+  const renderPaymentDropdown = async function () {
+    const apiRes = await fetApiGetListBanking({ limit: "100000", page: "1" });
+    if (!apiRes) return apiRes;
+    const container = getElementById("paymentDropdownMenuContent");
+    container.innerHTML = ``;
+    for (const item of apiRes) {
+      container.innerHTML += `<div class="dropdown-item"><span class='--d-none'>${item.id}</span>${item.name_banking} (${item.owner_banking}: ${item.number_banking})</div>`;
+    }
+    const firstBank = apiRes.at(0);
+    idUserBanking.current = firstBank?.id;
+    const seleted = getElementById("paymentDropdownSelected").querySelector(
+      ".transaction__payment-dropdown-text"
+    );
+    seleted.innerHTML = `${firstBank.name_banking} (${firstBank.owner_banking}: ${firstBank.number_banking})`;
+    // add event
+    for (const item of container.children) {
+      item.addEventListener("click", paymentItemClickHandle.bind(item));
+    }
+  };
+  const paymentItemClickHandle = function (item) {
+    const id = item.target.querySelector("span").innerText;
+    const pat = item.target.innerText;
+    const bankName = pat.split(" ").at(0);
+    const accountNumber = pat.split(":").at(1).replace(")", "");
+    const accountName = pat.split(":").at(0).split("(").at(1);
+    const seleted = getElementById("paymentDropdownSelected").querySelector(
+      ".transaction__payment-dropdown-text"
+    );
+    seleted.innerHTML = `${bankName} (${accountName}: ${accountNumber})`;
+    idUserBanking.current = id;
+  };
   return (
     <div className="transaction">
       <div className="container">
@@ -213,8 +349,29 @@ ${symbol.current}`;
               </div>
               <div className="transaction__input payment">
                 <label htmlFor="amountInput">Choose your payment:</label>
-                <input type="text" />
-                <span className="input__error"></span>
+                <div
+                  id="paymentDropdownSelected"
+                  onClick={dropdownPaymentToggle}
+                  className="transaction__payment-dropdown"
+                >
+                  <div className="transaction__payment-dropdown-text">
+                    Vietcombank (Nguyen Trung Hieu: 08370383231)
+                  </div>
+                  <span>
+                    <i className="fa-solid fa-angle-down"></i>
+                  </span>
+                </div>
+                <div
+                  id="paymentDropdownMenu"
+                  className="transaction__payment-dropdown-menu-container"
+                >
+                  <div
+                    id="paymentDropdownMenuContent"
+                    className="dropdown-menu"
+                  >
+                    <div className="dropdown-item">name</div>
+                  </div>
+                </div>
               </div>
             </div>
             <input id="agreeCheckBox" type="checkbox" className="--d-none" />
@@ -229,7 +386,11 @@ ${symbol.current}`;
                 </span>
               </div>
             </label>
-            <button type="submit" onClick={buyNowSubmitHandle}>
+            <button
+              id="buyNowButton"
+              type="submit"
+              onClick={buyNowSubmitHandle}
+            >
               <div className="loader --d-none"></div>Buy now
             </button>
           </form>
