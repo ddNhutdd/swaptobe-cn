@@ -38,12 +38,18 @@ function Transaction() {
   const userName = useRef();
   const side = useRef();
   const symbol = useRef();
+  const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const idUserBanking = useRef();
   const amountInput = useRef(null); // input element
   const idAds = useRef();
   const callApiStatus = useRef(api_status.pending);
   useEffect(() => {
+    if (!isLogin) {
+      history.push(url.login);
+      return;
+    }
     //If the profile has not confirmed KYC, then transfer it to the profile page
+
     //
     loadDataFirstTime();
     //
@@ -103,6 +109,11 @@ function Transaction() {
     )}</span> ${currency}`;
   };
   const loadDataFirstTime = function () {
+    if (!renderPaymentDropdown()) {
+      showToast(showAlertType.error, "No bank found in account");
+      history.push(url.profile);
+      return;
+    }
     if (!selectedAds) {
       history.push(url.p2pTrading);
       return;
@@ -135,11 +146,6 @@ ${symbol.current}`;
     getElementById("transactionBankName").innerHTML = bankName.current;
     getElementById("transactionUserName").innerHTML = userName.current;
     getElementById("receiveUnitTransaction").innerHTML = symbol.current;
-    //
-    if (!renderPaymentDropdown()) {
-      showToast(showAlertType.error, "load thong tin ngan hang that bai");
-      return;
-    }
   };
   const buyNowSubmitHandle = async function (e) {
     e.preventDefault();
@@ -185,7 +191,7 @@ ${symbol.current}`;
           callApiStatus.current = api_status.rejected;
           showToast(showAlertType.error, "create fail");
           console.log(error);
-          const mess = error.message;
+          const mess = error.response.data.message;
           switch (mess) {
             case "The quantity is too much and the order cannot be created":
               showAlert(showAlertType.error, mess);
@@ -197,6 +203,7 @@ ${symbol.current}`;
               showAlert(showAlertType.error, mess);
               break;
             default:
+              showAlert(showAlertType.error, "Fail");
               break;
           }
           return resolve(false);
@@ -263,7 +270,7 @@ ${symbol.current}`;
     if (windowWidth <= 576) {
       dropdownPaymentSelected.style.width = windowWidth - 100 + "px";
     } else {
-      dropdownPaymentSelected.style.width = null;
+      dropdownPaymentSelected.style.removeProperty("width");
     }
   };
   /**
@@ -295,7 +302,7 @@ ${symbol.current}`;
   };
   const renderPaymentDropdown = async function () {
     const apiRes = await fetApiGetListBanking({ limit: "100000", page: "1" });
-    if (!apiRes) return apiRes;
+    if (!apiRes || apiRes.length <= 0) return false;
     const container = getElementById("paymentDropdownMenuContent");
     container.innerHTML = ``;
     for (const item of apiRes) {

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Spin, Empty } from "antd";
+import { Card, Spin, Empty, Pagination } from "antd";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
 import {
@@ -24,6 +24,7 @@ import { useHistory } from "react-router-dom";
 import {
   addListBanking,
   generateOTPToken,
+  getListBanking,
   getProfile,
   turnOff2FA,
   turnOn2FA,
@@ -57,6 +58,7 @@ function Profile() {
   });
   const paymentTourched = useRef({});
   const paymentError = useRef({});
+  const listPaymentPageSize = useRef(5);
   //
   const { t } = useTranslation();
   const history = useHistory();
@@ -76,6 +78,13 @@ function Profile() {
   const [callApi2FAStatus, setCallApi2FAStatus] = useState(api_status.pending);
   const [showContent, setShowConTent] = useState(content.undefined);
   const callApiBankingUserStatus = useRef(api_status.pending);
+  const [listPayment, setListPayment] = useState([]);
+  const [callApiPaymentStatus, setCallApiPaymentStatus] = useState(
+    api_status.pending
+  );
+  const [listPaymentTotalItems, setListPaymentTotalItems] = useState(1);
+  const [listPaymentCurrentPage, setListPaymentCurrentPage] = useState(1);
+
   useEffect(() => {
     const dataUser = getLocalStorage(localStorageVariable.user);
     if (!dataUser) {
@@ -91,6 +100,8 @@ function Profile() {
     element.classList.add("fadeInBottomToTop");
     // load du lieu len cac control
     fetchUserProfile();
+    //
+    fetchApiGetListBankingUser(1);
     return () => {};
   }, []);
   const inputFileLogo = useRef(null);
@@ -768,8 +779,8 @@ function Profile() {
       ownerBanking: getElementById("profile__payment-account-name").value,
     });
     enablePaymentButton();
-
     // render list
+    fetchApiGetListBankingUser(1);
   };
   const fetApiUserAddBanking = function (data) {
     return new Promise((resolve) => {
@@ -884,6 +895,58 @@ function Profile() {
     const btn = getElementById("paymentButtonSubmit");
     const loader = btn.querySelector(".loader");
     hideElement(loader);
+  };
+  /**
+   * function fetch data for state listPayment
+   */
+  const fetchApiGetListBankingUser = async function (page) {
+    if (callApiPaymentStatus === api_status.fetching) {
+      return;
+    }
+    setCallApiPaymentStatus(api_status.fetching);
+    await getListBanking({
+      limit: listPaymentPageSize.current,
+      page: page,
+    })
+      .then((resp) => {
+        setCallApiPaymentStatus(api_status.fulfilled);
+        setListPayment(resp.data.data.array);
+        setListPaymentTotalItems(resp.data.data.total);
+      })
+      .catch((error) => {
+        console.log(error);
+        setCallApiPaymentStatus(api_status.rejected);
+        setListPayment([]);
+      });
+  };
+  const renderPaymenList = function () {
+    if (callApiPaymentStatus === api_status.fetching) {
+      return (
+        <div className={`spin-container`}>
+          <Spin />
+        </div>
+      );
+    } else if (listPayment.length <= 0) {
+      return (
+        <div className="spin-container">
+          <Empty />
+        </div>
+      );
+    } else {
+      return listPayment.map((item) => {
+        return (
+          <div key={item.id} className="profile__payment-record">
+            <div className="profile__payment-cell">{item.name_banking}</div>
+            <div className="profile__payment-cell">{item.owner_banking}</div>
+            <div className="profile__payment-cell">{item.number_banking}</div>
+          </div>
+        );
+      });
+    }
+  };
+  const listPaymentPageChangeHandle = function (page) {
+    setListPaymentCurrentPage(page);
+    fetchApiGetListBankingUser(page);
   };
   //
   return (
@@ -1018,22 +1081,14 @@ function Profile() {
                 </form>
               </div>
               <div className="profile__title">Your list bank:</div>
-              <div className="profile__payment-list">
-                <div className="profile__payment-record">
-                  <div className="profile__payment-cell">Vietcombank</div>
-                  <div className="profile__payment-cell">Trinh Minh Dung</div>
-                  <div className="profile__payment-cell">123456789</div>
-                </div>
-                <div className="profile__payment-record">
-                  <div className="profile__payment-cell">Vietcombank</div>
-                  <div className="profile__payment-cell">Trinh Minh Dung</div>
-                  <div className="profile__payment-cell">123456789</div>
-                </div>
-                <div className="profile__payment-record">
-                  <div className="profile__payment-cell">Vietcombank</div>
-                  <div className="profile__payment-cell">Trinh Minh Dung</div>
-                  <div className="profile__payment-cell">123456789</div>
-                </div>
+              <div className="profile__payment-list">{renderPaymenList()}</div>
+              <div>
+                <Pagination
+                  defaultCurrent={1}
+                  onChange={listPaymentPageChangeHandle}
+                  pageSize={listPaymentPageSize.current}
+                  total={listPaymentTotalItems}
+                />
               </div>
             </div>
           </Card>

@@ -215,3 +215,33 @@ export const getInfoP2p = function (data) {
     console.log(error);
   }
 };
+export const userCancelP2pCommand = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/userCancelP2pCommand", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const userConfirmP2pCommand = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/userConfirmP2pCommand", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const companyConfirmP2pCommand = function (data) {
+  try {
+    console.log(data);
+    return axiosService.post("/api/p2pBank/CompanyConfirmP2pCommand", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const companyCancelP2pCommand = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/CompanyCancelP2pCommand", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

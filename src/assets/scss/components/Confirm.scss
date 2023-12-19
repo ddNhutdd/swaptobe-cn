@@ -1,6 +1,4 @@
 .confirm {
-    margin-top: 90px;
-
     .confirm--green {
         color: $green-2;
         font-weight: bold;
@@ -23,6 +21,8 @@
 
     .container {
         @include container2;
+        padding-top: 0;
+        padding-bottom: 0;
 
         table {
             @include adminTable;
@@ -88,6 +88,19 @@
                 button {
                     @include userMainButton;
                     padding: 5px 10px;
+                }
+
+                .confirm__action {
+                    display: flex;
+                    gap: 10px;
+
+                    .confirm__action-danger {
+                        background-color: $red-1;
+
+                        &:hover {
+                            opacity: 0.7;
+                        }
+                    }
                 }
             }
         }
