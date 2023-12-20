@@ -5,6 +5,10 @@
         color: $green-2
     }
 
+    .transaction--red {
+        color: $red-1;
+    }
+
     .transaction--green-header {
         color: $header2-background;
     }
@@ -37,38 +41,8 @@
                     @include userInput;
                     position: relative;
 
-                    &.payment {
-                        grid-column: 1 / span 2;
-                        position: relative;
-
-                        @media screen and (max-width:576px) {
-                            grid-column: 1 / span 1;
-                        }
-
-                        .transaction__payment-dropdown {
-                            @include userDropdownSelected;
-                            margin-bottom: 20px;
-
-                            .transaction__payment-dropdown-text {
-
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-
-                                @media screen and(max-width: 576px) {
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                }
-                            }
-                        }
-
-                        .transaction__payment-dropdown-menu-container {
-                            @include userDropdownMenu;
-                            position: absolute;
-                            top: 63px;
-                            left: 0;
-                        }
+                    input {
+                        padding-right: 40px;
                     }
 
                     .transaction__unit {
@@ -76,6 +50,40 @@
                         top: 38px;
                         right: 6px;
                     }
+                }
+            }
+
+            .transaction__dropdown {
+
+                position: relative;
+
+                @media screen and (max-width:576px) {
+                    grid-column: 1 / span 1;
+                }
+
+                .transaction__payment-dropdown {
+                    @include userDropdownSelected;
+                    margin-bottom: 20px;
+
+                    .transaction__payment-dropdown-text {
+
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+
+                        @media screen and(max-width: 576px) {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+
+                .transaction__payment-dropdown-menu-container {
+                    @include userDropdownMenu;
+                    position: absolute;
+                    top: 63px;
+                    left: 0;
                 }
             }
 

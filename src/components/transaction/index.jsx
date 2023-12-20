@@ -13,10 +13,10 @@ import { showAlert } from "src/function/showAlert";
 import { showToast } from "src/function/showToast";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
-import { getAdsItem } from "src/redux/reducers/adsSlice";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
 import {
   addClassToElementById,
+  capitalizeFirstLetter,
   convertStringToNumber,
   formatStringNumberCultureUS,
   getClassListFromElementById,
@@ -28,9 +28,18 @@ import {
 } from "src/util/common";
 import { createP2p, getListBanking } from "src/util/userCallApi";
 function Transaction() {
-  const controlTouched = useRef({});
-  const controlError = useRef({});
-  const control = useRef({
+  const actionType = {
+    sell: "sell",
+    buy: "buy",
+  };
+  const controlTouchedFormBuy = useRef({});
+  const controlErrorFormBuy = useRef({});
+  const controlFormBuy = useRef({
+    amountInput: "amountInput",
+  });
+  const controlTouchedFormSell = useRef({});
+  const controlErrorFormSell = useRef({});
+  const controlFormSell = useRef({
     amountInput: "amountInput",
   });
   const history = useHistory();
@@ -43,11 +52,13 @@ function Transaction() {
   const amountMinimum = useRef();
   const bankName = useRef();
   const userName = useRef();
-  const side = useRef();
+  const side = useRef(); // advertising type
+  const [currentAction, setCurrentAction] = useState(actionType.buy); // user action
   const symbol = useRef();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const idUserBanking = useRef();
-  const amountInput = useRef(null); // input element
+  const amountInputFormBuy = useRef(null); // input element
+  const amountInputFormSell = useRef(null);
   const idAds = useRef();
   const callApiStatus = useRef(api_status.pending);
   useEffect(() => {
@@ -55,8 +66,6 @@ function Transaction() {
       history.push(url.login);
       return;
     }
-    //If the profile has not confirmed KYC, then transfer it to the profile page
-
     //
     loadDataFirstTime();
     //
@@ -73,28 +82,28 @@ function Transaction() {
   useEffect(() => {
     setValueInputReceive();
   }, [listCoinRealtime, exchange]);
-  const validate = function () {
+  const validateFormBuy = function () {
     let valid = true;
-    if (controlTouched.current[control.amountInput]) {
-      if (!amountInput.current.value) {
-        controlError.current[control.amountInput] = "Require";
+    if (controlTouchedFormBuy.current[controlFormBuy.amountInput]) {
+      if (!amountInputFormBuy.current.value) {
+        controlErrorFormBuy.current[controlFormBuy.amountInput] = "Require";
         valid &= false;
-      } else if (Number(amountInput.current.value) <= 0) {
-        controlError.current[control.amountInput] = "Invalid";
+      } else if (Number(amountInputFormBuy.current.value) <= 0) {
+        controlErrorFormBuy.current[controlFormBuy.amountInput] = "Invalid";
         valid &= false;
       } else {
-        delete controlError.current[control.amountInput];
+        delete controlErrorFormBuy.current[controlFormBuy.amountInput];
       }
     }
-    return Object.keys(controlError).length <= 0 ? false : valid;
+    return Object.keys(controlErrorFormBuy).length <= 0 ? false : valid;
   };
-  const renderError = function () {
-    const ele = getElementById("amountInputError");
+  const renderErrorFormBuy = function () {
+    const ele = getElementById("amountInputErrorFormBuy");
     if (
-      controlTouched.current[control.amountInput] &&
-      controlError.current[control.amountInput]
+      controlTouchedFormBuy.current[controlFormBuy.amountInput] &&
+      controlErrorFormBuy.current[controlFormBuy.amountInput]
     ) {
-      ele.innerHTML = controlError.current[control.amountInput];
+      ele.innerHTML = controlErrorFormBuy.current[controlFormBuy.amountInput];
     } else {
       ele.innerHTML = "";
     }
@@ -108,6 +117,7 @@ function Transaction() {
     const priceUSd = listCoinRealtime
       .filter((item) => item.name === symbol.current)
       .at(0)?.price;
+    if (!exchange || exchange.length <= 0) return;
     const exch = exchange.filter((item) => item.title === currency).at(0).rate;
     const result = priceUSd * exch;
     getElementById(
@@ -131,13 +141,19 @@ function Transaction() {
     bankName.current = selectedAds.bankName;
     userName.current = selectedAds.userName;
     side.current = selectedAds.side;
+    let tempCA = "";
+    if (side.current === actionType.buy) {
+      setCurrentAction(actionType.sell);
+      tempCA = actionType.sell;
+    } else {
+      setCurrentAction(actionType.buy);
+      tempCA = actionType.buy;
+    }
     symbol.current = selectedAds.symbol;
     idAds.current = selectedAds.id;
-    getElementById(
-      "transactionTitle"
-    ).innerHTML = `<span class="transaction--green">${
-      side.current.at(0).toUpperCase() + side.current.slice(1)
-    }</span> Tether ${symbol.current} via Bank
+    getElementById("transactionTitle").innerHTML = `<span class="transaction--${
+      tempCA === actionType.buy ? "green" : "red"
+    }">${capitalizeFirstLetter(tempCA)}</span> ${symbol.current} via Bank
     transfer (VND)`;
     getElementById(
       "transactionAmountMini"
@@ -157,31 +173,63 @@ ${symbol.current}`;
   };
   const buyNowSubmitHandle = async function (e) {
     e.preventDefault();
+    switch (currentAction) {
+      case actionType.buy: {
+        for (const item of Object.keys(controlFormBuy)) {
+          controlTouchedFormBuy.current[item] = true;
+        }
+        const valid = validateFormBuy();
+        if (!valid) {
+          return;
+        }
+        const acceptEula = getElementById("agreeCheckBox").checked;
+        if (!acceptEula) {
+          showAlert(showAlertType.error, "not yet accept Eula");
+          return;
+        }
+        disableButtonSubmit();
+        const apiRes = await fetchApiCreateP2p({
+          amount: convertStringToNumber(
+            getElementById("receiveInputTransactionFormBuy").value
+          ),
+          idP2p: idAds.current,
+          idBankingUser: idUserBanking.current,
+        });
+        enableButtonSubmit();
+        if (apiRes) {
+          history.push(url.confirm.replace(":id", idAds.current));
+        }
+        break;
+      }
+      case actionType.sell: {
+        for (const item of Object.keys(controlFormSell)) {
+          controlTouchedFormSell.current[item] = true;
+        }
+        const valid = validateFormSell();
+        if (!valid) {
+          return;
+        }
+        const acceptEula = getElementById("agreeCheckBox").checked;
+        if (!acceptEula) {
+          showAlert(showAlertType.error, "not yet accept Eula");
+          return;
+        }
+        disableButtonSubmit();
+        const apiResSell = await fetchApiCreateP2p({
+          amount: convertStringToNumber(amountInputFormSell.current.value),
+          idP2p: idAds.current,
+          idBankingUser: idUserBanking.current,
+        });
+        enableButtonSubmit();
+        if (apiResSell) {
+          history.push(url.confirm.replace(":id", idAds.current));
+        }
+        break;
+      }
+      default:
+        break;
+    }
     //
-    for (const item of Object.keys(control)) {
-      controlTouched.current[item] = true;
-    }
-    const valid = validate();
-    if (!valid) {
-      return;
-    }
-    const acceptEula = getElementById("agreeCheckBox").checked;
-    if (!acceptEula) {
-      showAlert(showAlertType.error, "not yet accept Eula");
-      return;
-    }
-    disableButtonSubmit();
-    const apiRes = await fetchApiCreateP2p({
-      amount: convertStringToNumber(
-        getElementById("receiveInputTransaction").value
-      ),
-      idP2p: idAds.current,
-      idBankingUser: idUserBanking.current,
-    });
-    enableButtonSubmit();
-    if (apiRes) {
-      history.push(url.confirm.replace(":id", idAds.current));
-    }
   };
   const fetchApiCreateP2p = function (data) {
     return new Promise((resolve) => {
@@ -218,21 +266,22 @@ ${symbol.current}`;
         });
     });
   };
-  const fetchApiGetProfile = function () {};
   const setValueInputReceive = function () {
-    const inputReceive = getElementById("receiveInputTransaction");
+    const inputReceive = getElementById("receiveInputTransactionFormBuy");
     if (
-      !amountInput.current.value ||
+      !amountInputFormBuy.current.value ||
       !listCoinRealtime ||
       listCoinRealtime.length <= 0 ||
       !exchange ||
       exchange.length <= 0
     ) {
       inputReceive.value = 0;
-      amountInput.current.value = "";
+      amountInputFormBuy.current.value = "";
       return;
     }
-    const amountInputValue = convertStringToNumber(amountInput.current.value);
+    const amountInputValue = convertStringToNumber(
+      amountInputFormBuy.current.value
+    );
     const rateDollar = exchange.find((item) => item.title === "VND").rate;
     const inputValueDollar = amountInputValue / rateDollar;
     const coinPrice = listCoinRealtime.find(
@@ -241,28 +290,28 @@ ${symbol.current}`;
     let amountCoin = Number(inputValueDollar) / coinPrice;
     inputReceive.value = roundDecimalValues(amountCoin, coinPrice);
   };
-  const amountInputChangeHandle = function (e) {
+  const amountInputFormBuyChangeHandle = function (e) {
     const inputValue = e.target.value;
-    const inputValueNumber = convertStringToNumber(inputValue);
-    if (!regularExpress.checkNumber.test(inputValueNumber)) {
-      amountInput.current.value = amountInput.current.value.slice(
+    const inputValueWithoutComma = inputValue.replaceAll(",", "");
+    if (!regularExpress.checkNumber.test(inputValueWithoutComma)) {
+      amountInputFormBuy.current.value = amountInputFormBuy.current.value.slice(
         0,
-        amountInput.current.value.length - 1
+        amountInputFormBuy.current.value.length - 1
       );
     } else {
-      amountInput.current.value = formatStringNumberCultureUS(
-        String(inputValueNumber)
+      amountInputFormBuy.current.value = formatStringNumberCultureUS(
+        inputValueWithoutComma
       );
     }
     setValueInputReceive();
     //
-    validate();
-    renderError();
+    validateFormBuy();
+    renderErrorFormBuy();
   };
-  const amountInputFocusHandle = function () {
-    controlTouched.current[control.amountInput] = true;
-    validate();
-    renderError();
+  const amountInputFormBuyFocusHandle = function () {
+    controlTouchedFormBuy.current[controlFormBuy.amountInput] = true;
+    validateFormBuy();
+    renderErrorFormBuy();
   };
   const dropdownPaymentToggle = function (e) {
     e.stopPropagation();
@@ -276,6 +325,7 @@ ${symbol.current}`;
     const windowWidth =
       window.innerWidth || document.documentElement.clientWidth;
     const dropdownPaymentSelected = getElementById("paymentDropdownSelected");
+    if (!dropdownPaymentSelected) return;
     if (windowWidth <= 576) {
       dropdownPaymentSelected.style.width = windowWidth - 100 + "px";
     } else {
@@ -341,6 +391,82 @@ ${symbol.current}`;
     seleted.innerHTML = `${bankName} (${accountName}: ${accountNumber})`;
     idUserBanking.current = id;
   };
+  const validateFormSell = function () {
+    let valid = true;
+    const inputValue = getElementById("amountInputFormSell").value;
+    if (controlTouchedFormSell.current[controlFormSell.current.amountInput]) {
+      if (!inputValue) {
+        controlErrorFormSell.current[controlFormSell.current.amountInput] =
+          "Require";
+        valid &= false;
+      } else {
+        delete controlErrorFormSell.current[
+          controlFormSell.current.amountInput
+        ];
+      }
+    }
+    return Object.keys(controlTouchedFormSell).length <= 0
+      ? false
+      : Boolean(valid);
+  };
+  const renderErrorFromSell = function () {
+    const element = getElementById("amountInputFormSellError");
+    if (
+      controlErrorFormSell.current[controlFormSell.current.amountInput] &&
+      controlTouchedFormSell.current[controlFormSell.current.amountInput]
+    ) {
+      element.innerHTML =
+        controlErrorFormSell.current[controlFormSell.current.amountInput];
+    } else {
+      element.innerHTML = "";
+    }
+  };
+  const amountInputFormSellFocusHandle = function (e) {
+    const name = e.target.name;
+    controlTouchedFormSell.current[name] = true;
+    validateFormSell();
+    renderErrorFromSell();
+  };
+  const amountInputFormSellChangeHandle = function (e) {
+    const inputValue = e.target.value;
+    const inputValueWithoutComma = inputValue.replaceAll(",", "");
+    if (!regularExpress.checkNumber.test(inputValueWithoutComma)) {
+      amountInputFormSell.current.value =
+        amountInputFormSell.current.value.slice(
+          0,
+          amountInputFormSell.current.value.length - 1
+        );
+    } else {
+      amountInputFormSell.current.value = formatStringNumberCultureUS(
+        inputValueWithoutComma
+      );
+    }
+    //
+    setValueInputVND(inputValueWithoutComma);
+    //
+    validateFormSell();
+    renderErrorFromSell();
+  };
+  const setValueInputVND = function (value) {
+    const elementOutput = getElementById("receiveInputFormSell");
+    const amountCoin = Number(value);
+    if (
+      isNaN(amountCoin) ||
+      !listCoinRealtime ||
+      listCoinRealtime.length <= 0 ||
+      !exchange ||
+      exchange.length <= 0 ||
+      !symbol.current
+    ) {
+      return;
+    }
+    const price = listCoinRealtime.find(
+      (item) => item.name === symbol.current
+    ).price;
+    const excha = exchange.find((item) => item.title === "VND").rate;
+    const result = amountCoin * price * excha;
+    elementOutput.value = formatStringNumberCultureUS(result.toFixed(3));
+  };
   return (
     <div className="transaction">
       <div className="container">
@@ -349,50 +475,84 @@ ${symbol.current}`;
         </div>
         <div className="box transaction__box">
           <form>
-            <div className="transaction__input-container">
+            <div
+              className={`transaction__input-container ${
+                currentAction === actionType.buy ? " " : "--d-none"
+              }`}
+            >
               <div className="transaction__input">
                 <label htmlFor="amountInput">I will pay:</label>
                 <input
-                  ref={amountInput}
-                  onFocus={amountInputFocusHandle}
-                  onChange={amountInputChangeHandle}
-                  id="amountInputTransaction"
+                  ref={amountInputFormBuy}
+                  onFocus={amountInputFormBuyFocusHandle}
+                  onChange={amountInputFormBuyChangeHandle}
                   type="text"
                 />
                 <span className="transaction__unit">VND</span>
-                <span id="amountInputError" className="input__error"></span>
+                <span
+                  id="amountInputErrorFormBuy"
+                  className="input__error"
+                ></span>
               </div>
               <div className="transaction__input">
                 <label htmlFor="receiveInput">to receive:</label>
-                <input disabled id="receiveInputTransaction" type="text" />
+                <input
+                  disabled
+                  id="receiveInputTransactionFormBuy"
+                  type="text"
+                />
                 <span id="receiveUnitTransaction" className="transaction__unit">
                   USDT
                 </span>
               </div>
-              <div className="transaction__input payment">
-                <label htmlFor="amountInput">Choose your payment:</label>
-                <div
-                  id="paymentDropdownSelected"
-                  onClick={dropdownPaymentToggle}
-                  className="transaction__payment-dropdown"
-                >
-                  <div className="transaction__payment-dropdown-text">
-                    Vietcombank (Nguyen Trung Hieu: 08370383231)
-                  </div>
-                  <span>
-                    <i className="fa-solid fa-angle-down"></i>
-                  </span>
+            </div>
+            <div
+              className={`transaction__input-container ${
+                currentAction === actionType.sell ? " " : "--d-none"
+              }`}
+            >
+              <div className="transaction__input">
+                <label>I pay:</label>
+                <input
+                  name="amountInput"
+                  onFocus={amountInputFormSellFocusHandle}
+                  onChange={amountInputFormSellChangeHandle}
+                  id="amountInputFormSell"
+                  ref={amountInputFormSell}
+                  type="text"
+                />
+                <span className="transaction__unit">{symbol.current}</span>
+                <span
+                  id="amountInputFormSellError"
+                  className="input__error"
+                ></span>
+              </div>
+              <div className="transaction__input">
+                <label>to receive:</label>
+                <input id="receiveInputFormSell" disabled type="text" />
+                <span className="transaction__unit">VND</span>
+              </div>
+            </div>
+            <div className="transaction__dropdown">
+              <label htmlFor="amountInput">Choose your payment:</label>
+              <div
+                id="paymentDropdownSelected"
+                onClick={dropdownPaymentToggle}
+                className="transaction__payment-dropdown"
+              >
+                <div className="transaction__payment-dropdown-text">
+                  Vietcombank (Nguyen Trung Hieu: 08370383231)
                 </div>
-                <div
-                  id="paymentDropdownMenu"
-                  className="transaction__payment-dropdown-menu-container"
-                >
-                  <div
-                    id="paymentDropdownMenuContent"
-                    className="dropdown-menu"
-                  >
-                    <div className="dropdown-item">name</div>
-                  </div>
+                <span>
+                  <i className="fa-solid fa-angle-down"></i>
+                </span>
+              </div>
+              <div
+                id="paymentDropdownMenu"
+                className="transaction__payment-dropdown-menu-container"
+              >
+                <div id="paymentDropdownMenuContent" className="dropdown-menu">
+                  <div className="dropdown-item">name</div>
                 </div>
               </div>
             </div>

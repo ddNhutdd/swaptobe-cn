@@ -85,6 +85,10 @@
                     }
                 }
 
+                .confirm__comment {
+                    padding: 20px;
+                }
+
                 button {
                     @include userMainButton;
                     padding: 5px 10px;

@@ -246,3 +246,12 @@ export const debounce = (func, ms) => {
     timeout = setTimeout(() => func.apply(this, args), ms);
   };
 };
+//
+/**
+ * The write function capitalizes the beginning of each word
+ * @param {string} str
+ * @returns The new string has been formatted
+ */
+export const capitalizeFirstLetter = function (str) {
+  return str.replace(/(^\w{1}|\s+\w{1})/g, (letter) => letter.toUpperCase());
+};

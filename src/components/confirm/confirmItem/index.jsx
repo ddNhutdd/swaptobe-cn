@@ -193,6 +193,8 @@ function ConfirmItem(props) {
       id: idC,
     } = content;
     idCommand.current = idC;
+    console.log(content);
+    getElementById("confirm__header" + index).innerHTML = `Giao dịch ${symbol}`;
     getElementById("transactionCode" + index).innerHTML = code;
     getElementById("youReceive" + index).innerHTML = `${amount} ${symbol}`;
     getElementById("rate" + index).innerHTML = rate;
@@ -253,7 +255,7 @@ function ConfirmItem(props) {
           <table id="confirm__table">
             <thead>
               <tr className="confirm__header">
-                <td colSpan={2}>Giao dịch mua Tether (USDT)</td>
+                <td id={"confirm__header" + index} colSpan={2}></td>
               </tr>
             </thead>
             <tbody>
@@ -329,7 +331,7 @@ function ConfirmItem(props) {
               </tr>
               <tr>
                 <td>Ghi chú</td>
-                <td>
+                <td className="confirm__comment">
                   <li>
                     Vui lòng thanh toán đúng thông tin tại màn hình thanh toán
                     trong thời gian quy định. Nếu bạn đã thanh toán có thể nhắn

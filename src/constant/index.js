@@ -57,5 +57,5 @@ export const currency = {
 
 export const defaultLanguage = availableLanguage.en;
 export const regularExpress = {
-  checkNumber: /^\s*[+-]?(\d+|\d*\.\d+|\d+\.\d*)([Ee][+-]?\d+)?\s*$/,
+  checkNumber: /^[+-]?([0-9]*[.])?[0-9]*$/,
 };

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Empty, Pagination, Spin, Modal } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { t } from "i18next";
 import {
   addClassToElementById,
@@ -19,14 +19,12 @@ import {
 } from "src/util/userCallApi";
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
-import { setAdsItem } from "src/redux/reducers/adsSlice";
 import { getCoin } from "src/redux/constant/coin.constant";
 export default function P2PTrading2({ history }) {
   // The list of users selling coins must be placed in the buy section on the interface.
   // The list of users buying coins must be placed in the sell section on the interface.
   const coin = getLocalStorage(localStorageVariable.coin);
   const coinFromRedux = useSelector(getCoin);
-  const dispatch = useDispatch();
   const callApiSellListStatus = useRef(api_status.pending);
   const callApiBuyListStatus = useRef(api_status.pending);
   const [buyListSectionTotalItems, setBuyListSectionTotalItems] = useState(1);
@@ -229,10 +227,7 @@ export default function P2PTrading2({ history }) {
           <td>${t("createdAt")}:</td>
           <td>${item.created_at}</td>
         </tr>
-        <tr>
-          <td>${t("addressWallet")}:</td>
-          <td>${item.addressWallet}</td>
-        </tr>
+        
             </tbody>
           </table>
         </div>
@@ -282,25 +277,22 @@ export default function P2PTrading2({ history }) {
                 <tr class="item2">
                   <td>${t("amount")}:</td>
                   <td class="item2-amount-number">${item.amount}</td>
-                </tr>
-                <tr>
-                  <td>${t("amountMinimum")}:</td>
-                  <td>${item.amountMinimum}</td>
-                </tr>
+                </tr>            
               </tbody>
             </table>
           </div>
           <div>
             <table>
               <tbody>
+              <tr>
+              <td>${t("amountMinimum")}:</td>
+              <td>${item.amountMinimum}</td>
+            </tr>
                 <tr>
                   <td>${t("createdAt")}:</td>
                   <td>${item.created_at}</td>
                 </tr>
-                <tr>
-                  <td>${t("addressWallet")}:</td>
-                  <td>${item.addressWallet}</td>
-                </tr>
+                
               </tbody>
             </table>
           </div>
@@ -354,7 +346,7 @@ export default function P2PTrading2({ history }) {
     history.push(url.transaction);
   };
   const sellClickHandle = function (item) {
-    dispatch(setAdsItem(item));
+    setLocalStorage(localStorageVariable.adsItem, item);
     history.push(url.transaction);
   };
   const onChangeSectionBuyPaging = function (page) {
@@ -447,7 +439,6 @@ export default function P2PTrading2({ history }) {
   const buyChooseCoinModalSellItemCLick = function (coin) {
     sellCoin.current = coin;
     const constainer = getElementById("p2ptrading2CoinSellModal");
-    console.log(constainer.children);
     for (const item of constainer.children) {
       const coin = item.querySelector(
         ".p2ptrading2-coin-to-select-modal__item-text"
