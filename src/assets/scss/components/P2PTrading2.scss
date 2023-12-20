@@ -81,9 +81,19 @@
           align-items: center;
           gap: 5px;
 
+          &.buy-coin {
+            background-color: $green;
+
+            &:hover {}
+          }
+
+          &.sell-coin {
+            background-color: $red;
+          }
+
           &:hover {
-            background-color: $header2-background-light;
             cursor: pointer;
+            opacity: 0.8;
           }
         }
       }

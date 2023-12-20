@@ -108,6 +108,7 @@ export default function Swap() {
     const inputValueWithoutComma = inputValue.replace(/,/g, "");
     const regex = /^$|^[0-9]+(\.[0-9]*)?$/;
     if (!regex.test(inputValueWithoutComma)) {
+      console.log(inputValue.slice(0, -1));
       setFromCoinValueString(inputValue.slice(0, -1));
       return;
     }
@@ -124,7 +125,9 @@ export default function Swap() {
         .price;
       const toPrice = data.filter((item) => item.name === swapToCoin)[0].price;
       const result = convertCacl(fromCoin, fromPrice, toPrice);
-      setToCoinValueString(formatStringNumberCultureUS(result.toString()));
+      setToCoinValueString(
+        formatStringNumberCultureUS(result.toString()) || ""
+      );
     }
   };
   const coinPriceDifference = function () {
@@ -175,7 +178,6 @@ export default function Swap() {
           `bạn có muốn đổi <span class="confirm-green">${fromCoinValueString}</span> <span class="confirm-green">${swapFromCoin}</span> sang <span class="confirm-green">${toCoinValueString}</span> <span class="confirm-green">${swapToCoin}</span> hay không?`
         ),
         () => {
-          console.log("confirm");
           swapCoinApi({
             symbolForm: swapFromCoin,
             symbolTo: swapToCoin,

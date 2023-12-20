@@ -139,13 +139,11 @@ export default function CreateBuy() {
       getElementById("dropdownBankMenu").querySelector("ul");
     containerElement.innerHTML = "";
     for (const item of getBankListV2()) {
-      containerElement.innerHTML += `<li class="field-dropdown-item">
+      containerElement.innerHTML += `<li class="dropdown-item">
       <span>
         <img src=${item.logo} alt="${item.code}" />
       </span>
-      <span class="field-dropdown-content">${" " + item.name} (${
-        item.code
-      })</span>
+      <span class="dropdown-content">${" " + item.name} (${item.code})</span>
     </li>`;
     }
     // add event
@@ -154,8 +152,8 @@ export default function CreateBuy() {
     }
   };
   const bankDropdownItemClickHandle = function (event) {
-    const element = event.target.closest(".field-dropdown-item");
-    const name = element.querySelector(".field-dropdown-content").innerHTML;
+    const element = event.target.closest(".dropdown-item");
+    const name = element.querySelector(".dropdown-content").innerHTML;
     const bankName = name.split(" ")[1].trim();
     bankDropdownSelect(bankName);
   };
@@ -461,7 +459,7 @@ export default function CreateBuy() {
                   id="dropdownBankMenu"
                   className="field-dropdown-menu-container"
                 >
-                  <ul className="field-dropdown-menu"></ul>
+                  <ul className="dropdown-menu"></ul>
                 </div>
               </div>
               <div className="field">

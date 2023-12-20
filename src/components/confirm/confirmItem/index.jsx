@@ -371,6 +371,7 @@ function ConfirmItem(props) {
           open={isModalOpen}
           onOk={handleCancelModalPayment}
           onCancel={handleCancelModalPayment}
+          cancelButtonProps={{ hidden: true }}
         >
           <div className="paymentModalContent">
             <table className="paymentModalContent">

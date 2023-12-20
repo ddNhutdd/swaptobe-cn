@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Empty, Pagination, Spin, Modal } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { t } from "i18next";
 import {
   addClassToElementById,
   getClassListFromElementById,
   getElementById,
   getLocalStorage,
+  setLocalStorage,
 } from "src/util/common";
 import { api_status, localStorageVariable, url } from "src/constant";
 import {
@@ -19,10 +20,12 @@ import {
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
 import { setAdsItem } from "src/redux/reducers/adsSlice";
+import { getCoin } from "src/redux/constant/coin.constant";
 export default function P2PTrading2({ history }) {
   // The list of users selling coins must be placed in the buy section on the interface.
   // The list of users buying coins must be placed in the sell section on the interface.
   const coin = getLocalStorage(localStorageVariable.coin);
+  const coinFromRedux = useSelector(getCoin);
   const dispatch = useDispatch();
   const callApiSellListStatus = useRef(api_status.pending);
   const callApiBuyListStatus = useRef(api_status.pending);
@@ -234,7 +237,7 @@ export default function P2PTrading2({ history }) {
           </table>
         </div>
         <div class="item4">
-          <button name="${item.id}">${t("buy")}</button>
+          <button class="buy-coin" name="${item.id}">${t("buy")}</button>
         </div>
       </div>`;
       }
@@ -302,11 +305,11 @@ export default function P2PTrading2({ history }) {
             </table>
           </div>
           <div class="item4">
-            <button name="${item.id}">${"Sell"}</button>
+            <button class="sell-coin"  name="${item.id}">${"Sell"}</button>
           </div>
         </div>`;
       }
-      // add
+      // add event
       for (const item of containerElement.children) {
         const button = item.querySelector("button");
         const id = button.name;
@@ -347,7 +350,7 @@ export default function P2PTrading2({ history }) {
     loadSectionSell(1);
   };
   const buyClickHandle = function (item) {
-    dispatch(setAdsItem(item));
+    setLocalStorage(localStorageVariable.adsItem, item);
     history.push(url.transaction);
   };
   const sellClickHandle = function (item) {
@@ -403,7 +406,7 @@ export default function P2PTrading2({ history }) {
     }
     for (const item of listCoin.current) {
       element.innerHTML += `<span class="p2ptrading2-coin-to-select-modal__item ${
-        item.name === buyCoin.current ? "active" : ""
+        item.name === sellCoin.current ? "active" : ""
       }">
       <img src="${DOMAIN + item.image}" />
         <span class='p2ptrading2-coin-to-select-modal__item-text'>${
@@ -444,11 +447,12 @@ export default function P2PTrading2({ history }) {
   const buyChooseCoinModalSellItemCLick = function (coin) {
     sellCoin.current = coin;
     const constainer = getElementById("p2ptrading2CoinSellModal");
+    console.log(constainer.children);
     for (const item of constainer.children) {
       const coin = item.querySelector(
         ".p2ptrading2-coin-to-select-modal__item-text"
       ).innerHTML;
-      if (coin === buyCoin.current) {
+      if (coin === sellCoin.current) {
         if (!item.classList.contains("active")) item.classList.add("active");
       } else {
         item.classList.remove("active");
@@ -490,13 +494,6 @@ export default function P2PTrading2({ history }) {
   };
   //
   useEffect(() => {
-    buyCoin.current = coin || "BTC";
-    sellCoin.current = coin || "BTC";
-    getElementById("buyChoiceCoinButton").innerHTML = buyCoin.current;
-    getElementById("sellChoiceCoinButton").innerHTML = sellCoin.current;
-    renderSectionBuy(fetchListAdsSell, 1);
-    renderSectionSell(fetchListAdsBuy, 1);
-    //
     socket.once("listCoin", (resp) => {
       listCoin.current = resp;
       const eleBuy = getElementById("p2ptrading2CoinBuyModal");
@@ -512,6 +509,14 @@ export default function P2PTrading2({ history }) {
     const element = document.querySelector(".p2ptrading2");
     element.classList.add("fadeInBottomToTop");
   }, []);
+  useEffect(() => {
+    buyCoin.current = coinFromRedux || coin || "BTC";
+    sellCoin.current = coinFromRedux || coin || "BTC";
+    getElementById("buyChoiceCoinButton").innerHTML = buyCoin.current;
+    getElementById("sellChoiceCoinButton").innerHTML = sellCoin.current;
+    renderSectionBuy(fetchListAdsSell, 1);
+    renderSectionSell(fetchListAdsBuy, 1);
+  }, [coinFromRedux]);
   return (
     <div className="p2ptrading2">
       <div className="container">
@@ -602,7 +607,7 @@ export default function P2PTrading2({ history }) {
             </span>
           </div>
           <div className="sell__filter">
-            <button onClick={sectionSellButtonFilterClickHandle}>search</button>
+            <button onClick={sectionSellButtonFilterClickHandle}>Search</button>
             <input
               id="amountSectionSellFilterInput"
               onChange={amountSectionSellFilterChangeHandle}

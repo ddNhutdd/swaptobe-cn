@@ -1,8 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { api_status, regularExpress, showAlertType, url } from "src/constant";
+import {
+  api_status,
+  localStorageVariable,
+  regularExpress,
+  showAlertType,
+  url,
+} from "src/constant";
 import { showAlert } from "src/function/showAlert";
 import { showToast } from "src/function/showToast";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
@@ -15,6 +21,7 @@ import {
   formatStringNumberCultureUS,
   getClassListFromElementById,
   getElementById,
+  getLocalStorage,
   hideElement,
   roundDecimalValues,
   showElement,
@@ -31,7 +38,7 @@ function Transaction() {
   const currency = useSelector(getCurrent);
   const exchangeRateDisparity = useSelector(getExchangeRateDisparity);
   const exchange = useSelector(getExchange);
-  const selectedAds = useSelector(getAdsItem);
+  const selectedAds = getLocalStorage(localStorageVariable.adsItem);
   const amount = useRef();
   const amountMinimum = useRef();
   const bankName = useRef();
@@ -97,6 +104,7 @@ function Transaction() {
       history.push(url.p2pTrading);
       return;
     }
+    if (!listCoinRealtime || listCoinRealtime.length <= 0) return;
     const priceUSd = listCoinRealtime
       .filter((item) => item.name === symbol.current)
       .at(0)?.price;
@@ -210,6 +218,7 @@ ${symbol.current}`;
         });
     });
   };
+  const fetchApiGetProfile = function () {};
   const setValueInputReceive = function () {
     const inputReceive = getElementById("receiveInputTransaction");
     if (
@@ -304,6 +313,7 @@ ${symbol.current}`;
     const apiRes = await fetApiGetListBanking({ limit: "100000", page: "1" });
     if (!apiRes || apiRes.length <= 0) return false;
     const container = getElementById("paymentDropdownMenuContent");
+    if (!container) return;
     container.innerHTML = ``;
     for (const item of apiRes) {
       container.innerHTML += `<div class="dropdown-item"><span class='--d-none'>${item.id}</span>${item.name_banking} (${item.owner_banking}: ${item.number_banking})</div>`;

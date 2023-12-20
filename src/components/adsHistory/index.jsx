@@ -26,11 +26,7 @@ function AdsHistory() {
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     //
-    document.addEventListener("click", closeActionMenu);
     renderTable(fetchListAdsBuyToUser);
-    return () => {
-      document.removeEventListener("click", closeActionMenu);
-    };
   }, []);
   const callApiStatus = useRef(api_status.pending);
   const page = useRef(1);
@@ -41,8 +37,8 @@ function AdsHistory() {
     buy: t("buy"),
     sell: t("sell"),
   };
-  const action = useRef("");
-  action.current = actionType.buy;
+  const [tabActive, setTabActive] = useState(actionType.buy);
+  const action = useRef(actionType.buy);
   const closeEmpty = function () {
     addClassToElementById("adsHistoryEmpty", "--d-none");
   };
@@ -60,21 +56,6 @@ function AdsHistory() {
   };
   const showContent = function () {
     getClassListFromElementById("ads-history__content").remove("--d-none");
-  };
-  const toggleActionMenu = function (e) {
-    e.stopPropagation();
-    if (
-      getClassListFromElementById("adsHistoryDropdownSelected").contains(
-        "disabled"
-      )
-    )
-      return;
-    getClassListFromElementById("adsHistoryDropdownSelected").toggle("active");
-    getClassListFromElementById("adsHistoryDropDownMenu").toggle("show");
-  };
-  const closeActionMenu = function () {
-    getClassListFromElementById("adsHistoryDropdownSelected").remove("active");
-    getClassListFromElementById("adsHistoryDropDownMenu").remove("show");
   };
   const fetchListAdsSellToUser = function () {
     return new Promise((resolve) => {
@@ -157,13 +138,9 @@ function AdsHistory() {
     });
   };
   const disableFilter = function () {
-    addClassToElementById("adsHistoryDropdownSelected", "disabled");
     getElementById("pendingCheckbox").disabled = true;
   };
   const enableFilter = function () {
-    getClassListFromElementById("adsHistoryDropdownSelected").remove(
-      "disabled"
-    );
     getElementById("pendingCheckbox").disabled = false;
   };
   const renderTable = async function (fn) {
@@ -239,13 +216,6 @@ function AdsHistory() {
     // set total items
     setTotalItem(total);
   };
-  const dropdownActionItemSelect = function (act) {
-    action.current = act;
-    getElementById("adsHistoryDropdownSelectedText").innerHTML = act;
-    getElementById("adsTypeList").innerHTML = act;
-    page.current = 1;
-    loadData();
-  };
   const loadData = function () {
     const act = action.current;
     const pending = getElementById("pendingCheckbox").checked;
@@ -270,80 +240,59 @@ function AdsHistory() {
   const pendingCheckboxChangeHandle = function () {
     loadData();
   };
+  const tabChangeHandle = function (e) {
+    const selected = e.target.textContent;
+    console.log(selected);
+    if (selected === actionType.sell) {
+      action.current = actionType.sell;
+      setTabActive(() => actionType.sell);
+    } else if (selected === actionType.buy) {
+      action.current = actionType.buy;
+      setTabActive(() => actionType.buy);
+    }
+    loadData();
+  };
   return (
     <div className="ads-history">
       <div className="container">
-        <div className="box ads-history__filter">
-          <h3>{t("filter")}</h3>
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <div>{t("action")}: </div>
-                </td>
-                <td>
-                  <div
-                    id="adsHistoryDropdownSelected"
-                    onClick={toggleActionMenu}
-                    className="ads-history__dropdown-selected"
-                  >
-                    <span id="adsHistoryDropdownSelectedText">{t("buy")}</span>
-                    <span>
-                      <i className="fa-solid fa-angle-down"></i>
-                    </span>
-                  </div>
-                  <div
-                    id="adsHistoryDropDownMenu"
-                    className="ads-history__dropdown-menu-container"
-                  >
-                    <div className="dropdown-menu">
-                      <div
-                        onClick={dropdownActionItemSelect.bind(
-                          null,
-                          actionType.sell
-                        )}
-                        className="dropdown-item"
-                      >
-                        {t("sell")}
-                      </div>
-                      <div
-                        onClick={dropdownActionItemSelect.bind(
-                          null,
-                          actionType.buy
-                        )}
-                        className="dropdown-item"
-                      >
-                        {t("buy")}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label htmlFor="pendingCheckbox">{t("pending")}:</label>
-                </td>
-                <td>
-                  <input
-                    onChange={pendingCheckboxChangeHandle}
-                    id="pendingCheckbox"
-                    type="checkbox"
-                    className="--d-none"
-                  />
-                  <label
-                    className="ads-history__checkbox"
-                    htmlFor="pendingCheckbox"
-                  >
-                    <div className="ads-history__square">
-                      <i className="fa-solid fa-check"></i>
-                    </div>
-                  </label>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
         <div className="box ads-history__content">
+          <div className="ads-history__filter">
+            <div className="ads-history__filter-tabs-container">
+              <div
+                onClick={tabChangeHandle}
+                className={`ads-history__filter-tabs ${
+                  tabActive === actionType.buy ? "active" : ""
+                }`}
+              >
+                {t("buy")}
+              </div>
+              <div
+                onClick={tabChangeHandle}
+                className={`ads-history__filter-tabs ${
+                  tabActive === actionType.sell ? "active" : ""
+                }`}
+              >
+                {t("sell")}
+              </div>
+            </div>
+            <div>
+              <input
+                onChange={pendingCheckboxChangeHandle}
+                id="pendingCheckbox"
+                type="checkbox"
+                className="--d-none"
+              />
+              <label
+                className="ads-history__checkbox"
+                htmlFor="pendingCheckbox"
+              >
+                <label htmlFor="pendingCheckbox">{t("pending")}:</label>
+                <div className="ads-history__square">
+                  <i className="fa-solid fa-check"></i>
+                </div>
+              </label>
+            </div>
+          </div>
           <h3>
             {t("list")} <span id="adsTypeList">{action.current}</span>
           </h3>
