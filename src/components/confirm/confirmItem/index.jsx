@@ -17,6 +17,10 @@ import {
   userConfirmP2pCommand,
 } from "src/util/userCallApi";
 function ConfirmItem(props) {
+  const actionType = {
+    buy: "buy",
+    sell: "sell",
+  };
   const { index, content, profileId, render } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const history = useHistory();
@@ -128,7 +132,6 @@ function ConfirmItem(props) {
       companyCancelP2pCommand({ idP2p: idCommand.current })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          console.log(resp);
           showToast(showAlertType.success, "Cancel Success");
           return resolve(true);
         })
@@ -150,7 +153,6 @@ function ConfirmItem(props) {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          console.log(resp);
           showToast(showAlertType.success, "Confirm Success");
           return resolve(true);
         })
@@ -184,6 +186,7 @@ function ConfirmItem(props) {
       symbol,
       rate,
       pay,
+      side,
       created_at,
       bankName: bankN,
       ownerAccount: account,
@@ -193,7 +196,6 @@ function ConfirmItem(props) {
       id: idC,
     } = content;
     idCommand.current = idC;
-    console.log(content);
     getElementById("confirm__header" + index).innerHTML = `Giao dịch ${symbol}`;
     getElementById("transactionCode" + index).innerHTML = code;
     getElementById("youReceive" + index).innerHTML = `${amount} ${symbol}`;
@@ -213,9 +215,24 @@ function ConfirmItem(props) {
     bankName.current = bankN;
     ownerAccount.current = account;
     numberBank.current = numAcc;
+    const confirmUserActionElement = getElementById("confirmUserAction");
+    if (
+      (side === actionType.buy && userId === profileId) ||
+      (side === actionType.sell && userId !== profileId)
+    ) {
+      //ban nhan
+      confirmUserActionElement.innerHTML = "Bạn nhận";
+    } else if (
+      (side === actionType.buy && userId !== profileId) ||
+      (side === actionType.sell && userId === profileId)
+    ) {
+      // ban ban
+      confirmUserActionElement.innerHTML = "Bạn bán";
+    }
     //
     const actionContainer = getElementById("actionConfirm" + index);
     actionContainer.innerHTML = "";
+    console.log(typeUser, userId, profileId);
     if (typeUser === 2 && userId === profileId) {
       // confirm button
       const confirmButton = document.createElement("button");
@@ -297,7 +314,7 @@ function ConfirmItem(props) {
                 </td>
               </tr>
               <tr>
-                <td>Bạn nhận</td>
+                <td id="confirmUserAction">Bạn nhận</td>
                 <td id={"youReceive" + index} className="confirm--red">
                   1100 USDT
                 </td>

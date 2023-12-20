@@ -100,9 +100,8 @@ function Profile() {
     element.classList.add("fadeInBottomToTop");
     // load du lieu len cac control
     fetchUserProfile();
-    //
+    //`
     fetchApiGetListBankingUser(1);
-    return () => {};
   }, []);
   const inputFileLogo = useRef(null);
   //
