@@ -109,11 +109,23 @@ export default function Header1({ history }) {
               {t("wallets")}
               <div ref={walletMenuElement} className="header1__subMenu wallet">
                 <div className="header1__subMenu__user-info">
-                  <div>
+                  <div className="header1__subMenu-item --no-hover">
                     {t("totalValue")} <i className="fa-regular fa-eye"></i>
                   </div>
-                  <div>BTC: {amountCoinBTC()} coins</div>
-                  <div id="money">00000</div>
+                  <div className="header1__subMenu-item">
+                    <div className="header1_icon-container">
+                      <i className="fa-brands fa-bitcoin"></i>
+                    </div>
+                    {amountCoinBTC()} coin
+                  </div>
+                  <div className="header1__subMenu-item">
+                    <div className="header1_icon-container">
+                      <i className="fa-solid fa-dollar-sign"></i>
+                    </div>
+                    <div className="" id="money">
+                      00000
+                    </div>
+                  </div>
                 </div>
                 <div
                   onClick={(e) => {
@@ -121,8 +133,11 @@ export default function Header1({ history }) {
                     walletMenuElement.current.classList.remove("show");
                     history.push(url.wallet);
                   }}
-                  className="header1__subMenu-item"
+                  className="header1__subMenu-item --mt"
                 >
+                  <div className="header1_icon-container">
+                    <i className="fa-solid fa-wallet"></i>
+                  </div>
                   {t("wallet")}
                 </div>
                 <div
@@ -133,6 +148,9 @@ export default function Header1({ history }) {
                   }}
                   className="header1__subMenu-item"
                 >
+                  <div className="header1_icon-container">
+                    <i className="fa-solid fa-rectangle-ad"></i>
+                  </div>
                   {t("advertisingHistory")}
                 </div>
               </div>
@@ -148,11 +166,15 @@ export default function Header1({ history }) {
                   }}
                   className="header1__subMenu-item"
                 >
-                  <i className="fa-regular fa-user"></i>
+                  <div className="header1_icon-container">
+                    <i className="fa-regular fa-user"></i>
+                  </div>
                   {t("profile")}
                 </div>
                 <div onClick={logout} className="header1__subMenu-item">
-                  <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                  <div className="header1_icon-container">
+                    <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                  </div>
                   {t("logOut")}
                 </div>
               </div>

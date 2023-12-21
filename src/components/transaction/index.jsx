@@ -62,6 +62,7 @@ function Transaction() {
   const idAds = useRef();
   const callApiStatus = useRef(api_status.pending);
   useEffect(() => {
+    console.log(isLogin);
     if (!isLogin) {
       history.push(url.login);
       return;

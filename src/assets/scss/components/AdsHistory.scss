@@ -66,7 +66,6 @@
                         border-top-left-radius: 5px;
                         color: $header2-background;
                         border-bottom: 2px solid $header2-background;
-
                     }
                 }
             }
@@ -92,29 +91,50 @@
                 }
 
                 table {
+
                     @media screen and (max-width:576px) {
                         width: 100%;
                     }
 
-                    tr {
-                        td {
-                            padding: 0 5px;
+                    tbody {
 
-                            @media screen and (max-width:576px) {
-                                border: 1px solid $background-color-4;
-                            }
-
-                            &:first-child {
-                                font-weight: bold;
-                                font-style: italic;
-                                text-align: right;
-
-                                @media screen and (max-width:992px) {
-                                    width: 152px;
-                                }
+                        tr {
+                            td {
+                                padding: 0 5px;
 
                                 @media screen and (max-width:576px) {
-                                    width: 50%;
+                                    border: 1px solid $background-color-4;
+                                }
+
+                                &:first-child {
+                                    font-weight: bold;
+                                    text-align: right;
+
+                                    @media screen and (max-width:992px) {
+                                        width: 152px;
+                                    }
+
+                                    @media screen and (max-width:576px) {
+                                        width: 50%;
+                                    }
+                                }
+
+                                .ads-history-action {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    height: 60px;
+
+                                    button {
+                                        @include adminButtonGhost;
+                                        color: $green;
+                                        border-color: $green;
+
+                                        &:hover {
+                                            background-color: $green;
+                                            color: $white;
+                                        }
+                                    }
                                 }
                             }
                         }

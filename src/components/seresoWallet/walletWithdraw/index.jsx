@@ -12,7 +12,7 @@ import {
   parseURLParameters,
 } from "src/util/common";
 import { useSelector } from "react-redux";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import {
   api_status,
   api_url,
@@ -32,8 +32,7 @@ import { showAlert } from "src/function/showAlert";
 import { historytransfer as historytransferApi } from "src/util/userCallApi";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
-{
-}
+
 function FormWithdraw() {
   //
   const form = {
@@ -322,6 +321,9 @@ function FormWithdraw() {
                   <div>Amount: {item.amount}</div>
                   <div>Type : {item.type_exchange}</div>
                   <div>Note: {item.note}</div>
+                  <div>From user: {item.address_form}</div>
+                  <div>To user: {item.address_to}</div>
+                  {console.log(item)}
                 </div>
               </div>
             ))}

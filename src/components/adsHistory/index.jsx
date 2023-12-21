@@ -20,6 +20,7 @@ import {
   getListAdsSellPenddingToUser,
   getListAdsSellToUser,
 } from "src/util/userCallApi";
+import socket from "src/util/socket";
 function AdsHistory() {
   useEffect(() => {
     const language =
@@ -29,10 +30,11 @@ function AdsHistory() {
     renderTable(fetchListAdsBuyToUser);
   }, []);
   const callApiStatus = useRef(api_status.pending);
-  const page = useRef(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const limit = useRef(10);
   const [totalItem, setTotalItem] = useState(0);
   const { t } = useTranslation();
+  const [listRecord, setListRecord] = useState([]);
   const actionType = {
     buy: t("buy"),
     sell: t("sell"),
@@ -57,13 +59,13 @@ function AdsHistory() {
   const showContent = function () {
     getClassListFromElementById("ads-history__content").remove("--d-none");
   };
-  const fetchListAdsSellToUser = function () {
+  const fetchListAdsSellToUser = function (page) {
     return new Promise((resolve) => {
       if (callApiStatus.current === api_status.fetching) resolve({});
       else callApiStatus.current = api_status.fetching;
       getListAdsSellToUser({
         limit: limit.current,
-        page: page.current,
+        page: page,
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
@@ -76,7 +78,7 @@ function AdsHistory() {
         });
     });
   };
-  const fetchListAdsBuyToUser = function () {
+  const fetchListAdsBuyToUser = function (page) {
     return new Promise((resolve) => {
       if (callApiStatus.current === api_status.fetching) {
         return resolve({});
@@ -85,7 +87,7 @@ function AdsHistory() {
       }
       getListAdsBuyToUser({
         limit: limit.current,
-        page: page.current,
+        page: page,
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
@@ -98,7 +100,7 @@ function AdsHistory() {
         });
     });
   };
-  const fetchListAdsBuyPenddingToUser = function () {
+  const fetchListAdsBuyPenddingToUser = function (page) {
     return new Promise((resolve) => {
       if (callApiStatus.current === api_status.fetching) {
         return resolve({});
@@ -107,7 +109,7 @@ function AdsHistory() {
       }
       getListAdsBuyPenddingToUser({
         limit: limit.current,
-        page: page.current,
+        page: page,
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
@@ -120,12 +122,15 @@ function AdsHistory() {
         });
     });
   };
-  const fetchListAdsSellPenddingToUser = function () {
+  const fetchListAdsSellPenddingToUser = function (page) {
     return new Promise((resolve) => {
       if (callApiStatus.current === api_status.fetching) {
         return resolve({});
       }
-      getListAdsSellPenddingToUser({ limit: limit.current, page: page.current })
+      getListAdsSellPenddingToUser({
+        limit: limit.current,
+        page: page,
+      })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
           return resolve(resp.data.data);
@@ -143,106 +148,125 @@ function AdsHistory() {
   const enableFilter = function () {
     getElementById("pendingCheckbox").disabled = false;
   };
-  const renderTable = async function (fn) {
+  const renderTable = async function (page, fn) {
+    if (!fn) return;
     closeContent();
     closeEmpty();
     showSpinner();
     disableFilter();
-    const containerElement = getElementById("ads-history__content");
-    containerElement.innerHTML = "";
-    const { array: apiRes, total } = await fn();
+    const listCoin = await fetchListCoin();
+    console.log(listCoin);
+
+    const { array: apiRes, total } = await fn(page);
     closeSpinner();
     enableFilter();
     if (!apiRes || apiRes.length <= 0) {
       showEmpty();
       return;
     } else {
+      const listRecord = [];
       for (const item of apiRes) {
-        containerElement.innerHTML += `<div class="box fadeInBottomToTop ads-history__record">
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>${t("userName")}:</td>
-                <td>${item.userName}</td>
-              </tr>
-              <tr>
-                <td>${t("bankName")}:</td>
-                <td>${item.bankName}</td>
-              </tr>
-              <tr>
-                <td>${t("accountName")}:</td>
-                <td>${item.ownerAccount}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>${t("accountNumber")}:</td>
-                <td>${item.numberBank}</td>
-              </tr>
-              <tr>
-                <td>${t("amount")}:</td>
-                <td>${item.amount}</td>
-              </tr>
-              <tr>
-                <td>${t("amountMinimum")}:</td>
-                <td>${item.amountMinimum}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>${t("createdAt")}:</td>
-                <td>${item.created_at}</td>
-              </tr>
-              <tr>
-                <td>${t("addressWallet")}:</td>
-                <td>${item.addressWallet}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>`;
+        console.log(item.symbol);
+        const price = listCoin.find((item) => item.name === item.symbol).price;
+        console.log(price);
+        listRecord.push(
+          <div
+            key={item.id}
+            className="box fadeInBottomToTop ads-history__record"
+          >
+            <div>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>{t("userName")}:</td>
+                    <td>{item.userName}</td>
+                  </tr>
+                  <tr>
+                    <td>{t("bankName")}:</td>
+                    <td>{item.bankName}</td>
+                  </tr>
+                  <tr>
+                    <td>{t("accountName")}:</td>
+                    <td>{item.ownerAccount}</td>
+                  </tr>
+                  <tr>
+                    <td>{t("accountNumber")}:</td>
+                    <td>{item.numberBank}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>{t("amount")}:</td>
+                    <td>{item.amount}</td>
+                  </tr>
+                  <tr>
+                    <td>{t("amountMinimum")}:</td>
+                    <td>{item.amountMinimum}</td>
+                  </tr>
+                  <tr>
+                    <td>{t("createdAt")}:</td>
+                    <td>{item.created_at}</td>
+                  </tr>
+                  <tr>
+                    <td>{t("coin")}: </td>
+                    <td>{item.symbol}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <table className="ads-history__last-table">
+                <tbody>
+                  <tr>
+                    <td>Quantity Remaining:</td>
+                    <td>{item.amount - item.amountSuccess}</td>
+                  </tr>
+                  <tr>
+                    <td id={"adsHistoryAction" + item.id} colSpan="2"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
       }
+      setListRecord(() => listRecord);
       showContent();
     }
     // set total items
     setTotalItem(total);
   };
-  const loadData = function () {
+  const loadData = function (page) {
     const act = action.current;
     const pending = getElementById("pendingCheckbox").checked;
     if (act === actionType.buy) {
       if (pending) {
-        renderTable(fetchListAdsBuyPenddingToUser);
+        renderTable(page, fetchListAdsBuyPenddingToUser);
       } else if (!pending) {
-        renderTable(fetchListAdsBuyToUser);
+        renderTable(page, fetchListAdsBuyToUser);
       }
     } else if (act === actionType.sell) {
       if (pending) {
-        renderTable(fetchListAdsSellPenddingToUser);
+        renderTable(page, fetchListAdsSellPenddingToUser);
       } else {
-        renderTable(fetchListAdsSellToUser);
+        renderTable(page, fetchListAdsSellToUser);
       }
     }
   };
   const pageChangeHandle = function (pag) {
-    page.current = pag;
-    loadData();
+    setCurrentPage(() => pag);
+    loadData(pag);
   };
   const pendingCheckboxChangeHandle = function () {
-    loadData();
+    setCurrentPage(1);
+    loadData(1);
   };
   const tabChangeHandle = function (e) {
     const selected = e.target.textContent;
-    console.log(selected);
     if (selected === actionType.sell) {
       action.current = actionType.sell;
       setTabActive(() => actionType.sell);
@@ -250,7 +274,15 @@ function AdsHistory() {
       action.current = actionType.buy;
       setTabActive(() => actionType.buy);
     }
-    loadData();
+    loadData(1);
+  };
+  const fetchApigetInfoP2p = function () {
+    return new Promise((resolve, reject) => {});
+  };
+  const fetchListCoin = async function () {
+    return new Promise((resolve) => {
+      socket.once("listCoin", (resp) => resolve(resp));
+    });
   };
   return (
     <div className="ads-history">
@@ -294,62 +326,10 @@ function AdsHistory() {
             </div>
           </div>
           <h3>
-            {t("list")} <span id="adsTypeList">{action.current}</span>
+            {t("list")} advertisement{" "}
+            <span id="adsTypeList">{action.current}</span>
           </h3>
-          <div id="ads-history__content">
-            <div className="box fadeInBottomToTop ads-history__record">
-              <div>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>User Name:</td>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>Bank Name:</td>
-                      <td>Vietcombank</td>
-                    </tr>
-                    <tr>
-                      <td>Name:</td>
-                      <td>Vietcombank</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>Account Number:</td>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>Amount:</td>
-                      <td>Vietcombank</td>
-                    </tr>
-                    <tr>
-                      <td>Amount Minimum:</td>
-                      <td>Vietcombank</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>Created At:</td>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>Address Wallet:</td>
-                      <td>Vietcombank</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <div id="ads-history__content">{listRecord}</div>
           <div id="adsHistoryEmpty" className="spin-container --d-none">
             <Empty />
           </div>
@@ -361,6 +341,7 @@ function AdsHistory() {
               defaultCurrent={1}
               showSizeChanger={false}
               total={totalItem}
+              current={currentPage}
               onChange={pageChangeHandle}
             />
           </div>

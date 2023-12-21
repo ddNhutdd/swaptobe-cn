@@ -483,6 +483,14 @@ export default function P2PTrading2({ history }) {
   const amountSectionSellFilterChangeHandle = function (e) {
     amountSectionSellFilter.current = e.target.value;
   };
+  const createAdsSell = function () {
+    setLocalStorage(localStorageVariable.createAds, buyCoin.current);
+    history.push(url.create_ads_sell);
+  };
+  const createAdsBuy = function () {
+    setLocalStorage(localStorageVariable.createAds, sellCoin.current);
+    history.push(url.create_ads_sell);
+  };
   //
   useEffect(() => {
     socket.once("listCoin", (resp) => {
@@ -562,7 +570,7 @@ export default function P2PTrading2({ history }) {
           <div className="p2ptrading2__footer">
             <div className="buy-ad">
               <button
-                onClick={() => history.push(url.create_ads_sell)}
+                onClick={createAdsSell}
                 type="primary"
                 size="large"
                 className="buyAdBtn"
@@ -643,7 +651,7 @@ export default function P2PTrading2({ history }) {
           <div className="p2ptrading2__footer">
             <div className="sell-ad">
               <button
-                onClick={() => history.push(url.create_ads_buy)}
+                onClick={createAdsBuy}
                 type="primary"
                 size="large"
                 className="sellAdBtn"

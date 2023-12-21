@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Modal } from "antd";
 import React, { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
@@ -15,6 +15,8 @@ import {
   getClassListFromElementById,
   getElementById,
   getLocalStorage,
+  hideElement,
+  showElement,
 } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { companyAddAds, getProfile } from "src/util/userCallApi";
@@ -28,17 +30,21 @@ import {
 } from "src/constant";
 import { showToast } from "src/function/showToast";
 import { showAlert } from "src/function/showAlert";
+import { userWalletFetchCount } from "src/redux/actions/coin.action";
 export default function CreateBuy() {
   const actionType = {
     sell: "sell",
     buy: "buy",
   };
   const history = useHistory();
+  const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
   const action = location.pathname.split("/").at(-1);
   const data = useRef([]);
-  const [currentCoin, setCurrentCoin] = useState("BTC");
+  const [currentCoin, setCurrentCoin] = useState(
+    getLocalStorage(localStorageVariable.createAds) || "BTC"
+  );
   const [isModalCoinVisible, setIsModalCoinVisible] = useState(false);
   const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
   const listCoinRealTime = useSelector(getListCoinRealTime);
@@ -122,8 +128,27 @@ export default function CreateBuy() {
       getElementById("amoutInput").value;
     getElementById("modalPreviewMinimumAmount").innerHTML =
       getElementById("minimumAmoutInput").value;
-    getElementById("modalBankName").innerHTML = selectedBank.current;
     getElementById("modalAction").innerHTML = String(action).toUpperCase();
+    //
+    const bank = getElementById("modalBankName");
+    bank.innerHTML = selectedBank.current;
+    const account = getElementById("modalAccount");
+    account.innerHTML = getElementById("fullnameInput").value;
+    const accountNumber = getElementById("modalAccountNumber");
+    accountNumber.innerHTML = getElementById("accountNumberInput").value;
+    //
+    const containerBank = bank.closest("tr");
+    const containerAccount = account.closest("tr");
+    const containerAccountNumber = account.closest("tr");
+    if (action === actionType.buy) {
+      hideElement(containerBank);
+      hideElement(containerAccount);
+      hideElement(containerAccountNumber);
+    } else {
+      showElement(containerBank);
+      showElement(containerAccount);
+      showElement(containerAccountNumber);
+    }
   };
   const toggleDropdownBank = function (e) {
     e.stopPropagation();
@@ -340,7 +365,10 @@ export default function CreateBuy() {
       sendData.ownerAccount = fullname;
       sendData.numberBank = accountNumber;
     }
-    await callApiCreateAds(sendData);
+    const resultApi = await callApiCreateAds(sendData);
+    if (resultApi) {
+      dispatch(userWalletFetchCount());
+    }
     closeLoadingButtonSubmit();
   };
   const showLoadingButtonSubmit = function () {
@@ -580,6 +608,14 @@ export default function CreateBuy() {
                 <tr>
                   <td>{t("bankName")}: </td>
                   <td id="modalBankName">test</td>
+                </tr>
+                <tr>
+                  <td>{t("account")}: </td>
+                  <td id="modalAccount">test</td>
+                </tr>
+                <tr>
+                  <td>{t("accountNumber")}: </td>
+                  <td id="modalAccountNumber">test</td>
                 </tr>
                 <tr>
                   <td>{t("action")}: </td>
