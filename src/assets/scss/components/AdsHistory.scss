@@ -119,11 +119,11 @@
                                     }
                                 }
 
-                                .ads-history-action {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    height: 60px;
+                                &.ads-history-action {
+
+                                    .spin-container {
+                                        height: 60px
+                                    }
 
                                     button {
                                         @include adminButtonGhost;

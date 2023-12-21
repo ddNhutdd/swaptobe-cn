@@ -43,6 +43,7 @@ import Transaction from "./components/transaction";
 import Confirm from "./components/confirm";
 import AdsHistory from "./components/adsHistory";
 import Exchange from "./components/admin/exchange";
+import P2pManagement from "./components/p2pManagement";
 function App() {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -140,6 +141,7 @@ function App() {
           <MainTemplate path={url.transaction} component={Transaction} />
           <MainTemplate path={url.profile} component={Profile} />
           <MainTemplate path={url.wallet} component={SwaptobeWallet} />
+          <MainTemplate path={url.p2p_management} component={P2pManagement} />
           <MainTemplate path="/p2p-trading" component={P2PTrading} />
           <MainTemplate path="/swap" component={Swap} />
           <MainTemplate path="/create-ads/buy" component={CreateBuySell} />

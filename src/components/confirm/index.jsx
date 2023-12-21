@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api_status, showAlertType, url } from "src/constant";
 import { useParams, useHistory } from "react-router-dom";
 import { getInfoP2p, getProfile } from "src/util/userCallApi";
 import { showAlert } from "src/function/showAlert";
 import ConfirmItem from "./confirmItem";
+import { Spin } from "antd";
+import { getElementById, hideElement } from "src/util/common";
 function Confirm() {
   const idAds = useParams().id;
   const history = useHistory();
-  const callApiStatus = useRef(api_status.pending);
+  const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
   const [data, setData] = useState(null);
   const [render, setRender] = useState(1);
   useEffect(() => {
@@ -16,19 +18,22 @@ function Confirm() {
   }, [render]);
   const fetchApiGetInfoP2p = function () {
     return new Promise((resolve) => {
-      if (callApiStatus.current === api_status.fetching) {
+      if (callApiStatus === api_status.fetching) {
         return resolve(false);
       }
       getInfoP2p({
         idP2p: idAds,
       })
         .then((resp) => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(api_status.fulfilled);
           return resolve(resp.data.data);
         })
         .catch((error) => {
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(api_status.rejected);
           return resolve(false);
+        })
+        .finally(() => {
+          hideElement(getElementById("confirm__spinner"));
         });
     });
   };
@@ -61,7 +66,6 @@ function Confirm() {
       history.push(url.p2pTrading);
       return;
     }
-
     const result = apiRes.map((item, index) => (
       <ConfirmItem
         key={index}
@@ -73,7 +77,6 @@ function Confirm() {
     ));
     setData(() => result);
   };
-
   const classStyle = {
     paddingTop: "120px",
     paddingBottom: "30px",
@@ -81,7 +84,23 @@ function Confirm() {
     gap: "30px",
     flexDirection: "column",
   };
+  return (
+    <>
+      <div
+        id="confirm__spinner"
+        className={`spin-container `}
+        style={classStyle}
+      >
+        <Spin />
+      </div>
 
-  return <div style={classStyle}>{data}</div>;
+      <div
+        className={`${callApiStatus === api_status.fetching ? "--d-none" : ""}`}
+        style={classStyle}
+      >
+        {data}
+      </div>
+    </>
+  );
 }
 export default Confirm;

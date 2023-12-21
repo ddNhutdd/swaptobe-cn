@@ -237,7 +237,6 @@ export const companyConfirmP2pCommand = function (data) {
     console.log(error);
   }
 };
-
 export const companyCancelP2pCommand = function (data) {
   try {
     return axiosService.post("/api/p2pBank/CompanyCancelP2pCommand", data);

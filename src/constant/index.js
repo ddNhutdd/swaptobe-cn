@@ -31,6 +31,7 @@ export const url = {
   ads_history: "/ads-history",
   transaction: "/transaction",
   confirm: "/confirm/:id",
+  p2p_management: "/p2p-management",
 };
 
 export const api_url = {

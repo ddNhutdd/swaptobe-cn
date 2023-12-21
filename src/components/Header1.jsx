@@ -153,6 +153,19 @@ export default function Header1({ history }) {
                   </div>
                   {t("advertisingHistory")}
                 </div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    walletMenuElement.current.classList.remove("show");
+                    history.push(url.ads_history);
+                  }}
+                  className="header1__subMenu-item"
+                >
+                  <div className="header1_icon-container">
+                    <i className="fa-solid fa-rectangle-ad"></i>
+                  </div>
+                  {t("advertisingHistory")}
+                </div>
               </div>
             </div>
             <div className="header1__item" onClick={userNameOnClickHandle}>

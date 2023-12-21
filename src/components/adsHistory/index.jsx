@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Pagination, Empty, Spin } from "antd";
+import { useHistory } from "react-router-dom";
 import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
 import {
@@ -8,13 +9,18 @@ import {
   getClassListFromElementById,
   getElementById,
   getLocalStorage,
+  hideElement,
+  roundDecimalValues,
+  showElement,
 } from "src/util/common";
 import {
   api_status,
   defaultLanguage,
   localStorageVariable,
+  url,
 } from "src/constant";
 import {
+  getInfoP2p,
   getListAdsBuyPenddingToUser,
   getListAdsBuyToUser,
   getListAdsSellPenddingToUser,
@@ -26,10 +32,17 @@ function AdsHistory() {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
-    //
-    renderTable(fetchListAdsBuyToUser);
+    // get list coin
+    closeContent();
+    closeEmpty();
+    showSpinner();
+    fetchListCoin().then((resp) => {
+      renderTable(1, fetchListAdsBuyToUser);
+    });
   }, []);
+  const history = useHistory();
   const callApiStatus = useRef(api_status.pending);
+  const listCoin = useRef();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = useRef(10);
   const [totalItem, setTotalItem] = useState(0);
@@ -149,26 +162,30 @@ function AdsHistory() {
     getElementById("pendingCheckbox").disabled = false;
   };
   const renderTable = async function (page, fn) {
-    if (!fn) return;
     closeContent();
     closeEmpty();
     showSpinner();
     disableFilter();
-    const listCoin = await fetchListCoin();
-    console.log(listCoin);
-
+    if (!fn) {
+      closeSpinner();
+      closeContent();
+      showEmpty();
+      return;
+    }
     const { array: apiRes, total } = await fn(page);
     closeSpinner();
     enableFilter();
     if (!apiRes || apiRes.length <= 0) {
+      closeContent();
+      closeSpinner();
       showEmpty();
       return;
     } else {
       const listRecord = [];
       for (const item of apiRes) {
-        console.log(item.symbol);
-        const price = listCoin.find((item) => item.name === item.symbol).price;
-        console.log(price);
+        const price = listCoin.current.find(
+          (c) => c.name === item.symbol
+        ).price;
         listRecord.push(
           <div
             key={item.id}
@@ -219,14 +236,40 @@ function AdsHistory() {
               </table>
             </div>
             <div>
-              <table className="ads-history__last-table">
+              <table>
                 <tbody>
                   <tr>
                     <td>Quantity Remaining:</td>
-                    <td>{item.amount - item.amountSuccess}</td>
+                    <td>
+                      {Number(
+                        roundDecimalValues(
+                          item.amount - item.amountSuccess,
+                          price
+                        )
+                      )}
+                    </td>
                   </tr>
                   <tr>
-                    <td id={"adsHistoryAction" + item.id} colSpan="2"></td>
+                    <td
+                      className="ads-history-action"
+                      id={"adsHistoryAction" + item.id}
+                      colSpan="2"
+                    >
+                      <div
+                        className="spin-container"
+                        id={"adsHistoryActionSpinner" + item.id}
+                      >
+                        <Spin />
+                      </div>
+                      <div
+                        className="spin-container --d-none"
+                        id={"adsHistoryActionButton" + item.id}
+                      >
+                        <button onClick={redirectConfirm.bind(null, item.id)}>
+                          Check
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -237,8 +280,25 @@ function AdsHistory() {
       setListRecord(() => listRecord);
       showContent();
     }
+    //
+    const listId = apiRes.map((item) => item.id);
+    fetchMultiApiGetInfoP2p(listId);
     // set total items
     setTotalItem(total);
+  };
+  const actionFulfilled = function (id) {
+    const loader = getElementById("adsHistoryActionSpinner" + id);
+    const btn = getElementById("adsHistoryActionButton" + id);
+    if (!loader || !btn) return;
+    hideElement(loader);
+    showElement(btn);
+  };
+  const actionRejected = function (id) {
+    const loader = getElementById("adsHistoryActionSpinner" + id);
+    const btn = getElementById("adsHistoryActionButton" + id);
+    if (!loader || !btn) return;
+    hideElement(loader);
+    hideElement(btn);
   };
   const loadData = function (page) {
     const act = action.current;
@@ -276,13 +336,42 @@ function AdsHistory() {
     }
     loadData(1);
   };
-  const fetchApigetInfoP2p = function () {
-    return new Promise((resolve, reject) => {});
-  };
-  const fetchListCoin = async function () {
-    return new Promise((resolve) => {
-      socket.once("listCoin", (resp) => resolve(resp));
+  /**
+   * If there is no returned data, the api informs the core
+   * The function both calls the api and renders the action
+   * @param {number | string} id AdsId
+   * @returns Promise
+   */
+  const fetchApiGetInfoP2p = function (id) {
+    return new Promise((resolve, reject) => {
+      getInfoP2p({
+        idP2p: id,
+      })
+        .then((resp) => {
+          actionFulfilled(id);
+          resolve(true);
+        })
+        .catch((error) => {
+          actionRejected(id);
+          resolve(null);
+        });
     });
+  };
+  const fetchMultiApiGetInfoP2p = function (listId) {
+    for (const id of listId) {
+      fetchApiGetInfoP2p(id);
+    }
+  };
+  const fetchListCoin = function () {
+    return new Promise((resolve) => {
+      socket.once("listCoin", (resp) => {
+        listCoin.current = resp;
+        resolve(resp);
+      });
+    });
+  };
+  const redirectConfirm = function (id) {
+    history.push(url.confirm.replace(":id", id));
   };
   return (
     <div className="ads-history">
