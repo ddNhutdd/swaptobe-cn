@@ -128,7 +128,7 @@ export default function CreateBuy() {
       getElementById("amoutInput").value;
     getElementById("modalPreviewMinimumAmount").innerHTML =
       getElementById("minimumAmoutInput").value;
-    getElementById("modalAction").innerHTML = String(action).toUpperCase();
+    getElementById("modalAction").innerHTML = t(action).toUpperCase();
     //
     const bank = getElementById("modalBankName");
     bank.innerHTML = selectedBank.current;
@@ -408,11 +408,11 @@ export default function CreateBuy() {
           <div className="head-area">
             <h2>
               {action === actionType.buy
-                ? "Ads to  buy"
+                ? t("adsToBuyBTC").replace("BTC", currentCoin)
                 : t("adsToSellBTC").replace("BTC", currentCoin)}
             </h2>
             <div>
-              Market buy price:{" "}
+              {t("marketBuyPrice")}:{" "}
               <span
                 id="marketBuyPrice"
                 className="create-buy-ads__head-area-price"
@@ -533,7 +533,7 @@ export default function CreateBuy() {
                 className="button-area-primary"
               >
                 <div id="buttonSubmitLoader" className="loader --d-none"></div>
-                Create new advertisement
+                {t("createNewAdvertisement")}
               </button>
             </div>
           </form>
@@ -578,7 +578,7 @@ export default function CreateBuy() {
       >
         <div className="create-buy-ads__modal-preview">
           <div className="create-buy-ads__modal-preview-header">
-            Preview
+            {t("preview")}
             <span
               onClick={modalPreviewHandleCancel}
               className="create-buy-ads__modal-preview-close"
@@ -625,7 +625,9 @@ export default function CreateBuy() {
             </table>
           </div>
           <div className="create-buy-ads__modal-preview-footer">
-            <button onClick={modalButtonCreateClickHandle}>Create</button>
+            <button onClick={modalButtonCreateClickHandle}>
+              {t("create")}
+            </button>
           </div>
         </div>
       </Modal>

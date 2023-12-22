@@ -18,7 +18,7 @@ import {
   localStorageVariable,
   url,
 } from "src/constant";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import { getCoinTotalValue } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { coinSetCoin } from "src/redux/actions/coin.action";
@@ -68,6 +68,13 @@ function SwaptobeWallet() {
     const ele = document.getElementById("showTotalValue");
     if (ele) ele.innerHTML = result;
   }, [userSelectedCurrentcy, exchange, totalValue]);
+  const sellBuyNowHandleClick = function () {
+    if (isLogin) {
+      history.push(url.p2pTrading);
+    } else {
+      history.push(url.login);
+    }
+  };
   //
   const renderActionContent = () => {
     switch (showActionContent) {
@@ -136,8 +143,12 @@ function SwaptobeWallet() {
                 {t("startBuyingAndSellingCryptoCurrencies")}
               </div>
               <div className="right-actions">
-                <button className="buy">{t("buyNow")}</button>
-                <button className="sell">{t("sellNow")}</button>
+                <button onClick={sellBuyNowHandleClick} className="buy">
+                  {t("buyNow")}
+                </button>
+                <button onClick={sellBuyNowHandleClick} className="sell">
+                  {t("sellNow")}
+                </button>
               </div>
             </div>
           </div>

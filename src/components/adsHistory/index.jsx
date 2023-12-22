@@ -32,6 +32,9 @@ function AdsHistory() {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
+    i18n.on("languageChanged", () => {
+      loadData(currentPage);
+    });
     // get list coin
     closeContent();
     closeEmpty();
@@ -39,6 +42,9 @@ function AdsHistory() {
     fetchListCoin().then((resp) => {
       renderTable(1, fetchListAdsBuyToUser);
     });
+    return () => {
+      i18n.off();
+    };
   }, []);
   const history = useHistory();
   const callApiStatus = useRef(api_status.pending);
@@ -156,10 +162,14 @@ function AdsHistory() {
     });
   };
   const disableFilter = function () {
-    getElementById("pendingCheckbox").disabled = true;
+    const element = getElementById("pendingCheckbox");
+    if (!element) return;
+    element.disabled = true;
   };
   const enableFilter = function () {
-    getElementById("pendingCheckbox").disabled = false;
+    const element = getElementById("pendingCheckbox");
+    if (!element) return;
+    element.disabled = false;
   };
   const renderTable = async function (page, fn) {
     closeContent();
@@ -302,7 +312,8 @@ function AdsHistory() {
   };
   const loadData = function (page) {
     const act = action.current;
-    const pending = getElementById("pendingCheckbox").checked;
+    const pending = getElementById("pendingCheckbox")?.checked;
+    if (pending === null || pending === undefined) return;
     if (act === actionType.buy) {
       if (pending) {
         renderTable(page, fetchListAdsBuyPenddingToUser);

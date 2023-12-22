@@ -1,8 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Empty, Spin, Pagination } from "antd";
 import React, { useState, useEffect, useRef } from "react";
-import { api_status, url } from "src/constant";
-import { capitalizeFirstLetter } from "src/util/common";
+import { useTranslation } from "react-i18next";
+import {
+  api_status,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
+import { capitalizeFirstLetter, getLocalStorage } from "src/util/common";
+import i18n from "src/translation/i18n";
 import socket from "src/util/socket";
 import { useHistory } from "react-router-dom";
 import {
@@ -11,16 +18,17 @@ import {
   getListHistoryP2pWhere,
 } from "src/util/userCallApi";
 function P2pManagement() {
+  const { t } = useTranslation();
   const advertisingStatusType = {
-    all: "all",
-    buy: "buy",
-    sell: "sell",
-    pending: "pending",
+    all: t("all"),
+    buy: t("buy"),
+    sell: t("sell"),
+    pending: t("pending"),
   };
   const radioAcitonType = {
-    all: "all",
-    buy: "buy",
-    sell: "sell",
+    all: t("all"),
+    buy: t("buy"),
+    sell: t("sell"),
   };
   const [advertisingStatus, setAdvertisingStatus] = useState(
     advertisingStatusType.all
@@ -33,18 +41,83 @@ function P2pManagement() {
   );
   const limit = useRef(10);
   const history = useHistory();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(1);
   const [selectedCoin, setSelectedCoin] = useState("All");
   const [listAllCoin, setListAllCoin] = useState();
   const [dataTable, setDataTable] = useState([]);
+  const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [radioAction, setRadioAction] = useState(radioAcitonType.all);
+  const dropdownSelected = useRef();
   useEffect(() => {
+    const element = document.querySelector(".p2pManagement");
+    element.classList.add("fadeInBottomToTop");
+    //
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
+    document.addEventListener("click", closeDropdown);
     fetchApiGetListAllCoin();
     fetchApiGetAllP2p(1);
+    return () => {
+      document.removeEventListener("click", closeDropdown);
+    };
   }, []);
+  useEffect(() => {
+    loadDropdown();
+  }, [advertisingStatus]);
+  /**
+   * load dropdown based on component state
+   */
+  const loadDropdown = function () {
+    const container = document.querySelectorAll(
+      ".p2pManagement__header-menu .p2pManagement__header-menu-item"
+    );
+    const ele = Array.from(container).find((item) => {
+      const span = item.querySelector("span");
+      if (span.innerHTML.toLowerCase() === advertisingStatus) return true;
+      else return false;
+    });
+    if (ele) {
+      dropdownSelected.current.innerHTML = ele.innerHTML;
+    }
+  };
   const renderClassTabActive = function (adsStatus) {
     return advertisingStatus === adsStatus ? "active" : "";
+  };
+  const toggleDropdown = function (e) {
+    e.stopPropagation();
+    setIsShowDropdown((s) => !s);
+  };
+  const closeDropdown = function () {
+    setIsShowDropdown(() => false);
+  };
+  const dropdownItemClick = function (e) {
+    const element = e.target.closest(".p2pManagement__header-menu-item");
+    dropdownSelected.current.innerHTML = element.innerHTML;
+    const ads = element.querySelector("span").textContent.toLowerCase();
+    switch (ads) {
+      case advertisingStatusType.all:
+        setAdvertisingStatus(advertisingStatusType.all);
+        fetchApiGetAllP2p(1);
+        break;
+      case advertisingStatusType.buy:
+        setAdvertisingStatus(advertisingStatusType.buy);
+        fetchApiGetListBuyP2p(1);
+        break;
+      case advertisingStatusType.sell:
+        setAdvertisingStatus(advertisingStatusType.sell);
+        fetchApiGetListSellP2p(1);
+        break;
+      case advertisingStatusType.pending:
+        setAdvertisingStatus(advertisingStatusType.pending);
+        fetchApiGetListPending(1, radioAction, selectedCoin);
+        break;
+      default:
+        break;
+    }
   };
   const tabClickHandle = function (adsStatus) {
     if (callApiLoadP2pStatus === api_status.fetching) return;
@@ -173,25 +246,25 @@ function P2pManagement() {
             onClick={redirectConfirm.bind(null, idP2p)}
             className="p2pHistory__buton-pending"
           >
-            Lệnh đang chờ
+            {t("pendingTransaction")}
           </button>
         );
       } else if (typeP2p === 1) {
         return (
           <button className="p2pHistory__buton-success">
-            Lệnh giao dịch thành công
+            {t("successfulTransaction")}
           </button>
         );
       } else if (typeP2p === 3 && typeUser === 3) {
         return (
           <button className="p2pHistory__buton-cancel">
-            Người giao dịch huỷ lệnh
+            {t("transactionCancel")}
           </button>
         );
       } else if (typeP2p === 3) {
         return (
           <button className="p2pHistory__buton-cancel">
-            Người quảng cáo báo chưa nhận được tiền
+            {t("advertiserNotReceivedFunds")}
           </button>
         );
       }
@@ -209,7 +282,7 @@ function P2pManagement() {
             <div>{item.symbol}</div>
             <div>{item.amount}</div>
             <div>{item.rate}</div>
-            <div>{item.side}</div>
+            <div>{t(item.side)}</div>
           </div>
         </td>
         <td>
@@ -243,7 +316,7 @@ function P2pManagement() {
     }
   };
   const fetchApiGetListBuyP2p = function (page) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (callApiLoadP2pStatus === api_status.fetching) resolve(false);
       else setCallApiLoadP2pStatus(api_status.fetching);
       getListHistoryP2pWhere({
@@ -352,7 +425,7 @@ function P2pManagement() {
               onClick={tabClickHandle.bind(null, advertisingStatusType.all)}
             >
               <i className="fa-solid fa-border-all"></i>
-              <span>All</span>
+              <span>{t("all")}</span>
             </div>
             <div
               className={`p2pManagement__header-tab-item ${renderClassTabActive(
@@ -361,7 +434,7 @@ function P2pManagement() {
               onClick={tabClickHandle.bind(null, advertisingStatusType.buy)}
             >
               <i className="fa-solid fa-cart-shopping"></i>
-              <span>Buy</span>
+              <span>{t("buy")}</span>
             </div>
             <div
               className={`p2pManagement__header-tab-item ${renderClassTabActive(
@@ -370,7 +443,7 @@ function P2pManagement() {
               onClick={tabClickHandle.bind(null, advertisingStatusType.sell)}
             >
               <i className="fa-brands fa-sellcast"></i>
-              <span>Sell</span>
+              <span>{t("sell")}</span>
             </div>
             <div
               className={`p2pManagement__header-tab-item ${renderClassTabActive(
@@ -379,31 +452,51 @@ function P2pManagement() {
               onClick={tabClickHandle.bind(null, advertisingStatusType.pending)}
             >
               <i className="fa-solid fa-spinner"></i>
-              <span>Pending</span>
+              <span>{t("pending")}</span>
             </div>
             <div className="p2pManagement__header-tab-item"></div>
           </div>
-          <div className="p2pManagement__header-dropdown ">
-            <div className="p2pManagement__header-selected">
+          <div className="p2pManagement__header-dropdown">
+            <div
+              onClick={toggleDropdown}
+              className="p2pManagement__header-selected "
+              ref={dropdownSelected}
+            >
               <i className="fa-solid fa-border-all"></i>
-              <span>All</span>
+              <span>{t("all")}</span>
             </div>
-            <div className="p2pManagement__header-menu">
-              <div className="p2pManagement__header-menu-item">
+            <div
+              className={`p2pManagement__header-menu ${
+                isShowDropdown ? "active" : ""
+              }`}
+            >
+              <div
+                className="p2pManagement__header-menu-item"
+                onClick={dropdownItemClick}
+              >
                 <i className="fa-solid fa-border-all"></i>
-                <span>All</span>
+                <span>{t("all")}</span>
               </div>
-              <div className="p2pManagement__header-menu-item">
+              <div
+                className="p2pManagement__header-menu-item"
+                onClick={dropdownItemClick}
+              >
                 <i className="fa-solid fa-cart-shopping"></i>
-                <span>Buy</span>
+                <span>{t("buy")}</span>
               </div>
-              <div className="p2pManagement__header-menu-item">
+              <div
+                className="p2pManagement__header-menu-item"
+                onClick={dropdownItemClick}
+              >
                 <i className="fa-brands fa-sellcast"></i>
-                <span>Sell</span>
+                <span>{t("sell")}</span>
               </div>
-              <div className="p2pManagement__header-menu-item">
+              <div
+                className="p2pManagement__header-menu-item"
+                onClick={dropdownItemClick}
+              >
                 <i className="fa-solid fa-spinner"></i>
-                <span>Pending</span>
+                <span>{t("pending")}</span>
               </div>
             </div>
           </div>
@@ -428,7 +521,7 @@ function P2pManagement() {
               <div className="p2pManagement__filter-circle">
                 <div className="p2pManagement__filter-dot"></div>
               </div>
-              <span>All</span>
+              <span>{t("all")}</span>
             </label>
           </span>
           <span className="p2pManagement__filter-radio">
@@ -444,7 +537,7 @@ function P2pManagement() {
               <div className="p2pManagement__filter-circle">
                 <div className="p2pManagement__filter-dot"></div>
               </div>
-              <span>Buy</span>
+              <span>{t("buy")}</span>
             </label>
           </span>
           <span className="p2pManagement__filter-radio">
@@ -460,7 +553,7 @@ function P2pManagement() {
               <div className="p2pManagement__filter-circle">
                 <div className="p2pManagement__filter-dot"></div>
               </div>
-              <span>Sell</span>
+              <span>{t("sell")}</span>
             </label>
           </span>
           <div
@@ -478,16 +571,16 @@ function P2pManagement() {
         </div>
         <div className="p2pManagement__content">
           <div className="p2pManagement__content-title">
-            List {capitalizeFirstLetter(advertisingStatus)}
+            {t("list")} {capitalizeFirstLetter(advertisingStatus)}
           </div>
           <div className={`p2pManagement__content-data ${renderClassTable()}`}>
             <table>
               <thead>
                 <tr>
-                  <th>trader</th>
-                  <th>Infomation</th>
-                  <th>Value</th>
-                  <th>Action</th>
+                  <th>{t("trader")}</th>
+                  <th>{t("infomation")}</th>
+                  <th>{t("value")}</th>
+                  <th>{t("action")}</th>
                 </tr>
               </thead>
               <tbody>{renderTable()}</tbody>

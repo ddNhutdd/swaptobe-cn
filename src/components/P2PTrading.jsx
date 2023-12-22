@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Card, Modal, Table } from "antd";
 import { Spin } from "antd";
+import { useHistory } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import P2PTrading2 from "./P2PTrading2";
@@ -10,7 +11,12 @@ import {
   getLocalStorage,
   setLocalStorage,
 } from "src/util/common";
-import { currency, defaultLanguage, localStorageVariable } from "src/constant";
+import {
+  currency,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import i18n from "src/translation/i18n";
 import { DOMAIN } from "src/util/service";
 import { coinSetCoin } from "src/redux/actions/coin.action";
@@ -20,7 +26,9 @@ import PhoneApps from "./PhoneApps";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
 //
 export default function P2PTrading({ history }) {
+  const redirectPage = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const data = useSelector(getListCoinRealTime);
   const [sellPrice, setSellPrice] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
@@ -147,6 +155,20 @@ export default function P2PTrading({ history }) {
         ?.rate || 0;
     return usd * rate;
   };
+  const buyNowClickHandle = function () {
+    if (isLogin) {
+      redirectPage.push(url.create_ads_buy);
+    } else {
+      redirectPage.push(url.login);
+    }
+  };
+  const sellNowClickHandle = function () {
+    if (isLogin) {
+      redirectPage.push(url.create_ads_sell);
+    } else {
+      redirectPage.push(url.login);
+    }
+  };
   //
   return (
     <>
@@ -171,7 +193,11 @@ export default function P2PTrading({ history }) {
                 )}
                 <span> {userSelectedCurrency}</span>
               </div>
-              <Button className="buyNowBtn" size="large">
+              <Button
+                onClick={buyNowClickHandle}
+                className="buyNowBtn"
+                size="large"
+              >
                 {t("buyNow")}
               </Button>
             </div>
@@ -186,7 +212,11 @@ export default function P2PTrading({ history }) {
                 )}
                 <span> {userSelectedCurrency}</span>
               </div>
-              <Button className="sellNowBtn" size="large">
+              <Button
+                onClick={sellNowClickHandle}
+                className="sellNowBtn"
+                size="large"
+              >
                 {t("sellNow")}
               </Button>
             </div>

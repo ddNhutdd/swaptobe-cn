@@ -2,8 +2,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   api_status,
+  defaultLanguage,
   localStorageVariable,
   regularExpress,
   showAlertType,
@@ -14,6 +16,7 @@ import { showToast } from "src/function/showToast";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
+import i18n from "src/translation/i18n";
 import {
   addClassToElementById,
   capitalizeFirstLetter,
@@ -43,6 +46,7 @@ function Transaction() {
     amountInput: "amountInput",
   });
   const history = useHistory();
+  const { t } = useTranslation();
   const listCoinRealtime = useSelector(getListCoinRealTime);
   const currency = useSelector(getCurrent);
   const exchangeRateDisparity = useSelector(getExchangeRateDisparity);
@@ -62,7 +66,10 @@ function Transaction() {
   const idAds = useRef();
   const callApiStatus = useRef(api_status.pending);
   useEffect(() => {
-    console.log(isLogin);
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
     if (!isLogin) {
       history.push(url.login);
       return;
@@ -87,10 +94,10 @@ function Transaction() {
     let valid = true;
     if (controlTouchedFormBuy.current[controlFormBuy.amountInput]) {
       if (!amountInputFormBuy.current.value) {
-        controlErrorFormBuy.current[controlFormBuy.amountInput] = "Require";
+        controlErrorFormBuy.current[controlFormBuy.amountInput] = t("require");
         valid &= false;
       } else if (Number(amountInputFormBuy.current.value) <= 0) {
-        controlErrorFormBuy.current[controlFormBuy.amountInput] = "Invalid";
+        controlErrorFormBuy.current[controlFormBuy.amountInput] = t("invalid");
         valid &= false;
       } else {
         delete controlErrorFormBuy.current[controlFormBuy.amountInput];
@@ -129,7 +136,7 @@ function Transaction() {
   };
   const loadDataFirstTime = function () {
     if (!renderPaymentDropdown()) {
-      showToast(showAlertType.error, "No bank found in account");
+      showToast(showAlertType.error, t("noBankFoundInAccount"));
       history.push(url.profile);
       return;
     }
@@ -212,7 +219,7 @@ ${symbol.current}`;
         }
         const acceptEula = getElementById("agreeCheckBox").checked;
         if (!acceptEula) {
-          showAlert(showAlertType.error, "not yet accept Eula");
+          showAlert(showAlertType.error, t("notYetAcceptEula"));
           return;
         }
         disableButtonSubmit();
@@ -241,29 +248,37 @@ ${symbol.current}`;
       createP2p(data)
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "create success");
+          showToast(showAlertType.success, t("createSuccess"));
           return resolve(true);
         })
         .catch((error) => {
           callApiStatus.current = api_status.rejected;
-          showToast(showAlertType.error, "create fail");
           console.log(error);
           const mess = error.response.data.message;
           switch (mess) {
             case "The quantity is too much and the order cannot be created":
-              showAlert(showAlertType.error, mess);
+              showAlert(
+                showAlertType.error,
+                t("theQuantityIsTooMuchAndTheOrderCannotBeCreated")
+              );
               break;
             case "The quantity is too small to create an order":
-              showAlert(showAlertType.error, mess);
+              showAlert(
+                showAlertType.error,
+                t("theQuantityIsTooSmallToCreateAnOrder")
+              );
               break;
             case "You have a transaction order that has not yet been processed":
-              showAlert(showAlertType.error, mess);
+              showAlert(
+                showAlertType.error,
+                t("youHaveATransactionOrderThatHasNotYetBeenProcessed")
+              );
               break;
             case "Your balance is insufficient":
-              showAlert(showAlertType.error, mess);
+              showAlert(showAlertType.error, t("yourBalanceIsInsufficient"));
               break;
             default:
-              showAlert(showAlertType.error, "Fail");
+              showAlert(showAlertType.error, t("anErrorHasOccurred"));
               break;
           }
           return resolve(false);
@@ -401,7 +416,7 @@ ${symbol.current}`;
     if (controlTouchedFormSell.current[controlFormSell.current.amountInput]) {
       if (!inputValue) {
         controlErrorFormSell.current[controlFormSell.current.amountInput] =
-          "Require";
+          t("require");
         valid &= false;
       } else {
         delete controlErrorFormSell.current[
@@ -499,7 +514,7 @@ ${symbol.current}`;
                 ></span>
               </div>
               <div className="transaction__input">
-                <label htmlFor="receiveInput">to receive:</label>
+                <label htmlFor="receiveInput">{t("toReceive")}:</label>
                 <input
                   disabled
                   id="receiveInputTransactionFormBuy"
@@ -532,13 +547,13 @@ ${symbol.current}`;
                 ></span>
               </div>
               <div className="transaction__input">
-                <label>to receive:</label>
+                <label>{t("toReceive")}:</label>
                 <input id="receiveInputFormSell" disabled type="text" />
                 <span className="transaction__unit">VND</span>
               </div>
             </div>
             <div className="transaction__dropdown">
-              <label htmlFor="amountInput">Choose your payment:</label>
+              <label htmlFor="amountInput">{t("chooseYourPayment")}:</label>
               <div
                 id="paymentDropdownSelected"
                 onClick={dropdownPaymentToggle}
@@ -556,7 +571,7 @@ ${symbol.current}`;
                 className="transaction__payment-dropdown-menu-container"
               >
                 <div id="paymentDropdownMenuContent" className="dropdown-menu">
-                  <div className="dropdown-item">name</div>
+                  <div className="dropdown-item">{t("name")}</div>
                 </div>
               </div>
             </div>
@@ -566,9 +581,9 @@ ${symbol.current}`;
                 <i className="fa-solid fa-check"></i>
               </div>
               <div className="transaction__checkbox-text">
-                By clicking Continue, you agree to Sereso's{" "}
+                {t("byClickingContinueYouAgreeToSeresos")}{" "}
                 <span className="transaction--green-header">
-                  P2P Terms of Service
+                  {t("p2PTermsOfService")}
                 </span>
               </div>
             </label>
@@ -577,18 +592,19 @@ ${symbol.current}`;
               type="submit"
               onClick={buyNowSubmitHandle}
             >
-              <div className="loader --d-none"></div>Buy now
+              <div className="loader --d-none"></div>
+              {t("buyNow")}
             </button>
           </form>
         </div>
-        <h3 className="transaction--bold">Advertisement informations</h3>
+        <h3 className="transaction--bold">{t("advertisementInformations")}</h3>
         <div className="box transaction__box">
           <div className="transaction__box-item">
-            <span>Price:</span>
+            <span>{t("price")}:</span>
             <span id="transaction__price"></span>
           </div>
           <div className="transaction__box-item amount">
-            <span>Amount limits:</span>
+            <span>{t("amountLimits")}:</span>
             <span className="transaction__box-amount-container">
               <span
                 id="transactionAmountMini"
@@ -602,34 +618,34 @@ ${symbol.current}`;
             </span>
           </div>
           <div className="transaction__box-item">
-            <span>Method:</span>
+            <span>{t("method")}:</span>
             <span id="transactionBankName" className="transaction--bold">
               Vietcombank
             </span>
           </div>
           <div className="transaction__box-item">
-            <span>Payment window:</span>
-            <span>15 minutes</span>
+            <span>{t("paymentWindow")}:</span>
+            <span>15 {t("minutes")}</span>
           </div>
         </div>
         <h3 className="transaction--bold">infomation about partners</h3>
         <div className="box transaction__box">
           <div className="transaction__box-item">
-            <span>Username:</span>
+            <span>{t("username")}:</span>
             <span id="transactionUserName" className="transaction--green">
               queencoin9999
             </span>
           </div>
           <div className="transaction__box-item">
-            <span>Status:</span>
-            <span>Online</span>
+            <span>{t("status")}:</span>
+            <span>{t("online")}</span>
           </div>
           <div className="transaction__box-item">
-            <span>Country:</span>
+            <span>{t("country")}:</span>
             <span>Việt Nam</span>
           </div>
           <div className="transaction__box-item">
-            <span>Feedback score:</span>
+            <span>{t("feedbackScore")}:</span>
             <span>😃 X978</span>
           </div>
           <div className="transaction__box-item">
@@ -662,9 +678,11 @@ ${symbol.current}`;
               <i className="fa-solid fa-comments"></i>
             </div>
             <div className="transaction__chat">
-              <div className="transaction__chat-header">Need more help?</div>
+              <div className="transaction__chat-header">
+                {t("needMoreHelp")}?
+              </div>
               <div className="transaction__chat-text">
-                Contact Customer support via{" "}
+                {t("contactCustomerSupportVia")}{" "}
                 <span className="transaction--green">Online support.</span> We
                 are always ready to help
               </div>

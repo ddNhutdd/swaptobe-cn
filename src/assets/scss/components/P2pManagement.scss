@@ -19,7 +19,7 @@
 
                 .p2pManagement__header-tab-item {
                     font-size: 17px;
-                    width: 90px;
+                    width: 100px;
                     height: 50px;
                     border-bottom: 1px solid $background-color-4;
                     border-top-left-radius: 5px;
@@ -30,6 +30,7 @@
                     gap: 5px;
 
                     &:last-child {
+                        width: auto;
                         flex-grow: 1;
                     }
 

@@ -2,7 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Empty, Pagination, Spin, Modal } from "antd";
 import { useSelector } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+import i18n from "src/translation/i18n";
 import {
   addClassToElementById,
   getClassListFromElementById,
@@ -10,7 +11,12 @@ import {
   getLocalStorage,
   setLocalStorage,
 } from "src/util/common";
-import { api_status, localStorageVariable, url } from "src/constant";
+import {
+  api_status,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import {
   getListAdsBuy,
   getListAdsSell,
@@ -24,6 +30,7 @@ export default function P2PTrading2({ history }) {
   // The list of users selling coins must be placed in the buy section on the interface.
   // The list of users buying coins must be placed in the sell section on the interface.
   const coin = getLocalStorage(localStorageVariable.coin);
+  const { t } = useTranslation();
   const coinFromRedux = useSelector(getCoin);
   const callApiSellListStatus = useRef(api_status.pending);
   const callApiBuyListStatus = useRef(api_status.pending);
@@ -69,7 +76,10 @@ export default function P2PTrading2({ history }) {
     addClassToElementById("buyLoader", "--d-none");
   };
   const showBuySectionLoader = function () {
-    getClassListFromElementById("buyLoader").remove("--d-none");
+    const ele = getClassListFromElementById("buyLoader");
+    if (ele) {
+      ele.remove("--d-none");
+    }
   };
   const closeBuySectionEmpty = function () {
     addClassToElementById("buyEmpty", "--d-none");
@@ -87,7 +97,10 @@ export default function P2PTrading2({ history }) {
     addClassToElementById("sellLoader", "--d-none");
   };
   const showSellSectionLoader = function () {
-    getClassListFromElementById("sellLoader").remove("--d-none");
+    const ele = getClassListFromElementById("sellLoader");
+    if (ele) {
+      ele.remove("--d-none");
+    }
   };
   const closeSellSectionEmpty = function () {
     addClassToElementById("sellEmpty", "--d-none");
@@ -183,6 +196,7 @@ export default function P2PTrading2({ history }) {
     const { array, total } = await fnFetch(page);
     closeBuySectionLoader();
     const containerElement = getElementById("buyContent");
+    if (!containerElement) return;
     containerElement.innerHTML = "";
     if (!array || array.length <= 0) {
       showBuySectionEmpty();
@@ -227,7 +241,6 @@ export default function P2PTrading2({ history }) {
           <td>${t("createdAt")}:</td>
           <td>${item.created_at}</td>
         </tr>
-        
             </tbody>
           </table>
         </div>
@@ -261,6 +274,7 @@ export default function P2PTrading2({ history }) {
     const { array, total } = await fnFetch(page);
     closeSellSectionLoader();
     const containerElement = getElementById("sellContent");
+    if (!containerElement) return;
     containerElement.innerHTML = "";
     if (!array || array.length <= 0) {
       showSellSectionEmpty();
@@ -292,12 +306,11 @@ export default function P2PTrading2({ history }) {
                   <td>${t("createdAt")}:</td>
                   <td>${item.created_at}</td>
                 </tr>
-                
               </tbody>
             </table>
           </div>
           <div class="item4">
-            <button class="sell-coin"  name="${item.id}">${"Sell"}</button>
+            <button class="sell-coin" name="${item.id}">${t("sell")}</button>
           </div>
         </div>`;
       }
@@ -493,6 +506,14 @@ export default function P2PTrading2({ history }) {
   };
   //
   useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    i18n.on("languageChanged", () => {
+      loadSectionBuy(buySectionPage);
+      loadSectionSell(sellSectionPage);
+    });
+    //
     socket.once("listCoin", (resp) => {
       listCoin.current = resp;
       const eleBuy = getElementById("p2ptrading2CoinBuyModal");

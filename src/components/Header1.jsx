@@ -162,7 +162,7 @@ export default function Header1({ history }) {
                   className="header1__subMenu-item"
                 >
                   <div className="header1_icon-container">
-                    <i className="fa-solid fa-rectangle-ad"></i>
+                    <i className="fa-solid fa-comments-dollar"></i>
                   </div>
                   {t("p2pHistory")}
                 </div>

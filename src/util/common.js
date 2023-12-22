@@ -228,6 +228,7 @@ export const querySelector = function (cssSelector) {
 };
 export const addClassToElementById = function (id, classname) {
   let element = document.getElementById(id);
+  if (!element) return;
   if (!element.classList.contains(classname)) {
     element.classList.add(classname);
   }

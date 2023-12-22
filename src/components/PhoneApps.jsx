@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { defaultLanguage, localStorageVariable } from "src/constant";
+import { getLocalStorage } from "src/util/common";
+import i18n, { availableLanguage } from "src/translation/i18n";
+import { useLocation } from "react-router-dom";
 function PhoneApps() {
+  const { t } = useTranslation();
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname === "/") {
+      i18n.changeLanguage(availableLanguage.en);
+    } else {
+      const language =
+        getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+      i18n.changeLanguage(language);
+    }
+  }, []);
   return (
     <div className="phone__apps">
       <div className="container">
         <div className="home__app__content">
           <div className="home__app__left">
-            <h3>Sereso Apps</h3>
+            <h3>{t("seresoApps")}</h3>
             <p className="home__app__small-header">
-              Trading whenever and wherever you are!
+              {t("tradingWheneverAndWhereverYouAre")}
             </p>
+            <p>{t("compatibleWithIOSAndroidWebsite")}</p>
             <p>
-              Sereso is compatible with iOS, Android, Website, intuitive user
-              interface and easy navigation. Easily pair your web wallet with a
-              mobile device by scanning a QR code
-            </p>
-            <p>
-              Click to download app store for ios operating system, click
-              download google play for android OS
+              {t("downloadAppStoreForIOSOperatingSystem")}{" "}
+              {t("downloadGooglePlayForAndroidOS")}
             </p>
             <div className="home__app__image-container">
               <img src={process.env.PUBLIC_URL + "/img/ios.png"} alt="ios" />
