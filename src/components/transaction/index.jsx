@@ -259,6 +259,9 @@ ${symbol.current}`;
             case "You have a transaction order that has not yet been processed":
               showAlert(showAlertType.error, mess);
               break;
+            case "Your balance is insufficient":
+              showAlert(showAlertType.error, mess);
+              break;
             default:
               showAlert(showAlertType.error, "Fail");
               break;

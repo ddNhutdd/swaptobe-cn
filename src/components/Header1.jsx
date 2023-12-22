@@ -157,14 +157,14 @@ export default function Header1({ history }) {
                   onClick={(e) => {
                     e.stopPropagation();
                     walletMenuElement.current.classList.remove("show");
-                    history.push(url.ads_history);
+                    history.push(url.p2p_management);
                   }}
                   className="header1__subMenu-item"
                 >
                   <div className="header1_icon-container">
                     <i className="fa-solid fa-rectangle-ad"></i>
                   </div>
-                  {t("advertisingHistory")}
+                  {t("p2pHistory")}
                 </div>
               </div>
             </div>

@@ -244,3 +244,24 @@ export const companyCancelP2pCommand = function (data) {
     console.log(error);
   }
 };
+export const getListHistoryP2p = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListHistoryP2p", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListHistoryP2pPendding = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListHistoryP2pPendding", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListHistoryP2pWhere = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/getListHistoryP2pWhere", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

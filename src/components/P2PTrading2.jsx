@@ -489,7 +489,7 @@ export default function P2PTrading2({ history }) {
   };
   const createAdsBuy = function () {
     setLocalStorage(localStorageVariable.createAds, sellCoin.current);
-    history.push(url.create_ads_sell);
+    history.push(url.create_ads_buy);
   };
   //
   useEffect(() => {
