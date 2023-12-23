@@ -46,15 +46,11 @@ function ConfirmItem(props) {
   }, []);
   const timer = function () {
     return setInterval(() => {
-      const now = new Date();
-      const utcOffset = 7 * 60; // UTC+7
-      const localTime = new Date(
-        now.getTime() + (now.getTimezoneOffset() + utcOffset) * 60 * 1000
-      );
-
-      console.log(localTime);
-      const abs = calculateTimeDifference(localTime, deadLine.current);
-
+      const utcTime = new Date();
+      utcTime.setHours(utcTime.getHours() + 7);
+      const test = utcTime.toISOString();
+      console.log(test, deadLine);
+      const abs = calculateTimeDifference(test, deadLine.current);
       setCounter(() => formatTime(abs));
     }, 1000);
   };
