@@ -413,6 +413,18 @@
                         gap: 5px;
                         border-bottom-left-radius: 5px;
                         border-bottom-right-radius: 5px;
+
+                        .formWithdraw__Wallet-body-amount {
+                            display: flex;
+                            align-items: center;
+                            justify-content: flex-start;
+                            gap: 5px;
+
+                            img {
+                                width: 20px;
+                                height: 20px;
+                            }
+                        }
                     }
                 }
             }

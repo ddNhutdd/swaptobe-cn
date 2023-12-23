@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import CreateBuySell from "./components/CreateBuySell";
 import Login from "./components/Login";
@@ -25,7 +25,11 @@ import {
 } from "./redux/actions/currency.action";
 import { getFetchExchangeCount } from "./redux/constant/currency.constant";
 import socket from "./util/socket";
-import { setListCoinRealtime } from "./redux/actions/listCoinRealTime.action";
+import {
+  setListCoinRealtime,
+  setTotalAssetsBtcRealTime,
+  setTotalAssetsRealTime,
+} from "./redux/actions/listCoinRealTime.action";
 import { userWalletFetchCount } from "./redux/constant/coin.constant";
 import { coinUserWallet } from "./redux/actions/coin.action";
 import { roundDecimalValues } from "./util/common";
@@ -52,6 +56,7 @@ function App() {
   const getExchangeRateDisparityFetch = useSelector(
     getExchangeRateDisparityFetchCount
   );
+  const userWallet = useRef([]);
   const getExchange = function () {
     dispatch(currencySetExchangeFetchStatus(api_status.fetching));
     getExchangeApi()
@@ -84,7 +89,10 @@ function App() {
               )[0]?.price ?? 0;
             result[name] = roundDecimalValues(value, price);
           }
-          if (Object.keys(result)) dispatch(coinUserWallet(result));
+          if (Object.keys(result)) {
+            userWallet.current = result;
+            dispatch(coinUserWallet(result));
+          }
         })
         .catch((error) => console.log(error));
     });
@@ -117,6 +125,9 @@ function App() {
     socket.connect();
     socket.on("listCoin", (resp) => {
       dispatch(setListCoinRealtime(resp));
+      const total = calTotalAssets(resp, userWallet.current);
+      dispatch(setTotalAssetsRealTime(total));
+      dispatch(setTotalAssetsBtcRealTime(calTotalAssetsBtc(total, resp)));
     });
     //
     return () => {
@@ -132,6 +143,40 @@ function App() {
   useEffect(() => {
     getExchangeRateDisparityApi();
   }, [getExchangeRateDisparityFetch]);
+  const calTotalAssets = function (listCoinRealTime, userWallet) {
+    if (
+      !listCoinRealTime ||
+      listCoinRealTime.length <= 0 ||
+      !userWallet ||
+      userWallet.length <= 0
+    ) {
+      return -1;
+    }
+    let result = 0;
+    for (const [coinBalance, amount] of Object.entries(userWallet)) {
+      const coinName = coinBalance.replace("_balance", "").toUpperCase();
+      const price = listCoinRealTime.find(
+        (item) => item.name === coinName
+      )?.price;
+      if (price) {
+        result += +amount * price;
+      }
+    }
+    return result;
+  };
+  const calTotalAssetsBtc = function (totalUsd, listCoinRealTime) {
+    if (
+      !totalUsd ||
+      !listCoinRealTime ||
+      totalUsd <= 0 ||
+      listCoinRealTime.length <= 0
+    )
+      return;
+    const priceBtc = listCoinRealTime.find(
+      (item) => item.name === "BTC"
+    )?.price;
+    return roundDecimalValues(totalUsd / priceBtc, 100000000);
+  };
   return (
     <BrowserRouter>
       <ScrollToTop>

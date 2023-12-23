@@ -5,7 +5,10 @@ import { useHistory } from "react-router-dom";
 import { api_status, showAlertType, url } from "src/constant";
 import { showToast } from "src/function/showToast";
 import {
+  calculateTime,
+  calculateTimeDifference,
   formatStringNumberCultureUS,
+  formatTime,
   getElementById,
   hideElement,
   showElement,
@@ -22,6 +25,8 @@ function ConfirmItem(props) {
     sell: "sell",
   };
   const { index, content, profileId, render } = props;
+  const deadLine = useRef(calculateTime(content.created_at, 15, 0));
+  const [counter, setCounter] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const history = useHistory();
   const callApiStatus = useRef(api_status.pending);
@@ -32,6 +37,26 @@ function ConfirmItem(props) {
   useEffect(() => {
     loadData();
   }, [content]);
+  useEffect(() => {
+    const intervalId = timer();
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+  const timer = function () {
+    return setInterval(() => {
+      const now = new Date();
+      const utcOffset = 7 * 60; // UTC+7
+      const localTime = new Date(
+        now.getTime() + (now.getTimezoneOffset() + utcOffset) * 60 * 1000
+      );
+
+      console.log(localTime);
+      const abs = calculateTimeDifference(localTime, deadLine.current);
+
+      setCounter(() => formatTime(abs));
+    }, 1000);
+  };
   const showModalPayment = () => {
     setIsModalOpen(true);
     setTimeout(() => {
@@ -292,8 +317,7 @@ function ConfirmItem(props) {
                       </div>
                     </span>
                     <span className="confirm--red confirm__status-time">
-                      00 : 04: 59{" "}
-                      <span className="confirm__status-small">60</span>
+                      {counter}
                     </span>
                   </div>
                 </td>

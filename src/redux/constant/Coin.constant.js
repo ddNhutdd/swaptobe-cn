@@ -18,7 +18,6 @@ export const defaultState = {
 };
 
 export const getCoinCreateWallet = (state) => state.coinReducer.createWallet;
-export const getCoinTotalValue = (state) => state.coinReducer.totalValue;
 export const getCoinAll = (state) => state.coinReducer.totalValue;
 export const getAmountCoin = (state) => state.coinReducer.amountCoin;
 export const getUserWallet = (state) => state.coinReducer.userWallet;

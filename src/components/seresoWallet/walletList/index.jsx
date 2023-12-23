@@ -7,11 +7,7 @@ import { currency, localStorageVariable, url } from "src/constant";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { Spin } from "antd";
-import {
-  coinSetAmountCoin,
-  coinSetCoin,
-  coinTotalValue,
-} from "src/redux/actions/coin.action";
+import { coinSetAmountCoin, coinSetCoin } from "src/redux/actions/coin.action";
 import { useHistory } from "react-router-dom";
 import { getUserWallet } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
@@ -32,23 +28,7 @@ function SeresoWalletList() {
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
     i18n.changeLanguage(language);
   }, []);
-  useEffect(() => {
-    if (myListCoin && allCoin) {
-      //
-      let result = 0;
-      const listCoin = Object.keys(myListCoin);
-      listCoin.forEach((item) => {
-        const name = item.replace("_balance", "").toUpperCase();
-        const number = myListCoin[item];
-        const itemsCoin = allCoin.filter((item) => item.name === name);
-        if (itemsCoin.length) {
-          result += number * itemsCoin[0].price;
-        }
-      });
-      dispatch(coinTotalValue(result));
-      //
-    }
-  }, [myListCoin, allCoin]);
+
   const getMyCoin = function (coinName) {
     if (myListCoin) {
       const key = coinName.toLowerCase() + "_balance";

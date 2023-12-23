@@ -12,14 +12,8 @@ import {
   parseURLParameters,
   setLocalStorage,
 } from "src/util/common";
-import {
-  currency,
-  defaultLanguage,
-  localStorageVariable,
-  url,
-} from "src/constant";
+import { defaultLanguage, localStorageVariable, url } from "src/constant";
 import i18n from "src/translation/i18n";
-import { getCoinTotalValue } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { coinSetCoin } from "src/redux/actions/coin.action";
 import {
@@ -27,13 +21,13 @@ import {
   getShow,
   setShow,
 } from "src/redux/reducers/wallet2Slice";
+import { getTotalAssetsRealTime } from "src/redux/constant/listCoinRealTime.constant";
 function SwaptobeWallet() {
-  //
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
   const { search } = useLocation();
-  const totalValue = useSelector(getCoinTotalValue);
+  const totalValue = useSelector(getTotalAssetsRealTime);
   const userSelectedCurrentcy = useSelector(getCurrent);
   const exchange = useSelector(getExchange);
   const isLogin = useSelector((root) => root.loginReducer.isLogin);
@@ -132,10 +126,8 @@ function SwaptobeWallet() {
             <div className="left">
               <div>{t("estimatedAssetsValue")}</div>
               <div>
-                <span id="showTotalValue"></span>
-                {userSelectedCurrentcy === currency.usd && " USD"}
-                {userSelectedCurrentcy === currency.eur && " EUR"}
-                {userSelectedCurrentcy === currency.vnd && " VND"}
+                <span id="showTotalValue"></span>{" "}
+                {userSelectedCurrentcy.toUpperCase()}
               </div>
             </div>
             <div className="right">

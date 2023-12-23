@@ -6,3 +6,17 @@ export const setListCoinRealtime = function (payload) {
     payload,
   };
 };
+
+export const setTotalAssetsRealTime = function (payload) {
+  return {
+    type: listCoinRealTimeConstant.setTotalAssetsRealTime,
+    payload,
+  };
+};
+
+export const setTotalAssetsBtcRealTime = function (payload) {
+  return {
+    type: listCoinRealTimeConstant.setTotalAssetsBtcRealTime,
+    payload,
+  };
+};

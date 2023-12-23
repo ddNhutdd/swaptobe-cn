@@ -10,6 +10,7 @@ import {
 import {
   api_status,
   defaultLanguage,
+  image_domain,
   localStorageVariable,
   showAlertType,
   url,
@@ -267,7 +268,14 @@ export default function Swap() {
               <div className="swap__history-item-main">
                 <span>{item.coin_key}: </span>
                 <span className="swap__history-minus">
-                  -{item.amount} coins
+                  -{item.amount}{" "}
+                  <img
+                    src={image_domain.replace(
+                      "USDT",
+                      item.coin_key.toUpperCase()
+                    )}
+                    alt={item.coin_key}
+                  />
                 </span>
                 <span>{item.wallet}: </span>
                 <span className="swap__history-add">
@@ -278,7 +286,13 @@ export default function Swap() {
                       (it) => it.name === item.wallet
                     )[0]?.price
                   )}{" "}
-                  coins
+                  <img
+                    src={image_domain.replace(
+                      "USDT",
+                      item.wallet.toUpperCase()
+                    )}
+                    alt={item.wallet}
+                  />
                 </span>
               </div>
               <div className="swap__history-final">

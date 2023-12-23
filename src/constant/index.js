@@ -39,6 +39,8 @@ export const api_url = {
   refreshToken: "api/user/refreshToken",
 };
 
+export const image_domain = "https://remitano.dk-tech.vn/images/USDT.png";
+
 export const showAlertType = {
   success: "success",
   error: "error",

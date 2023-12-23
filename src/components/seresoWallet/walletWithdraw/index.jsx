@@ -18,6 +18,7 @@ import {
   api_url,
   defaultLanguage,
   deploy_domain,
+  image_domain,
   localStorageVariable,
   showAlertType,
 } from "src/constant";
@@ -207,8 +208,17 @@ function FormWithdraw() {
                   <div>
                     {t("note")}: {item.note}
                   </div>
-                  <div>
-                    {t("amount")}: {item.amount}
+                  <div className="formWithdraw__Wallet-body-amount">
+                    {t("amount")}: {item.amount}{" "}
+                    {
+                      <img
+                        src={image_domain.replace(
+                          "USDT",
+                          item.wallet.toUpperCase()
+                        )}
+                        alt={item.wallet.toUpperCase()}
+                      />
+                    }
                   </div>
                 </div>
               </div>
@@ -318,12 +328,22 @@ function FormWithdraw() {
                 </div>
                 <div className="formWithdraw__Wallet-body">
                   <div>Coin: {item.coin_key.toUpperCase()}</div>
-                  <div>Amount: {item.amount}</div>
+                  <div className="formWithdraw__Wallet-body-amount">
+                    Amount: {item.amount}{" "}
+                    {
+                      <img
+                        src={image_domain.replace(
+                          "USDT",
+                          item.coin_key.toUpperCase()
+                        )}
+                        alt={item.coin_key.toUpperCase()}
+                      />
+                    }
+                  </div>
                   <div>Type : {item.type_exchange}</div>
                   <div>Note: {item.note}</div>
                   <div>From user: {item.address_form}</div>
                   <div>To user: {item.address_to}</div>
-                  {console.log(item)}
                 </div>
               </div>
             ))}

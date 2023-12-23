@@ -164,11 +164,32 @@
           .swap__history-add {
             color: $green;
             font-weight: bolder;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            img {
+              width: 20px;
+              height: 20px;
+              object-fit: cover;
+
+            }
           }
 
           .swap__history-minus {
             color: $red-1;
             font-weight: bolder;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            img {
+              width: 20px;
+              height: 20px;
+              object-fit: cover;
+            }
           }
         }
 

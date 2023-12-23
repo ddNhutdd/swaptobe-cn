@@ -20,6 +20,7 @@ import {
   url,
 } from "src/constant";
 import {
+  companyCancelP2p,
   getInfoP2p,
   getListAdsBuyPenddingToUser,
   getListAdsBuyToUser,
@@ -272,12 +273,24 @@ function AdsHistory() {
                       >
                         <Spin />
                       </div>
-                      <div
-                        className="spin-container --d-none"
-                        id={"adsHistoryActionButton" + item.id}
-                      >
-                        <button onClick={redirectConfirm.bind(null, item.id)}>
+                      <div className="ads-history-action-container">
+                        <button
+                          className="--d-none"
+                          id={"adsHistoryActionCheckButton" + item.id}
+                          onClick={redirectConfirm.bind(null, item.id)}
+                        >
                           Check
+                        </button>
+                        {item.type === 1 || item.type === 2 ? "" : ""}
+                        <button
+                          className={`--danger ${
+                            item.type === 1 || item.type === 2 ? "" : "--d-none"
+                          }`}
+                          onClick={cancelAdsClickHandle.bind(null, item.id)}
+                          id={"adsHistoryActionCancelButton" + item.id}
+                        >
+                          <div className="loader --d-none"></div>
+                          Cancel
                         </button>
                       </div>
                     </td>
@@ -299,17 +312,51 @@ function AdsHistory() {
   };
   const actionFulfilled = function (id) {
     const loader = getElementById("adsHistoryActionSpinner" + id);
-    const btn = getElementById("adsHistoryActionButton" + id);
+    const btn = getElementById("adsHistoryActionCheckButton" + id);
+    console.log(loader, btn);
     if (!loader || !btn) return;
     hideElement(loader);
     showElement(btn);
   };
   const actionRejected = function (id) {
     const loader = getElementById("adsHistoryActionSpinner" + id);
-    const btn = getElementById("adsHistoryActionButton" + id);
+    const btn = getElementById("adsHistoryActionCheckButton" + id);
     if (!loader || !btn) return;
     hideElement(loader);
     hideElement(btn);
+  };
+  const cancelAdsClickHandle = function (id) {
+    const btn = getElementById("adsHistoryActionCancelButton" + id);
+    if (!btn || btn.classList.contains("disabled")) return;
+    showLoaderButtonCancel();
+    companyCancelP2p({
+      idP2p: id,
+    })
+      .then((resp) => {
+        loadData();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        closeShowLoaderButtonCancel();
+      });
+  };
+  const showLoaderButtonCancel = function (id) {
+    const btn = getElementById("adsHistoryActionCancelButton" + id);
+    if (!btn) return;
+    const loader = btn.querySelector(".loader");
+    if (!loader) return;
+    showElement(loader);
+    if (!btn.classList.contains("disabled")) btn.classList.add("disabled");
+  };
+  const closeShowLoaderButtonCancel = function (id) {
+    const btn = getElementById("adsHistoryActionCancelButton" + id);
+    if (!btn) return;
+    const loader = btn.querySelector(".loader");
+    if (!loader) return;
+    hideElement(loader);
+    if (btn.classList.contains("disabled")) btn.classList.remove("disabled");
   };
   const loadData = function (page) {
     const act = action.current;
@@ -355,7 +402,7 @@ function AdsHistory() {
    * @returns Promise
    */
   const fetchApiGetInfoP2p = function (id) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       getInfoP2p({
         idP2p: id,
       })

@@ -256,3 +256,56 @@ export const debounce = (func, ms) => {
 export const capitalizeFirstLetter = function (str) {
   return str.replace(/(^\w{1}|\s+\w{1})/g, (letter) => letter.toUpperCase());
 };
+export const calculateTime = function (
+  inputString,
+  addMinutes,
+  subtractSeconds
+) {
+  const inputDate = new Date(inputString);
+  inputDate.setMinutes(inputDate.getMinutes() + addMinutes);
+  inputDate.setSeconds(inputDate.getSeconds() - subtractSeconds);
+  const resultString = inputDate.toISOString();
+  return resultString;
+};
+/**
+ * splits the datetime string into components
+ * @param {string} dateTimeString format 2023-12-22T14:20:32.000Z
+ * @returns obj {year, month, day, hour, minute, second}
+ */
+export const extractDateTimeComponents = function (dateTimeString) {
+  const dateTime = new Date(dateTimeString);
+  const year = dateTime.getUTCFullYear();
+  const month = dateTime.getUTCMonth() + 1;
+  const day = dateTime.getUTCDate();
+  const hour = dateTime.getUTCHours();
+  const minute = dateTime.getUTCMinutes();
+  const second = dateTime.getUTCSeconds();
+  return {
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+  };
+};
+export const calculateTimeDifference = function (
+  dateTimeString1,
+  dateTimeString2
+) {
+  const date1 = new Date(dateTimeString1);
+  const date2 = new Date(dateTimeString2);
+  const timeDifference = date2 - date1;
+  const secondsDifference = Math.abs(timeDifference / 1000);
+  return secondsDifference;
+};
+export const formatTime = function (seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  const formattedTime = `${hours}:${String(minutes).padStart(
+    2,
+    "0"
+  )}:${Math.floor(remainingSeconds).toString().padStart(2, "0")}`;
+  return formattedTime;
+};

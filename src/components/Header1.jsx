@@ -17,20 +17,22 @@ import {
 } from "src/util/common";
 import { currencySetCurrent } from "src/redux/actions/currency.action";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
-import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
-import { getUserWallet } from "src/redux/constant/coin.constant";
+import {
+  getTotalAssetsBtcRealTime,
+  getTotalAssetsRealTime,
+} from "src/redux/constant/listCoinRealTime.constant";
 import i18n from "src/translation/i18n";
 export default function Header1({ history }) {
   //
   const { isLogin, username } = useSelector((root) => root.loginReducer);
   const userSelectedCurrency = useSelector(getCurrent);
+  const totalAssetsRealTime = useSelector(getTotalAssetsRealTime);
+  const totalAssetsBtcRealTime = useSelector(getTotalAssetsBtcRealTime);
   const exchange = useSelector(getExchange);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const listOwnedCoins = useSelector(getUserWallet);
   const userMenuElement = useRef();
   const walletMenuElement = useRef();
-  const listOnCoinRealtime = useSelector(getListCoinRealTime);
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
@@ -45,31 +47,13 @@ export default function Header1({ history }) {
       window.removeEventListener("click", closeAllSubMenu);
     };
   }, []);
-  useEffect(() => {
-    if (
-      !exchange ||
-      exchange.length <= 0 ||
-      !userSelectedCurrency ||
-      !listOwnedCoins ||
-      listOwnedCoins <= 0 ||
-      listOnCoinRealtime?.current ||
-      listOnCoinRealtime?.current <= 0
-    )
-      return;
-    const filterExchange =
-      exchange.filter((item) => item.title === userSelectedCurrency)[0]?.rate ??
-      0;
-    const price =
-      listOnCoinRealtime.filter((item) => item.name === "BTC")[0]?.price || 0;
-    const amountCoinBTC = listOwnedCoins["btc_balance"];
-    const result = filterExchange * amountCoinBTC * price;
-    const showMoneyElement = document.getElementById("money");
-    if (showMoneyElement)
-      showMoneyElement.innerHTML = `${formatStringNumberCultureUS(
-        result.toFixed(3)
-      )} ${userSelectedCurrency}`;
-  }, [exchange, userSelectedCurrency, listOnCoinRealtime]);
   //
+  const showMoney = function (usd, currency, listExchange) {
+    if (!usd || !currency || !listExchange || listExchange.length <= 0)
+      return -1;
+    const rate = listExchange.find((item) => item.title === currency).rate;
+    return usd * rate;
+  };
   const logout = () => {
     localStorage.removeItem(localStorageVariable.user);
     localStorage.removeItem(localStorageVariable.token);
@@ -97,9 +81,6 @@ export default function Header1({ history }) {
       walletMenuElement.current.classList.remove("show");
     }
   };
-  const amountCoinBTC = function () {
-    return listOwnedCoins["btc_balance"];
-  };
   return (
     <header className="header1">
       <div className="container">
@@ -116,14 +97,21 @@ export default function Header1({ history }) {
                     <div className="header1_icon-container">
                       <i className="fa-brands fa-bitcoin"></i>
                     </div>
-                    {amountCoinBTC()} coin
+                    {totalAssetsBtcRealTime}
                   </div>
                   <div className="header1__subMenu-item">
                     <div className="header1_icon-container">
                       <i className="fa-solid fa-dollar-sign"></i>
                     </div>
-                    <div className="" id="money">
-                      00000
+                    <div id="money">
+                      {formatStringNumberCultureUS(
+                        showMoney(
+                          totalAssetsRealTime,
+                          userSelectedCurrency,
+                          exchange
+                        ).toFixed(3)
+                      )}{" "}
+                      {`${userSelectedCurrency}`}
                     </div>
                   </div>
                 </div>

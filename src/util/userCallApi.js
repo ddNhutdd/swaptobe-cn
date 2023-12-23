@@ -265,3 +265,10 @@ export const getListHistoryP2pWhere = function (data) {
     console.log(error);
   }
 };
+export const companyCancelP2p = function (data) {
+  try {
+    return axiosService.post("/api/p2pBank/cancelP2p", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
