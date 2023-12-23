@@ -172,6 +172,7 @@ function AdsHistory() {
     element.disabled = false;
   };
   const renderTable = async function (page, fn) {
+    if (!listCoin.current) return;
     closeContent();
     closeEmpty();
     showSpinner();

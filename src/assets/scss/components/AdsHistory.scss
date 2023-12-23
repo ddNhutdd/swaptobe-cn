@@ -1,6 +1,7 @@
 .ads-history {
-    margin-top: 90px;
+    margin-top: 100px;
     padding: 30px 0;
+    font-size: 15px;
 
     .container {
         @include container;
@@ -91,6 +92,7 @@
                 }
 
                 table {
+                    font-size: 15px;
 
                     @media screen and (max-width:576px) {
                         width: 100%;

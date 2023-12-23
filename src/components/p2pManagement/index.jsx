@@ -20,15 +20,15 @@ import {
 function P2pManagement() {
   const { t } = useTranslation();
   const advertisingStatusType = {
-    all: t("all"),
-    buy: t("buy"),
-    sell: t("sell"),
-    pending: t("pending"),
+    all: "all",
+    buy: "buy",
+    sell: "sell",
+    pending: "pending",
   };
   const radioAcitonType = {
-    all: t("all"),
-    buy: t("buy"),
-    sell: t("sell"),
+    all: "all",
+    buy: "buy",
+    sell: "sell",
   };
   const [advertisingStatus, setAdvertisingStatus] = useState(
     advertisingStatusType.all
@@ -41,7 +41,6 @@ function P2pManagement() {
   );
   const limit = useRef(10);
   const history = useHistory();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(1);
   const [selectedCoin, setSelectedCoin] = useState("All");
@@ -57,6 +56,9 @@ function P2pManagement() {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
+    i18n.on("languageChanged", () => {
+      loadDropdown();
+    });
     //
     document.addEventListener("click", closeDropdown);
     fetchApiGetListAllCoin();
@@ -77,10 +79,11 @@ function P2pManagement() {
     );
     const ele = Array.from(container).find((item) => {
       const span = item.querySelector("span");
-      if (span.innerHTML.toLowerCase() === advertisingStatus) return true;
+      if (span.innerHTML.toLowerCase() === t(advertisingStatus)) return true;
       else return false;
     });
-    if (ele) {
+
+    if (ele && dropdownSelected.current) {
       dropdownSelected.current.innerHTML = ele.innerHTML;
     }
   };
@@ -97,8 +100,8 @@ function P2pManagement() {
   const dropdownItemClick = function (e) {
     const element = e.target.closest(".p2pManagement__header-menu-item");
     dropdownSelected.current.innerHTML = element.innerHTML;
-    const ads = element.querySelector("span").textContent.toLowerCase();
-    switch (ads) {
+    const ads = element.id.split("-");
+    switch (ads.at(-1)) {
       case advertisingStatusType.all:
         setAdvertisingStatus(advertisingStatusType.all);
         fetchApiGetAllP2p(1);
@@ -472,6 +475,7 @@ function P2pManagement() {
             >
               <div
                 className="p2pManagement__header-menu-item"
+                id={"dropdown-item-" + advertisingStatusType.all}
                 onClick={dropdownItemClick}
               >
                 <i className="fa-solid fa-border-all"></i>
@@ -479,6 +483,7 @@ function P2pManagement() {
               </div>
               <div
                 className="p2pManagement__header-menu-item"
+                id={"dropdown-item-" + advertisingStatusType.buy}
                 onClick={dropdownItemClick}
               >
                 <i className="fa-solid fa-cart-shopping"></i>
@@ -486,6 +491,7 @@ function P2pManagement() {
               </div>
               <div
                 className="p2pManagement__header-menu-item"
+                id={"dropdown-item-" + advertisingStatusType.sell}
                 onClick={dropdownItemClick}
               >
                 <i className="fa-brands fa-sellcast"></i>
@@ -493,6 +499,7 @@ function P2pManagement() {
               </div>
               <div
                 className="p2pManagement__header-menu-item"
+                id={"dropdown-item-" + advertisingStatusType.pending}
                 onClick={dropdownItemClick}
               >
                 <i className="fa-solid fa-spinner"></i>

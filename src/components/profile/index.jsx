@@ -83,7 +83,7 @@ function Profile() {
     api_status.pending
   );
   const [listPaymentTotalItems, setListPaymentTotalItems] = useState(1);
-  const [listPaymentCurrentPage, setListPaymentCurrentPage] = useState(1);
+  const [, setListPaymentCurrentPage] = useState(1);
 
   useEffect(() => {
     const dataUser = getLocalStorage(localStorageVariable.user);

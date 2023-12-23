@@ -1,6 +1,6 @@
 .p2ptrading {
   width: 100%;
-  padding-top: 90px;
+  padding-top: 100px;
   background: url(../../../../public/img/background.jpg);
   background-position: center;
   background-size: cover;
@@ -45,7 +45,8 @@
         span {
           font-weight: bold;
           font-size: 20px;
-          color: $primary-color;
+          color: white;
+
         }
       }
     }
@@ -152,6 +153,10 @@
           text-decoration: underline;
         }
       }
+    }
+
+    .box {
+      background-color: #126e76de;
     }
   }
 }

@@ -193,11 +193,7 @@ export default function P2PTrading({ history }) {
                 )}
                 <span> {userSelectedCurrency}</span>
               </div>
-              <Button
-                onClick={buyNowClickHandle}
-                className="buyNowBtn"
-                size="large"
-              >
+              <Button onClick={buyNowClickHandle} className="buyNowBtn">
                 {t("buyNow")}
               </Button>
             </div>
@@ -212,11 +208,7 @@ export default function P2PTrading({ history }) {
                 )}
                 <span> {userSelectedCurrency}</span>
               </div>
-              <Button
-                onClick={sellNowClickHandle}
-                className="sellNowBtn"
-                size="large"
-              >
+              <Button onClick={sellNowClickHandle} className="sellNowBtn">
                 {t("sellNow")}
               </Button>
             </div>
