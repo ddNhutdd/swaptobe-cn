@@ -16,7 +16,7 @@
     }
 
     .confirm--break {
-        word-break: break-all
+        word-break: break-all;
     }
 
     .container {
@@ -43,7 +43,7 @@
                             min-width: 112px;
                             font-weight: bold;
 
-                            @media screen and (max-width:576px) {
+                            @media screen and (max-width: 576px) {
                                 min-width: auto;
                             }
                         }
@@ -117,4 +117,57 @@
             font-weight: bold;
         }
     }
+}
+
+.descriptionText {
+    padding: 0 20px;
+}
+
+.paymentContent {
+    padding: 20px;
+    font-family: "Open Sans", "Roboto", sans-serif;
+
+    .ant-descriptions-item-content {
+        span {
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: flex-start;
+
+            @media screen and (min-width: 600px) {
+                justify-content: space-between;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            div {
+                &:first-of-type {
+                    flex-grow: 1;
+                }
+            }
+        }
+    }
+
+    .icon-copy {
+        color: $text-color-3;
+        cursor: pointer;
+    }
+}
+
+.green-text {
+    font-weight: 600;
+    color: $green;
+    display: inline-block;
+}
+
+.blue-text {
+    font-weight: 600;
+    display: inline-block;
+    color: $text-color-8;
+}
+
+.red-text {
+    font-weight: 600;
+    display: inline-block;
+    color: $text-color-4;
 }

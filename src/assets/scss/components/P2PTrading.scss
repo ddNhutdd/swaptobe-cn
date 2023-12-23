@@ -5,12 +5,14 @@
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  color: white;
+  height: 90vh;
 
   .container {
     @include container1;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 
     .top {
@@ -19,18 +21,17 @@
       justify-content: space-between;
       align-items: center;
 
-      @media screen and (max-width:576px) {
+      @media screen and (max-width: 576px) {
         flex-direction: column;
         gap: 15px;
         align-items: flex-start;
       }
 
-
       div {
         display: flex;
         align-items: center;
 
-        @media screen and (max-width:576px) {
+        @media screen and (max-width: 576px) {
           align-items: flex-start;
         }
 
@@ -46,7 +47,6 @@
           font-weight: bold;
           font-size: 20px;
           color: white;
-
         }
       }
     }
@@ -58,7 +58,7 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 30px;
 
-      @media screen and (max-width:576px) {
+      @media screen and (max-width: 576px) {
         grid-template-columns: repeat(1, 1fr);
       }
 
@@ -148,6 +148,7 @@
         margin-left: 8px;
         color: $primary-color;
         cursor: pointer;
+        color: #e6e6e6;
 
         &:hover {
           text-decoration: underline;
@@ -168,12 +169,12 @@
         .ant-table-container {
           .ant-table-content {
             table {
-              @media screen and (max-width:576px) {
+              @media screen and (max-width: 576px) {
                 width: 100%;
               }
 
               .ant-table-thead {
-                @media screen and (max-width:576px) {
+                @media screen and (max-width: 576px) {
                   width: 100%;
                   display: table;
                   position: sticky;
@@ -182,20 +183,20 @@
                 }
 
                 tr {
-                  @media screen and (max-width:576px) {
+                  @media screen and (max-width: 576px) {
                     width: 100%;
                     display: flex;
                     flex-wrap: wrap;
                   }
 
                   th {
-                    @media screen and (max-width:576px) {
+                    @media screen and (max-width: 576px) {
                       display: block;
                       width: 50%;
                     }
 
                     &:nth-of-type(2) {
-                      @media screen and (max-width:576px) {
+                      @media screen and (max-width: 576px) {
                         border-top-right-radius: 5px;
                       }
                     }
@@ -204,7 +205,7 @@
               }
 
               .ant-table-tbody {
-                @media screen and (max-width:576px) {
+                @media screen and (max-width: 576px) {
                   width: 100%;
                   display: block;
 
@@ -214,27 +215,27 @@
                     }
                   }
 
-                  &>tr {
-                    @media screen and (max-width:576px) {
+                  & > tr {
+                    @media screen and (max-width: 576px) {
                       width: 100%;
                       display: flex;
                       flex-wrap: wrap;
                     }
 
-                    &>td {
+                    & > td {
                       &:nth-of-type(1) {
-                        @media screen and (max-width:576px) {
+                        @media screen and (max-width: 576px) {
                           border-bottom: none;
                         }
                       }
 
                       &:nth-of-type(2) {
-                        @media screen and (max-width:576px) {
+                        @media screen and (max-width: 576px) {
                           border-bottom: none;
                         }
                       }
 
-                      @media screen and (max-width:576px) {
+                      @media screen and (max-width: 576px) {
                         display: block;
                         width: 50%;
                       }
