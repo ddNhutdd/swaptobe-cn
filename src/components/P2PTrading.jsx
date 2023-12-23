@@ -242,6 +242,11 @@ export default function P2PTrading({ history }) {
                     }, 0);
                   },
                 }}
+                onRow={(record) => {
+                  return {
+                    onClick: () => handleSelectedRow(record),
+                  };
+                }}
               />
             ) : (
               <div className="p2ptrading__model-spinner-container">

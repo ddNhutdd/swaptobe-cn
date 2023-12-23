@@ -551,7 +551,7 @@ export default function P2PTrading2({ history }) {
                 className="buyChoiceCoin"
               >
                 {buyCoin.current}
-              </button>
+              </button>{" "}
               ?
             </span>
           </div>

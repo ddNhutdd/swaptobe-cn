@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Modal, Spin } from "antd";
+import { Descriptions, Modal, Spin } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { api_status, showAlertType, url } from "src/constant";
@@ -29,6 +29,7 @@ function ConfirmItem(props) {
   const ownerAccount = useRef();
   const numberBank = useRef();
   const idCommand = useRef();
+  const isMobileViewport = window.innerWidth < 600;
   useEffect(() => {
     loadData();
   }, [content]);
@@ -385,11 +386,13 @@ function ConfirmItem(props) {
           </div>
         </div>
         <Modal
-          title="Payment Info"
+          title={<div style={{ textAlign: "center" }}>Payment Info</div>}
           open={isModalOpen}
           onOk={handleCancelModalPayment}
           onCancel={handleCancelModalPayment}
-          cancelButtonProps={{ hidden: true }}
+          okText="Gửi hình thanh toán"
+          cancelText="Đóng"
+          width={800}
         >
           <div className="paymentModalContent">
             <table className="paymentModalContent">
@@ -408,6 +411,71 @@ function ConfirmItem(props) {
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div className="descriptionText">
+            Bạn đang mua <span className="red-text">0.01 Bitcoint (BTC)</span>{" "}
+            từ <span className="blue-text">Phố Bitcoin</span> về địa chỉ ví{" "}
+            <span className="red-text">
+              0x123456abcdef54212351ffasf12421asfasfad1231as
+            </span>
+            .{" "}
+            <span className="blue-text">
+              Vui lòng thanh toán đúng số tiền, nội dung và số tài khoản bên
+              dưới.
+            </span>
+          </div>
+
+          <div className="paymentContent">
+            <Descriptions
+              column={1}
+              title=""
+              bordered
+              size={isMobileViewport ? "small" : "middle"}
+            >
+              <Descriptions.Item label="Số tiền">
+                <div className="green-text">11148743</div>
+                <div className="icon-copy">
+                  <i class="fa-solid fa-copy"></i>
+                </div>
+              </Descriptions.Item>
+              <Descriptions.Item label="Nội dung">
+                <div className="green-text">NVHL1703305859</div>
+                <div className="icon-copy">
+                  <i class="fa-solid fa-copy"></i>
+                </div>
+              </Descriptions.Item>
+              <Descriptions.Item label="Số tài khoản">
+                <div>
+                  <div>
+                    <div className="green-text">19038310193011</div> tại{" "}
+                    <div className="blue-text">Techcombank</div>
+                  </div>
+                  <div>
+                    Chủ tài khoản:{" "}
+                    <div className="red-text">Lê Thị Thu Dung</div>
+                  </div>
+                </div>
+                <div className="icon-copy">
+                  <i class="fa-solid fa-copy"></i>
+                </div>
+              </Descriptions.Item>
+              <Descriptions.Item label="Hoặc số tài khoản khác">
+                <div>
+                  <div>
+                    <div className="green-text">1903831019</div> tại{" "}
+                    <div className="blue-text">Techcombank</div>
+                  </div>
+                  <div>
+                    Chủ tài khoản:{" "}
+                    <div className="red-text">Lê Thị Thu Dung</div>
+                  </div>
+                </div>
+                <div className="icon-copy">
+                  <i class="fa-solid fa-copy"></i>
+                </div>
+              </Descriptions.Item>
+            </Descriptions>
           </div>
         </Modal>
       </div>
