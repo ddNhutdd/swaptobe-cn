@@ -1,6 +1,7 @@
 .p2ptrading2 {
   margin: auto;
   padding: 30px;
+  background: $new-background-3;
 
   @media screen and (max-width: 576px) {
     padding-left: 0;
@@ -12,13 +13,18 @@
 
     .record-content {
       margin-top: 12px;
-      background-color: white;
-      padding: 20px;
+      background-color: $new-background-5;
+      padding: 10px 10px;
       font-size: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 15px;
+      box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+
+      @media screen and (min-width: 480px) {
+        padding: 10px 15px;
+      }
 
       @media screen and(max-width:992px) {
         flex-direction: column;
@@ -27,7 +33,7 @@
 
       @media screen and(max-width:576px) {
         align-items: stretch;
-        padding: 16px;
+        // padding: 16px;
       }
 
       table {
@@ -86,6 +92,10 @@
           gap: 5px;
           font-size: 15px;
           text-transform: capitalize;
+          line-height: 1;
+          width: 100%;
+          text-align: center;
+          justify-content: center;
 
           &.buy-coin {
             background-color: $green;
@@ -107,7 +117,8 @@
     }
 
     .buy {
-      background-color: whitesmoke;
+      background-color: $new-background-4;
+      color: $new-text-color-white;
       padding: 30px;
       border-radius: 5px;
 
@@ -116,14 +127,14 @@
       }
 
       .buy-title {
-        font-size: 18px;
+        font-size: 20px;
         display: flex;
         align-items: center;
-        font-weight: 700;
+        font-weight: 600;
         letter-spacing: 0.5px;
 
         @media screen and (max-width: 576px) {
-          font-size: 16px;
+          font-size: 18px;
         }
 
         i {
@@ -142,11 +153,11 @@
           background-color: $transparent;
           border-radius: 5px;
           border: 1px solid $background-color-4;
-          padding: 0 5px;
+          padding: 0 10px;
           transition: 0.2s;
 
           &:hover {
-            background-color: $header2-background;
+            background-color: $new-background-5;
             color: $white;
             cursor: pointer;
           }
@@ -158,14 +169,19 @@
           background-color: $green;
           border: none;
           margin-top: 16px;
-          padding: 8px 20px;
+          padding: 8px 16px;
           border-radius: 5px;
           transition: 0.2s;
           color: $white;
           cursor: pointer;
+          line-height: 1;
 
           &:hover {
             opacity: 0.8;
+          }
+
+          @media screen and (min-width: 480px) {
+            padding: 10px 20px;
           }
         }
       }
@@ -176,18 +192,27 @@
         width: 200px;
         display: flex;
         gap: 16px;
+        color: $new-text-color-black;
+        line-height: 1;
 
         button {
           @include userMainButton;
-          padding-top: 5px;
-          padding-bottom: 5px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        input {
+          outline: none;
+          border: 0;
+          font-size: 14px;
         }
       }
     }
 
     .sell {
+      background-color: $new-background-4;
+      color: $new-text-color-white;
       margin-top: 30px;
-      background-color: whitesmoke;
       padding: 30px;
       border-radius: 5px;
 
@@ -196,14 +221,14 @@
       }
 
       .sell-title {
-        font-size: 18px;
+        font-size: 20px;
         display: flex;
         align-items: center;
-        font-weight: 700;
+        font-weight: 600;
         letter-spacing: 0.5px;
 
         @media screen and (max-width: 576px) {
-          font-size: 16px;
+          font-size: 18px;
         }
 
         i {
@@ -222,7 +247,7 @@
           background-color: $transparent;
           border-radius: 5px;
           border: 1px solid $background-color-4;
-          padding: 0 5px;
+          padding: 0 10px;
           transition: 0.2s;
 
           &:hover {
@@ -239,14 +264,19 @@
           border: none;
           border: none;
           margin-top: 16px;
-          padding: 8px 20px;
+          padding: 8px 16px;
           border-radius: 5px;
           transition: 0.2s;
           color: $white;
           cursor: pointer;
+          line-height: 1;
 
           &:hover {
             opacity: 0.8;
+          }
+
+          @media screen and (min-width: 480px) {
+            padding: 10px 20px;
           }
         }
       }
@@ -257,11 +287,19 @@
         width: 200px;
         display: flex;
         gap: 16px;
+        color: $new-text-color-black;
+        line-height: 1;
 
         button {
           @include userMainButton;
-          padding-top: 5px;
-          padding-bottom: 5px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        input {
+          outline: none;
+          border: 0;
+          font-size: 14px;
         }
       }
     }

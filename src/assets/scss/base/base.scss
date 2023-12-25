@@ -1,10 +1,153 @@
-$primary-color: #255965;
+// $primary-color: #255965;
+// $primary-color-dark: #27133a;
+// $primary-color-light: #9b59b6;
+// $primary-color-super-light: #f7e4ff;
+// $header-background: #087972;
+// $header2-background: #255965;
+// $header2-background-light: #255965cc;
+
+// //
+// $admin-background: #011022;
+// $admin-background-light: #34404e;
+// $admin-background-2: #232323;
+// $admin-text-color: rgba(255, 255, 255, 0.85);
+// $admin-line-color: #303030;
+// $admin-line-color-2: #4b4b4b;
+// $transparent: transparent;
+// $white: #fff;
+// $black: black;
+// $green-1: #07ad87;
+// $blue-1: #1890ff;
+// $footer-background: #e5e5e5;
+// $footer-text-1: #757575;
+// $gray-background-1: #ebecf0;
+// $text-color-1: #49474a;
+// $text-color-2: #212529;
+// $text-color-3: #2a5872;
+// $text-color-4: #bc2634;
+// $text-color-5: #b8b6b6;
+// $text-color-6: #495057;
+// $text-color-7: #007e95;
+// $text-color-8: #007c91;
+// $text-color-9: #5dc8b6;
+// $text-color-10: #5e5862;
+// $border-color-1: #f2f2f236;
+// $border-color-2: #f2f2f2;
+// $border-color-3: #bbbbbb;
+// $border-color-4: #ebebeb;
+// $border-color-5: #80bdff;
+// $border-color-6: #b8b7be;
+// $border-color-7: #2a8387;
+// $background-color-1: #4bbd99;
+// $background-color-2: #faa51a;
+// $background-color-3: #bde7f5;
+// $background-color-4: #7575755d;
+// $background-color-5: #e2e2e25b;
+// $background-color-6: #eaeaea;
+// $background-color-7: #797979;
+// $background-color-8: #a5a5a5;
+// $background-color-9: #111e285e;
+// $background-color-10: #255c5d;
+// $background-color-11: #37adb2;
+// $background-color-12: #329ca0;
+// $background-color-13: #0a717a;
+// $background-color-14: #00000096;
+// $background-color-15: #cdebf2;
+// $background-color-16: #195875;
+// $background-color-17: #195875;
+// $background-color-18: #02142b;
+// $background-color-19: #0c1d33;
+// $background-color-20: #f7f7f7;
+// $boxShadown-color-1: #00c297;
+// $boxShadown-color-2: #0000004d;
+// $boxShadown-color-3: #0000001f;
+// $boxShadown-color-4: #0000001a;
+// //
+// $green: #299d63;
+// $green-2: green;
+// $green-dark: #1c7749;
+// $green-light: #3ec984;
+// $green-light-2: #0080003b;
+// $green-1: #3e917a;
+// $red: #e65656;
+// $red-dark: #c33838;
+// $red-light: #fc7f7f;
+// $red-1: red;
+// $orange: orange;
+// $orange-1: #ffa71d;
+// $yellow: #b9bc2f;
+// $blue: blue;
+// $blue-light: #ceceff;
+
+// New theme
+$new-primary-color: #000000;
+$new-primary-color-1: #aa9145;
+$new-primary-color-2: #815225;
+$new-primary-color-3: #94612c;
+$new-primary-color-4: #a87438;
+$new-primary-color-5: #ba8843;
+$new-primary-color-6: #cb9950;
+$new-primary-color-7: #d4a553;
+$new-primary-color-8: #e6b362;
+$new-primary-color-9: #daae53;
+$new-primary-color-10: #d1a745;
+$new-primary-color-11: #cca23f;
+$new-primary-color-12: #bf9b33;
+$new-primary-color-13: #c49f35;
+$new-primary-color-14: #e2be36;
+$new-primary-color-15: #ecc939;
+$new-primary-color-16: #f7d342;
+$new-primary-color-17: #fbda3b;
+$new-primary-color-18: #f7d93b;
+
+$neutral-1: #000000;
+$neutral-2: #0d0d0d;
+$neutral-3: #1b1b1b;
+$neutral-4: #282828;
+$neutral-5: #363636;
+$neutral-6: #434343;
+$neutral-7: #515151;
+$neutral-8: #5e5e5e;
+$neutral-9: #6b6b6b;
+$neutral-10: #797979;
+$neutral-11: #868686;
+$neutral-12: #949494;
+$neutral-13: #a1a1a1;
+$neutral-14: #aeaeae;
+$neutral-15: #bcbcbc;
+$neutral-16: #c9c9c9;
+$neutral-17: #d7d7d7;
+$neutral-18: #e4e4e4;
+$neutral-19: #f2f2f2;
+$neutral-20: #ffffff;
+
+$new-text-color-1: $new-primary-color-18;
+$new-text-color-2: $new-primary-color-16;
+$new-text-color-3: $new-primary-color-14;
+$new-text-color-4: $new-primary-color-12;
+$new-text-color-5: $new-primary-color-10;
+$new-text-color-6: $new-primary-color-8;
+$new-text-color-7: $new-primary-color-6;
+$new-text-color-white: #fff;
+$new-text-color-black: #000;
+
+$new-background-1: $neutral-1;
+$new-background-2: $neutral-2;
+$new-background-3: $neutral-3;
+$new-background-4: $neutral-4;
+$new-background-5: $neutral-5;
+$new-background-6: $neutral-6;
+$new-background-white: #fff;
+
+//
+$primary-color: $neutral-4;
 $primary-color-dark: #27133a;
 $primary-color-light: #9b59b6;
 $primary-color-super-light: #f7e4ff;
-$header-background: #087972;
-$header2-background: #255965;
-$header2-background-light: #255965cc;
+$header-background: $neutral-3;
+$header2-background: $neutral-2;
+$header2-background-light: $neutral-4;
+
 //
 $admin-background: #011022;
 $admin-background-light: #34404e;
@@ -15,20 +158,20 @@ $admin-line-color-2: #4b4b4b;
 $transparent: transparent;
 $white: #fff;
 $black: black;
-$green-1: #07ad87;
+$green-1: $neutral-4;
 $blue-1: #1890ff;
 $footer-background: #e5e5e5;
 $footer-text-1: #757575;
 $gray-background-1: #ebecf0;
 $text-color-1: #49474a;
 $text-color-2: #212529;
-$text-color-3: #2a5872;
+$text-color-3: $neutral-4;
 $text-color-4: #bc2634;
 $text-color-5: #b8b6b6;
 $text-color-6: #495057;
-$text-color-7: #007e95;
-$text-color-8: #007c91;
-$text-color-9: #5dc8b6;
+$text-color-7: $black;
+$text-color-8: $neutral-4;
+$text-color-9: $neutral-4;
 $text-color-10: #5e5862;
 $border-color-1: #f2f2f236;
 $border-color-2: #f2f2f2;
@@ -36,8 +179,8 @@ $border-color-3: #bbbbbb;
 $border-color-4: #ebebeb;
 $border-color-5: #80bdff;
 $border-color-6: #b8b7be;
-$border-color-7: #2a8387;
-$background-color-1: #4bbd99;
+$border-color-7: $neutral-4;
+$background-color-1: $black;
 $background-color-2: #faa51a;
 $background-color-3: #bde7f5;
 $background-color-4: #7575755d;
@@ -46,28 +189,28 @@ $background-color-6: #eaeaea;
 $background-color-7: #797979;
 $background-color-8: #a5a5a5;
 $background-color-9: #111e285e;
-$background-color-10: #255c5d;
-$background-color-11: #37adb2;
-$background-color-12: #329ca0;
-$background-color-13: #0a717a;
+$background-color-10: #000000;
+$background-color-11: $neutral-4;
+$background-color-12: $neutral-4;
+$background-color-13: $neutral-4;
 $background-color-14: #00000096;
 $background-color-15: #cdebf2;
-$background-color-16: #195875;
-$background-color-17: #195875;
+$background-color-16: $neutral-4;
+$background-color-17: $neutral-4;
 $background-color-18: #02142b;
 $background-color-19: #0c1d33;
 $background-color-20: #f7f7f7;
-$boxShadown-color-1: #00c297;
+$boxShadown-color-1: $neutral-4;
 $boxShadown-color-2: #0000004d;
 $boxShadown-color-3: #0000001f;
 $boxShadown-color-4: #0000001a;
 //
 $green: #299d63;
-$green-2: green;
-$green-dark: #1c7749;
-$green-light: #3ec984;
-$green-light-2: #0080003b;
-$green-1: #3e917a;
+$green-2: $neutral-4;
+$green-dark: $neutral-4;
+$green-light: $neutral-4;
+$green-light-2: $neutral-4;
+$green-1: $neutral-4;
 $red: #e65656;
 $red-dark: #c33838;
 $red-light: #fc7f7f;
@@ -109,7 +252,11 @@ $blue-light: #ceceff;
   max-width: 960px;
   height: 100%;
   margin: 0 auto;
-  padding: 30px 30px;
+  padding: 15px;
+
+  @media screen and (min-width: 480px) {
+    padding: 30px;
+  }
 }
 
 @mixin container2 {
@@ -178,10 +325,10 @@ $blue-light: #ceceff;
 @mixin userMainButton {
   padding: 8px 20px;
   color: #fff;
-  background-color: #255965;
+  background-color: $new-primary-color-6;
   border: none;
   border-radius: 5px;
-  transition: 0.2s;
+  transition: background-color 0.3s ease-out;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -191,7 +338,7 @@ $blue-light: #ceceff;
   gap: 5px;
 
   &.disable {
-    background-color: $header2-background-light;
+    background-color: $new-primary-color-5;
     opacity: 0.7;
 
     &:hover {
@@ -200,7 +347,7 @@ $blue-light: #ceceff;
   }
 
   &:hover {
-    background-color: $header2-background-light;
+    background-color: $new-primary-color-5;
     cursor: pointer;
   }
 }

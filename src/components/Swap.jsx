@@ -266,34 +266,38 @@ export default function Swap() {
                 <i className="fa-solid fa-calendar"></i> {item.created_at}
               </div>
               <div className="swap__history-item-main">
-                <span>{item.coin_key}: </span>
-                <span className="swap__history-minus">
-                  -{item.amount}{" "}
-                  <img
-                    src={image_domain.replace(
-                      "USDT",
-                      item.coin_key.toUpperCase()
-                    )}
-                    alt={item.coin_key}
-                  />
-                </span>
-                <span>{item.wallet}: </span>
-                <span className="swap__history-add">
-                  +
-                  {roundDecimalValues(
-                    item.wallet_amount,
-                    allCoinPrice.current.filter(
-                      (it) => it.name === item.wallet
-                    )[0]?.price
-                  )}{" "}
-                  <img
-                    src={image_domain.replace(
-                      "USDT",
-                      item.wallet.toUpperCase()
-                    )}
-                    alt={item.wallet}
-                  />
-                </span>
+                <div className="item">
+                  <span>{item.coin_key}: </span>
+                  <span className="swap__history-minus">
+                    -{item.amount}{" "}
+                    <img
+                      src={image_domain.replace(
+                        "USDT",
+                        item.coin_key.toUpperCase()
+                      )}
+                      alt={item.coin_key}
+                    />
+                  </span>
+                </div>
+                <div className="item">
+                  <span>{item.wallet}: </span>
+                  <span className="swap__history-add">
+                    +
+                    {roundDecimalValues(
+                      item.wallet_amount,
+                      allCoinPrice.current.filter(
+                        (it) => it.name === item.wallet
+                      )[0]?.price
+                    )}{" "}
+                    <img
+                      src={image_domain.replace(
+                        "USDT",
+                        item.wallet.toUpperCase()
+                      )}
+                      alt={item.wallet}
+                    />
+                  </span>
+                </div>
               </div>
               <div className="swap__history-final">
                 <span>
@@ -349,8 +353,8 @@ export default function Swap() {
                 </div>
               </button>
             </div>
-            <div>
-              {t("balance")}:{" "}
+            <div className="balance">
+              <span className="balance-title">{t("balance")}: </span>
               {isLogin
                 ? userWallet[swapFromCoin.toLowerCase() + "_balance"] ?? 0
                 : ""}
