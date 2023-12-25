@@ -138,6 +138,14 @@ $new-background-4: $neutral-4;
 $new-background-5: $neutral-5;
 $new-background-6: $neutral-6;
 $new-background-white: #fff;
+$new-primary-background-1: $new-primary-color-18;
+$new-primary-background-2: $new-primary-color-16;
+$new-primary-background-3: $new-primary-color-14;
+$new-primary-background-4: $new-primary-color-12;
+$new-primary-background-5: $new-primary-color-10;
+$new-primary-background-6: $new-primary-color-8;
+$new-primary-background-7: $new-primary-color-6;
+$new-primary-background-8: $new-primary-color-4;
 
 //
 $primary-color: $neutral-4;
@@ -645,7 +653,11 @@ $blue-light: #ceceff;
 .box {
   background-color: whitesmoke;
   border-radius: 5px;
-  padding: 30px;
+  padding: 15px;
+
+  @media screen and (min-width: 480px) {
+    padding: 30px;
+  }
 }
 
 label {
@@ -656,7 +668,11 @@ label {
 h2.title {
   font-weight: bold;
   color: $primary-color;
-  margin-bottom: 25px;
+  margin-bottom: 16px;
+
+  @media screen and (min-width: 480px) {
+    margin-bottom: 25px;
+  }
 }
 
 .error {

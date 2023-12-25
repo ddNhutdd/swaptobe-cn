@@ -2,16 +2,17 @@
     width: 100%;
     padding: 50px 0;
     padding-top: 140px;
+    background: $new-background-3;
 
     .container {
         @include container;
 
         .title {
             font-weight: 500;
-            color: $text-color-3;
+            color: $new-text-color-6;
             margin-bottom: 0;
             margin-left: 10px;
-            font-size: 21px;
+            font-size: 24px;
             font-family: "Roboto", sans-serif;
             margin-bottom: 40px;
 
@@ -28,28 +29,32 @@
         }
 
         .info {
-            padding: 24px;
-            // background: linear-gradient(90.17deg, #4bbd99 1.71%, #007c91 97.5%);
-            background: rgb(8, 121, 114);
-            background: linear-gradient(90deg, rgba(8, 121, 114, 1) 0%, rgba(37, 89, 101, 1) 100%, rgba(37, 89, 101, 1) 100%);
-            border-radius: 19px;
-            color: $white;
+            padding: 20px 15px;
+            background: linear-gradient(90deg, $neutral-1 0%, $neutral-2 50%, $neutral-1 100%);
+            border-radius: 12px;
+            color: $new-text-color-3;
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 50px;
+            gap: 20px;
 
-            @media screen and (max-width:768px) {
+            @media screen and (max-width: 768px) {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+            }
+
+            @media screen and (min-width: 480px) {
+                padding: 24px;
             }
 
             .left {
                 display: flex;
                 flex-direction: column;
-                line-height: 39px;
-
+                line-height: 1;
+                gap: 16px;
+                font-size: 16px;
+                font-weight: 500;
 
                 div:nth-of-type(2) {
                     font-size: 28px;
@@ -57,15 +62,18 @@
                     font-family: "IBM Plex Sans";
                     word-break: break-word;
                 }
-
             }
 
             .right {
                 .right-text {
-                    font-size: 20px;
-                    font-weight: 300;
+                    font-size: 16px;
+                    font-weight: 500;
                     font-family: "IBM Plex Sans";
-                    margin-bottom: 5px;
+                    margin-bottom: 12px;
+
+                    @media screen and (min-width: 480px) {
+                        margin-bottom: 16px;
+                    }
                 }
 
                 .right-actions {
@@ -74,42 +82,55 @@
 
                     .buy {
                         border: none;
-                        background: $background-color-1;
+                        background: $new-primary-background-7;
+                        color: $new-text-color-white;
                         border-radius: 5px;
-                        padding: 5px 20px;
-                        font-size: 16px;
+                        padding: 8px 20px;
                         font-family: "IBM Plex Sans";
+                        font-size: 13px;
                         font-weight: 500;
                         cursor: pointer;
                         text-transform: uppercase;
-                        transition: .3s;
+                        transition: background ease 0.3s;
+                        letter-spacing: 0.5px;
+
+                        @media screen and (min-width: 480px) {
+                            font-size: 14px;
+                            font-weight: 700;
+                        }
 
                         &:hover {
-                            color: $text-color-4;
+                            background: $new-primary-background-6;
                         }
                     }
 
                     .sell {
                         margin-left: 30px;
                         border: none;
-                        background: $background-color-2;
+                        background: $neutral-3;
+                        border: 1px solid $new-primary-background-7;
+                        color: $new-primary-background-7;
                         border-radius: 5px;
-                        padding: 5px 20px;
-                        font-size: 16px;
+                        padding: 8px 20px;
+                        font-size: 13px;
+                        font-weight: 700;
                         font-family: "IBM Plex Sans";
-                        font-weight: 500;
                         text-transform: uppercase;
                         cursor: pointer;
-                        transition: .3s;
+                        transition: background ease 0.3s;
+                        letter-spacing: 0.5px;
+
+                        @media screen and (min-width: 480px) {
+                            font-size: 14px;
+                            font-weight: 700;
+                        }
 
                         &:hover {
-                            color: $text-color-4;
+                            background: $neutral-2;
                         }
                     }
                 }
             }
         }
-
-
     }
 }

@@ -1,18 +1,30 @@
 .create-buy-ads {
   width: 100%;
   padding-top: 90px;
+  background: $new-background-3;
 
   .container {
     @include container2;
 
+    @media screen and (min) {
+    }
+
+    .title {
+      font-size: 24px;
+    }
+
     .switch {
       display: block;
-      margin-bottom: 25px;
+      margin-bottom: 16px;
       cursor: pointer;
 
       &:hover {
         color: $primary-color;
         text-decoration: underline;
+      }
+
+      @media screen and (min-width: 480px) {
+        margin-bottom: 25px;
       }
     }
 
@@ -39,7 +51,11 @@
     .amount-area,
     .payment-area,
     .button-area {
-      margin-top: 40px;
+      margin-top: 30px;
+
+      @media screen and (min-width: 480px) {
+        margin-top: 40px;
+      }
 
       .field {
         margin-bottom: 18px;

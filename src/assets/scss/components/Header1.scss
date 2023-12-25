@@ -1,7 +1,7 @@
 .header1 {
   width: 100%;
   height: 40px;
-  background-color: $header-background;
+  background-color: $neutral-1;
   position: absolute;
   top: 0;
   left: 0;
@@ -40,7 +40,7 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
-      transition: opacity .2s;
+      transition: opacity 0.2s;
 
       &.show {
         opacity: 1;
@@ -60,7 +60,7 @@
 
       .header1__subMenu-item {
         padding: 5px 10px;
-        transition: .2s;
+        transition: 0.2s;
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -70,14 +70,12 @@
           &:hover {
             cursor: default;
             background-color: $white;
-
           }
         }
 
         &.--mt {
           margin-top: 2px;
         }
-
 
         &:hover {
           cursor: pointer;
@@ -92,12 +90,7 @@
             font-size: 17px;
           }
         }
-
-
       }
-
-
-
     }
   }
 }
