@@ -1,16 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Descriptions, Modal, Spin } from "antd";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
+import i18n from "src/translation/i18n";
 import { useHistory } from "react-router-dom";
-import { api_status, currencyMapper, showAlertType, url } from "src/constant";
+import {
+  api_status,
+  currencyMapper,
+  defaultLanguage,
+  localStorageVariable,
+  showAlertType,
+  url,
+} from "src/constant";
 import { showToast } from "src/function/showToast";
 import {
   calculateTime,
   calculateTimeDifference,
-  formatStringNumberCultureUS,
-  formatTime,
   getElementById,
+  getLocalStorage,
   hideElement,
   showElement,
 } from "src/util/common";
@@ -26,6 +34,7 @@ function ConfirmItem(props) {
     buy: "buy",
     sell: "sell",
   };
+  const { t } = useTranslation();
   const exchange = useSelector(getExchange);
   const currentCurrency = useSelector(getCurrent);
   const { index, content, profileId, render } = props;
@@ -49,6 +58,10 @@ function ConfirmItem(props) {
     loadData();
   }, [content]);
   useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
     const intervalId = timer();
     if (counter === `00 : 00`) clearInterval(intervalId);
     return () => {
@@ -111,7 +124,7 @@ function ConfirmItem(props) {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Confirm Success");
+          showToast(showAlertType.success, t("confirmSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -140,7 +153,7 @@ function ConfirmItem(props) {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Cancel Success");
+          showToast(showAlertType.success, t("cancelSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -174,7 +187,7 @@ function ConfirmItem(props) {
       companyCancelP2pCommand({ idP2p: idCommand.current })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Cancel Success");
+          showToast(showAlertType.success, t("cancelSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -195,7 +208,7 @@ function ConfirmItem(props) {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Confirm Success");
+          showToast(showAlertType.success, t("confirmSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -238,7 +251,9 @@ function ConfirmItem(props) {
       id: idC,
     } = content;
     idCommand.current = idC;
-    getElementById("confirm__header" + index).innerHTML = `Giao dịch ${symbol}`;
+    getElementById("confirm__header" + index).innerHTML = `${t(
+      "trading"
+    )} ${symbol}`;
     const date = created_at.split("T");
     const time = date.at(-1).split(".");
     getElementById("createdAt" + index).innerHTML =
@@ -270,30 +285,34 @@ function ConfirmItem(props) {
     if (typeUser === 2 && userId === profileId) {
       // confirm button
       const confirmButton = document.createElement("button");
-      confirmButton.innerHTML = "Xác nhận đã chuyển tiền";
+      confirmButton.innerHTML = t("confirmedTransfer");
       confirmButton.className = "confirm__action-main";
       confirmButton.addEventListener("click", userConfirmClickHandle);
       actionContainer.appendChild(confirmButton);
       // cancel button
       const cancelButton = document.createElement("button");
-      cancelButton.innerHTML = "Nút huỷ lệnh";
+      cancelButton.innerHTML = t("cancelOrder");
       cancelButton.className = "confirm__action-danger";
       cancelButton.addEventListener("click", userCancelClickHandle);
       actionContainer.appendChild(cancelButton);
     } else if (typeUser === 2 && userId !== profileId) {
-      actionContainer.innerHTML = `<button class='confirm__action-main disable'>Đang chờ đối phương chuyển tiền</button>`;
+      actionContainer.innerHTML = `<button class='confirm__action-main disable'>${t(
+        "waitingTransfer"
+      )}</button>`;
     } else if (typeUser === 1 && userId === profileId) {
-      actionContainer.innerHTML = `<button class='confirm__action-main disable'>Đang chờ đối phương xác nhận</>`;
+      actionContainer.innerHTML = `<button class='confirm__action-main disable'>${t(
+        "waitingConfirm"
+      )}</>`;
     } else if (typeUser === 1 && userId !== profileId) {
       // receivedButton
       const receivedButton = document.createElement("button");
-      receivedButton.innerHTML = `Đã nhận được tiền`;
+      receivedButton.innerHTML = t("receivedPayment");
       receivedButton.className = `confirm__action-main`;
       receivedButton.addEventListener("click", companyConfirmHandleClick);
       actionContainer.appendChild(receivedButton);
       //not recieved button
       const notRecievedButton = document.createElement("button");
-      notRecievedButton.innerHTML = `Chưa nhận được tiền`;
+      notRecievedButton.innerHTML = t("notReceivedPayment");
       notRecievedButton.className = `confirm__action-danger`;
       notRecievedButton.addEventListener("click", companyCancelClickHandle);
       actionContainer.appendChild(notRecievedButton);
@@ -315,17 +334,17 @@ function ConfirmItem(props) {
             </thead>
             <tbody>
               <tr>
-                <td>Mã GD</td>
+                <td>{t("transactionCode")}</td>
                 <td className="confirm--green">{code}</td>
               </tr>
               <tr>
-                <td>Trạng thái</td>
+                <td>{t("status")}</td>
                 <td>
                   <div className="confirm__status">
                     <span>
                       <div className="confirm__status-text confirm--blue">
                         <div className="loader"></div>
-                        Đang chờ thanh toán từ Ngân Hàng
+                        {t("waitingForPayment")}
                       </div>
                     </span>
                     <span className="confirm--red confirm__status-time">
@@ -335,11 +354,11 @@ function ConfirmItem(props) {
                 </td>
               </tr>
               <tr>
-                <td>Thanh Toán</td>
+                <td>{t("payment")}</td>
                 <td>
                   <div className="confirm__payment">
                     <button onClick={showModalPayment}>
-                      Mở màn hình thanh toán
+                      {t("openPaymentScreen")}
                     </button>
                     <span className="confirm--green">
                       Bạn xác nhận đã chuyển khoản, vui lòng đợi chúng tôi kiểm
@@ -434,11 +453,19 @@ function ConfirmItem(props) {
           width={800}
         >
           <div className="descriptionText">
+            {userCurrentAction === actionType.buy
+              ? t("buyingEthFromSereso")
+                  .replace("ETH", symbol)
+                  .replace(
+                    "1.80594354",
+                    `<span class="red-text">${amount}</span>`
+                  )
+              : ""}
             Bạn đang {userCurrentAction}{" "}
             <span className="red-text">
               {amount} {symbol}
             </span>{" "}
-            từ <span className="blue-text">Phố Sereso</span>
+            từ <span className="blue-text">Sereso</span>
             <span className="blue-text">
               Vui lòng thanh toán đúng số tiền, nội dung và số tài khoản bên
               dưới.

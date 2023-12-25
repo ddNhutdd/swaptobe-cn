@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Card, Spin, Empty, Pagination } from "antd";
+import { getBankListV2 } from "src/assets/resource/getBankListV2";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
 import {
@@ -52,13 +53,13 @@ function Profile() {
     notVerifiedYet: 4,
   };
   const paymentControl = useRef({
-    bankName: "bankName",
     accountName: "accountName",
     accountNumber: "accountNumber",
   });
   const paymentTourched = useRef({});
   const paymentError = useRef({});
   const listPaymentPageSize = useRef(5);
+  const listBank = useRef(getBankListV2());
   //
   const { t } = useTranslation();
   const history = useHistory();
@@ -69,6 +70,10 @@ function Profile() {
   );
   const [callApiTurnONOff2faStatus, setCallApiTurnONOff2faStatus] = useState(
     api_status.pending
+  );
+  const [isShowBankDropdown, setIsShowBankDropdown] = useState(false);
+  const [bankDropdownSelected, setBankDropdownSelected] = useState(
+    listBank.current.at(0)
   );
   const [isEnabled_twofa, setIsEnabled_twofa] = useState(false); // 2fa status
   const [qrValue, setQrvalue] = useState({
@@ -84,7 +89,6 @@ function Profile() {
   );
   const [listPaymentTotalItems, setListPaymentTotalItems] = useState(1);
   const [, setListPaymentCurrentPage] = useState(1);
-
   useEffect(() => {
     const dataUser = getLocalStorage(localStorageVariable.user);
     if (!dataUser) {
@@ -102,6 +106,13 @@ function Profile() {
     fetchUserProfile();
     //`
     fetchApiGetListBankingUser(1);
+    //
+    document.addEventListener("click", closeAllDropdown);
+
+    //
+    return () => {
+      document.removeEventListener("click", closeAllDropdown);
+    };
   }, []);
   const inputFileLogo = useRef(null);
   //
@@ -772,12 +783,15 @@ function Profile() {
     if (!valid) return;
     //
     disablePaymentButton();
-    await fetApiUserAddBanking({
+    const result = await fetApiUserAddBanking({
       numberBanking: getElementById("profile__payment-account-number").value,
-      nameBanking: getElementById("profile__payment-bank-name").value,
+      nameBanking: bankDropdownSelected.name,
       ownerBanking: getElementById("profile__payment-account-name").value,
     });
+    if (result !== null) getElementById("profilePaymentForm").reset();
+    setBankDropdownSelected(listBank.current.at(0));
     enablePaymentButton();
+
     // render list
     fetchApiGetListBankingUser(1);
   };
@@ -802,21 +816,12 @@ function Profile() {
   };
   const paymentValidate = function () {
     let valid = true;
-    const bankNameValue = getElementById("profile__payment-bank-name").value;
     const accountNumberValue = getElementById(
       "profile__payment-account-number"
     ).value;
     const accountNameValue = getElementById(
       "profile__payment-account-number"
     ).value;
-    if (paymentTourched.current[paymentControl.current.bankName]) {
-      if (!bankNameValue) {
-        valid &= false;
-        paymentError.current[paymentControl.current.bankName] = t("require");
-      } else {
-        delete paymentError.current[paymentControl.current.bankName];
-      }
-    }
     if (paymentTourched.current[paymentControl.current.accountNumber]) {
       if (!accountNumberValue) {
         valid &= false;
@@ -837,20 +842,10 @@ function Profile() {
     return Object.keys(paymentTourched).length <= 0 || Boolean(valid);
   };
   const paymentErrorRender = function () {
-    const bankName = getElementById("profile__payment-bank-name__error");
     const accountName = getElementById("profile__payment-account-name__error");
     const accountNumber = getElementById(
       "profile__payment-account-number__error"
     );
-    if (
-      paymentTourched.current[paymentControl.current.bankName] &&
-      paymentError.current[paymentControl.current.bankName]
-    ) {
-      bankName.innerHTML =
-        paymentError.current[paymentControl.current.bankName];
-    } else {
-      bankName.innerHTML = "";
-    }
     if (
       paymentTourched.current[paymentControl.current.accountNumber] &&
       paymentError.current[paymentControl.current.accountNumber]
@@ -947,6 +942,48 @@ function Profile() {
     setListPaymentCurrentPage(page);
     fetchApiGetListBankingUser(page);
   };
+  const bankDropdownClickHandle = function (e) {
+    e.stopPropagation();
+    setIsShowBankDropdown((state) => !state);
+  };
+  const renderMenuBankDropdown = function () {
+    if (!listBank.current) return;
+    return listBank.current.map(({ logo, name, code }) => (
+      <li
+        onClick={bankDropdownItemClickHandle.bind(null, logo, name, code)}
+        className="dropdown-item"
+      >
+        <span>
+          <img src={logo} alt={name} />
+        </span>
+        <span className="dropdown-content">{`${name} (${code})`}</span>
+      </li>
+    ));
+  };
+  const bankDropdownItemClickHandle = function (logo, name, code) {
+    const ob = {
+      logo,
+      name,
+      code,
+    };
+    setBankDropdownSelected(ob);
+    setIsShowBankDropdown(() => false);
+  };
+  const renderSelectorBankDropdown = function () {
+    if (!bankDropdownSelected) return;
+    const { logo, name, code } = bankDropdownSelected;
+    return (
+      <>
+        <span>
+          <img src={logo} alt={name} />
+        </span>
+        <span>{`${name} (${code})`}</span>
+      </>
+    );
+  };
+  const closeAllDropdown = function () {
+    setIsShowBankDropdown(() => false);
+  };
   //
   return (
     <div className="profile">
@@ -1018,22 +1055,31 @@ function Profile() {
             <div className="profile__card-container">
               <div className="profile__title">Payment</div>
               <div className="profile__payment-content">
-                <form>
+                <form id="profilePaymentForm">
                   <div className="profile__input">
-                    <label htmlFor="profile__payment-bank-name">
-                      {t("bankName")}
-                    </label>
-                    <input
-                      onFocus={paymentControlFocusHandle}
-                      onChange={paymentControlChangeHandle}
-                      name="bankName"
-                      id="profile__payment-bank-name"
-                      type="text"
-                    />
-                    <div
-                      id="profile__payment-bank-name__error"
-                      className={`input__error`}
-                    ></div>
+                    <label>{t("bankName")}</label>
+                    <div className="profile__dropdown">
+                      <div
+                        onClick={bankDropdownClickHandle}
+                        className={`profile__dropdown__selector ${
+                          isShowBankDropdown ? "active" : ""
+                        }`}
+                      >
+                        {renderSelectorBankDropdown()}
+                        <span>
+                          <i className="fa-solid fa-chevron-down"></i>
+                        </span>
+                      </div>
+                      <div
+                        className={`profile__dropdown__menu-container ${
+                          isShowBankDropdown ? "show" : ""
+                        }`}
+                      >
+                        <ul className="dropdown-menu">
+                          {renderMenuBankDropdown()}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                   <div className="profile__input">
                     <label htmlFor="profile__payment-account-number">

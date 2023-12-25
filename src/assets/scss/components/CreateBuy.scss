@@ -6,8 +6,7 @@
   .container {
     @include container2;
 
-    @media screen and (min) {
-    }
+    @media screen and (min) {}
 
     .title {
       font-size: 24px;
@@ -97,7 +96,7 @@
         .field-dropdown-menu-container {
           @include userDropdownMenu;
           position: absolute;
-          top: 61px;
+          top: 64px;
           left: 0;
         }
 

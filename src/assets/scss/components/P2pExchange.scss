@@ -86,7 +86,6 @@
                         border-radius: 5px;
                         border: 1px solid $background-color-4;
 
-
                         &:hover {
                             border-color: $neutral-3;
                             cursor: pointer;
@@ -135,6 +134,43 @@
                     cursor: pointer;
                 }
             }
+        }
+    }
+}
+
+.p2pExchange__list-coin {
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .p2pExchange__coin-item {
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid $background-color-4;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        img {
+            display: block;
+            width: 20px;
+            height: 20px;
+            object-fit: cover;
+        }
+
+        &.active {
+            background-color: $header2-background;
+            border-color: $header2-background;
+            color: $white;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: $header2-background;
+            border-color: $header2-background;
+            color: $white;
         }
     }
 }

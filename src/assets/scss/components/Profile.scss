@@ -271,6 +271,22 @@
             }
         }
 
+        .profile__dropdown {
+            position: relative;
+
+            .profile__dropdown__selector {
+                @include userDropdownSelected;
+            }
+
+            .profile__dropdown__menu-container {
+                @include userDropdownMenu;
+                position: absolute;
+                top: 33px;
+                left: 0;
+                width: 100%;
+            }
+        }
+
         .input__error {
             color: $red-1;
             height: 22px;

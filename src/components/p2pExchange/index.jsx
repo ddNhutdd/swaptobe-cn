@@ -1,4 +1,5 @@
-import React, { memo, useState, useRef } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { memo, useState, useRef, useEffect } from "react";
 import { Empty, Spin, Modal } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -8,16 +9,22 @@ import {
   showP2pType,
 } from "src/redux/reducers/p2pTradingShow";
 import { getCoin } from "src/redux/constant/coin.constant";
+import { formatStringNumberCultureUS } from "src/util/common";
+import { api_status } from "src/constant";
+import socket from "src/util/socket";
 const P2pExchange = memo(function () {
   let [type, setType] = useState(useSelector(getType));
   const coin = useSelector(getCoin);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
+  const [listCoin, setListCoin] = useState();
   const showModalChooseCoin = () => {
     setIsModalOpen(true);
   };
   const amountInputElement = useRef();
-  const amountValue = useRef();
+  useEffect(() => {
+    fetchListCoin();
+  }, []);
   const handleCancelModalChooseCoin = () => {
     setIsModalOpen(false);
   };
@@ -47,7 +54,38 @@ const P2pExchange = memo(function () {
         break;
     }
   };
-  const amountInputChangeHandle = function (e) {};
+  const amountInputChangeHandle = function (e) {
+    const inputValue = e.target.value;
+    const inputValueWithoutComma = inputValue.replace(/,/g, "");
+    const regex = /^$|^[0-9]+(\.[0-9]*)?$/;
+    if (!regex.test(inputValueWithoutComma)) {
+      amountInputElement.current.value = inputValue.slice(0, -1);
+      return;
+    }
+    const inputValueFormated = formatStringNumberCultureUS(
+      inputValueWithoutComma
+    );
+    amountInputElement.current.value = inputValueFormated;
+  };
+  const [callApiGetListCoinStatus, setCallApiGetListCoinStatus] = useState(
+    api_status.pending
+  );
+  const fetchListCoin = function () {
+    if (callApiGetListCoinStatus === api_status.fetching) return;
+    setCallApiGetListCoinStatus(api_status.fetching);
+    socket.once("listCoin", (resp) => {
+      setCallApiGetListCoinStatus(api_status.fulfilled);
+      setListCoin(resp);
+    });
+  };
+  const renderModalChooseCoin = function () {
+    if (!listCoin) return;
+    return listCoin.map((item) => (
+      <span key={item.name} className="p2pExchange__coin-item">
+        {item.name}
+      </span>
+    ));
+  };
   return (
     <div className="p2pExchange">
       <div className="container">
@@ -110,14 +148,24 @@ const P2pExchange = memo(function () {
           </span>
         </div>
         <Modal
-          title="Basic Modal"
+          title="Choose the coin you want"
           open={isModalOpen}
           onCancel={handleCancelModalChooseCoin}
           width={600}
+          footer={null}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <div className="p2pExchange__list-coin">
+            {renderModalChooseCoin()}
+            <div
+              className={`spin-container ${
+                callApiGetListCoinStatus === api_status.pending
+                  ? ""
+                  : "--d-none"
+              }`}
+            >
+              <Spin />
+            </div>
+          </div>
         </Modal>
       </div>
     </div>

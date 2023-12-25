@@ -109,7 +109,6 @@ export default function Swap() {
     const inputValueWithoutComma = inputValue.replace(/,/g, "");
     const regex = /^$|^[0-9]+(\.[0-9]*)?$/;
     if (!regex.test(inputValueWithoutComma)) {
-      console.log(inputValue.slice(0, -1));
       setFromCoinValueString(inputValue.slice(0, -1));
       return;
     }
