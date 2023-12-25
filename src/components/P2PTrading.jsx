@@ -24,7 +24,12 @@ import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import PhoneApps from "./PhoneApps";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
-import { getShow, showP2pType } from "src/redux/reducers/p2pTradingShow";
+import {
+  getShow,
+  p2pExchangeType,
+  setShow,
+  showP2pType,
+} from "src/redux/reducers/p2pTradingShow";
 import P2pExchange from "./p2pExchange";
 //
 export default function P2PTrading({ history }) {
@@ -162,14 +167,14 @@ export default function P2PTrading({ history }) {
   };
   const buyNowClickHandle = function () {
     if (isLogin) {
-      redirectPage.push(url.create_ads_buy);
+      dispatch(setShow([showP2pType.p2pExchange, p2pExchangeType.buy]));
     } else {
       redirectPage.push(url.login);
     }
   };
   const sellNowClickHandle = function () {
     if (isLogin) {
-      redirectPage.push(url.create_ads_sell);
+      dispatch(setShow([showP2pType.p2pExchange, p2pExchangeType.sell]));
     } else {
       redirectPage.push(url.login);
     }

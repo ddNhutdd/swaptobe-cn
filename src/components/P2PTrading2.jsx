@@ -327,10 +327,10 @@ export default function P2PTrading2({ history }) {
           )
         );
       }
+      // show
+      closeSellSectionEmpty();
+      showSellSectionContent();
     }
-    // show
-    closeSellSectionEmpty();
-    showSellSectionContent();
     setSellListSectionTotalItems(() => total);
     setSellSectionPage(() => page);
   };

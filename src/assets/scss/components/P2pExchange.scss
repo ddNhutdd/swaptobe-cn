@@ -1,0 +1,140 @@
+.p2pExchange {
+    padding-top: 100px;
+    background: url(../../../../public/img/background.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: $new-text-color-white;
+
+    .container {
+        @include container1;
+
+        .p2pExchange__title {
+            font-size: 25px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .p2pExchange__selected {
+            background-color: $neutral-3;
+            padding: 20px 10%;
+            border-radius: 5px;
+            position: relative;
+            margin-bottom: 20px;
+
+            .p2pExchange__button-select {
+                padding: 20px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-color: $neutral-4;
+                border: none;
+                outline: none;
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: $neutral-5;
+                }
+            }
+        }
+
+        .p2pExchange__search-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-radius: 5px;
+            position: relative;
+
+            .p2pExchange__input-container {
+                input {
+                    padding: 10px;
+                    width: 100%;
+                    outline: none;
+                    border: none;
+                    border-radius: 5px;
+                    color: $neutral-3;
+                }
+
+                span {
+                    position: absolute;
+                    top: 38px;
+                    right: 5px;
+                    background-color: $neutral-3;
+                    padding: 5px;
+                }
+            }
+
+            .p2pExchange__type {
+                background-color: $neutral-20;
+                border-radius: 5px;
+                padding: 15px;
+                color: $neutral-3 ;
+
+                .p2pExchange__type-list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+
+                    .p2pExchange__type-item {
+                        padding: 5px;
+                        border-radius: 5px;
+                        border: 1px solid $background-color-4;
+
+
+                        &:hover {
+                            border-color: $neutral-3;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+
+        .p2pExchange__data {
+            margin-top: 20px;
+
+            .p2pExchange__data-content {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                .p2pExchange__data-content-item {
+                    background-color: $neutral-7;
+                    border-radius: 5px;
+                    padding: 10px;
+                    display: flex;
+
+                    .p2pExchange__data-cell {
+                        width: 33.33333%;
+
+                        &.amount {
+                            text-align: center;
+                        }
+
+                        &.minimum {
+                            text-align: right;
+                        }
+                    }
+                }
+            }
+        }
+
+        .p2pExchange__footer {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+
+            .p2pExchange__footer-item {
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
