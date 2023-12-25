@@ -262,6 +262,7 @@ export default function P2PTrading2({ history }) {
         );
       }
       // show
+      closeBuySectionEmpty();
       showBuySectionContent();
     }
     setBuyListSectionTotalItems(() => total);
@@ -328,6 +329,7 @@ export default function P2PTrading2({ history }) {
       }
     }
     // show
+    closeSellSectionEmpty();
     showSellSectionContent();
     setSellListSectionTotalItems(() => total);
     setSellSectionPage(() => page);
@@ -357,10 +359,12 @@ export default function P2PTrading2({ history }) {
   const buyClickHandle = function (item) {
     setLocalStorage(localStorageVariable.adsItem, item);
     history.push(url.transaction);
+    return;
   };
   const sellClickHandle = function (item) {
     setLocalStorage(localStorageVariable.adsItem, item);
     history.push(url.transaction);
+    return;
   };
   const onChangeSectionBuyPaging = function (page) {
     loadSectionBuy(page);
@@ -696,6 +700,7 @@ export default function P2PTrading2({ history }) {
         open={isBuyChooseCoinModalOpen}
         onCancel={chooseCoinBuyCancelHandle}
         footer={null}
+        width={600}
       >
         <div>
           <div
@@ -712,6 +717,7 @@ export default function P2PTrading2({ history }) {
         open={isSellChooseCoinModalOpen}
         onCancel={chooseCoinSellCancelHandle}
         footer={null}
+        width={600}
       >
         <div>
           <div

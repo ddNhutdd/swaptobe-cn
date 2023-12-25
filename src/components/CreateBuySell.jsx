@@ -63,7 +63,6 @@ export default function CreateBuy() {
   const controlsErrors = useRef({});
   const callApiStatus = useRef(api_status.pending);
   const isMobileViewport = window.innerWidth < 600;
-
   useEffect(() => {
     data.current = listCoinRealTime ?? [];
     renderMarketBuyPrice();
@@ -130,7 +129,6 @@ export default function CreateBuy() {
       getElementById("amoutInput").value;
     getElementById("modalPreviewMinimumAmount").innerHTML =
       getElementById("minimumAmoutInput").value;
-    getElementById("modalAction").innerHTML = t(action).toUpperCase();
     //
     const bank = getElementById("modalBankName");
     bank.innerHTML = selectedBank.current;
@@ -547,7 +545,7 @@ export default function CreateBuy() {
         onOk={modalCoinHandleOk}
         onCancel={modalCoinHandleCancel}
         footer={null}
-        width={400}
+        width={600}
       >
         <div className="create-buy-ads__modal-coin" style={{ padding: 20 }}>
           {data.current.map((item, i) => {
@@ -577,7 +575,7 @@ export default function CreateBuy() {
         onOk={modalPreviewHandleOk}
         onCancel={modalPreviewHandleCancel}
         footer={null}
-        width={600}
+        width={800}
       >
         <div className="create-buy-ads__modal-preview">
           <div className="create-buy-ads__modal-preview-header">
@@ -589,61 +587,21 @@ export default function CreateBuy() {
               <i className="fa-solid fa-xmark"></i>
             </span>
           </div>
-          <div className="create-buy-ads__modal-preview-body">
-            <table>
-              <tbody>
-                <tr>
-                  <td>{t("userName")}: </td>
-                  <td id="modalPreviewUserName">123</td>
-                </tr>
-                <tr>
-                  <td>{t("price")}: </td>
-                  <td id="modalPreviewPrice">test</td>
-                </tr>
-                <tr>
-                  <td>{t("amount")}: </td>
-                  <td id="modalPreviewAmount">test</td>
-                </tr>
-                <tr>
-                  <td>{t("amountMinimum")}: </td>
-                  <td id="modalPreviewMinimumAmount">test</td>
-                </tr>
-                <tr>
-                  <td>{t("bankName")}: </td>
-                  <td id="modalBankName">test</td>
-                </tr>
-                <tr>
-                  <td>{t("account")}: </td>
-                  <td id="modalAccount">test</td>
-                </tr>
-                <tr>
-                  <td>{t("accountNumber")}: </td>
-                  <td id="modalAccountNumber">test</td>
-                </tr>
-                <tr>
-                  <td>{t("action")}: </td>
-                  <td id="modalAction">test</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Here */}
           <div className="preview">
             <div className="col col-1">
               <div>
                 <span className="title">{t("userName")}:</span>{" "}
                 <span id="modalPreviewUserName">This is test</span>
               </div>
-              <div>
+              <div className={`${action === actionType.buy ? "--d-none" : ""}`}>
                 <span className="title">{t("bankName")}:</span>{" "}
                 <span id="modalBankName">Test</span>
               </div>
-              <div>
+              <div className={`${action === actionType.buy ? "--d-none" : ""}`}>
                 <span className="title">{t("account")}:</span>{" "}
                 <span id="modalAccount">Test</span>
               </div>
-              <div>
+              <div className={`${action === actionType.buy ? "--d-none" : ""}`}>
                 <span className="title">{t("accountNumber")}:</span>{" "}
                 <span id="modalAccountNumber">Test</span>
               </div>
@@ -665,19 +623,16 @@ export default function CreateBuy() {
             <div className="col col-3">
               <div className="" id="modalAction">
                 <Button
+                  onClick={modalButtonCreateClickHandle}
                   style={{ width: isMobileViewport ? "100%" : "fit-content" }}
                 >
-                  Mua / Bán ...
+                  {t(action).toUpperCase()}
                 </Button>
               </div>
             </div>
           </div>
-          {/*  */}
-
           <div className="create-buy-ads__modal-preview-footer">
-            <button onClick={modalButtonCreateClickHandle}>
-              {t("create")}
-            </button>
+            <button onClick={modalPreviewHandleCancel}>{t("close")}</button>
           </div>
         </div>
       </Modal>

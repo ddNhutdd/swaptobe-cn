@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Descriptions, Modal, Spin } from "antd";
+import { useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { api_status, showAlertType, url } from "src/constant";
+import { api_status, currencyMapper, showAlertType, url } from "src/constant";
 import { showToast } from "src/function/showToast";
 import {
   calculateTime,
@@ -19,20 +20,29 @@ import {
   userCancelP2pCommand,
   userConfirmP2pCommand,
 } from "src/util/userCallApi";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 function ConfirmItem(props) {
   const actionType = {
     buy: "buy",
     sell: "sell",
   };
+  const exchange = useSelector(getExchange);
+  const currentCurrency = useSelector(getCurrent);
   const { index, content, profileId, render } = props;
   const deadLine = useRef(calculateTime(content.created_at, 15, 0));
   const [counter, setCounter] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const history = useHistory();
   const callApiStatus = useRef(api_status.pending);
-  const bankName = useRef();
-  const ownerAccount = useRef();
-  const numberBank = useRef();
+  const [bankName, setbankName] = useState();
+  const [ownerAccount, setOwnerAccount] = useState();
+  const [numberBank, setNumberBank] = useState();
+  const [pay, setPay] = useState();
+  const [amount, setAmount] = useState();
+  const [symbol, setSymbol] = useState();
+  const [code, setCode] = useState();
+  const [rate, setRate] = useState();
+  const [userCurrentAction, setUserCurrentAction] = useState(); //The current user's action is different from the ad's side
   const idCommand = useRef();
   const isMobileViewport = window.innerWidth < 600;
   useEffect(() => {
@@ -40,30 +50,40 @@ function ConfirmItem(props) {
   }, [content]);
   useEffect(() => {
     const intervalId = timer();
+    if (counter === `00 : 00`) clearInterval(intervalId);
     return () => {
       clearInterval(intervalId);
     };
   }, []);
+  const calcMoney = function (money) {
+    if (!exchange || !currentCurrency || !money) return;
+    const currencyRate = exchange.find(
+      (item) => item.title === currentCurrency
+    ).rate;
+    const result = money * currencyRate;
+    return new Intl.NumberFormat(currencyMapper[currentCurrency], {
+      style: "currency",
+      currency: currentCurrency,
+    }).format(result);
+  };
   const timer = function () {
     return setInterval(() => {
       const utcTime = new Date();
       utcTime.setHours(utcTime.getHours() + 7);
-      const test = utcTime.toISOString();
-      console.log(test, deadLine);
-      const abs = calculateTimeDifference(test, deadLine.current);
-      setCounter(() => formatTime(abs));
+      const time = calculateTimeDifference(
+        utcTime.toISOString(),
+        deadLine.current
+      );
+      setCounter(
+        () =>
+          `${time.mm.toString().padStart(2, "0")} : ${time.ss
+            .toString()
+            .padStart(2, "0")}`
+      );
     }, 1000);
   };
   const showModalPayment = () => {
     setIsModalOpen(true);
-    setTimeout(() => {
-      renderModalPayment();
-    }, 0);
-  };
-  const renderModalPayment = function () {
-    getElementById("bankNamePaymentModal").innerHTML = bankName.current;
-    getElementById("accountPaymentModal").innerHTML = ownerAccount.current;
-    getElementById("accountNumberPaymentModal").innerHTML = numberBank.current;
   };
   const handleCancelModalPayment = () => {
     setIsModalOpen(false);
@@ -219,37 +239,30 @@ function ConfirmItem(props) {
     } = content;
     idCommand.current = idC;
     getElementById("confirm__header" + index).innerHTML = `Giao dịch ${symbol}`;
-    getElementById("transactionCode" + index).innerHTML = code;
-    getElementById("youReceive" + index).innerHTML = `${amount} ${symbol}`;
-    getElementById("rate" + index).innerHTML = rate;
-    getElementById(
-      "pay" + index
-    ).innerHTML = `<span class="confirm--red">${formatStringNumberCultureUS(
-      pay.toFixed(3)
-    )} VND</span>
-      <span>
-        (Đã bao gồm phí giao dịch: 0 VNĐ và phí chuyển: 48,000 VNĐ)
-      </span>`;
     const date = created_at.split("T");
     const time = date.at(-1).split(".");
     getElementById("createdAt" + index).innerHTML =
       date.at(0) + " " + time.at(0);
-    bankName.current = bankN;
-    ownerAccount.current = account;
-    numberBank.current = numAcc;
-    const confirmUserActionElement = getElementById("confirmUserAction");
+    setbankName(bankN);
+    setOwnerAccount(account);
+    setNumberBank(numAcc);
+    setPay(pay);
+    setAmount(amount);
+    setSymbol(symbol);
+    setCode(code);
+    setRate(rate);
     if (
       (side === actionType.buy && userId === profileId) ||
       (side === actionType.sell && userId !== profileId)
     ) {
       //ban nhan
-      confirmUserActionElement.innerHTML = "Bạn nhận";
+      setUserCurrentAction(() => actionType.buy);
     } else if (
       (side === actionType.buy && userId !== profileId) ||
       (side === actionType.sell && userId === profileId)
     ) {
       // ban ban
-      confirmUserActionElement.innerHTML = "Bạn bán";
+      setUserCurrentAction(() => actionType.sell);
     }
     //
     const actionContainer = getElementById("actionConfirm" + index);
@@ -286,6 +299,10 @@ function ConfirmItem(props) {
       actionContainer.appendChild(notRecievedButton);
     }
   };
+  const copyButtonClickHandle = async function (text) {
+    await navigator.clipboard.writeText(text);
+    showToast(showAlertType.success, "Success");
+  };
   return (
     <>
       <div className="confirm">
@@ -299,9 +316,7 @@ function ConfirmItem(props) {
             <tbody>
               <tr>
                 <td>Mã GD</td>
-                <td id={`transactionCode` + index} className="confirm--green">
-                  JXEX1702459766
-                </td>
+                <td className="confirm--green">{code}</td>
               </tr>
               <tr>
                 <td>Trạng thái</td>
@@ -334,25 +349,28 @@ function ConfirmItem(props) {
                 </td>
               </tr>
               <tr>
-                <td id="confirmUserAction">Bạn nhận</td>
-                <td id={"youReceive" + index} className="confirm--red">
-                  1100 USDT
+                <td>Bạn {userCurrentAction}</td>
+                <td className="confirm--red">
+                  {amount} {symbol}
                 </td>
               </tr>
               <tr>
                 <td>Tỉ giá</td>
-                <td id={"rate" + index} className="confirm--red">
-                  24,898.00 VND
-                </td>
+                <td className="confirm--red">{calcMoney(rate)}</td>
               </tr>
               <tr>
                 <td>Số tiền</td>
                 <td>
-                  <div id={"pay" + index} className="confirm__money">
-                    <span className="confirm--red">27,435,800 VND</span>
+                  <div className="confirm__money">
+                    <span className="confirm--red">
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(pay)}
+                    </span>
                     <span>
-                      (Đã bao gồm phí giao dịch: 0 VNĐ và phí chuyển: 48,000
-                      VNĐ)
+                      (Đã bao gồm phí giao dịch: 0 VNĐ và phí chuyển: 48 000
+                      VND)
                     </span>
                   </div>
                 </td>
@@ -411,41 +429,21 @@ function ConfirmItem(props) {
           onOk={handleCancelModalPayment}
           onCancel={handleCancelModalPayment}
           okText="Gửi hình thanh toán"
+          okButtonProps={{ style: { display: "none" } }}
           cancelText="Đóng"
           width={800}
         >
-          <div className="paymentModalContent">
-            <table className="paymentModalContent">
-              <tbody>
-                <tr>
-                  <td>Bank name: </td>
-                  <td id="bankNamePaymentModal">OCB</td>
-                </tr>
-                <tr>
-                  <td>Account: </td>
-                  <td id="accountPaymentModal">Van Den</td>
-                </tr>
-                <tr>
-                  <td>Accout Number: </td>
-                  <td id="accountNumberPaymentModal">789567456354</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
           <div className="descriptionText">
-            Bạn đang mua <span className="red-text">0.01 Bitcoint (BTC)</span>{" "}
-            từ <span className="blue-text">Phố Bitcoin</span> về địa chỉ ví{" "}
+            Bạn đang {userCurrentAction}{" "}
             <span className="red-text">
-              0x123456abcdef54212351ffasf12421asfasfad1231as
-            </span>
-            .{" "}
+              {amount} {symbol}
+            </span>{" "}
+            từ <span className="blue-text">Phố Sereso</span>
             <span className="blue-text">
               Vui lòng thanh toán đúng số tiền, nội dung và số tài khoản bên
               dưới.
             </span>
           </div>
-
           <div className="paymentContent">
             <Descriptions
               column={1}
@@ -454,45 +452,52 @@ function ConfirmItem(props) {
               size={isMobileViewport ? "small" : "middle"}
             >
               <Descriptions.Item label="Số tiền">
-                <div className="green-text">11148743</div>
+                <div className="green-text">
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                    maximumSignificantDigits: 3,
+                  }).format(pay)}
+                </div>
                 <div className="icon-copy">
-                  <i class="fa-solid fa-copy"></i>
+                  <i
+                    onClick={copyButtonClickHandle.bind(
+                      null,
+                      new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                        maximumSignificantDigits: 3,
+                      }).format(pay)
+                    )}
+                    className="fa-solid fa-copy"
+                  ></i>
                 </div>
               </Descriptions.Item>
               <Descriptions.Item label="Nội dung">
-                <div className="green-text">NVHL1703305859</div>
+                <div className="green-text">{code}</div>
                 <div className="icon-copy">
-                  <i class="fa-solid fa-copy"></i>
+                  <i
+                    onClick={copyButtonClickHandle.bind(null, code)}
+                    className="fa-solid fa-copy"
+                  ></i>
                 </div>
               </Descriptions.Item>
               <Descriptions.Item label="Số tài khoản">
                 <div>
                   <div>
-                    <div className="green-text">19038310193011</div> tại{" "}
-                    <div className="blue-text">Techcombank</div>
+                    <div className="green-text">{numberBank}</div> tại{" "}
+                    <div className="blue-text">{bankName}</div>
                   </div>
                   <div>
                     Chủ tài khoản:{" "}
-                    <div className="red-text">Lê Thị Thu Dung</div>
+                    <div className="red-text">{ownerAccount}</div>
                   </div>
                 </div>
                 <div className="icon-copy">
-                  <i class="fa-solid fa-copy"></i>
-                </div>
-              </Descriptions.Item>
-              <Descriptions.Item label="Hoặc số tài khoản khác">
-                <div>
-                  <div>
-                    <div className="green-text">1903831019</div> tại{" "}
-                    <div className="blue-text">Techcombank</div>
-                  </div>
-                  <div>
-                    Chủ tài khoản:{" "}
-                    <div className="red-text">Lê Thị Thu Dung</div>
-                  </div>
-                </div>
-                <div className="icon-copy">
-                  <i class="fa-solid fa-copy"></i>
+                  <i
+                    onClick={copyButtonClickHandle.bind(null, numberBank)}
+                    className="fa-solid fa-copy"
+                  ></i>
                 </div>
               </Descriptions.Item>
             </Descriptions>

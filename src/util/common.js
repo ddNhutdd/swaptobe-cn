@@ -234,9 +234,11 @@ export const addClassToElementById = function (id, classname) {
   }
 };
 export const hideElement = function (element) {
+  if (!element) return;
   !element.classList.contains("--d-none") && element.classList.add("--d-none");
 };
 export const showElement = function (element) {
+  if (!element) return;
   element.classList.remove("--d-none");
 };
 //
@@ -293,11 +295,19 @@ export const calculateTimeDifference = function (
   dateTimeString1,
   dateTimeString2
 ) {
+  const result = {
+    mm: 0,
+    ss: 0,
+  };
+  if (!dateTimeString1 || !dateTimeString2) return result;
   const date1 = new Date(dateTimeString1);
   const date2 = new Date(dateTimeString2);
   const timeDifference = date2 - date1;
-  const secondsDifference = Math.abs(timeDifference / 1000);
-  return secondsDifference;
+  if (timeDifference <= 0) return result;
+  const newDate = new Date(timeDifference);
+  result.mm = newDate.getMinutes();
+  result.ss = newDate.getSeconds();
+  return result;
 };
 export const formatTime = function (seconds) {
   const hours = Math.floor(seconds / 3600);

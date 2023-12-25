@@ -24,8 +24,11 @@ import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import PhoneApps from "./PhoneApps";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
+import { getShow, showP2pType } from "src/redux/reducers/p2pTradingShow";
+import P2pExchange from "./p2pExchange";
 //
 export default function P2PTrading({ history }) {
+  const showContent = useSelector(getShow);
   const redirectPage = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -49,7 +52,9 @@ export default function P2PTrading({ history }) {
     i18n.changeLanguage(language);
     //
     const element = document.querySelector(".p2ptrading");
-    element.classList.add("fadeInBottomToTop");
+    if (element) {
+      element.classList.add("fadeInBottomToTop");
+    }
     //
   }, []);
   useEffect(() => {
@@ -169,93 +174,105 @@ export default function P2PTrading({ history }) {
       redirectPage.push(url.login);
     }
   };
+  const renderContent = function () {
+    switch (showContent) {
+      case showP2pType.p2pTrading:
+        return (
+          <div className="p2ptrading">
+            <div className="container">
+              <div className="top box">
+                <div>
+                  <img src={coinImage} alt={coin} />
+                  <span>{coinFullName}</span>
+                </div>
+                <Button onClick={showModal}>{t("chooseAnother")} </Button>
+              </div>
+              <div className="center">
+                <div className="left box">
+                  <div className="left1">
+                    <i className="fa-solid fa-flag"></i>
+                    <span>{t("sellingPrice")}:</span>
+                  </div>
+                  <div className="left2">
+                    {formatStringNumberCultureUS(
+                      convertCurrency(sellPrice)?.toFixed(3) ?? ""
+                    )}
+                    <span> {userSelectedCurrency}</span>
+                  </div>
+                  <Button onClick={buyNowClickHandle} className="buyNowBtn">
+                    {t("buyNow")}
+                  </Button>
+                </div>
+                <div className="right box">
+                  <div className="right1">
+                    <i className="fa-solid fa-flag"></i>
+                    <span>{t("buyingPrice")}:</span>
+                  </div>
+                  <div className="right2">
+                    {formatStringNumberCultureUS(
+                      convertCurrency(buyPrice)?.toFixed(3) ?? ""
+                    )}
+                    <span> {userSelectedCurrency}</span>
+                  </div>
+                  <Button onClick={sellNowClickHandle} className="sellNowBtn">
+                    {t("sellNow")}
+                  </Button>
+                </div>
+              </div>
+              <div className="bottom box">
+                <i className="fa-solid fa-bolt"></i>
+                {t("receiveBitcoinWithin15MinutesOrBeRefunded")}
+                <span>{t("moreDetails")}</span>
+              </div>
+            </div>
+            <Modal
+              open={isModalVisible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              footer={null}
+            >
+              <Card bodyStyle={{ padding: "0" }}>
+                {data && data.length ? (
+                  <Table
+                    className="p2ptrading__table"
+                    columns={columns}
+                    dataSource={data}
+                    rowKey={(record) => record.id}
+                    pagination={{
+                      onChange: () => {
+                        setTimeout(() => {
+                          document.querySelector(".ant-modal-wrap").scrollTo({
+                            top: 0,
+                            behavior: "smooth",
+                          });
+                        }, 0);
+                      },
+                    }}
+                    onRow={(record) => {
+                      return {
+                        onClick: () => handleSelectedRow(record),
+                      };
+                    }}
+                  />
+                ) : (
+                  <div className="p2ptrading__model-spinner-container">
+                    <Spin style={{ width: "100%" }} />
+                  </div>
+                )}
+              </Card>
+            </Modal>
+          </div>
+        );
+      case showP2pType.p2pExchange:
+        return <P2pExchange />;
+      default:
+        break;
+    }
+  };
   //
   return (
     <>
-      <div className="p2ptrading">
-        <div className="container">
-          <div className="top box">
-            <div>
-              <img src={coinImage} alt={coin} />
-              <span>{coinFullName}</span>
-            </div>
-            <Button onClick={showModal}>{t("chooseAnother")} </Button>
-          </div>
-          <div className="center">
-            <div className="left box">
-              <div className="left1">
-                <i className="fa-solid fa-flag"></i>
-                <span>{t("sellingPrice")}:</span>
-              </div>
-              <div className="left2">
-                {formatStringNumberCultureUS(
-                  convertCurrency(sellPrice)?.toFixed(3) ?? ""
-                )}
-                <span> {userSelectedCurrency}</span>
-              </div>
-              <Button onClick={buyNowClickHandle} className="buyNowBtn">
-                {t("buyNow")}
-              </Button>
-            </div>
-            <div className="right box">
-              <div className="right1">
-                <i className="fa-solid fa-flag"></i>
-                <span>{t("buyingPrice")}:</span>
-              </div>
-              <div className="right2">
-                {formatStringNumberCultureUS(
-                  convertCurrency(buyPrice)?.toFixed(3) ?? ""
-                )}
-                <span> {userSelectedCurrency}</span>
-              </div>
-              <Button onClick={sellNowClickHandle} className="sellNowBtn">
-                {t("sellNow")}
-              </Button>
-            </div>
-          </div>
-          <div className="bottom box">
-            <i className="fa-solid fa-bolt"></i>
-            {t("receiveBitcoinWithin15MinutesOrBeRefunded")}
-            <span>{t("moreDetails")}</span>
-          </div>
-        </div>
-        <Modal
-          open={isModalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={null}
-        >
-          <Card bodyStyle={{ padding: "0" }}>
-            {data && data.length ? (
-              <Table
-                className="p2ptrading__table"
-                columns={columns}
-                dataSource={data}
-                rowKey={(record) => record.id}
-                pagination={{
-                  onChange: () => {
-                    setTimeout(() => {
-                      document.querySelector(".ant-modal-wrap").scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                      });
-                    }, 0);
-                  },
-                }}
-                onRow={(record) => {
-                  return {
-                    onClick: () => handleSelectedRow(record),
-                  };
-                }}
-              />
-            ) : (
-              <div className="p2ptrading__model-spinner-container">
-                <Spin style={{ width: "100%" }} />
-              </div>
-            )}
-          </Card>
-        </Modal>
-      </div>
+      {renderContent()}
       <P2PTrading2 history={history} />
       <PhoneApps />
     </>

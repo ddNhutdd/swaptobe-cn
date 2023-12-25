@@ -59,6 +59,12 @@ export const currency = {
   usd: "USD",
 };
 
+export const currencyMapper = {
+  USD: "en-US",
+  VND: "vi-VN",
+  EUR: "it-IT",
+};
+
 export const defaultLanguage = availableLanguage.en;
 export const regularExpress = {
   checkNumber: /^[+-]?([0-9]*[.])?[0-9]*$/,
