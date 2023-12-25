@@ -7,6 +7,7 @@
   background-repeat: no-repeat;
   color: white;
   height: 90vh;
+  min-height: 700px;
 
   .container {
     @include container1;
@@ -46,20 +47,25 @@
         span {
           font-weight: bold;
           font-size: 20px;
-          color: white;
+          color: $new-primary-color-18;
         }
       }
     }
 
     .center {
-      margin-top: 30px;
+      margin-top: 15px;
       width: 100%;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
+      gap: 15px;
 
       @media screen and (max-width: 576px) {
         grid-template-columns: repeat(1, 1fr);
+      }
+
+      @media screen and (min-width: 480px) {
+        gap: 30px;
+        margin-top: 30px;
       }
 
       .left {
@@ -137,7 +143,11 @@
 
     .bottom {
       width: 100%;
-      margin-top: 30px;
+      margin-top: 15px;
+
+      @media screen and (min-width: 480px) {
+        margin-top: 30px;
+      }
 
       i {
         margin-right: 8px;
@@ -157,7 +167,12 @@
     }
 
     .box {
-      background-color: #126e76de;
+      background-color: $neutral-3;
+      padding: 15px;
+
+      @media screen and (min-width: 480px) {
+        padding: 30px;
+      }
     }
   }
 }

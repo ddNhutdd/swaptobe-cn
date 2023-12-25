@@ -179,7 +179,9 @@ export default function P2PTrading({ history }) {
               <img src={coinImage} alt={coin} />
               <span>{coinFullName}</span>
             </div>
-            <Button onClick={showModal}>{t("chooseAnother")} </Button>
+            <Button type="primary" onClick={showModal}>
+              {t("chooseAnother")}{" "}
+            </Button>
           </div>
           <div className="center">
             <div className="left box">

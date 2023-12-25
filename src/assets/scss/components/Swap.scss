@@ -2,33 +2,36 @@
   min-height: calc(100vh - 90px);
   width: 100%;
   padding-top: 100px;
+  background: $new-background-3;
 
   .container {
     @include container2;
 
-    .field {
-      button.max {
-        position: absolute;
-        top: 50%;
-        right: 114px;
-        transform: translateY(-50%);
-        padding: 0 10px;
-        background: #eaeaea;
-        border-radius: 5px;
-        border: none;
-        height: 85%;
+    .box {
+      background: $new-background-4;
+      color: $new-text-color-white;
+      padding: 15px;
 
-        @media screen and (max-width:576px) {
-          position: absolute;
-          top: 6%;
-          right: 4px;
-          transform: none;
-          padding: 0 10px;
-          background: #eaeaea;
-          border-radius: 5px;
-          border: none;
-          height: 32%;
+      @media screen and (min-width: 480px) {
+        padding: 30px;
+      }
+
+      .title {
+        color: $new-text-color-6;
+      }
+    }
+
+    .field {
+      .balance {
+        margin-top: 5px;
+
+        .balance-title {
+          font-weight: 500;
         }
+      }
+
+      label {
+        font-weight: 500;
       }
 
       .input-area {
@@ -38,16 +41,46 @@
         position: relative;
 
         @media screen and (max-width: 576px) {
-          flex-direction: column;
-          gap: 10px;
+          // flex-direction: column;
+          // gap: 10px;
+        }
+
+        button.max {
+          position: absolute;
+          top: 50%;
+          right: 114px;
+          transform: translateY(-50%);
+          padding: 0 10px;
+          background: $neutral-12;
+          border-radius: 5px;
+          border: none;
+          height: 85%;
+          display: block;
+
+          @media screen and (max-width: 480px) {
+            position: absolute;
+            display: none;
+            top: 6%;
+            right: 4px;
+            transform: none;
+            padding: 0 10px;
+            background: #eaeaea;
+            border-radius: 5px;
+            border: none;
+            height: 32%;
+          }
         }
 
         .swap__input {
-          border: 1px solid $background-color-4;
+          // border: 1px solid $background-color-4;
+          border: 0;
+          outline: none;
           padding: 5px 10px;
           border-radius: 5px;
-          transition: .2s;
+          transition: 0.2s;
           width: 100%;
+          background-color: $new-background-white;
+          color: $new-text-color-black;
 
           &:disabled {
             background-color: $background-color-4;
@@ -79,7 +112,7 @@
         color: $white;
         border: none;
         border-radius: 5px;
-        transition: .2s;
+        transition: 0.2s;
         background-color: $white;
         border: 1px solid $header2-background;
         color: $header2-background;
@@ -113,18 +146,18 @@
       width: 100%;
       padding: 8px 20px;
       color: $white;
-      background-color: $primary-color;
+      background-color: $new-primary-color-6;
       border: none;
       border-radius: 5px;
-      transition: .2s;
+      transition: background-color 0.3s ease-out;
 
       &.disabled {
-        background-color: $background-color-4;
+        background-color: $background-color-5;
         cursor: not-allowed;
       }
 
       &:hover {
-        background-color: $header2-background-light;
+        background-color: $new-primary-color-5;
         cursor: pointer;
       }
     }
@@ -139,25 +172,42 @@
         flex-direction: column;
         border-radius: 5px;
         gap: 10px;
-        box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+        background-color: $new-background-5;
 
         .swap__history-time {
           padding: 10px 10px 5px 10px;
-          background-color: $primary-color;
+          background-color: $new-background-3;
           width: 100%;
           border-top-left-radius: 5px;
           border-top-right-radius: 5px;
           color: $white;
           font-size: 15px;
+          letter-spacing: 0.5px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          @media screen and (min-width: 480px) {
+            padding: 10px 10px 5px 20px;
+          }
         }
 
         .swap__history-item-main {
           padding: 0 10px;
           display: flex;
+          flex-direction: column;
           gap: 15px;
 
-          @media screen and (max-width:576px) {
-            flex-direction: column;
+          @media screen and (min-width: 480px) {
+            flex-direction: row;
+            align-items: center;
+            padding: 0 20px;
+          }
+
+          .item {
+            display: flex;
+            align-items: center;
             gap: 5px;
           }
 
@@ -173,7 +223,6 @@
               width: 20px;
               height: 20px;
               object-fit: cover;
-
             }
           }
 
@@ -191,6 +240,13 @@
               object-fit: cover;
             }
           }
+
+          span {
+            &:nth-of-type(n) {
+              font-weight: 500;
+              line-height: 1;
+            }
+          }
         }
 
         .swap__history-final {
@@ -201,14 +257,27 @@
           display: flex;
           gap: 5px;
 
+          @media screen and (min-width: 480px) {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+
           span {
             &:last-child {
-              font-weight: bold;
               color: $green-1;
 
-              @media screen and (max-width:576px) {
+              @media screen and (max-width: 576px) {
                 word-break: break-all;
               }
+            }
+
+            &:first-of-type {
+              font-weight: 500;
+            }
+
+            &:last-of-type {
+              color: $new-text-color-white;
+              font-weight: 400;
             }
           }
         }
@@ -228,7 +297,7 @@
   border: 1px solid $background-color-4;
   padding: 5px 10px;
   border-radius: 5px;
-  transition: .2s;
+  transition: 0.2s;
   margin-bottom: 15px;
 
   &:disabled {
@@ -258,7 +327,7 @@
   padding: 8px 20px;
   border: none;
   border-radius: 5px;
-  transition: .2s;
+  transition: 0.2s;
   margin-bottom: 10px;
   margin-right: 10px;
   border: 1px solid transparent;
