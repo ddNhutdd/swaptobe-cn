@@ -120,11 +120,16 @@
 }
 
 .descriptionText {
+    margin-top: 10px;
     padding: 0 20px;
+
+    .descriptionText__remind {
+        display: block;
+    }
 }
 
 .paymentContent {
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
     font-family: "Open Sans", "Roboto", sans-serif;
 
     .ant-descriptions-item-content {

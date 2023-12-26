@@ -20,6 +20,7 @@ import {
   getElementById,
   getLocalStorage,
   hideElement,
+  processString,
   showElement,
 } from "src/util/common";
 import {
@@ -48,6 +49,7 @@ function ConfirmItem(props) {
   const [numberBank, setNumberBank] = useState();
   const [pay, setPay] = useState();
   const [amount, setAmount] = useState();
+  const [header, setHeader] = useState();
   const [symbol, setSymbol] = useState();
   const [code, setCode] = useState();
   const [rate, setRate] = useState();
@@ -61,6 +63,14 @@ function ConfirmItem(props) {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
+    let currentLanguage = i18n.language;
+    i18n.on("languageChanged", (newLanguage) => {
+      if (newLanguage !== currentLanguage) {
+        loadData();
+        currentLanguage = newLanguage;
+        return;
+      }
+    });
     //
     const intervalId = timer();
     if (counter === `00 : 00`) clearInterval(intervalId);
@@ -235,6 +245,7 @@ function ConfirmItem(props) {
     apiNoFetchingUI();
   };
   const loadData = function () {
+    console.log("run hear");
     const {
       code,
       amount,
@@ -251,9 +262,7 @@ function ConfirmItem(props) {
       id: idC,
     } = content;
     idCommand.current = idC;
-    getElementById("confirm__header" + index).innerHTML = `${t(
-      "trading"
-    )} ${symbol}`;
+    setHeader(() => `${t("trading")} ${symbol}`);
     const date = created_at.split("T");
     const time = date.at(-1).split(".");
     getElementById("createdAt" + index).innerHTML =
@@ -322,6 +331,67 @@ function ConfirmItem(props) {
     await navigator.clipboard.writeText(text);
     showToast(showAlertType.success, "Success");
   };
+  const renderBankInfo = function () {
+    const inputString = t("accountInfoVietcomBank");
+    const substringsList = ["3000stk2888", "VietcomBank", "123accountnae456"];
+    const callback = (match, i) => {
+      switch (match) {
+        case "3000stk2888":
+          return (
+            <div key={i} className="green-text">
+              {numberBank}
+            </div>
+          );
+        case "VietcomBank":
+          return (
+            <div key={i} className="blue-text">
+              {bankName}
+            </div>
+          );
+        case "123accountnae456":
+          return (
+            <div key={i} className="red-text">
+              {ownerAccount}
+            </div>
+          );
+        default:
+          break;
+      }
+    };
+    return processString(inputString, substringsList, callback);
+  };
+  const renderTitleModal = function () {
+    let inputString = "";
+    if (userCurrentAction === actionType.buy)
+      inputString = t("youAreBuyingBitcoinThroughSereso");
+    else inputString = t("youAreSellingBitcoinThroughSereso");
+    const substringsList = ["0.abc00012346787889456", "BTC", "Sereso"];
+    const callback = (match, i) => {
+      switch (match) {
+        case "0.abc00012346787889456":
+          return (
+            <div key={i} className="red-text">
+              {amount}
+            </div>
+          );
+        case "BTC":
+          return (
+            <div key={i} className="red-text">
+              {symbol}
+            </div>
+          );
+        case "Sereso":
+          return (
+            <div key={i} className="blue-text">
+              {"Sereso"}
+            </div>
+          );
+        default:
+          break;
+      }
+    };
+    return processString(inputString, substringsList, callback);
+  };
   return (
     <>
       <div className="confirm">
@@ -329,7 +399,7 @@ function ConfirmItem(props) {
           <table id="confirm__table">
             <thead>
               <tr className="confirm__header">
-                <td id={"confirm__header" + index} colSpan={2}></td>
+                <td colSpan={2}>{header} </td>
               </tr>
             </thead>
             <tbody>
@@ -361,24 +431,29 @@ function ConfirmItem(props) {
                       {t("openPaymentScreen")}
                     </button>
                     <span className="confirm--green">
-                      Bạn xác nhận đã chuyển khoản, vui lòng đợi chúng tôi kiểm
-                      tra
+                      {t(
+                        "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify"
+                      )}
                     </span>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td>Bạn {userCurrentAction}</td>
+                <td>
+                  {userCurrentAction === actionType.buy
+                    ? t("youAreBuying")
+                    : t("youAreSelling")}
+                </td>
                 <td className="confirm--red">
                   {amount} {symbol}
                 </td>
               </tr>
               <tr>
-                <td>Tỉ giá</td>
+                <td>{t("rate")}</td>
                 <td className="confirm--red">{calcMoney(rate)}</td>
               </tr>
               <tr>
-                <td>Số tiền</td>
+                <td>{t("amount")}</td>
                 <td>
                   <div className="confirm__money">
                     <span className="confirm--red">
@@ -387,15 +462,12 @@ function ConfirmItem(props) {
                         currency: "VND",
                       }).format(pay)}
                     </span>
-                    <span>
-                      (Đã bao gồm phí giao dịch: 0 VNĐ và phí chuyển: 48 000
-                      VND)
-                    </span>
+                    <span>{t("transactionFee")}</span>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td>Thời gian</td>
+                <td>{t("time")}</td>
                 <td
                   id={"createdAt" + index}
                   className="confirm--green confirm__time"
@@ -404,25 +476,12 @@ function ConfirmItem(props) {
                 </td>
               </tr>
               <tr>
-                <td>Ghi chú</td>
+                <td>{t("note")}</td>
                 <td className="confirm__comment">
-                  <li>
-                    Vui lòng thanh toán đúng thông tin tại màn hình thanh toán
-                    trong thời gian quy định. Nếu bạn đã thanh toán có thể nhắn
-                    tin cho người bán ngay để họ kiểm tra.
-                  </li>
-                  <li>
-                    Chúng tôi chỉ mua bán tiền điện tử, không liên quan đến bất
-                    kì dự án nào.
-                  </li>
-                  <li>
-                    Khách hàng lưu ý chỉ giao dịch trên web. Các giao dịch bên
-                    ngoài website chúng tôi không chịu trách nhiệm.
-                  </li>
-                  <li>
-                    Nếu khách hàng thanh toán bị chậm, lỗi ngân hàng ... vui
-                    lòng liên hệ người bán để được hỗ trợ
-                  </li>
+                  <li>{t("makePayment")}</li>
+                  <li>{t("cryptoOnly")}</li>
+                  <li>{t("websiteTransaction")}</li>
+                  <li>{t("paymentDelayOrError")}</li>
                 </td>
               </tr>
               <tr>
@@ -449,27 +508,16 @@ function ConfirmItem(props) {
           onCancel={handleCancelModalPayment}
           okText="Gửi hình thanh toán"
           okButtonProps={{ style: { display: "none" } }}
-          cancelText="Đóng"
+          cancelText={t("close")}
           width={800}
         >
           <div className="descriptionText">
-            {userCurrentAction === actionType.buy
-              ? t("buyingEthFromSereso")
-                  .replace("ETH", symbol)
-                  .replace(
-                    "1.80594354",
-                    `<span class="red-text">${amount}</span>`
-                  )
-              : ""}
-            Bạn đang {userCurrentAction}{" "}
-            <span className="red-text">
-              {amount} {symbol}
-            </span>{" "}
-            từ <span className="blue-text">Sereso</span>
-            <span className="blue-text">
-              Vui lòng thanh toán đúng số tiền, nội dung và số tài khoản bên
-              dưới.
-            </span>
+            {renderTitleModal()}
+            <div className="blue-text descriptionText__remind">
+              {t(
+                "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow"
+              )}
+            </div>
           </div>
           <div className="paymentContent">
             <Descriptions
@@ -478,7 +526,7 @@ function ConfirmItem(props) {
               bordered
               size={isMobileViewport ? "small" : "middle"}
             >
-              <Descriptions.Item label="Số tiền">
+              <Descriptions.Item label={t("amount")}>
                 <div className="green-text">
                   {new Intl.NumberFormat("vi-VN", {
                     style: "currency",
@@ -509,16 +557,9 @@ function ConfirmItem(props) {
                   ></i>
                 </div>
               </Descriptions.Item>
-              <Descriptions.Item label="Số tài khoản">
+              <Descriptions.Item label={t("accountNumber")}>
                 <div>
-                  <div>
-                    <div className="green-text">{numberBank}</div> tại{" "}
-                    <div className="blue-text">{bankName}</div>
-                  </div>
-                  <div>
-                    Chủ tài khoản:{" "}
-                    <div className="red-text">{ownerAccount}</div>
-                  </div>
+                  <div>{renderBankInfo()}</div>
                 </div>
                 <div className="icon-copy">
                   <i

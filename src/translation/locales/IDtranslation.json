@@ -227,9 +227,10 @@
     "details": "Rincian",
     "openPaymentScreen": "Buka layar pembayaran",
     "confirmTransfer": "Konfirmasi bahwa Anda telah melakukan transfer, harap tunggu verifikasi kami",
-    "accountInfoVietcomBank": "Akun di VietcomBank Nama Pemegang Akun: Nama Pemegang Akun",
+    "accountInfoVietcomBank": "3000stk2888 di Rekening VietcomBank Nama Rekening: 123accountnae456",
     "close": "Tutup",
-    "selling": "Anda sedang menjual",
+    "youAreSelling": "Anda menjual",
+    "youAreBuying": "Anda membeli",
     "exchangeRate": "Kurs",
     "time": "Waktu",
     "transactionFee": "(Termasuk biaya transaksi: 0 VND dan biaya transfer: 48,000 VND)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "Menunggu pihak lain mentransfer uang",
     "waitingConfirm": "Menunggu pihak lain mengonfirmasi",
     "cancelSuccess": "Batal Berhasil",
-    "confirmSuccess": "Konfirmasi Berhasil"
+    "confirmSuccess": "Konfirmasi Berhasil",
+    "youAreSellingBitcoinThroughSereso": "Anda mentransfer 0.abc00012346787889456 BTC melalui Sereso.",
+    "youAreBuyingBitcoinThroughSereso": "Anda membeli 0.abc00012346787889456 BTC melalui Sereso.",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "Silakan melakukan pembayaran untuk jumlah, konten, dan nomor akun yang benar di bawah ini.",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "Anda mengkonfirmasi bahwa Anda telah melakukan transfer; harap tunggu kami untuk memverifikasi."
 }

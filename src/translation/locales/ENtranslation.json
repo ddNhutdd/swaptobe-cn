@@ -227,9 +227,10 @@
     "details": "Details",
     "openPaymentScreen": "Open payment screen",
     "confirmTransfer": "Confirm that you have made the transfer, please wait for our verification",
-    "accountInfoVietcomBank": "Account at VietcomBank Account Holder: Account Holder Name",
+    "accountInfoVietcomBank": "3000stk2888 at VietcomBank Account Name: 123accountnae456",
     "close": "Close",
-    "selling": "You are selling",
+    "youAreSelling": "You are selling",
+    "youAreBuying": "You are buying",
     "exchangeRate": "Exchange Rate",
     "time": "Time",
     "transactionFee": "(Including transaction fee: 0 VND and transfer fee: 48,000 VND)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "Waiting for the other party to transfer money",
     "waitingConfirm": "Waiting for the other party to confirm",
     "cancelSuccess": "Cancel Success",
-    "confirmSuccess": "Confirm Success"
+    "confirmSuccess": "Confirm Success",
+    "youAreSellingBitcoinThroughSereso": "You are selling 0.abc00012346787889456 BTC through Sereso.",
+    "youAreBuyingBitcoinThroughSereso": "You are buying 0.abc00012346787889456 BTC through Sereso.",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "Please make the payment for the correct amount, content, and account number below",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "You confirm that you have made the transfer. Please wait for us to verify."
 }

@@ -120,10 +120,11 @@ function Home() {
                 <div
                   className="home__header__menu-item"
                   onClick={(e) => {
-                    document
-                      .getElementById("home__benefit")
-                      .scrollIntoView({ behavior: "smooth" });
-                    headerBarButtonClickHandle(e);
+                    const ele = document.getElementById("home__benefit");
+                    if (ele) {
+                      ele.scrollIntoView({ behavior: "smooth" });
+                      headerBarButtonClickHandle(e);
+                    }
                   }}
                 >
                   COIN
@@ -133,10 +134,11 @@ function Home() {
                 <div
                   className="home__header__menu-item"
                   onClick={(e) => {
-                    document
-                      .getElementById("home__road-map")
-                      .scrollIntoView({ behavior: "smooth" });
-                    headerBarButtonClickHandle(e);
+                    const ele = document.getElementById("home__road-map");
+                    if (ele) {
+                      ele.scrollIntoView({ behavior: "smooth" });
+                      headerBarButtonClickHandle(e);
+                    }
                   }}
                 >
                   ROADMAP
@@ -146,10 +148,11 @@ function Home() {
                 <div
                   className="home__header__menu-item"
                   onClick={(e) => {
-                    document
-                      .getElementById("home__app")
-                      .scrollIntoView({ behavior: "smooth" });
-                    headerBarButtonClickHandle(e);
+                    const ele = document.getElementById("home__app");
+                    if (ele) {
+                      ele.scrollIntoView({ behavior: "smooth" });
+                      headerBarButtonClickHandle(e);
+                    }
                   }}
                 >
                   APP
@@ -159,10 +162,11 @@ function Home() {
                 <div
                   className="home__header__menu-item"
                   onClick={(e) => {
-                    document
-                      .getElementById("home__faqs")
-                      .scrollIntoView({ behavior: "smooth" });
-                    headerBarButtonClickHandle(e);
+                    const ele = document.getElementById("home__faqs");
+                    if (ele) {
+                      ele.scrollIntoView({ behavior: "smooth" });
+                      headerBarButtonClickHandle(e);
+                    }
                   }}
                 >
                   FAQ

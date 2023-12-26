@@ -952,6 +952,7 @@ function Profile() {
       <li
         onClick={bankDropdownItemClickHandle.bind(null, logo, name, code)}
         className="dropdown-item"
+        key={name}
       >
         <span>
           <img src={logo} alt={name} />
@@ -989,8 +990,8 @@ function Profile() {
     <div className="profile">
       <div className="container">
         <div className="profile__info">
-          <Card bodyStyle={{ backgroundColor: "#f5f5f5" }}>
-            <div className="profile__card-container">
+          <div>
+            <div className="profile__card-container box">
               <div className="profile__title">{t("profile")}</div>
               <div className="profile__user-img">
                 <span className="profile__icon">
@@ -1026,10 +1027,10 @@ function Profile() {
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
         <div className="profile__account">
-          <Card bodyStyle={{ backgroundColor: "#f5f5f5" }}>
+          <div className="box">
             <div className="profile__card-container">
               <div className="profile__title">{t("updateInfomation")}</div>
               <ul className="profile__account-content">
@@ -1048,10 +1049,10 @@ function Profile() {
               </ul>
               {renderUserProfileControl()}
             </div>
-          </Card>
+          </div>
         </div>
         <div className="profile__payment">
-          <Card bodyStyle={{ backgroundColor: "#f5f5f5" }}>
+          <div className="box">
             <div className="profile__card-container">
               <div className="profile__title">Payment</div>
               <div className="profile__payment-content">
@@ -1136,10 +1137,10 @@ function Profile() {
                 />
               </div>
             </div>
-          </Card>
+          </div>
         </div>
         <div className=" profile__security">
-          <Card bodyStyle={{ backgroundColor: "#f5f5f5" }}>
+          <div className="box">
             <div className="profile__card-container">
               <div className="profile__title">{t("security")}</div>
               <div className="profile__security-item">
@@ -1166,7 +1167,7 @@ function Profile() {
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
       <Modal

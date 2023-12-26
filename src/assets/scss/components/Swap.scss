@@ -82,8 +82,9 @@
           background-color: $new-background-white;
           color: $new-text-color-black;
 
-          &:disabled {
+          &.disabled {
             background-color: $background-color-4;
+            color: #fff;
 
             &:hover {
               border-color: $background-color-4;

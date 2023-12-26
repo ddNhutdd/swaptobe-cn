@@ -324,6 +324,11 @@ export default function Swap() {
   const historyPagingOnChangeHandle = function (page) {
     setSwapHistoryCurrentPage(page);
   };
+  const maxClickHandle = function () {
+    setFromCoinValueString(
+      () => userWallet[swapFromCoin.toLowerCase() + "_balance"] || "0"
+    );
+  };
   return (
     <div className="swap">
       <div className="container">
@@ -340,7 +345,9 @@ export default function Swap() {
                 value={fromCoinValueString}
                 onChange={fromCoinOnChange}
               />
-              <button className="max">{t("max")}</button>
+              <button onClick={maxClickHandle} className="max">
+                {t("max")}
+              </button>
               <button className="selectBtn" onClick={showModal}>
                 <div className="selectBtn-container">
                   <img
@@ -375,7 +382,7 @@ export default function Swap() {
             </label>
             <div className="input-area">
               <input
-                className="swap__input"
+                className="swap__input disabled"
                 value={toCoinValueString}
                 readOnly
               />

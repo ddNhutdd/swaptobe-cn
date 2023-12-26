@@ -188,7 +188,7 @@
                 text-align: center;
 
                 button {
-                    background: $new-primary-background-7;
+                    background: $new-primary-background-6;
                     border-radius: 5px;
                     padding: 10px;
                     color: $white;
@@ -199,7 +199,7 @@
                     width: 100%;
 
                     &:hover {
-                        background: $new-primary-background-6;
+                        background: $new-primary-background-7;
                         cursor: pointer;
                     }
 
@@ -328,7 +328,7 @@
                 text-align: center;
 
                 button {
-                    background: $header2-background;
+                    background: $new-primary-background-6;
                     border-radius: 5px;
                     padding: 10px;
                     color: $white;
@@ -337,7 +337,7 @@
                     outline: none;
 
                     &:hover {
-                        background-color: $header2-background-light;
+                        background: $new-primary-background-7;
                         cursor: pointer;
                     }
 
@@ -355,6 +355,7 @@
         flex-direction: column;
         gap: 20px;
 
+
         @media screen and (max-width: 480px) {
             width: 100%;
         }
@@ -362,18 +363,27 @@
         .FormWithdraw__qr {
             width: 450px;
             padding: 30px;
-            background: $white;
+            background-color: $neutral-1;
+            color: $new-text-color-1;
             box-shadow: 0 10px 28px $boxShadown-color-3;
             border-radius: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+
+            .FormWithdraw__qr__bg {
+                padding: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: $neutral-20;
+            }
         }
 
         .right {
             width: 450px;
             padding: 15px;
-            background: $white;
+            background: $neutral-2;
             box-shadow: 0 10px 28px $boxShadown-color-3;
             border-radius: 20px;
 
@@ -398,7 +408,7 @@
 
             .formWithdraw__title {
                 font-weight: bold;
-                color: $primary-color;
+                color: $new-primary-color-8;
                 margin-bottom: 25px;
                 font-size: 1.5em;
                 text-transform: capitalize;
@@ -415,7 +425,7 @@
 
                     .formWithdraw__Wallet-header {
                         padding: 10px 10px 5px 10px;
-                        background-color: $primary-color;
+                        background-color: $new-primary-color-8;
                         width: 100%;
                         border-top-left-radius: 5px;
                         border-top-right-radius: 5px;
@@ -433,6 +443,8 @@
                         gap: 5px;
                         border-bottom-left-radius: 5px;
                         border-bottom-right-radius: 5px;
+                        color: $new-text-color-white;
+                        background-color: $neutral-3;
 
                         .formWithdraw__Wallet-body-amount {
                             display: flex;

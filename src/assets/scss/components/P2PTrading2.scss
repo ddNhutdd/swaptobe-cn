@@ -100,8 +100,7 @@
           &.buy-coin {
             background-color: $green;
 
-            &:hover {
-            }
+            &:hover {}
           }
 
           &.sell-coin {
@@ -351,6 +350,12 @@
       background-color: $header2-background;
       border-color: $header2-background;
       color: $white;
+    }
+
+    span {
+      &:last-child {
+        transform: translateY(1px);
+      }
     }
   }
 }

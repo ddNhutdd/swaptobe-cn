@@ -374,15 +374,20 @@ function SeresoWalletDeposit() {
                   >
                     <Empty />
                   </div>
-                  <div id="address" className={`fadeInBottomToTop --d-done`}>
-                    <QRCode
-                      style={{
-                        height: "auto",
-                        maxWidth: "100%",
-                        width: "100%",
-                      }}
-                      value={address.current}
-                    />
+                  <div
+                    id="address"
+                    className={`address-content-qr fadeInBottomToTop --d-done`}
+                  >
+                    <div className="address-content-qr-background">
+                      <QRCode
+                        style={{
+                          height: "auto",
+                          maxWidth: "100%",
+                          width: "100%",
+                        }}
+                        value={address.current ?? ""}
+                      />
+                    </div>
                   </div>
                   <div
                     id="addressCodeContainer"

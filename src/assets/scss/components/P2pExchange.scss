@@ -23,6 +23,11 @@
             position: relative;
             margin-bottom: 20px;
 
+            @media screen and (max-width:576px) {
+                text-align: center;
+            }
+
+
             .p2pExchange__button-select {
                 padding: 20px;
                 position: absolute;
@@ -36,6 +41,12 @@
                 align-items: center;
                 justify-content: center;
                 gap: 5px;
+
+                @media screen and (max-width:576px) {
+                    position: static;
+                    padding: 5px;
+                    width: 100%;
+                }
 
                 &:hover {
                     cursor: pointer;
@@ -104,24 +115,61 @@
                 gap: 10px;
 
                 .p2pExchange__data-content-item {
-                    background-color: $neutral-7;
+                    background-color: $neutral-3;
                     border-radius: 5px;
                     padding: 10px;
                     display: flex;
+                    align-items: center;
+
+                    @media screen and (max-width:576px) {
+                        flex-direction: column;
+                    }
 
                     .p2pExchange__data-cell {
-                        width: 33.33333%;
+                        width: 25%;
+
+                        @media screen and (max-width:576px) {
+                            width: 100%;
+                        }
 
                         &.amount {
                             text-align: center;
+
+                            @media screen and (max-width:576px) {
+                                text-align: left;
+                            }
                         }
 
                         &.minimum {
+                            text-align: center;
+
+                            @media screen and (max-width:576px) {
+                                text-align: left;
+                            }
+                        }
+
+                        &.action {
                             text-align: right;
+                            display: flex;
+                            gap: 10px;
+                            justify-content: flex-end;
+
+                            @media screen and (max-width:576px) {
+                                justify-content: flex-start;
+                            }
+
+                            button {
+                                @include userMainButton;
+                            }
                         }
                     }
                 }
             }
+        }
+
+        .p2pExchange__paging {
+            margin-top: 20px;
+            text-align: right;
         }
 
         .p2pExchange__footer {
@@ -171,6 +219,12 @@
             background-color: $header2-background;
             border-color: $header2-background;
             color: $white;
+        }
+
+        span {
+            &:last-child {
+                transform: translateY(1px);
+            }
         }
     }
 }

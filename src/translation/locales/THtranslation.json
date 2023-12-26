@@ -227,9 +227,10 @@
     "details": "รายละเอียด",
     "openPaymentScreen": "เปิดหน้าจอการชำระเงิน",
     "confirmTransfer": "ยืนยันว่าคุณได้โอนเงินแล้ว โปรดรอการตรวจสอบของเรา",
-    "accountInfoVietcomBank": "บัญชีที่ VietcomBank ผู้ถือบัญชี: ชื่อผู้ถือบัญชี",
+    "accountInfoVietcomBank": "3000stk2888 ที่ธนาคาร VietcomBank ชื่อบัญชี: 123accountnae456",
     "close": "ปิด",
-    "selling": "คุณกำลังขาย",
+    "youAreSelling": "คุณขาย",
+    "youAreBuying": "คุณซื้อ",
     "exchangeRate": "อัตราแลกเปลี่ยน",
     "time": "เวลา",
     "transactionFee": "(รวมค่าธรรมเนียมธุรกรรม: 0 VND และค่าธรรมเนียมการโอน: 48,000 VND)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "กำลังรอให้ฝ่ายตรงข้ามโอนเงิน",
     "waitingConfirm": "กำลังรอให้ฝ่ายตรงข้ามยืนยัน",
     "cancelSuccess": "ยกเลิกสำเร็จ",
-    "confirmSuccess": "ยืนยันสำเร็จ"
+    "confirmSuccess": "ยืนยันสำเร็จ",
+    "youAreSellingBitcoinThroughSereso": "คุณกำลังขาย Bitcoin 0.abc00012346787889456 ผ่าน Sereso",
+    "youAreBuyingBitcoinThroughSereso": "คุณกำลังซื้อ Bitcoin 0.abc00012346787889456 ผ่าน Sereso",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "โปรดชำระเงินตามจำนวนที่ถูกต้อง, เนื้อหา และหมายเลขบัญชีด้านล่าง",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "คุณยืนยันว่าคุณได้ทำการโอนเงิน โปรดรอเราทำการตรวจสอบ"
 }

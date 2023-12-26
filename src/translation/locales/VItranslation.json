@@ -227,9 +227,10 @@
     "details": "Chi Tiết",
     "openPaymentScreen": "Mở màn hình thanh toán",
     "confirmTransfer": "Xác nhận đã chuyển khoản, vui lòng đợi chúng tôi kiểm tra",
-    "accountInfoVietcomBank": "STK tại VietcomBank Chủ tài khoản: CTK",
+    "accountInfoVietcomBank": "3000stk2888 tại VietcomBank Tên Tài khoản: 123accountnae456",
     "close": "Đóng",
-    "selling": "Bạn sell",
+    "youAreSelling": "Bạn đang bán",
+    "youAreBuying": "Bạn đang mua",
     "exchangeRate": "Tỉ giá",
     "time": "Thời gian",
     "transactionFee": "(Đã bao gồm phí giao dịch: 0 VNĐ và phí chuyển: 48,000 VND)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "Đang chờ đối phương chuyển tiền",
     "waitingConfirm": "đang chờ đối phương xác nhận",
     "cancelSuccess": "Success",
-    "confirmSuccess": "Cancel Success"
+    "confirmSuccess": "Cancel Success",
+    "youAreSellingBitcoinThroughSereso": "Bạn đang bán 0.abc00012346787889456 BTC thông qua Sereso.",
+    "youAreBuyingBitcoinThroughSereso": "Bạn đang mua 0.abc00012346787889456 BTC thông qua Sereso.",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "Vui lòng thanh toán đúng số tiền, nội dung và số tài khoản bên dưới.",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "Bạn xác nhận đã chuyển khoản? Vui lòng đợi chúng tôi kiểm tra."
 }

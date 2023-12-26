@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+// If the ad is for sale, display the buy button; if the ad is for buy, display the sell button
 import React, { memo, useState, useRef, useEffect } from "react";
-import { Empty, Spin, Modal } from "antd";
+import { Empty, Spin, Modal, Pagination } from "antd";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import {
   getType,
   p2pExchangeType,
@@ -9,36 +11,141 @@ import {
   showP2pType,
 } from "src/redux/reducers/p2pTradingShow";
 import { getCoin } from "src/redux/constant/coin.constant";
-import { formatStringNumberCultureUS } from "src/util/common";
-import { api_status } from "src/constant";
+import {
+  debounce,
+  formatStringNumberCultureUS,
+  setLocalStorage,
+} from "src/util/common";
+import { api_status, localStorageVariable, url } from "src/constant";
 import socket from "src/util/socket";
+import { searchBuyQuick, searchSellQuick } from "src/util/userCallApi";
+import { DOMAIN } from "src/util/service";
 const P2pExchange = memo(function () {
-  let [type, setType] = useState(useSelector(getType));
-  const coin = useSelector(getCoin);
+  const history = useHistory();
+  const [type, setType] = useState(useSelector(getType));
+  const [coin, setCoin] = useState(useSelector(getCoin));
+  const isUserLogin = useSelector((state) => state.loginReducer.isLogin);
+  const limit = useRef(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const [listCoin, setListCoin] = useState();
   const showModalChooseCoin = () => {
     setIsModalOpen(true);
   };
+  const [mainData, setMainData] = useState();
+  const [callApiFetchMainDataStatus, setCallApiFetchMainDataStatus] = useState(
+    api_status.pending
+  );
+  const [totalItems, setTotalItems] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const amountInputElement = useRef();
+  const [callApiGetListCoinStatus, setCallApiGetListCoinStatus] = useState(
+    api_status.pending
+  );
   useEffect(() => {
     fetchListCoin();
   }, []);
+  const fetchMainData = function (limit, page, symbol, amount, type) {
+    return new Promise((resolve, reject) => {
+      if (callApiFetchMainDataStatus === api_status.fetching) resolve(false);
+      else setCallApiFetchMainDataStatus(api_status.fetching);
+      switch (type) {
+        case p2pExchangeType.buy:
+          searchBuyQuick({
+            limit,
+            page,
+            symbol,
+            amount,
+          })
+            .then((resp) => {
+              const data = resp.data.data;
+              console.log(data);
+              setMainData(() => data.array);
+              setTotalItems(() => data.total);
+              setCurrentPage(() => page);
+              setCallApiFetchMainDataStatus(api_status.fulfilled);
+              resolve(data);
+            })
+            .catch((error) => {
+              console.log(error);
+              resolve(false);
+              setCallApiFetchMainDataStatus(api_status.rejected);
+            });
+          break;
+        case p2pExchangeType.sell:
+          searchSellQuick({
+            limit,
+            page,
+            symbol,
+            amount,
+          })
+            .then((resp) => {
+              const data = resp.data.data;
+              console.log(data);
+              setMainData(() => data.array);
+              setTotalItems(() => data.total);
+              setCurrentPage(() => page);
+              setCallApiFetchMainDataStatus(api_status.fulfilled);
+              resolve(data);
+            })
+            .catch((error) => {
+              console.log(error);
+              resolve(false);
+              setCallApiFetchMainDataStatus(api_status.rejected);
+            });
+          break;
+        default:
+          resolve(false);
+          break;
+      }
+    });
+  };
+  const renderMainData = function () {
+    if (!mainData || mainData.length <= 0) return;
+    return mainData.map((item) => (
+      <div key={item.id} className="p2pExchange__data-content-item">
+        <div className="p2pExchange__data-cell">User: {item.userName}</div>
+        <div className="p2pExchange__data-cell amount">
+          Amount Available: {item.amount - item.amountSuccess}
+        </div>
+        <div className="p2pExchange__data-cell minimum">
+          Minimum: {item.amountMinimum}
+        </div>
+        <div className="p2pExchange__data-cell action">
+          {item.side === p2pExchangeType.buy ? (
+            <button onClick={buySellClickHandle.bind(null, item)}>Sell</button>
+          ) : (
+            <button onClick={buySellClickHandle.bind(null, item)}>Buy</button>
+          )}
+        </div>
+      </div>
+    ));
+  };
+  const fetchMainDataDebounced = debounce(fetchMainData, 1000);
   const handleCancelModalChooseCoin = () => {
     setIsModalOpen(false);
   };
   const backClickHandle = function () {
+    if (callApiFetchMainDataStatus === api_status.fetching) return;
     dispatch(setShow([showP2pType.p2pTrading, p2pExchangeType.buy]));
     return;
   };
   const changeTypeClickHandle = function () {
+    if (callApiFetchMainDataStatus === api_status.fetching) return;
+    clearMainData();
+    const amount =
+      amountInputElement.current.value &&
+      amountInputElement.current.value.replace(",", "");
     switch (type) {
       case p2pExchangeType.buy:
         setType(() => p2pExchangeType.sell);
+        if (amount)
+          fetchMainData(limit.current, 1, coin, amount, p2pExchangeType.sell);
         break;
       case p2pExchangeType.sell:
         setType(() => p2pExchangeType.buy);
+        if (amount)
+          fetchMainData(limit.current, 1, coin, amount, p2pExchangeType.buy);
         break;
       default:
         break;
@@ -66,10 +173,15 @@ const P2pExchange = memo(function () {
       inputValueWithoutComma
     );
     amountInputElement.current.value = inputValueFormated;
+    //
+    fetchMainDataDebounced(
+      limit.current,
+      1,
+      coin,
+      amountInputElement.current.value.replace(",", ""),
+      type
+    );
   };
-  const [callApiGetListCoinStatus, setCallApiGetListCoinStatus] = useState(
-    api_status.pending
-  );
   const fetchListCoin = function () {
     if (callApiGetListCoinStatus === api_status.fetching) return;
     setCallApiGetListCoinStatus(api_status.fetching);
@@ -81,10 +193,71 @@ const P2pExchange = memo(function () {
   const renderModalChooseCoin = function () {
     if (!listCoin) return;
     return listCoin.map((item) => (
-      <span key={item.name} className="p2pExchange__coin-item">
-        {item.name}
+      <span
+        onClick={coinSelectHandle}
+        key={item.name}
+        className={`p2pExchange__coin-item ${
+          item.name === coin ? "active" : ""
+        }`}
+      >
+        <img src={DOMAIN + item.image} alt={item.name} />
+        <span>{item.name}</span>
       </span>
     ));
+  };
+  const coinSelectHandle = function (e) {
+    if (callApiFetchMainDataStatus === api_status.fetching) return;
+    clearMainData();
+    const element = e.target.closest(".p2pExchange__coin-item");
+    const coinSelected = element.querySelector("span").textContent;
+    setCoin(() => coinSelected);
+    handleCancelModalChooseCoin();
+    //
+    const amount =
+      amountInputElement.current?.value &&
+      amountInputElement.current?.value.replace(",", "");
+    if (amount) fetchMainData(limit.current, 1, coinSelected, amount, type);
+  };
+  const pageChangeHandle = function (page) {
+    if (callApiFetchMainDataStatus === api_status.fetching) return;
+    const amount =
+      amountInputElement.current.value &&
+      amountInputElement.current.value.replace(",", "");
+    fetchMainData(limit.current, page, coin, amount, type);
+  };
+  const renderClassContent = function () {
+    if (
+      callApiGetListCoinStatus !== api_status.fetching &&
+      mainData &&
+      mainData.length > 0
+    )
+      return "";
+    else return "--d-none";
+  };
+  const renderClassEmpty = function () {
+    if (
+      callApiFetchMainDataStatus !== api_status.fetching &&
+      (!mainData || mainData.length <= 0)
+    )
+      return "";
+    else return "--d-none";
+  };
+  const renderClassSpin = function () {
+    if (callApiFetchMainDataStatus === api_status.fetching) return "";
+    else return "--d-none";
+  };
+  const clearMainData = function () {
+    setMainData(() => null);
+  };
+  const buySellClickHandle = function (item) {
+    if (!isUserLogin) {
+      history.push(url.login);
+      return;
+    } else {
+      setLocalStorage(localStorageVariable.adsItem, item);
+      history.push(url.transaction);
+      return;
+    }
   };
   return (
     <div className="p2pExchange">
@@ -115,26 +288,32 @@ const P2pExchange = memo(function () {
             <div className="p2pExchange__type-title">Nhập bằng:</div>
             <div className="p2pExchange__type-list">
               <div className="p2pExchange__type-item">VND</div>
-              <div className="p2pExchange__type-item">BTC</div>
+              <div className="p2pExchange__type-item">{coin}</div>
             </div>
           </div>
         </div>
         <div className="p2pExchange__data fadeInBottomToTop">
-          <div className="p2pExchange__data-content">
-            <div className="p2pExchange__data-content-item">
-              <div className="p2pExchange__data-cell">User: Văn Nam Phúc</div>
-              <div className="p2pExchange__data-cell amount">Amount: 5</div>
-              <div className="p2pExchange__data-cell minimum">
-                Minimum: 0.00001
-              </div>
-            </div>
+          <div className={`p2pExchange__data-content ${renderClassContent()}`}>
+            {renderMainData()}
           </div>
-          <div className="p2pExchange__data-spin spin-container --d-none">
+          <div
+            className={`p2pExchange__data-spin spin-container ${renderClassSpin()}`}
+          >
             <Spin />
           </div>
-          <div className="p2pExchange__data-empty  --d-none">
+          <div className={`p2pExchange__data-empty ${renderClassEmpty()}`}>
             <Empty />
           </div>
+        </div>
+        <div className="p2pExchange__paging">
+          <Pagination
+            defaultCurrent={1}
+            pageSize={limit.current}
+            current={currentPage}
+            total={totalItems}
+            showSizeChanger={false}
+            onChange={pageChangeHandle}
+          />
         </div>
         <div className="p2pExchange__footer">
           <span

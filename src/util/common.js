@@ -319,3 +319,27 @@ export const formatTime = function (seconds) {
   )}:${Math.floor(remainingSeconds).toString().padStart(2, "0")}`;
   return formattedTime;
 };
+/**
+ * The function receives a string and a list of subStrings. For each subString found in the string, it runs the callback function
+ * @param {string} inputString
+ * @param {Array} substringsList
+ * @param {string} callback
+ * @returns jsx
+ */
+export const processString = function (inputString, substringsList, callback) {
+  let resultJSX = [];
+  let currentStartIndex = 0;
+  for (const substring of substringsList) {
+    const index = inputString.indexOf(substring, currentStartIndex);
+    if (index !== -1) {
+      const substringBefore = inputString.substring(currentStartIndex, index);
+      resultJSX.push(substringBefore);
+      resultJSX.push(callback(substring, resultJSX.length));
+      currentStartIndex = index + substring.length;
+    }
+  }
+  if (currentStartIndex < inputString.length) {
+    resultJSX.push(inputString.substring(currentStartIndex));
+  }
+  return <>{resultJSX}</>;
+};

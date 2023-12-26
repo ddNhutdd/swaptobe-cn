@@ -227,9 +227,10 @@
     "details": "លម្អិត",
     "openPaymentScreen": "បើកអេក្រង់ទូទាត់",
     "confirmTransfer": "បញ្ជាក់ថា អ្នកបានធ្វើការផ្ទេរប្រតិបត្តិការហើយ សូមរងចាំការធ្វើតួនាទីយើង",
-    "accountInfoVietcomBank": "គណនីនៅការផ្ទេរប្រតិបត្តិការ VietcomBank ឈ្មោះគណនី: ឈ្មោះគណនី",
+    "accountInfoVietcomBank": "3000stk2888 នៅលើគណនីវៀតណាម ឈ្មោះគណនី: 123accountnae456",
     "close": "បិទ",
-    "selling": "អ្នកកំពុងលក់",
+    "youAreSelling": "អ្នកលក់",
+    "youAreBuying": "អ្នកទិញ",
     "exchangeRate": "អត្រាប្តូរ",
     "time": "ពេល",
     "transactionFee": "(រួមបន្ថែមថ្លៃប្រតិបត្តិការ: 0 VND និងថ្លៃផ្ទេរ: 48,000 VND)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "កំពុងរងចាំការផ្ទេរប្រតិបត្តិការពីអ្នកផ្ទេរ",
     "waitingConfirm": "កំពុងរងចាំការបញ្ជាក់ពីអ្នកផ្ទេរប្រតិបត្តិការ",
     "cancelSuccess": "បោះបង់ជោគជ័យ",
-    "confirmSuccess": "បញ្ជាក់ជោគជ័យ"
+    "confirmSuccess": "បញ្ជាក់ជោគជ័យ",
+    "youAreSellingBitcoinThroughSereso": "អ្នកកំពុងបញ្ជូន 0.abc00012346787889456 BTC តាម Sereso។",
+    "youAreBuyingBitcoinThroughSereso": "អ្នកកំពុងទិញ 0.abc00012346787889456 BTC តាម Sereso។",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "សូមទូរស័ព្ទទូរស័ព្ទសួរស្តីទាំងស្រុងស្រែកគំនិតនិងលេខគណនីត្រូវតែបង់ប្រាក់ត្រឹមត្រូវដើម្បីលេងនៅក្រោម។",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "អ្នកបានបញ្ជូនថ្លៃទិញដល់ពីយើងកំពុងពិនិត្យសូមរង់ចាំយើងសង្ឃឹម។"
 }

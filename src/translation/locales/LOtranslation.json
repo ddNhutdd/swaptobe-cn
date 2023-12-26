@@ -227,9 +227,10 @@
     "details": "ລາຍລະອຽດ",
     "openPaymentScreen": "ເປີດຊ່ອງການຊຳລະ",
     "confirmTransfer": "ຢືນຢັນວ່າທ່ານໄດ້ຊຳລະເງີນ, ກະລຸນາຖ້າການກວດສອບຂອງພວກເຮົາ",
-    "accountInfoVietcomBank": "ບັນຊີທີ່ຢູ່ທີ່ທີ່ VietcomBank ຜູ້ຕິດຕາມບັນຊີ: ຊື່ຜູ້ຕິດຕາມບັນຊີ",
+    "accountInfoVietcomBank": "3000stk2888 ທີ່ຢູ່ໃນບັນຊີ VietcomBank ຊື່ບັນຊີ: 123accountnae456",
     "close": "ປິດ",
-    "selling": "ທ່ານກາຣາຍ",
+    "youAreSelling": "ທ່ານຂາຍ",
+    "youAreBuying": "ທ່ານຊື້",
     "exchangeRate": "ອັດຕາຄ່ານະຄອນ",
     "time": "ເວລາ",
     "transactionFee": "(ລາຄາການສະແດ: 0 VND ແລະ ຄ່າຕ່າງປະ້ມ: 48,000 VND)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "ກໍາລັງບໍລິກເງີນຈາກຜູ້ຕ່າງປະ້ມ",
     "waitingConfirm": "ກໍາລັງບໍລິກການຢືນຢັນຈາກຜູ້ຕ່າງປະ້ມ",
     "cancelSuccess": "ຍົກເລີກສົບຜູ້ເຮັດ",
-    "confirmSuccess": "ຢືນຢັນສົບຜູ້ເຮັດ"
+    "confirmSuccess": "ຢືນຢັນສົບຜູ້ເຮັດ",
+    "youAreSellingBitcoinThroughSereso": "ທ່ານຂາຍ Bitcoin 0.abc00012346787889456 ຕົວຢ່າງ Sereso.",
+    "youAreBuyingBitcoinThroughSereso": "ທ່ານຊື້ Bitcoin 0.abc00012346787889456 ຕົວຢ່າງ Sereso.",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "ກະລຸນາຊື້ເງິນສິນຄ້າທີ່ຖືກຕ້ອງ, ການຂໍ້ຄວາມແລະເລກບັນຊີຕໍ່ຄ່າດຽວ",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "ທ່ານຢືນຢັນທີ່ທ່ານໄດ້ສົ່ງໄປ; ກະລຸນາຖ້າຫຼັງຈາກພວກເຮົາກວດເບີໂທ."
 }

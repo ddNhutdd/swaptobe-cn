@@ -355,6 +355,7 @@ export default function P2PTrading2({ history }) {
   const sectionSellButtonFilterClickHandle = function () {
     if (callApiBuyListStatus.current === api_status.fetching) return;
     loadSectionSell(1);
+    return;
   };
   const buyClickHandle = function (item) {
     setLocalStorage(localStorageVariable.adsItem, item);
@@ -371,6 +372,7 @@ export default function P2PTrading2({ history }) {
   };
   const onChangeSectionSellPaging = function (page) {
     loadSectionSell(page);
+    return;
   };
   /**
    * render modal
@@ -469,6 +471,7 @@ export default function P2PTrading2({ history }) {
     amountSectionSellFilterClear();
     loadSectionSell(1);
     chooseCoinSellCancelHandle();
+    return;
   };
   const amountSectionBuyFilterChangeHandle = function (e) {
     amountSectionBuyFilter.current = e.target.value;
@@ -513,9 +516,13 @@ export default function P2PTrading2({ history }) {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
-    i18n.on("languageChanged", () => {
-      loadSectionBuy(buySectionPage);
-      loadSectionSell(sellSectionPage);
+    let currentLanguage = i18n.language;
+    i18n.on("languageChanged", (newLanguage) => {
+      if (newLanguage !== currentLanguage) {
+        loadSectionBuy(buySectionPage);
+        loadSectionSell(sellSectionPage);
+        return;
+      }
     });
     //
     socket.once("listCoin", (resp) => {

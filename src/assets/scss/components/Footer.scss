@@ -3,7 +3,6 @@
   height: auto;
   background-color: $footer-background;
   display: block;
-  color: $white;
   padding: 90px 0 45px;
 
 
@@ -111,7 +110,7 @@
               transition: .2s;
 
               &:hover {
-                color: $green-1;
+                color: $neutral-16;
                 cursor: pointer;
               }
             }

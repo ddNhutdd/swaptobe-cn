@@ -33,7 +33,6 @@ import { showAlert } from "src/function/showAlert";
 import { historytransfer as historytransferApi } from "src/util/userCallApi";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
-
 function FormWithdraw() {
   //
   const form = {
@@ -580,14 +579,16 @@ function FormWithdraw() {
               showForm === form.Wallet ? "--d-none" : ""
             }`}
           >
-            <QRCode
-              style={{
-                height: "auto",
-                maxWidth: "200px",
-                width: "200px",
-              }}
-              value={qrValue.current}
-            />
+            <div className="FormWithdraw__qr__bg">
+              <QRCode
+                style={{
+                  height: "auto",
+                  maxWidth: "200px",
+                  width: "200px",
+                }}
+                value={qrValue.current}
+              />
+            </div>
           </div>
           <div className="right">
             {showForm === form.Wallet ? (

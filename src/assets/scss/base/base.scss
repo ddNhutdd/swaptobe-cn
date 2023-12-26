@@ -87,8 +87,8 @@ $white: #fff;
 $black: black;
 $green-1: $neutral-4;
 $blue-1: #1890ff;
-$footer-background: #e5e5e5;
-$footer-text-1: #757575;
+$footer-background: $neutral-3;
+$footer-text-1: $neutral-20;
 $gray-background-1: #ebecf0;
 $text-color-1: #49474a;
 $text-color-2: #212529;
@@ -290,6 +290,7 @@ $blue-light: #ceceff;
   display: flex;
   background-color: $white;
   gap: 10px;
+  color: $neutral-2;
 
   &.disabled {
     color: $background-color-4;
@@ -320,6 +321,7 @@ $blue-light: #ceceff;
   span {
     &:last-child {
       margin-left: auto;
+      transform: translateY(2px);
     }
   }
 
@@ -346,7 +348,6 @@ $blue-light: #ceceff;
   .dropdown-menu {
     margin-top: 5px;
     padding: 3px 0;
-    color: $black;
     border-radius: 5px;
     background-color: $white;
     border: 1px solid $background-color-4;
@@ -358,6 +359,7 @@ $blue-light: #ceceff;
       display: flex;
       transition: 0.2s;
       gap: 5px;
+      color: $black;
 
       &.active {
         background-color: $background-color-9;
@@ -570,7 +572,7 @@ $blue-light: #ceceff;
 }
 
 .box {
-  background-color: whitesmoke;
+  background-color: $neutral-5;
   border-radius: 5px;
   padding: 15px;
 

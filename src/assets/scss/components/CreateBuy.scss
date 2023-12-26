@@ -2,14 +2,14 @@
   width: 100%;
   padding-top: 90px;
   background: $new-background-3;
+  color: $neutral-20;
 
   .container {
     @include container2;
 
-    @media screen and (min) {}
-
     .title {
       font-size: 24px;
+      color: $neutral-20;
     }
 
     .switch {
@@ -18,7 +18,7 @@
       cursor: pointer;
 
       &:hover {
-        color: $primary-color;
+        color: $neutral-16;
         text-decoration: underline;
       }
 
@@ -29,6 +29,10 @@
 
     .head-area {
       position: relative;
+
+      .head-area-title {
+        color: $neutral-20;
+      }
 
       .create-buy-ads__head-area-price {
         font-weight: bold;
@@ -56,6 +60,10 @@
         margin-top: 40px;
       }
 
+      h2 {
+        color: $neutral-20;
+      }
+
       .field {
         margin-bottom: 18px;
         position: relative;
@@ -66,6 +74,7 @@
           padding: 5px 10px;
           border-radius: 5px;
           transition: 0.2s;
+          color: $neutral-2;
 
           &:disabled {
             background-color: $background-color-4;
@@ -107,12 +116,16 @@
     }
 
     .review-area {
-      cursor: pointer;
 
-      &:hover {
-        color: $primary-color;
-        text-decoration: underline;
+
+      span {
+        &:hover {
+          color: $neutral-16;
+          text-decoration: underline;
+          cursor: pointer;
+        }
       }
+
 
       i {
         margin-right: 8px;

@@ -10,7 +10,7 @@ export const p2pExchangeType = {
 const p2pTradingShowSlice = createSlice({
   name: "p2pTradingShow",
   initialState: {
-    show: showP2pType.p2pExchange,
+    show: showP2pType.p2pTrading,
     p2pExchangeType: p2pExchangeType.buy,
   },
   reducers: {

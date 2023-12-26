@@ -227,9 +227,10 @@
     "details": "세부 정보",
     "openPaymentScreen": "결제 화면 열기",
     "confirmTransfer": "송금을 확인하고 저희의 검증을 기다려주세요",
-    "accountInfoVietcomBank": "VietcomBank 계좌 예금주: 예금주명",
+    "accountInfoVietcomBank": "3000stk2888 VietcomBank 계좌 이름: 123accountnae456",
     "close": "닫기",
-    "selling": "판매 중입니다",
+    "youAreSelling": "판매 중",
+    "youAreBuying": "구매 중",
     "exchangeRate": "환율",
     "time": "시간",
     "transactionFee": "(거래 수수료: 0 VND 및 이체 수수료: 48,000 VND 포함)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "상대방이 송금하기를 기다리는 중",
     "waitingConfirm": "상대방이 확인하기를 기다리는 중",
     "cancelSuccess": "취소 성공",
-    "confirmSuccess": "확인 성공"
+    "confirmSuccess": "확인 성공",
+    "youAreSellingBitcoinThroughSereso": "당신은 Sereso를 통해 0.abc00012346787889456 BTC를 판매하고 있습니다.",
+    "youAreBuyingBitcoinThroughSereso": "당신은 Sereso를 통해 0.abc00012346787889456 BTC를 구매하고 있습니다.",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "아래의 올바른 금액, 내용 및 계좌 번호에 대한 지불을 진행해 주세요.",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "이체를 완료했다는 것을 확인하였습니다. 확인을 위해 잠시 기다려 주세요."
 }

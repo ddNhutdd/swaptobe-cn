@@ -227,9 +227,10 @@
     "details": "详情",
     "openPaymentScreen": "打开支付屏幕",
     "confirmTransfer": "确认您已经转账，请等待我们的验证",
-    "accountInfoVietcomBank": "在越com银行的帐户 账户持有人：账户持有人的名字",
+    "accountInfoVietcomBank": "3000stk2888 在VietcomBank 账户名称：123accountnae456",
     "close": "关闭",
-    "selling": "您正在出售",
+    "youAreSelling": "你在卖",
+    "youAreBuying": "你在买",
     "exchangeRate": "汇率",
     "time": "时间",
     "transactionFee": "(包括交易费：0 VNĐ 和转账费：48,000 VNĐ)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "等待对方转账",
     "waitingConfirm": "等待对方确认",
     "cancelSuccess": "取消成功",
-    "confirmSuccess": "确认成功"
+    "confirmSuccess": "确认成功",
+    "youAreSellingBitcoinThroughSereso": "您正在通过Sereso出售0.abc00012346787889456 BTC。",
+    "youAreBuyingBitcoinThroughSereso": "您正在通过Sereso购买0.abc00012346787889456 BTC。",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "请为下面的正确金额、内容和账号进行支付。",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "您确认已经完成了转账，请等待我们的确认。"
 }

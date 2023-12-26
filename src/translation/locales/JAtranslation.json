@@ -227,9 +227,10 @@
     "details": "詳細",
     "openPaymentScreen": "支払い画面を開く",
     "confirmTransfer": "送金を確認し、弊社の確認をお待ちください",
-    "accountInfoVietcomBank": "VietcomBankの口座 口座名義: アカウントホルダーの名前",
+    "accountInfoVietcomBank": "3000stk2888、VietcomBankの口座、口座名：123accountnae456",
     "close": "閉じる",
-    "selling": "あなたは売っています",
+    "youAreSelling": "販売しています",
+    "youAreBuying": "購入しています",
     "exchangeRate": "為替レート",
     "time": "時間",
     "transactionFee": "(取引手数料: 0 VNDおよび転送手数料: 48,000 VNDを含む)",
@@ -244,5 +245,9 @@
     "waitingTransfer": "相手方が送金するのを待っています",
     "waitingConfirm": "相手方の確認を待っています",
     "cancelSuccess": "キャンセル成功",
-    "confirmSuccess": "確認成功"
+    "confirmSuccess": "確認成功",
+    "youAreSellingBitcoinThroughSereso": "Seresoを介して0.abc00012346787889456 BTCを転送しています。",
+    "youAreBuyingBitcoinThroughSereso": "Seresoを介して0.abc00012346787889456 BTCを購入しています。",
+    "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "正しい金額、内容、および以下の口座番号に支払いを行ってください。",
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "転送を行ったことを確認しました。弊社の確認をお待ちください。"
 }

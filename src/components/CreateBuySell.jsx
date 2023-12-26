@@ -406,7 +406,7 @@ export default function CreateBuy() {
               : t("doYouWantToBuy")}
           </span>
           <div className="head-area">
-            <h2>
+            <h2 className="head-area-title">
               {action === actionType.buy
                 ? t("adsToBuyBTC").replace("BTC", currentCoin)
                 : t("adsToSellBTC").replace("BTC", currentCoin)}
