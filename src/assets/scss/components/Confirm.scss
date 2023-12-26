@@ -1,6 +1,6 @@
 .confirm {
     .confirm--green {
-        color: $green-2;
+        color: $green-16;
         font-weight: bold;
     }
 
@@ -19,6 +19,8 @@
         word-break: break-all;
     }
 
+    background-color: $neutral-3;
+
     .container {
         @include container2;
         padding-top: 0;
@@ -26,6 +28,14 @@
 
         table {
             @include adminTable;
+            color: $neutral-19;
+
+            tr {
+                &:hover {
+                    cursor: default;
+                    background-color: transparent;
+                }
+            }
 
             .confirm__header {
                 td {

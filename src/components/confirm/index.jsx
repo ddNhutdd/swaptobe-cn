@@ -83,6 +83,7 @@ function Confirm() {
     display: "flex",
     gap: "30px",
     flexDirection: "column",
+    backgroundColor: "#1b1b1b",
   };
   return (
     <>
