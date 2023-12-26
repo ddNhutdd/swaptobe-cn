@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "Seresoを介して0.abc00012346787889456 BTCを転送しています。",
     "youAreBuyingBitcoinThroughSereso": "Seresoを介して0.abc00012346787889456 BTCを購入しています。",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "正しい金額、内容、および以下の口座番号に支払いを行ってください。",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "転送を行ったことを確認しました。弊社の確認をお待ちください。"
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "転送を行ったことを確認しました。弊社の確認をお待ちください。",
+    "chooseAnotherCoin": "他のコインを選択",
+    "enterBTCAmountToBuy": "購入するBTCの量を入力",
+    "enterBTCAmountToSell": "販売するBTCの量を入力",
+    "enterWith": "と入力",
+    "searchForBTCToSell": "販売するBTCを検索",
+    "searchToBuyBTC": "購入するBTCを検索",
+    "goBack": "戻る",
+    "chooseTheCoinYouWant": "希望のコインを選択",
+    "p2pExchange": "P2Pエクスチェンジ",
+    "quantity": "数量"
 }

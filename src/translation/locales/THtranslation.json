@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "คุณกำลังขาย Bitcoin 0.abc00012346787889456 ผ่าน Sereso",
     "youAreBuyingBitcoinThroughSereso": "คุณกำลังซื้อ Bitcoin 0.abc00012346787889456 ผ่าน Sereso",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "โปรดชำระเงินตามจำนวนที่ถูกต้อง, เนื้อหา และหมายเลขบัญชีด้านล่าง",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "คุณยืนยันว่าคุณได้ทำการโอนเงิน โปรดรอเราทำการตรวจสอบ"
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "คุณยืนยันว่าคุณได้ทำการโอนเงิน โปรดรอเราทำการตรวจสอบ",
+    "chooseAnotherCoin": "เลือกเหรียญอื่น",
+    "enterBTCAmountToBuy": "ป้อนจำนวน BTC ที่ต้องการซื้อ",
+    "enterBTCAmountToSell": "ป้อนจำนวน BTC ที่ต้องการขาย",
+    "enterWith": "ป้อนด้วย",
+    "searchForBTCToSell": "ค้นหา BTC เพื่อขาย",
+    "searchToBuyBTC": "ค้นหาเพื่อซื้อ BTC",
+    "goBack": "ย้อนกลับ",
+    "chooseTheCoinYouWant": "เลือกเหรียญที่คุณต้องการ",
+    "p2pExchange": "P2P Exchange",
+    "quantity": "ปริมาณ"
 }

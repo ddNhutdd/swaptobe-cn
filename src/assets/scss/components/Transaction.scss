@@ -1,5 +1,7 @@
 .transaction {
     margin-top: 90px;
+    background-color: $neutral-3;
+    color: $neutral-20;
 
     .transaction--green {
         color: $green-2
@@ -10,7 +12,7 @@
     }
 
     .transaction--green-header {
-        color: $header2-background;
+        color: $blue-16;
     }
 
     .transaction--bold {
@@ -43,12 +45,22 @@
 
                     input {
                         padding-right: 40px;
+                        color: $neutral-2;
+
+                        &.transaction__input-result {
+                            color: $neutral-20;
+                        }
                     }
 
                     .transaction__unit {
                         position: absolute;
                         top: 41px;
                         right: 6px;
+                        color: $neutral-2;
+
+                        &.result {
+                            color: $neutral-20;
+                        }
                     }
                 }
             }
@@ -82,7 +94,7 @@
                 .transaction__payment-dropdown-menu-container {
                     @include userDropdownMenu;
                     position: absolute;
-                    top: 63px;
+                    top: 64px;
                     left: 0;
                 }
             }
@@ -136,7 +148,7 @@
 
                 .transaction__box-price {
                     font-weight: bold;
-                    color: $green-2;
+                    color: $new-primary-background-6;
                     font-size: 15px;
                 }
 
@@ -178,7 +190,7 @@
                     }
 
                     i {
-                        color: $green-2;
+                        color: $green-16;
                     }
                 }
 
@@ -188,6 +200,10 @@
                     @media screen and (max-width:576px) {
                         align-items: flex-start;
                     }
+                }
+
+                .transaction__username {
+                    color: $green-16;
                 }
             }
 
@@ -211,6 +227,10 @@
                     font-size: 16px;
                     font-weight: bold;
                 }
+
+                .transaction__chat-support {
+                    color: $blue-16;
+                }
             }
 
             button {
@@ -222,10 +242,21 @@
         .transaction__header {
             font-size: 18px;
             font-weight: bold;
+
+            .transaction__title-action {
+                &.green {
+                    color: $green-16;
+                }
+
+                &.red {
+                    color: $red-16;
+                }
+            }
         }
 
-        h3 {
+        .transaction__title {
             margin-bottom: 0;
+            color: $neutral-20;
         }
     }
 }

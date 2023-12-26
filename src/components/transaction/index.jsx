@@ -159,7 +159,9 @@ function Transaction() {
     }
     symbol.current = selectedAds.symbol;
     idAds.current = selectedAds.id;
-    getElementById("transactionTitle").innerHTML = `<span class="transaction--${
+    getElementById(
+      "transactionTitle"
+    ).innerHTML = `<span class="transaction__title-action ${
       tempCA === actionType.buy ? "green" : "red"
     }">${capitalizeFirstLetter(tempCA)}</span> ${symbol.current} via Bank
     transfer (VND)`;
@@ -519,8 +521,12 @@ ${symbol.current}`;
                   disabled
                   id="receiveInputTransactionFormBuy"
                   type="text"
+                  className="transaction__input-result"
                 />
-                <span id="receiveUnitTransaction" className="transaction__unit">
+                <span
+                  id="receiveUnitTransaction"
+                  className="transaction__unit result"
+                >
                   USDT
                 </span>
               </div>
@@ -597,7 +603,9 @@ ${symbol.current}`;
             </button>
           </form>
         </div>
-        <h3 className="transaction--bold">{t("advertisementInformations")}</h3>
+        <h3 className="transaction__title transaction--bold">
+          {t("advertisementInformations")}
+        </h3>
         <div className="box transaction__box">
           <div className="transaction__box-item">
             <span>{t("price")}:</span>
@@ -628,11 +636,13 @@ ${symbol.current}`;
             <span>15 {t("minutes")}</span>
           </div>
         </div>
-        <h3 className="transaction--bold">infomation about partners</h3>
+        <h3 className="transaction__title transaction--bold">
+          infomation about partners
+        </h3>
         <div className="box transaction__box">
           <div className="transaction__box-item">
             <span>{t("username")}:</span>
-            <span id="transactionUserName" className="transaction--green">
+            <span className="transaction__username" id="transactionUserName">
               queencoin9999
             </span>
           </div>
@@ -683,8 +693,10 @@ ${symbol.current}`;
               </div>
               <div className="transaction__chat-text">
                 {t("contactCustomerSupportVia")}{" "}
-                <span className="transaction--green">Online support.</span> We
-                are always ready to help
+                <span className="transaction__chat-support">
+                  Online support.
+                </span>{" "}
+                We are always ready to help
               </div>
             </div>
           </div>

@@ -245,7 +245,6 @@ function ConfirmItem(props) {
     apiNoFetchingUI();
   };
   const loadData = function () {
-    console.log("run hear");
     const {
       code,
       amount,

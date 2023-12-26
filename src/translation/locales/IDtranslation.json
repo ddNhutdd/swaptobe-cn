@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "Anda mentransfer 0.abc00012346787889456 BTC melalui Sereso.",
     "youAreBuyingBitcoinThroughSereso": "Anda membeli 0.abc00012346787889456 BTC melalui Sereso.",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "Silakan melakukan pembayaran untuk jumlah, konten, dan nomor akun yang benar di bawah ini.",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "Anda mengkonfirmasi bahwa Anda telah melakukan transfer; harap tunggu kami untuk memverifikasi."
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "Anda mengkonfirmasi bahwa Anda telah melakukan transfer; harap tunggu kami untuk memverifikasi.",
+    "chooseAnotherCoin": "Pilih koin lain",
+    "enterBTCAmountToBuy": "Masukkan jumlah BTC yang ingin dibeli",
+    "enterBTCAmountToSell": "Masukkan jumlah BTC yang ingin dijual",
+    "enterWith": "Masukkan dengan",
+    "searchForBTCToSell": "Cari BTC untuk dijual",
+    "searchToBuyBTC": "Cari untuk membeli BTC",
+    "goBack": "Kembali",
+    "chooseTheCoinYouWant": "Pilih koin yang Anda inginkan",
+    "p2pExchange": "Pertukaran P2P",
+    "quantity": "Jumlah"
 }

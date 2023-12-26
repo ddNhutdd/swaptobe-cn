@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "You are selling 0.abc00012346787889456 BTC through Sereso.",
     "youAreBuyingBitcoinThroughSereso": "You are buying 0.abc00012346787889456 BTC through Sereso.",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "Please make the payment for the correct amount, content, and account number below",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "You confirm that you have made the transfer. Please wait for us to verify."
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "You confirm that you have made the transfer. Please wait for us to verify.",
+    "chooseAnotherCoin": "Choose another coin",
+    "enterBTCAmountToBuy": "Enter BTC amount to buy",
+    "enterBTCAmountToSell": "Enter BTC amount to sell",
+    "enterWith": "Enter with",
+    "searchForBTCToSell": "Search for BTC to sell",
+    "searchToBuyBTC": "Search to buy BTC",
+    "goBack": "Go back",
+    "chooseTheCoinYouWant": "Choose the coin you want",
+    "p2pExchange": "P2P Exchange",
+    "quantity": "Quantity"
 }

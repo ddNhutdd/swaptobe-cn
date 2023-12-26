@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "Bạn đang bán 0.abc00012346787889456 BTC thông qua Sereso.",
     "youAreBuyingBitcoinThroughSereso": "Bạn đang mua 0.abc00012346787889456 BTC thông qua Sereso.",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "Vui lòng thanh toán đúng số tiền, nội dung và số tài khoản bên dưới.",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "Bạn xác nhận đã chuyển khoản? Vui lòng đợi chúng tôi kiểm tra."
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "Bạn xác nhận đã chuyển khoản? Vui lòng đợi chúng tôi kiểm tra.",
+    "chooseAnotherCoin": "Chọn một coin khác",
+    "enterBTCAmountToBuy": "Nhập số lượng BTC muốn mua",
+    "enterBTCAmountToSell": "Nhập số lượng BTC muốn bán",
+    "enterWith": "Nhập bằng",
+    "searchForBTCToSell": "Tìm bán BTC",
+    "searchToBuyBTC": "Tìm mua BTC",
+    "goBack": "Quay lại",
+    "chooseTheCoinYouWant": "Chọn coin bạn muốn",
+    "p2pExchange": "Trao đổi P2P",
+    "quantity": "Số lượng"
 }

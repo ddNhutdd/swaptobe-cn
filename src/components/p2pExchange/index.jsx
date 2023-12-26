@@ -3,7 +3,9 @@
 import React, { memo, useState, useRef, useEffect } from "react";
 import { Empty, Spin, Modal, Pagination } from "antd";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import i18n from "src/translation/i18n";
 import {
   getType,
   p2pExchangeType,
@@ -14,9 +16,15 @@ import { getCoin } from "src/redux/constant/coin.constant";
 import {
   debounce,
   formatStringNumberCultureUS,
+  getLocalStorage,
   setLocalStorage,
 } from "src/util/common";
-import { api_status, localStorageVariable, url } from "src/constant";
+import {
+  api_status,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import socket from "src/util/socket";
 import { searchBuyQuick, searchSellQuick } from "src/util/userCallApi";
 import { DOMAIN } from "src/util/service";
@@ -32,6 +40,7 @@ const P2pExchange = memo(function () {
   const showModalChooseCoin = () => {
     setIsModalOpen(true);
   };
+  const { t } = useTranslation();
   const [mainData, setMainData] = useState();
   const [callApiFetchMainDataStatus, setCallApiFetchMainDataStatus] = useState(
     api_status.pending
@@ -43,6 +52,10 @@ const P2pExchange = memo(function () {
     api_status.pending
   );
   useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
     fetchListCoin();
   }, []);
   const fetchMainData = function (limit, page, symbol, amount, type) {
@@ -81,7 +94,6 @@ const P2pExchange = memo(function () {
           })
             .then((resp) => {
               const data = resp.data.data;
-              console.log(data);
               setMainData(() => data.array);
               setTotalItems(() => data.total);
               setCurrentPage(() => page);
@@ -113,9 +125,19 @@ const P2pExchange = memo(function () {
         </div>
         <div className="p2pExchange__data-cell action">
           {item.side === p2pExchangeType.buy ? (
-            <button onClick={buySellClickHandle.bind(null, item)}>Sell</button>
+            <button
+              className="p2pExchange__button-sell"
+              onClick={buySellClickHandle.bind(null, item)}
+            >
+              Sell
+            </button>
           ) : (
-            <button onClick={buySellClickHandle.bind(null, item)}>Buy</button>
+            <button
+              className="p2pExchange__button-buy"
+              onClick={buySellClickHandle.bind(null, item)}
+            >
+              Buy
+            </button>
           )}
         </div>
       </div>
@@ -154,9 +176,9 @@ const P2pExchange = memo(function () {
   const renderFooterQuestion = function () {
     switch (type) {
       case p2pExchangeType.buy:
-        return `Tìm bán BTC?`;
+        return t("searchForBTCToSell");
       case p2pExchangeType.sell:
-        return `Tìm mua BTC?`;
+        return t("searchToBuyBTC");
       default:
         break;
     }
@@ -259,25 +281,35 @@ const P2pExchange = memo(function () {
       return;
     }
   };
+  const renderPlaceholder = function () {
+    switch (type) {
+      case p2pExchangeType.buy:
+        return t("enterBTCAmountToBuy").replace("BTC", coin);
+      case p2pExchangeType.sell:
+        return t("enterBTCAmountToSell").replace("BTC", coin);
+      default:
+        break;
+    }
+  };
   return (
     <div className="p2pExchange">
       <div className="container">
-        <div className="p2pExchange__title">P2P EXCHANGE</div>
+        <div className="p2pExchange__title">{t("p2pExchange")}</div>
         <div className="p2pExchange__selected">
           <span className="p2pExchange__coin">{coin}</span>
           <button
             onClick={showModalChooseCoin}
             className="p2pExchange__button-select"
           >
-            <span>chon mot coi khac</span>
+            <span>{t("chooseAnotherCoin")}</span>
             <i className="fa-solid fa-caret-down"></i>
           </button>
         </div>
         <div className="p2pExchange__search-container">
-          <div className="p2pExchange__search-title">Amount:</div>
+          <div className="p2pExchange__search-title">{t("quantity")}:</div>
           <div className="p2pExchange__input-container">
             <input
-              placeholder={`enter ${coin} amount to ${type}`}
+              placeholder={renderPlaceholder()}
               type="text"
               ref={amountInputElement}
               onChange={amountInputChangeHandle}
@@ -285,7 +317,7 @@ const P2pExchange = memo(function () {
             <span>{coin}</span>
           </div>
           <div className="p2pExchange__type">
-            <div className="p2pExchange__type-title">Nhập bằng:</div>
+            <div className="p2pExchange__type-title">{t("enterWith")}:</div>
             <div className="p2pExchange__type-list">
               <div className="p2pExchange__type-item">VND</div>
               <div className="p2pExchange__type-item">{coin}</div>
@@ -323,7 +355,7 @@ const P2pExchange = memo(function () {
             {renderFooterQuestion().replace("BTC", coin)}
           </span>
           <span onClick={backClickHandle} className="p2pExchange__footer-item">
-            Quay lại
+            {t("goBack")}
           </span>
         </div>
         <Modal

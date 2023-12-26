@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "당신은 Sereso를 통해 0.abc00012346787889456 BTC를 판매하고 있습니다.",
     "youAreBuyingBitcoinThroughSereso": "당신은 Sereso를 통해 0.abc00012346787889456 BTC를 구매하고 있습니다.",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "아래의 올바른 금액, 내용 및 계좌 번호에 대한 지불을 진행해 주세요.",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "이체를 완료했다는 것을 확인하였습니다. 확인을 위해 잠시 기다려 주세요."
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "이체를 완료했다는 것을 확인하였습니다. 확인을 위해 잠시 기다려 주세요.",
+    "chooseAnotherCoin": "다른 코인 선택",
+    "enterBTCAmountToBuy": "매수할 BTC 양 입력",
+    "enterBTCAmountToSell": "매도할 BTC 양 입력",
+    "enterWith": "입력하십시오",
+    "searchForBTCToSell": "판매할 BTC 검색",
+    "searchToBuyBTC": "매수할 BTC 검색",
+    "goBack": "뒤로 가기",
+    "chooseTheCoinYouWant": "원하는 코인 선택",
+    "p2pExchange": "P2P 거래소",
+    "quantity": "수량"
 }

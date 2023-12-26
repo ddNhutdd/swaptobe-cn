@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Spin, Empty, Pagination } from "antd";
+import { Spin, Empty, Pagination } from "antd";
 import { getBankListV2 } from "src/assets/resource/getBankListV2";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";

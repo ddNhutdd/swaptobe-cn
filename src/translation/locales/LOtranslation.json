@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "ທ່ານຂາຍ Bitcoin 0.abc00012346787889456 ຕົວຢ່າງ Sereso.",
     "youAreBuyingBitcoinThroughSereso": "ທ່ານຊື້ Bitcoin 0.abc00012346787889456 ຕົວຢ່າງ Sereso.",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "ກະລຸນາຊື້ເງິນສິນຄ້າທີ່ຖືກຕ້ອງ, ການຂໍ້ຄວາມແລະເລກບັນຊີຕໍ່ຄ່າດຽວ",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "ທ່ານຢືນຢັນທີ່ທ່ານໄດ້ສົ່ງໄປ; ກະລຸນາຖ້າຫຼັງຈາກພວກເຮົາກວດເບີໂທ."
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "ທ່ານຢືນຢັນທີ່ທ່ານໄດ້ສົ່ງໄປ; ກະລຸນາຖ້າຫຼັງຈາກພວກເຮົາກວດເບີໂທ.",
+    "chooseAnotherCoin": "ເລືອກປະກາດອື່ນ",
+    "enterBTCAmountToBuy": "ປ້ອນຈຳນວນ BTC ເພື່ອຊື້",
+    "enterBTCAmountToSell": "ປ້ອນຈຳນວນ BTC ເພື່ອຂາຍ",
+    "enterWith": "ປ້ອນດ້ວຍ",
+    "searchForBTCToSell": "ຄົ້ນຫາ BTC ເພື່ອຂາຍ",
+    "searchToBuyBTC": "ຄົ້ນຫາເພື່ອຊື້ BTC",
+    "goBack": "ກັບຄືນ",
+    "chooseTheCoinYouWant": "ເລືອກປະກາດທີ່ຢູ່",
+    "p2pExchange": "ຕັ້ງຕໍ່ P2P",
+    "quantity": "ຈຳນວນ"
 }

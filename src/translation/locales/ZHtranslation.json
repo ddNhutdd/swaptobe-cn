@@ -249,5 +249,15 @@
     "youAreSellingBitcoinThroughSereso": "您正在通过Sereso出售0.abc00012346787889456 BTC。",
     "youAreBuyingBitcoinThroughSereso": "您正在通过Sereso购买0.abc00012346787889456 BTC。",
     "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow": "请为下面的正确金额、内容和账号进行支付。",
-    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "您确认已经完成了转账，请等待我们的确认。"
+    "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify": "您确认已经完成了转账，请等待我们的确认。",
+    "chooseAnotherCoin": "选择其他币种",
+    "enterBTCAmountToBuy": "输入购买的BTC数量",
+    "enterBTCAmountToSell": "输入出售的BTC数量",
+    "enterWith": "输入",
+    "searchForBTCToSell": "搜索要出售的BTC",
+    "searchToBuyBTC": "搜索要购买的BTC",
+    "goBack": "返回",
+    "chooseTheCoinYouWant": "选择您想要的币种",
+    "p2pExchange": "P2P交易",
+    "quantity": "数量"
 }
