@@ -259,5 +259,9 @@
     "goBack": "返回",
     "chooseTheCoinYouWant": "选择您想要的币种",
     "p2pExchange": "P2P交易",
-    "quantity": "数量"
+    "quantity": "数量",
+    "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "你是否想交换 113hgh222 12ETH12 为 122jjk999 33BTC33？",
+    "areYouSureYouWantToCancel": "你确定要取消吗？",
+    "confirm": "确认",
+    "cancel": "取消"
 }

@@ -259,5 +259,9 @@
     "goBack": "뒤로 가기",
     "chooseTheCoinYouWant": "원하는 코인 선택",
     "p2pExchange": "P2P 거래소",
-    "quantity": "수량"
+    "quantity": "수량",
+    "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "113hgh222 12ETH12를 122jjk999 33BTC33로 교환하시겠습니까?",
+    "areYouSureYouWantToCancel": "취소하시겠습니까?",
+    "confirm": "확인",
+    "cancel": "취소"
 }

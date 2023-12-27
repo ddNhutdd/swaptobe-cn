@@ -259,5 +259,9 @@
     "goBack": "ກັບຄືນ",
     "chooseTheCoinYouWant": "ເລືອກປະກາດທີ່ຢູ່",
     "p2pExchange": "ຕັ້ງຕໍ່ P2P",
-    "quantity": "ຈຳນວນ"
+    "quantity": "ຈຳນວນ",
+    "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "ຕິດຕາມທີ່ທ່ານຕ້ອງຕິດຕາມ 113hgh222 12ETH12 ເພື່ອ 122jjk999 33BTC33 ຫຼືບໍ່?",
+    "areYouSureYouWantToCancel": "ທ່ານແມ່ນເຈົ້າຕ້ອງການຍົກເລີກແລ້ວບໍ?",
+    "confirm": "ຢືນຢັນ",
+    "cancel": "ຍົກເລີກ"
 }

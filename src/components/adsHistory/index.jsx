@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Pagination, Empty, Spin } from "antd";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import { useHistory } from "react-router-dom";
 import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
@@ -517,13 +517,13 @@ function AdsHistory() {
       <Modal title={null} open={isModalConfirmOpen} footer={null}>
         <div className="ads-history__modal-container">
           <div className="ads-history__modal-header">
-            Confirm{" "}
+            {t("confirm")}
             <span onClick={closeModal}>
               <i className="fa-solid fa-xmark"></i>
             </span>
           </div>
           <div className="ads-history__modal-content">
-            Are you sure you want to cancel ?{" "}
+            {t("areYouSureYouWantToCancel")}
           </div>
           <div className="ads-history__modal-footer">
             <button
@@ -532,7 +532,7 @@ function AdsHistory() {
                 callApiCancelStatus === api_status.fetching ? "disabled" : ""
               }`}
             >
-              Cancel
+              {t("cancel")}
             </button>
             <button
               onClick={modalConfirmOkClickHandle}
@@ -545,7 +545,7 @@ function AdsHistory() {
                   callApiCancelStatus === api_status.fetching ? "" : "--d-none"
                 }`}
               ></div>
-              OK
+              {t("ok")}
             </button>
           </div>
         </div>

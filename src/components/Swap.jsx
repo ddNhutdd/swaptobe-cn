@@ -5,6 +5,7 @@ import {
   convertStringToNumber,
   formatStringNumberCultureUS,
   getLocalStorage,
+  processString,
   roundDecimalValues,
 } from "src/util/common";
 import {
@@ -27,7 +28,6 @@ import {
 } from "src/redux/constant/coin.constant";
 import { getHistorySwapApi, swapCoinApi } from "src/util/userCallApi";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
-
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import socket from "src/util/socket";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
@@ -90,6 +90,11 @@ export default function Swap() {
     setSearchCoinName("");
     setIsModalVisible(false);
   };
+  const closeModalConfirm = () => {
+    if (callApiSwapStatus === api_status.fetching) return;
+    setIsModalConfirmOpen(false);
+  };
+  const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
   const showModal2 = () => setIsModalVisible2(true);
   const handleOk2 = () => setIsModalVisible2(false);
   const handleCancel2 = () => {
@@ -101,6 +106,9 @@ export default function Swap() {
     const currentTo = swapToCoin;
     setSwapFromCoin(currentTo);
     setSwapToCoin(currentFrom);
+  };
+  const showModalConfirm = () => {
+    setIsModalConfirmOpen(true);
   };
   const fromCoinOnChange = function (e) {
     const inputValue = e.target.value;
@@ -154,55 +162,18 @@ export default function Swap() {
   };
   const mainButtonOnClickHandle = function () {
     if (isLogin && callApiSwapStatus !== api_status.fetching) {
-      setCallApiSwapStatus(api_status.fetching);
       const swapValue = convertStringToNumber(fromCoinValueString);
       const maxAvailable = convertStringToNumber(
         userWallet[swapFromCoin.toLowerCase() + "_balance"].toString()
       );
-      if (swapValue <= 0) {
+      if (!swapValue || swapValue <= 0) {
         callToastError(t("invalidValue"));
-        setCallApiSwapStatus(api_status.rejected);
         return;
       } else if (swapValue > maxAvailable) {
-        callToastError(t("theAmountOfCryptocurrencyIsInsufficient. "));
-        setCallApiSwapStatus(api_status.rejected);
+        callToastError(t("theAmountOfCryptocurrencyIsInsufficient."));
         return;
       }
-      // showConfirm(
-      //   t(
-      //     `bạn có muốn đổi <span class="confirm-green">${fromCoinValueString}</span> <span class="confirm-green">${swapFromCoin}</span> sang <span class="confirm-green">${toCoinValueString}</span> <span class="confirm-green">${swapToCoin}</span> hay không?`
-      //   ),
-      //   () => {
-      //     swapCoinApi({
-      //       symbolForm: swapFromCoin,
-      //       symbolTo: swapToCoin,
-      //       amountForm: convertStringToNumber(fromCoinValueString).toString(),
-      //     })
-      //       .then((resp) => {
-      //         callToastSuccess(resp?.data?.message || t("anErrorHasOccurred"));
-      //         fetchCoinSwapHistory();
-      //         // sau khi swap tải lại thông tin để render cho các component khác
-      //         dispatch(userWalletFetchCount());
-      //         setCallApiSwapStatus(api_status.fulfilled);
-      //       })
-      //       .catch((error) => {
-      //         const responseError = error?.response?.data?.message;
-      //         switch (responseError) {
-      //           case "Insufficient balance":
-      //             callToastError(t("insufficientBalance"));
-      //             break;
-      //           default:
-      //             callToastError(t("anErrorHasOccurred"));
-      //             break;
-      //         }
-      //         setCallApiSwapStatus(api_status.rejected);
-      //       });
-      //   },
-      //   () => {
-      //     console.log("khong");
-      //     setCallApiSwapStatus(api_status.rejected);
-      //   }
-      // );
+      showModalConfirm();
     } else if (!isLogin) {
       history.push(url.login);
     }
@@ -321,9 +292,80 @@ export default function Swap() {
       () => userWallet[swapFromCoin.toLowerCase() + "_balance"] || "0"
     );
   };
+  const modalConfirmOkClickHandle = function () {
+    if (callApiSwapStatus === api_status.fetching) return;
+    else setCallApiSwapStatus(api_status.fetching);
+    swapCoinApi({
+      symbolForm: swapFromCoin,
+      symbolTo: swapToCoin,
+      amountForm: convertStringToNumber(fromCoinValueString).toString(),
+    })
+      .then((resp) => {
+        callToastSuccess(resp?.data?.message || t("anErrorHasOccurred"));
+        fetchCoinSwapHistory();
+        dispatch(userWalletFetchCount());
+        setCallApiSwapStatus(api_status.fulfilled);
+      })
+      .catch((error) => {
+        const responseError = error?.response?.data?.message;
+        switch (responseError) {
+          case "Insufficient balance":
+            callToastError(t("insufficientBalance"));
+            break;
+          default:
+            callToastError(t("anErrorHasOccurred"));
+            break;
+        }
+        setCallApiSwapStatus(api_status.rejected);
+      })
+      .finally(() => {
+        closeModalConfirm();
+      });
+  };
+  const renderContentConfirm = function () {
+    const listString = ["113hgh222", "12ETH12", "122jjk999", "33BTC33"];
+    const callBack = function (match, index) {
+      switch (match) {
+        case "113hgh222":
+          return (
+            <span className="swap__modal-confirm-content-main">
+              {fromCoinValueString}
+            </span>
+          );
+        case "12ETH12":
+          return (
+            <span className="swap__modal-confirm-content-main">
+              {swapFromCoin}
+            </span>
+          );
+        case "122jjk999":
+          return (
+            <span className="swap__modal-confirm-content-main">
+              {toCoinValueString}
+            </span>
+          );
+        case "33BTC33":
+          return (
+            <span className="swap__modal-confirm-content-main">
+              {swapToCoin}
+            </span>
+          );
+        default:
+          break;
+      }
+    };
+    return processString(
+      t("doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33"),
+      listString,
+      callBack
+    );
+  };
   return (
     <div className="swap">
       <div className="container">
+        <div>
+          <button onClick={showModalConfirm}>test</button>
+        </div>
         <div className="box">
           <h2 className="title">{t("swap")}</h2>
           <div className="field">
@@ -496,6 +538,42 @@ export default function Swap() {
                 </button>
               );
             })}
+        </div>
+      </Modal>
+      <Modal title={null} open={isModalConfirmOpen} footer={null}>
+        <div className="swap__modal-confirm-container">
+          <div className="swap__modal-confirm-header">
+            {t("confirm")}
+            <span onClick={closeModalConfirm}>
+              <i className="fa-solid fa-xmark"></i>
+            </span>
+          </div>
+          <div className="swap__modal-confirm-content">
+            {renderContentConfirm()}
+          </div>
+          <div className="swap__modal-confirm-footer">
+            <button
+              onClick={closeModalConfirm}
+              className={`swap__modal-confirm-cancel ${
+                callApiSwapStatus === api_status.fetching ? "disabled" : ""
+              }`}
+            >
+              {t("cancel")}
+            </button>
+            <button
+              onClick={modalConfirmOkClickHandle}
+              className={`swap__modal-confirm-ok ${
+                callApiSwapStatus === api_status.fetching ? "disable" : ""
+              }`}
+            >
+              <div
+                className={`loader ${
+                  callApiSwapStatus === api_status.fetching ? "" : "--d-none"
+                }`}
+              ></div>
+              {t("ok")}
+            </button>
+          </div>
         </div>
       </Modal>
     </div>
