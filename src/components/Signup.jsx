@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as Yup from "yup";
-import { Input, Button } from "antd";
+import { Button } from "antd";
 import { axiosService } from "../util/service";
-import { showAlert } from "../function/showAlert";
 import { useState } from "react";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import { getLocalStorage } from "src/util/common";
 import { defaultLanguage, localStorageVariable } from "src/constant";
 import { useTranslation } from "react-i18next";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 
 export default function Signup({ history }) {
   //
@@ -65,11 +65,11 @@ export default function Signup({ history }) {
     try {
       let response = await axiosService.post("/api/user/signup", info);
       const verifyToken = response?.data?.data;
-      showAlert("success", response.data.message);
+      callToastSuccess(response.data.message);
       axiosService.get("/api/user/verifyEmail/" + verifyToken);
       history.replace("/login");
     } catch (error) {
-      showAlert("error", error?.response?.data?.message);
+      callToastError(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }

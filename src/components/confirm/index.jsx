@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { api_status, showAlertType, url } from "src/constant";
+import { api_status, url } from "src/constant";
 import { useParams, useHistory } from "react-router-dom";
 import { getInfoP2p, getProfile } from "src/util/userCallApi";
-import { showAlert } from "src/function/showAlert";
+
 import ConfirmItem from "./confirmItem";
 import { Spin } from "antd";
 import { getElementById, hideElement } from "src/util/common";
+import { callToastError } from "src/function/toast/callToast";
 function Confirm() {
   const idAds = useParams().id;
   const history = useHistory();
@@ -44,7 +45,7 @@ function Confirm() {
           resolve(resp.data.data);
         })
         .catch((error) => {
-          showAlert(showAlertType.error, "Can't find user information");
+          callToastError("Can't find user information");
           resolve(false);
           console.log(error);
         });
@@ -56,7 +57,7 @@ function Confirm() {
   const loadData = async function () {
     const profile = await fetchApiGetProfile();
     if (!profile) {
-      showAlert(showAlertType.error, "Can't find user information");
+      callToastError("Can't find user information");
       history.push(url.p2pTrading);
       return;
     }

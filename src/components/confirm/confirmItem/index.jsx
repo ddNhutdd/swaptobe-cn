@@ -10,10 +10,8 @@ import {
   currencyMapper,
   defaultLanguage,
   localStorageVariable,
-  showAlertType,
   url,
 } from "src/constant";
-import { showToast } from "src/function/showToast";
 import {
   calculateTime,
   calculateTimeDifference,
@@ -30,6 +28,7 @@ import {
   userConfirmP2pCommand,
 } from "src/util/userCallApi";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { callToastSuccess } from "src/function/toast/callToast";
 function ConfirmItem(props) {
   const actionType = {
     buy: "buy",
@@ -134,7 +133,7 @@ function ConfirmItem(props) {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, t("confirmSuccess"));
+          callToastSuccess(t("confirmSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -163,7 +162,7 @@ function ConfirmItem(props) {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, t("cancelSuccess"));
+          callToastSuccess(t("cancelSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -197,7 +196,7 @@ function ConfirmItem(props) {
       companyCancelP2pCommand({ idP2p: idCommand.current })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, t("cancelSuccess"));
+          callToastSuccess(t("cancelSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -218,7 +217,7 @@ function ConfirmItem(props) {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, t("confirmSuccess"));
+          callToastSuccess(t("confirmSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -328,7 +327,7 @@ function ConfirmItem(props) {
   };
   const copyButtonClickHandle = async function (text) {
     await navigator.clipboard.writeText(text);
-    showToast(showAlertType.success, "Success");
+    callToastSuccess("Success");
   };
   const renderBankInfo = function () {
     const inputString = t("accountInfoVietcomBank");

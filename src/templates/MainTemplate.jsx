@@ -10,14 +10,17 @@ export default function MainTemplate(props) {
       path={props.path}
       render={(propsRoute) => {
         return (
-          <>
+          <div className="main-template">
+            <div className="main-template__bg-1"></div>
+            <div className="main-template__bg-2"></div>
+            <div className="main-template__bg-3"></div>
             <Header1 {...propsRoute} />
             <Header2 {...propsRoute} />
             <div style={{ minHeight: "70vh" }}>
               <props.component {...propsRoute} />
             </div>
             <Footer {...propsRoute} />
-          </>
+          </div>
         );
       }}
     />

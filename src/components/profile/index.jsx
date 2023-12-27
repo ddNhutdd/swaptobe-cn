@@ -8,7 +8,6 @@ import {
   api_status,
   defaultLanguage,
   localStorageVariable,
-  showAlertType,
   url,
 } from "src/constant";
 import i18n from "src/translation/i18n";
@@ -31,8 +30,7 @@ import {
   turnOn2FA,
   uploadKyc,
 } from "src/util/userCallApi";
-import { showToast } from "src/function/showToast";
-import { showAlert } from "src/function/showAlert";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 function Profile() {
   const kycControl = {
     fullName: "fullName",
@@ -357,7 +355,7 @@ function Profile() {
       .then((resp) => {
         //show notify
         const mes = resp.data.message;
-        showToast(showAlertType.success, mes);
+        callToastSuccess(mes);
         // reload component
         setShowConTent(content.verifing);
         //
@@ -365,7 +363,7 @@ function Profile() {
       })
       .catch((error) => {
         setCallApiKYCStatus(api_status.rejected);
-        showAlert(showAlertType.error, error.message, t("ok"));
+        callToastError(error.message);
         console.log(error);
       });
   };
@@ -693,7 +691,7 @@ function Profile() {
       !(inputCodeValue.length === 6) ||
       !regularIsNumberString.test(inputCodeValue)
     ) {
-      showAlert(showAlertType.error, t("invalidData"), t("ok"));
+      callToastError(t("invalidData"));
       return;
     }
     //cal api
@@ -705,7 +703,7 @@ function Profile() {
         .then((resp) => {
           setIsEnabled_twofa(() => false);
           modal2FAHandleCancel();
-          showToast(showAlertType.success, t("turnOffSuccessfully"));
+          callToastSuccess(t("turnOffSuccessfully"));
           setCallApiTurnONOff2faStatus(api_status.fulfilled);
         })
         .catch((error) => {
@@ -718,7 +716,7 @@ function Profile() {
         .then((resp) => {
           setIsEnabled_twofa(() => true); // get new user info
           modal2FAHandleCancel();
-          showToast(showAlertType.success, t("turnOnSuccessfully"));
+          callToastSuccess(t("turnOnSuccessfully"));
           setCallApiTurnONOff2faStatus(api_status.fulfilled);
         })
         .catch((error) => {
@@ -726,10 +724,10 @@ function Profile() {
           const message = error?.response?.data?.message;
           switch (message) {
             case "Incorrect code ! ":
-              showAlert(showAlertType.error, t("incorrectCode"), t("ok"));
+              callToastError(t("incorrectCode"));
               break;
             default:
-              showAlert(showAlertType.error, t("anErrorHasOccurred"), t("ok"));
+              callToastError(t("anErrorHasOccurred"));
               break;
           }
           setCallApiTurnONOff2faStatus(api_status.rejected);
@@ -804,12 +802,12 @@ function Profile() {
       addListBanking(data)
         .then((resp) => {
           callApiBankingUserStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Success");
+          callToastSuccess("Success");
           return resolve(resp.data.data);
         })
         .catch((error) => {
           callApiBankingUserStatus.current = api_status.rejected;
-          showToast(showAlertType.error, "Fail");
+          callToastError("Fail");
           return resolve(null);
         });
     });

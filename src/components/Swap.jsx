@@ -12,7 +12,6 @@ import {
   defaultLanguage,
   image_domain,
   localStorageVariable,
-  showAlertType,
   url,
 } from "src/constant";
 import i18n from "src/translation/i18n";
@@ -27,12 +26,11 @@ import {
   getUserWallet,
 } from "src/redux/constant/coin.constant";
 import { getHistorySwapApi, swapCoinApi } from "src/util/userCallApi";
-import { showAlert } from "src/function/showAlert";
-import { showToast } from "src/function/showToast";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
-import { showConfirm } from "src/function/showConfirm";
+
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import socket from "src/util/socket";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 export default function Swap() {
   //
   const { isLogin } = useSelector((root) => root.loginReducer);
@@ -162,55 +160,49 @@ export default function Swap() {
         userWallet[swapFromCoin.toLowerCase() + "_balance"].toString()
       );
       if (swapValue <= 0) {
-        showAlert(showAlertType.error, t("invalidValue"));
+        callToastError(t("invalidValue"));
         setCallApiSwapStatus(api_status.rejected);
         return;
       } else if (swapValue > maxAvailable) {
-        showAlert(
-          showAlertType.error,
-          t("theAmountOfCryptocurrencyIsInsufficient. ")
-        );
+        callToastError(t("theAmountOfCryptocurrencyIsInsufficient. "));
         setCallApiSwapStatus(api_status.rejected);
         return;
       }
-      showConfirm(
-        t(
-          `bạn có muốn đổi <span class="confirm-green">${fromCoinValueString}</span> <span class="confirm-green">${swapFromCoin}</span> sang <span class="confirm-green">${toCoinValueString}</span> <span class="confirm-green">${swapToCoin}</span> hay không?`
-        ),
-        () => {
-          swapCoinApi({
-            symbolForm: swapFromCoin,
-            symbolTo: swapToCoin,
-            amountForm: convertStringToNumber(fromCoinValueString).toString(),
-          })
-            .then((resp) => {
-              showToast(
-                showAlertType.success,
-                resp?.data?.message || t("anErrorHasOccurred")
-              );
-              fetchCoinSwapHistory();
-              // sau khi swap tải lại thông tin để render cho các component khác
-              dispatch(userWalletFetchCount());
-              setCallApiSwapStatus(api_status.fulfilled);
-            })
-            .catch((error) => {
-              const responseError = error?.response?.data?.message;
-              switch (responseError) {
-                case "Insufficient balance":
-                  showAlert(showAlertType.error, t("insufficientBalance"));
-                  break;
-                default:
-                  showAlert(showAlertType.error, t("anErrorHasOccurred"));
-                  break;
-              }
-              setCallApiSwapStatus(api_status.rejected);
-            });
-        },
-        () => {
-          console.log("khong");
-          setCallApiSwapStatus(api_status.rejected);
-        }
-      );
+      // showConfirm(
+      //   t(
+      //     `bạn có muốn đổi <span class="confirm-green">${fromCoinValueString}</span> <span class="confirm-green">${swapFromCoin}</span> sang <span class="confirm-green">${toCoinValueString}</span> <span class="confirm-green">${swapToCoin}</span> hay không?`
+      //   ),
+      //   () => {
+      //     swapCoinApi({
+      //       symbolForm: swapFromCoin,
+      //       symbolTo: swapToCoin,
+      //       amountForm: convertStringToNumber(fromCoinValueString).toString(),
+      //     })
+      //       .then((resp) => {
+      //         callToastSuccess(resp?.data?.message || t("anErrorHasOccurred"));
+      //         fetchCoinSwapHistory();
+      //         // sau khi swap tải lại thông tin để render cho các component khác
+      //         dispatch(userWalletFetchCount());
+      //         setCallApiSwapStatus(api_status.fulfilled);
+      //       })
+      //       .catch((error) => {
+      //         const responseError = error?.response?.data?.message;
+      //         switch (responseError) {
+      //           case "Insufficient balance":
+      //             callToastError(t("insufficientBalance"));
+      //             break;
+      //           default:
+      //             callToastError(t("anErrorHasOccurred"));
+      //             break;
+      //         }
+      //         setCallApiSwapStatus(api_status.rejected);
+      //       });
+      //   },
+      //   () => {
+      //     console.log("khong");
+      //     setCallApiSwapStatus(api_status.rejected);
+      //   }
+      // );
     } else if (!isLogin) {
       history.push(url.login);
     }
@@ -446,7 +438,7 @@ export default function Swap() {
               )
               .map((item, i) => {
                 return (
-                  <Button
+                  <button
                     className="btn-choice-coin"
                     type={item.name === swapFromCoin ? "primary" : "default"}
                     key={i}
@@ -460,7 +452,7 @@ export default function Swap() {
                       <img src={DOMAIN + item.image} alt={item.image} />
                       <span>{item.name}</span>
                     </div>
-                  </Button>
+                  </button>
                 );
               })}
           </div>
@@ -487,7 +479,7 @@ export default function Swap() {
             )
             .map((item, i) => {
               return (
-                <Button
+                <button
                   className="btn-choice-coin"
                   type={item.name === swapToCoin ? "primary" : "default"}
                   key={i}
@@ -501,7 +493,7 @@ export default function Swap() {
                     <img src={DOMAIN + item.image} alt={item.image} />
                     <span>{item.name}</span>
                   </div>
-                </Button>
+                </button>
               );
             })}
         </div>

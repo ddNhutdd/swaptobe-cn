@@ -1,7 +1,7 @@
 .p2ptrading2 {
   margin: auto;
   padding: 30px;
-  background: $new-background-3;
+  background: $new-background-level-0;
 
   @media screen and (max-width: 576px) {
     padding-left: 0;
@@ -13,7 +13,7 @@
 
     .record-content {
       margin-top: 12px;
-      background-color: $new-background-5;
+      background-color: $new-background-level-2;
       padding: 10px 10px;
       font-size: 15px;
       display: flex;
@@ -116,7 +116,7 @@
     }
 
     .buy {
-      background-color: $new-background-4;
+      background-color: $new-background-level-1;
       color: $new-text-color-white;
       padding: 30px;
       border-radius: 5px;
@@ -209,7 +209,7 @@
     }
 
     .sell {
-      background-color: $new-background-4;
+      background-color: $new-background-level-1;
       color: $new-text-color-white;
       margin-top: 30px;
       padding: 30px;

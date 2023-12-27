@@ -2,13 +2,13 @@
   min-height: calc(100vh - 90px);
   width: 100%;
   padding-top: 100px;
-  background: $new-background-3;
+  background: $new-background-level-0;
 
   .container {
     @include container2;
 
     .box {
-      background: $new-background-4;
+      background: $new-background-level-1;
       color: $new-text-color-white;
       padding: 15px;
 
@@ -17,7 +17,7 @@
       }
 
       .title {
-        color: $new-text-color-6;
+        color: $new-text-color-white;
       }
     }
 
@@ -39,11 +39,6 @@
         justify-content: space-between;
         align-items: center;
         position: relative;
-
-        @media screen and (max-width: 576px) {
-          // flex-direction: column;
-          // gap: 10px;
-        }
 
         button.max {
           position: absolute;
@@ -174,15 +169,15 @@
         border-radius: 5px;
         gap: 10px;
         box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
-        background-color: $new-background-5;
+        background-color: $new-background-level-2;
 
         .swap__history-time {
           padding: 10px 10px 5px 10px;
-          background-color: $new-background-3;
+          background-color: $neutral-2;
           width: 100%;
           border-top-left-radius: 5px;
           border-top-right-radius: 5px;
-          color: $white;
+          color: $neutral-20;
           font-size: 15px;
           letter-spacing: 0.5px;
           display: flex;
@@ -325,22 +320,26 @@
 
 .btn-choice-coin {
   box-sizing: border-box;
-  padding: 8px 20px;
+  padding: 5px 10px;
   border: none;
   border-radius: 5px;
   transition: 0.2s;
   margin-bottom: 10px;
   margin-right: 10px;
-  border: 1px solid transparent;
+  border: 1px solid $background-color-4;
+  background: transparent;
 
   &.active {
     background-color: $header2-background;
+    border-color: $header2-background;
     color: $white;
   }
 
   &:hover {
-    border: 1px solid $header2-background;
     cursor: pointer;
+    background-color: $header2-background;
+    border-color: $header2-background;
+    color: $white;
   }
 
   .btn-choice-coin-content {

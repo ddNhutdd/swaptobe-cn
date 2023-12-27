@@ -13,8 +13,8 @@ import {
   addClassToElementById,
 } from "src/util/common";
 import { createWalletApi, getDepositHistory } from "src/util/userCallApi";
-import { api_status, showAlertType } from "src/constant";
-import { showToast } from "src/function/showToast";
+import { api_status, image_domain } from "src/constant";
+import { callToastSuccess } from "src/function/toast/callToast";
 function SeresoWalletDeposit() {
   //
   const dropdownCoinMenuClickHandle = function (e) {
@@ -148,7 +148,7 @@ function SeresoWalletDeposit() {
     const addressCode = getElementById("addressCode").innerHTML;
     const writeTexttoClipboard = navigator.clipboard.writeText(addressCode);
     writeTexttoClipboard.then(() => {
-      showToast(showAlertType.success, t("copySuccess"));
+      callToastSuccess(t("copySuccess"));
     });
   };
   const renderDropdownCoinSelected = function (coinName, listAllCoin) {
@@ -212,20 +212,26 @@ function SeresoWalletDeposit() {
       //render html
       const renderEle = getElementById("historyContent");
       renderEle.innerHTML = ``;
+      console.log(apiresp);
       for (const item of apiresp) {
         renderEle.innerHTML += `<div class="wallet-deposite__history-item">
         <div class="wallet-deposite__history-time">
           <i class="fa-solid fa-calendar"></i> ${item.created_at}
         </div>
-        <div class="wallet-deposite__history-name">
-          ${item.coin_key.toUpperCase()}
-        </div>
-        <div class="wallet-deposite__history-amount">
-          +${item.amount} coins
-        </div>
-        <div class="wallet-deposite__history-final">
-          <span>Final Amount:</span>
-          <span>${item.before_amount} coins</span>
+        <div class="wallet-deposite__history-content">
+          <div class="wallet-deposite__history-name">
+            ${item.coin_key.toUpperCase()}
+          </div>
+          <div class="wallet-deposite__history-amount">
+            +${item.amount} coins
+          </div>
+          <div class="wallet-deposite__history-final">
+            <span>Final Amount:</span>
+            <span>${item.before_amount} <img src='${image_domain.replace(
+          "USDT",
+          item.coin_key.toUpperCase()
+        )}' alt='${item.coin_key}' /></span>
+          </div>
         </div>
       </div>`;
       }
@@ -418,13 +424,11 @@ function SeresoWalletDeposit() {
           <div
             id="historyContent"
             className=" wallet-deposit__history fadeInBottomToTop"
-          >
-            {/* js render  */}
-          </div>
+          ></div>
           <div id="historySpinner" className="spin-container fadeInBottomToTop">
             <Spin />
           </div>
-          <div id="historyEmpty" className="fadeInBottomToTop">
+          <div id="historyEmpty" className="spin-container fadeInBottomToTop">
             <Empty />
           </div>
           <div className="wallet-deposite-paging">

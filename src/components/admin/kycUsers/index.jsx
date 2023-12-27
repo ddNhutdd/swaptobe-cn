@@ -6,11 +6,10 @@ import {
   cancelUserKyc,
   getKycUserPendding,
 } from "src/util/adminCallApi";
-import { api_status, showAlertType } from "src/constant";
+import { api_status } from "src/constant";
 import { DOMAIN } from "src/util/service";
 import { zoomImage } from "src/util/common";
-import { showToast } from "src/function/showToast";
-import { showAlert } from "src/function/showAlert";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 function KYC() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [listKycUserData, setListKycUserData] = useState();
@@ -19,7 +18,6 @@ function KYC() {
   const listKycUserDataCurrentPage = useRef(1);
   //
   useEffect(() => {
-    // neus user chua dang nhap thi chuyen vef trang home
     //fetch kyc table
     fetchKYCTable(1);
     // render kyc table
@@ -146,7 +144,7 @@ function KYC() {
       .then((resp) => {
         setCallApiStatus(api_status.fulfilled);
         const message = resp.data.message;
-        showToast(showAlertType.success, message);
+        callToastSuccess(message);
         handleCancel();
         fetchKYCTable(listKycUserDataCurrentPage.current);
       })
@@ -155,10 +153,10 @@ function KYC() {
         const message = error?.response?.data?.message;
         switch (message) {
           case "The user is not in a waiting state":
-            showAlert(showAlertType.error, message);
+            callToastError(message);
             break;
           default:
-            showAlert(showAlertType.error, "có lõi xảy ra");
+            callToastError("có lõi xảy ra");
             break;
         }
         setCallApiStatus(api_status.rejected);
@@ -173,7 +171,7 @@ function KYC() {
       .then((resp) => {
         setCallApiStatus(api_status.fulfilled);
         const message = resp.data.message;
-        showToast(showAlertType.success, message);
+        callToastSuccess(message);
         handleCancel();
         fetchKYCTable(listKycUserDataCurrentPage.current);
       })

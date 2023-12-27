@@ -8,11 +8,9 @@ import {
   defaultLanguage,
   localStorageVariable,
   regularExpress,
-  showAlertType,
   url,
 } from "src/constant";
-import { showAlert } from "src/function/showAlert";
-import { showToast } from "src/function/showToast";
+
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
@@ -30,6 +28,7 @@ import {
   showElement,
 } from "src/util/common";
 import { createP2p, getListBanking } from "src/util/userCallApi";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 function Transaction() {
   const actionType = {
     sell: "sell",
@@ -136,7 +135,7 @@ function Transaction() {
   };
   const loadDataFirstTime = function () {
     if (!renderPaymentDropdown()) {
-      showToast(showAlertType.error, t("noBankFoundInAccount"));
+      callToastError(t("noBankFoundInAccount"));
       history.push(url.profile);
       return;
     }
@@ -194,7 +193,7 @@ ${symbol.current}`;
         }
         const acceptEula = getElementById("agreeCheckBox").checked;
         if (!acceptEula) {
-          showAlert(showAlertType.error, "not yet accept Eula");
+          callToastError(t("notYetAcceptEula"));
           return;
         }
         disableButtonSubmit();
@@ -221,7 +220,7 @@ ${symbol.current}`;
         }
         const acceptEula = getElementById("agreeCheckBox").checked;
         if (!acceptEula) {
-          showAlert(showAlertType.error, t("notYetAcceptEula"));
+          callToastError(t("notYetAcceptEula"));
           return;
         }
         disableButtonSubmit();
@@ -250,7 +249,7 @@ ${symbol.current}`;
       createP2p(data)
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, t("createSuccess"));
+          callToastSuccess(t("createSuccess"));
           return resolve(true);
         })
         .catch((error) => {
@@ -259,28 +258,23 @@ ${symbol.current}`;
           const mess = error.response.data.message;
           switch (mess) {
             case "The quantity is too much and the order cannot be created":
-              showAlert(
-                showAlertType.error,
+              callToastError(
                 t("theQuantityIsTooMuchAndTheOrderCannotBeCreated")
               );
               break;
             case "The quantity is too small to create an order":
-              showAlert(
-                showAlertType.error,
-                t("theQuantityIsTooSmallToCreateAnOrder")
-              );
+              callToastError(t("theQuantityIsTooSmallToCreateAnOrder"));
               break;
             case "You have a transaction order that has not yet been processed":
-              showAlert(
-                showAlertType.error,
+              callToastError(
                 t("youHaveATransactionOrderThatHasNotYetBeenProcessed")
               );
               break;
             case "Your balance is insufficient":
-              showAlert(showAlertType.error, t("yourBalanceIsInsufficient"));
+              callToastError(t("yourBalanceIsInsufficient"));
               break;
             default:
-              showAlert(showAlertType.error, t("anErrorHasOccurred"));
+              callToastError(t("anErrorHasOccurred"));
               break;
           }
           return resolve(false);

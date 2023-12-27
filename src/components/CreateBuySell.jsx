@@ -15,8 +15,6 @@ import {
   getClassListFromElementById,
   getElementById,
   getLocalStorage,
-  hideElement,
-  showElement,
 } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { companyAddAds, getProfile } from "src/util/userCallApi";
@@ -25,12 +23,11 @@ import {
   defaultLanguage,
   localStorageVariable,
   regularExpress,
-  showAlertType,
   url,
 } from "src/constant";
-import { showToast } from "src/function/showToast";
-import { showAlert } from "src/function/showAlert";
+
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 export default function CreateBuy() {
   const actionType = {
     sell: "sell",
@@ -122,33 +119,12 @@ export default function CreateBuy() {
     return ccCoin.toFixed(3);
   };
   const renderModalReview = function () {
-    getElementById("modalPreviewUserName").innerHTML = userName.current;
     getElementById("modalPreviewPrice").innerHTML =
       formatStringNumberCultureUS(calcBuyPrice()) + " " + currentCurrency;
     getElementById("modalPreviewAmount").innerHTML =
       getElementById("amoutInput").value;
     getElementById("modalPreviewMinimumAmount").innerHTML =
       getElementById("minimumAmoutInput").value;
-    //
-    const bank = getElementById("modalBankName");
-    bank.innerHTML = selectedBank.current;
-    const account = getElementById("modalAccount");
-    account.innerHTML = getElementById("fullnameInput").value;
-    const accountNumber = getElementById("modalAccountNumber");
-    accountNumber.innerHTML = getElementById("accountNumberInput").value;
-    //
-    const containerBank = bank.closest("tr");
-    const containerAccount = account.closest("tr");
-    const containerAccountNumber = account.closest("tr");
-    if (action === actionType.buy) {
-      hideElement(containerBank);
-      hideElement(containerAccount);
-      hideElement(containerAccountNumber);
-    } else {
-      showElement(containerBank);
-      showElement(containerAccount);
-      showElement(containerAccountNumber);
-    }
   };
   const toggleDropdownBank = function (e) {
     e.stopPropagation();
@@ -318,7 +294,7 @@ export default function CreateBuy() {
       companyAddAds(data)
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, t("success"));
+          callToastSuccess(t("success"));
           getElementById("buyAdsForm").reset();
           resolve(resp);
         })
@@ -328,10 +304,10 @@ export default function CreateBuy() {
           const mess = error?.response?.data?.message;
           switch (mess) {
             case "Insufficient balance":
-              showAlert(showAlertType.error, t("insufficientBalance"));
+              callToastError(t("insufficientBalance"));
               break;
             default:
-              showAlert(showAlertType, t("anErrorHasOccurred"));
+              callToastError(t("anErrorHasOccurred"));
               break;
           }
           resolve(null);
@@ -588,24 +564,6 @@ export default function CreateBuy() {
             </span>
           </div>
           <div className="preview">
-            <div className="col col-1">
-              <div>
-                <span className="title">{t("userName")}:</span>{" "}
-                <span id="modalPreviewUserName">This is test</span>
-              </div>
-              <div className={`${action === actionType.buy ? "--d-none" : ""}`}>
-                <span className="title">{t("bankName")}:</span>{" "}
-                <span id="modalBankName">Test</span>
-              </div>
-              <div className={`${action === actionType.buy ? "--d-none" : ""}`}>
-                <span className="title">{t("account")}:</span>{" "}
-                <span id="modalAccount">Test</span>
-              </div>
-              <div className={`${action === actionType.buy ? "--d-none" : ""}`}>
-                <span className="title">{t("accountNumber")}:</span>{" "}
-                <span id="modalAccountNumber">Test</span>
-              </div>
-            </div>
             <div className="col col-2">
               <div>
                 <span className="title">{t("price")}:</span>{" "}
