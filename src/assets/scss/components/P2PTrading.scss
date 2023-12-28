@@ -1,7 +1,7 @@
 .p2ptrading {
   width: 100%;
   padding-top: 100px;
-  background: url(../../../../public/img/background.jpg);
+  background: url(../../../../public/img/background.png);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -230,14 +230,14 @@
                     }
                   }
 
-                  & > tr {
+                  &>tr {
                     @media screen and (max-width: 576px) {
                       width: 100%;
                       display: flex;
                       flex-wrap: wrap;
                     }
 
-                    & > td {
+                    &>td {
                       &:nth-of-type(1) {
                         @media screen and (max-width: 576px) {
                           border-bottom: none;
