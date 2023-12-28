@@ -139,11 +139,11 @@
         color: $new-text-color-black;
         line-height: 1;
 
-        button {
-          @extend .buttonContainer--primary;
-          padding-top: 10px;
-          padding-bottom: 10px;
-        }
+        // button {
+        //   @extend .buttonContainer--primary;
+        //   padding-top: 10px;
+        //   padding-bottom: 10px;
+        // }
       }
     }
 

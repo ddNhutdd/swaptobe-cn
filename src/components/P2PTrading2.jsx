@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Empty, Pagination, Spin, Modal } from "antd";
+import { Button as ButtonAntd, Empty, Pagination, Spin, Modal } from "antd";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import i18n from "src/translation/i18n";
@@ -27,6 +27,7 @@ import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
 import { getCoin } from "src/redux/constant/coin.constant";
 import { Input } from "./Common/Input";
+import { Button } from "./Common/Button";
 export default function P2PTrading2({ history }) {
   // The list of users selling coins must be placed in the buy section on the interface.
   // The list of users buying coins must be placed in the sell section on the interface.
@@ -568,15 +569,9 @@ export default function P2PTrading2({ history }) {
             </span>
           </div>
           <div className="buy__filter">
-            <button onClick={sectionBuyButtonFilterClickHandle}>Search</button>
-            {/* <input
-              id="amountSectionBuyFilterInput"
-              className="inputContainer--default"
-              onChange={amountSectionBuyFilterChangeHandle}
-              type="text"
-              placeholder="Amount"
-            /> */}
-
+            <Button type="primary" onClick={sectionBuyButtonFilterClickHandle}>
+              Search
+            </Button>
             <Input
               id="amountSectionBuyFilterInput"
               onChange={amountSectionBuyFilterChangeHandle}
@@ -592,7 +587,7 @@ export default function P2PTrading2({ history }) {
               <div className="item2"></div>
               <div className="item3"></div>
               <div className="item4">
-                <Button type="primary">{t("buy")}</Button>
+                <ButtonAntd type="primary">{t("buy")}</ButtonAntd>
               </div>
             </div>
           </div>
@@ -610,12 +605,9 @@ export default function P2PTrading2({ history }) {
           </div>
           <div className="p2ptrading2__footer">
             <div className="buy-ad">
-              <button
-                onClick={createAdsSell}
-                className="buttonContainer--primary"
-              >
+              <Button onClick={createAdsBuy}>
                 {t("creatingYourBuyingAd")}
-              </button>
+              </Button>
             </div>
             <Pagination
               defaultCurrent={1}
@@ -646,9 +638,8 @@ export default function P2PTrading2({ history }) {
             </span>
           </div>
           <div className="sell__filter">
-            <button onClick={sectionSellButtonFilterClickHandle}>Search</button>
-            <input
-              className="inputContainer--default"
+            <Button onClick={sectionSellButtonFilterClickHandle}>Search</Button>
+            <Input
               id="amountSectionSellFilterInput"
               onChange={amountSectionSellFilterChangeHandle}
               type="text"
@@ -666,7 +657,7 @@ export default function P2PTrading2({ history }) {
               <div className="item2">Westpac</div>
               <div className="item3">Felix500</div>
               <div className="item4">
-                <Button type="primary">{t("sell")}</Button>
+                <ButtonAntd type="primary">{t("sell")}</ButtonAntd>
               </div>
             </div>
             <div className="sell-content box">
@@ -679,7 +670,7 @@ export default function P2PTrading2({ history }) {
               <div className="item2">Westpac</div>
               <div className="item3">Felix500</div>
               <div className="item4">
-                <Button type="primary">{t("sell")}</Button>
+                <ButtonAntd type="primary">{t("sell")}</ButtonAntd>
               </div>
             </div>
           </div>
@@ -691,12 +682,9 @@ export default function P2PTrading2({ history }) {
           </div>
           <div className="p2ptrading2__footer">
             <div className="sell-ad">
-              <button
-                onClick={createAdsBuy}
-                className="buttonContainer--primary"
-              >
+              <Button onClick={createAdsSell}>
                 {t("creatingYourSellingAd")}
-              </button>
+              </Button>
             </div>
             <Pagination
               defaultCurrent={1}

@@ -28,6 +28,8 @@ import {
 import socket from "src/util/socket";
 import { searchBuyQuick, searchSellQuick } from "src/util/userCallApi";
 import { DOMAIN } from "src/util/service";
+import { Input } from "../Common/Input";
+import { Button } from "../Common/Button";
 const P2pExchange = memo(function () {
   const history = useHistory();
   const [type, setType] = useState(useSelector(getType));
@@ -118,26 +120,28 @@ const P2pExchange = memo(function () {
       <div key={item.id} className="p2pExchange__data-content-item">
         <div className="p2pExchange__data-cell">User: {item.userName}</div>
         <div className="p2pExchange__data-cell amount">
-          Amount Available: {item.amount - item.amountSuccess}
+          Amount Available: {(item.amount - item.amountSuccess).toFixed(8)}
         </div>
         <div className="p2pExchange__data-cell minimum">
           Minimum: {item.amountMinimum}
         </div>
         <div className="p2pExchange__data-cell action">
           {item.side === p2pExchangeType.buy ? (
-            <button
-              className="p2pExchange__button-sell"
-              onClick={buySellClickHandle.bind(null, item)}
-            >
-              Sell
-            </button>
+            // <button
+            //   className="p2pExchange__button-sell"
+            //   onClick={buySellClickHandle.bind(null, item)}
+            // >
+            //   Sell
+            // </button>
+            <Button onClick={buySellClickHandle.bind(null, item)}>Sell</Button>
           ) : (
-            <button
-              className="p2pExchange__button-buy"
-              onClick={buySellClickHandle.bind(null, item)}
-            >
-              Buy
-            </button>
+            // <button
+            //   className="p2pExchange__button-buy"
+            //   onClick={buySellClickHandle.bind(null, item)}
+            // >
+            //   Buy
+            // </button>
+            <Button onClick={buySellClickHandle.bind(null, item)}>Buy</Button>
           )}
         </div>
       </div>
@@ -308,11 +312,23 @@ const P2pExchange = memo(function () {
         <div className="p2pExchange__search-container">
           <div className="p2pExchange__search-title">{t("quantity")}:</div>
           <div className="p2pExchange__input-container">
-            <input
+            {/* <input
               placeholder={renderPlaceholder()}
               type="text"
               ref={amountInputElement}
               onChange={amountInputChangeHandle}
+            /> */}
+            <Input
+              placeholder={renderPlaceholder()}
+              type="text"
+              refEl={amountInputElement}
+              onChange={amountInputChangeHandle}
+              style={{
+                height: "45px",
+                fontSize: "16px",
+                border: 0,
+                letterSpacing: "0.5px",
+              }}
             />
             <span>{coin}</span>
           </div>
