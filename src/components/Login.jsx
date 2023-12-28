@@ -2,22 +2,15 @@ import { Button } from "antd";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
-import { showAlert } from "../function/showAlert";
-import { showToast } from "../function/showToast";
 import { axiosService } from "../util/service";
-import {
-  defaultLanguage,
-  localStorageVariable,
-  showAlertType,
-  url,
-} from "src/constant";
+import { defaultLanguage, localStorageVariable, url } from "src/constant";
 import { useEffect } from "react";
 import { getLocalStorage, removeLocalStorage } from "src/util/common";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 export default function Login({ history }) {
   //
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +48,7 @@ export default function Login({ history }) {
         userName: e,
         password: p,
       });
-      showToast(showAlertType.success, t("loggedInSuccessfully"));
+      callToastSuccess(t("loggedInSuccessfully"));
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.data));
       dispatch({ type: "USER_LOGIN" });
@@ -71,7 +64,7 @@ export default function Login({ history }) {
         history.push(url.p2pTrading);
       }
     } catch (error) {
-      showAlert("error", error?.response?.data?.message);
+      callToastError(error?.response?.data?.message);
     } finally {
       setIsLoading(false);
     }

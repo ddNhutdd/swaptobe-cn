@@ -3,7 +3,12 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import i18n, { availableLanguage } from "src/translation/i18n";
-import { currency, localStorageVariable, url } from "src/constant";
+import {
+  currency,
+  image_domain,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { Spin } from "antd";
@@ -66,7 +71,13 @@ function SeresoWalletList() {
             {userSelectedCurrency === currency.eur && "€"}
             {userSelectedCurrency === currency.vnd && "đ"}
           </span>
-          <span>Own: {getMyCoin(item.name, myListCoin)} coins</span>
+          <span>
+            Own: {getMyCoin(item.name, myListCoin)}{" "}
+            <img
+              src={image_domain.replace("USDT", item.name)}
+              alt={item.name}
+            />
+          </span>
         </div>
         <div className="action">
           <button

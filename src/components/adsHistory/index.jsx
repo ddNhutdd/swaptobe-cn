@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Pagination, Empty, Spin } from "antd";
+import { Modal } from "antd";
 import { useHistory } from "react-router-dom";
 import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
@@ -16,6 +17,7 @@ import {
 import {
   api_status,
   defaultLanguage,
+  image_domain,
   localStorageVariable,
   url,
 } from "src/constant";
@@ -59,8 +61,20 @@ function AdsHistory() {
     buy: t("buy"),
     sell: t("sell"),
   };
+  const cancelAdsId = useRef();
   const [tabActive, setTabActive] = useState(actionType.buy);
   const action = useRef(actionType.buy);
+  const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
+  const [callApiCancelStatus, setCallApiCancelStatus] = useState(
+    api_status.pending
+  );
+  const showModal = () => {
+    setIsModalConfirmOpen(true);
+  };
+  const closeModal = () => {
+    if (callApiCancelStatus === api_status.fetching) return;
+    setIsModalConfirmOpen(false);
+  };
   const closeEmpty = function () {
     addClassToElementById("adsHistoryEmpty", "--d-none");
   };
@@ -194,6 +208,12 @@ function AdsHistory() {
       return;
     } else {
       const listRecord = [];
+      const hideClass = function () {
+        if (action.current === actionType.buy) {
+          return "--d-none";
+        }
+        return "";
+      };
       for (const item of apiRes) {
         const price = listCoin.current.find(
           (c) => c.name === item.symbol
@@ -210,15 +230,15 @@ function AdsHistory() {
                     <td>{t("userName")}:</td>
                     <td>{item.userName}</td>
                   </tr>
-                  <tr>
+                  <tr className={hideClass()}>
                     <td>{t("bankName")}:</td>
                     <td>{item.bankName}</td>
                   </tr>
-                  <tr>
+                  <tr className={hideClass()}>
                     <td>{t("accountName")}:</td>
                     <td>{item.ownerAccount}</td>
                   </tr>
-                  <tr>
+                  <tr className={hideClass()}>
                     <td>{t("accountNumber")}:</td>
                     <td>{item.numberBank}</td>
                   </tr>
@@ -241,8 +261,19 @@ function AdsHistory() {
                     <td>{item.created_at}</td>
                   </tr>
                   <tr>
-                    <td>{t("coin")}: </td>
-                    <td>{item.symbol}</td>
+                    <td className="logo-coin">
+                      <img
+                        src={image_domain.replace(
+                          "USDT",
+                          item.symbol.toUpperCase()
+                        )}
+                        alt={item.symbol}
+                      />
+                      :{" "}
+                    </td>
+                    <td>
+                      <span>{item.symbol}</span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -283,13 +314,15 @@ function AdsHistory() {
                         </button>
                         {item.type === 1 || item.type === 2 ? "" : ""}
                         <button
-                          className={`--danger ${
+                          className={`cancel ${
                             item.type === 1 || item.type === 2 ? "" : "--d-none"
                           }`}
-                          onClick={cancelAdsClickHandle.bind(null, item.id)}
+                          onClick={() => {
+                            cancelAdsId.current = item.id;
+                            showModal();
+                          }}
                           id={"adsHistoryActionCancelButton" + item.id}
                         >
-                          <div className="loader --d-none"></div>
                           Cancel
                         </button>
                       </div>
@@ -325,38 +358,20 @@ function AdsHistory() {
     hideElement(loader);
     hideElement(btn);
   };
-  const cancelAdsClickHandle = function (id) {
-    const btn = getElementById("adsHistoryActionCancelButton" + id);
-    if (!btn || btn.classList.contains("disabled")) return;
-    showLoaderButtonCancel();
+  const cancelAds = function (id) {
+    if (callApiCancelStatus === api_status.fetching) return;
+    else setCallApiCancelStatus(api_status.fetching);
     companyCancelP2p({
       idP2p: id,
     })
-      .then((resp) => {
-        loadData();
+      .then(() => {
+        setCallApiCancelStatus(api_status.fulfilled);
+        loadData(currentPage);
       })
       .catch((error) => {
+        setCallApiCancelStatus(api_status.rejected);
         console.log(error);
-      })
-      .finally(() => {
-        closeShowLoaderButtonCancel();
       });
-  };
-  const showLoaderButtonCancel = function (id) {
-    const btn = getElementById("adsHistoryActionCancelButton" + id);
-    if (!btn) return;
-    const loader = btn.querySelector(".loader");
-    if (!loader) return;
-    showElement(loader);
-    if (!btn.classList.contains("disabled")) btn.classList.add("disabled");
-  };
-  const closeShowLoaderButtonCancel = function (id) {
-    const btn = getElementById("adsHistoryActionCancelButton" + id);
-    if (!btn) return;
-    const loader = btn.querySelector(".loader");
-    if (!loader) return;
-    hideElement(loader);
-    if (btn.classList.contains("disabled")) btn.classList.remove("disabled");
   };
   const loadData = function (page) {
     const act = action.current;
@@ -432,6 +447,10 @@ function AdsHistory() {
   const redirectConfirm = function (id) {
     history.push(url.confirm.replace(":id", id));
   };
+  const modalConfirmOkClickHandle = function () {
+    if (callApiCancelStatus === api_status.fetching) return;
+    cancelAds(cancelAdsId.current);
+  };
   return (
     <div className="ads-history">
       <div className="container">
@@ -495,6 +514,42 @@ function AdsHistory() {
           </div>
         </div>
       </div>
+      <Modal title={null} open={isModalConfirmOpen} footer={null}>
+        <div className="ads-history__modal-container">
+          <div className="ads-history__modal-header">
+            {t("confirm")}
+            <span onClick={closeModal}>
+              <i className="fa-solid fa-xmark"></i>
+            </span>
+          </div>
+          <div className="ads-history__modal-content">
+            {t("areYouSureYouWantToCancel")}
+          </div>
+          <div className="ads-history__modal-footer">
+            <button
+              onClick={closeModal}
+              className={`ads-history__modal-cancel ${
+                callApiCancelStatus === api_status.fetching ? "disabled" : ""
+              }`}
+            >
+              {t("cancel")}
+            </button>
+            <button
+              onClick={modalConfirmOkClickHandle}
+              className={`ads-history__modal-ok ${
+                callApiCancelStatus === api_status.fetching ? "disable" : ""
+              }`}
+            >
+              <div
+                className={`loader ${
+                  callApiCancelStatus === api_status.fetching ? "" : "--d-none"
+                }`}
+              ></div>
+              {t("ok")}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

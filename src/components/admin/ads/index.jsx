@@ -8,7 +8,7 @@ import {
 } from "src/util/common";
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
-import { api_status, showAlertType } from "src/constant";
+import { api_status } from "src/constant";
 import {
   confirmAds,
   getAdsToWhere,
@@ -16,8 +16,8 @@ import {
   getAllAdsPending,
   refuseAds,
 } from "src/util/adminCallApi";
-import { showToast } from "src/function/showToast";
-import { showAlert } from "src/function/showAlert";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+
 function Ads() {
   const actionType = {
     all: "All",
@@ -350,7 +350,7 @@ function Ads() {
       id,
     })
       .then((resp) => {
-        showToast(showAlertType.success, "Success");
+        callToastSuccess("Success");
         callApiConfirmAdsStatus.current = api_status.fulfilled;
         enableFilter();
         tableCloseLoaderButton();
@@ -360,7 +360,7 @@ function Ads() {
         enableFilter();
         callApiConfirmAdsStatus.current = api_status.rejected;
         tableCloseLoaderButton();
-        showAlert(showAlertType.error, "Fail");
+        callToastError("Fail");
         console.log(error);
       });
   };
@@ -396,13 +396,13 @@ function Ads() {
     })
       .then((resp) => {
         callApiConfirmAdsStatus.current = api_status.fulfilled;
-        showToast(showAlertType.success, "Success");
+        callToastSuccess("Success");
         loadData();
         tableCloseLoaderButton();
       })
       .catch((error) => {
         callApiConfirmAdsStatus.current = api_status.rejected;
-        showAlert(showAlertType.error, "Fail");
+        callToastError("Fail");
         tableCloseLoaderButton();
         console.log(error);
       });

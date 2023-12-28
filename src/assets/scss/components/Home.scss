@@ -25,9 +25,7 @@
       .home__header__icon {
         img {
           width: 80px;
-          height: 80px;
           object-fit: cover;
-          margin-left: -15px;
           display: block;
         }
       }
@@ -514,11 +512,11 @@
             }
 
             &.green {
-              background-color: $green-1;
+              background-color: $green-10;
             }
 
             &.blue {
-              background-color: $text-color-8;
+              background-color: $blue-10;
             }
 
             &.yellow {

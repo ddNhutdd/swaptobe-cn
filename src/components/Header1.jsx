@@ -2,7 +2,7 @@
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showToast } from "../function/showToast";
+
 import { useEffect, useRef } from "react";
 import {
   currency,
@@ -22,6 +22,7 @@ import {
   getTotalAssetsRealTime,
 } from "src/redux/constant/listCoinRealTime.constant";
 import i18n from "src/translation/i18n";
+import { callToastSuccess } from "src/function/toast/callToast";
 export default function Header1({ history }) {
   //
   const { isLogin, username } = useSelector((root) => root.loginReducer);
@@ -63,7 +64,7 @@ export default function Header1({ history }) {
     removeLocalStorage(localStorageVariable.coin);
     history.push(url.home);
     dispatch({ type: "USER_LOGOUT" });
-    showToast("success", "Logged out");
+    callToastSuccess("Logged out");
   };
   const userNameOnClickHandle = function (e) {
     e.stopPropagation();

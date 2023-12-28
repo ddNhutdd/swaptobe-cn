@@ -259,5 +259,9 @@
     "goBack": "戻る",
     "chooseTheCoinYouWant": "希望のコインを選択",
     "p2pExchange": "P2Pエクスチェンジ",
-    "quantity": "数量"
+    "quantity": "数量",
+    "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "113hgh222 12ETH12 を 122jjk999 33BTC33 に交換しますか？",
+    "areYouSureYouWantToCancel": "キャンセルしてもよろしいですか？",
+    "confirm": "確認",
+    "cancel": "キャンセル"
 }

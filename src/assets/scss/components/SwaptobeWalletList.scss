@@ -6,11 +6,12 @@
             margin-bottom: 10px;
             border-radius: 6px;
             padding: 25px 20px;
-            background: $new-background-2;
+            background: $new-background-level-1;
             box-shadow: 0 6px 4px rgba(0, 0, 0, 0.25);
             display: flex;
             flex-wrap: nowrap;
             transition: background 0.3s ease-in;
+
 
             &:hover {
                 background: $neutral-1;
@@ -64,7 +65,7 @@
                 align-self: center;
                 font-family: arial;
                 font-weight: 600;
-                color: $new-text-color-2;
+                color: $new-text-color-white;
                 display: flex;
                 flex-direction: column;
 
@@ -79,6 +80,15 @@
                         font-weight: normal;
                         color: $new-text-color-white;
                         margin-top: 4px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        img {
+                            margin-left: 5px;
+                            width: 20px;
+                            height: 20px;
+                        }
                     }
                 }
             }

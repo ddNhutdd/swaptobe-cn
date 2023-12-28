@@ -31,6 +31,7 @@ import {
   showP2pType,
 } from "src/redux/reducers/p2pTradingShow";
 import P2pExchange from "./p2pExchange";
+import "react-toastify/dist/ReactToastify.css";
 //
 export default function P2PTrading({ history }) {
   const showContent = useSelector(getShow);
@@ -277,6 +278,7 @@ export default function P2PTrading({ history }) {
     }
   };
   //
+
   return (
     <>
       {renderContent()}

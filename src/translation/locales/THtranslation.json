@@ -259,5 +259,9 @@
     "goBack": "ย้อนกลับ",
     "chooseTheCoinYouWant": "เลือกเหรียญที่คุณต้องการ",
     "p2pExchange": "P2P Exchange",
-    "quantity": "ปริมาณ"
+    "quantity": "ปริมาณ",
+    "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "คุณต้องการแลกเปลี่ยน 113hgh222 12ETH12 กับ 122jjk999 33BTC33 หรือไม่?",
+    "areYouSureYouWantToCancel": "คุณแน่ใจหรือว่าต้องการยกเลิก?",
+    "confirm": "ยืนยัน",
+    "cancel": "ยกเลิก"
 }

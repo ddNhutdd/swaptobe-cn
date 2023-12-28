@@ -1,0 +1,72 @@
+.main-template {
+    background-color: #141414;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+
+    .main-template__bg-1 {
+        background-image: url(../../../../public/img/starsky.png);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -21;
+    }
+
+    .main-template__bg-2 {
+        background-image: url(../../../../public/img/starsky.png);
+        animation-name: zoomAnimation;
+        transition-timing-function: ease;
+        animation-duration: 60s;
+        animation-iteration-count: infinite;
+        z-index: -20;
+        background-size: 100% 100%;
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        top: 0;
+    }
+
+    .main-template__bg-3 {
+        background-image: url(../../../../public/img/starsky.png);
+        animation-name: zoomAnimationTwo;
+        animation-duration: 60s;
+        transition-timing-function: ease;
+        animation-iteration-count: infinite;
+        z-index: -19;
+        background-size: 100% 100%;
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        top: 0;
+    }
+}
+
+@keyframes zoomAnimation {
+    0% {
+        transform: scale3d(1.5, .3, 2);
+    }
+
+    50% {
+        transform: scaleY(1.5);
+    }
+
+    100% {
+        transform: scale3d(1.5, .3, 2);
+    }
+}
+
+@keyframes zoomAnimationTwo {
+    0% {
+        transform: scaleY(1.3);
+    }
+
+    50% {
+        transform: scaleX(1);
+    }
+
+    100% {
+        transform: scaleY(1.3);
+    }
+}

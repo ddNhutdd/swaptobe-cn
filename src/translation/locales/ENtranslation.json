@@ -259,5 +259,9 @@
     "goBack": "Go back",
     "chooseTheCoinYouWant": "Choose the coin you want",
     "p2pExchange": "P2P Exchange",
-    "quantity": "Quantity"
+    "quantity": "Quantity",
+    "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "Do you want to exchange 113hgh222 12ETH12 for 122jjk999 33BTC33 ?",
+    "areYouSureYouWantToCancel": "Are you sure you want to cancel ?",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
 }

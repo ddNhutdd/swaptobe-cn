@@ -11,7 +11,6 @@ export const localStorageVariable = {
   createAds: "createAds",
 };
 
-// export const deploy_domain = "https://demo.dk-technical.vn/";
 export const deploy_domain = "http://192.168.1.15:3000/wallet-2";
 
 export const url = {
@@ -40,11 +39,6 @@ export const api_url = {
 };
 
 export const image_domain = "https://remitano.dk-tech.vn/images/USDT.png";
-
-export const showAlertType = {
-  success: "success",
-  error: "error",
-};
 
 export const api_status = {
   pending: "pending",

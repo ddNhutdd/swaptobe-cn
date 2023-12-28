@@ -12,10 +12,9 @@ import {
   fetchExchangeRateDisparity,
   getExchangeRateDisparity,
 } from "src/redux/reducers/exchangeRateDisparitySlice";
-import { api_status, showAlertType } from "src/constant";
+import { api_status } from "src/constant";
 import { updateExchangeRateDisparity } from "src/util/userCallApi";
-import { showAlert } from "src/function/showAlert";
-import { showToast } from "src/function/showToast";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 function ExchangeRateDisparity() {
   const rateFromRedux = useSelector(getExchangeRateDisparity);
   const rateStatusFromRedux = useSelector(exchangeRateDisparityApiStatus);
@@ -129,7 +128,7 @@ function ExchangeRateDisparity() {
       })
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Thành Công");
+          callToastSuccess("Thành Công");
           const value = getElementById("newValueInput").value;
           getElementById("rateInput").value = value;
           closeButtonSubmitLoader();
@@ -141,14 +140,10 @@ function ExchangeRateDisparity() {
           const mess = error?.response?.data?.message;
           switch (mess) {
             case "User does not have access":
-              showAlert(showAlertType.error, mess, "OK");
+              callToastError(mess);
               break;
             default:
-              showAlert(
-                showAlertType.error,
-                "Có lỗi trong quá trình xử lí",
-                "OK"
-              );
+              callToastError("Có lỗi trong quá trình xử lí");
               break;
           }
         });

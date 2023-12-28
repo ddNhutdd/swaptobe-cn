@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { showAlert } from "../function/showAlert";
 import { axiosService } from "../util/service";
 import { defaultLanguage, localStorageVariable } from "src/constant";
 import { getLocalStorage } from "src/util/common";
-import i18n, { availableLanguage } from "src/translation/i18n";
+import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 const typeList = ["TRC20", "ERC20", "PEP20"];
 export default function Wallet() {
   //
@@ -49,10 +49,10 @@ export default function Wallet() {
     try {
       let response = await axiosService.post("api/crypto/widthdraw", data);
       console.log(response.data);
-      showAlert("success", response.data.message);
+      callToastSuccess(response.data.message);
     } catch (error) {
       console.log(error);
-      showAlert("error", error.response.data.message);
+      callToastError(error.response.data.message);
     }
   };
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function Wallet() {
         }
         key={index}
       >
-        <img src="/img/busd.png" />
+        <img src="/img/busd.png" alt="..." />
         <div className="info">
           <span className="name">{item.token_key}</span>
           <span className="shortName">{item.name}</span>

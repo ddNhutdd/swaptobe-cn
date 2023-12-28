@@ -333,7 +333,9 @@ const P2pExchange = memo(function () {
           >
             <Spin />
           </div>
-          <div className={`p2pExchange__data-empty ${renderClassEmpty()}`}>
+          <div
+            className={`spin-container p2pExchange__data-empty ${renderClassEmpty()}`}
+          >
             <Empty />
           </div>
         </div>

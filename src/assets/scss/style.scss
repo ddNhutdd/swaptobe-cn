@@ -11,6 +11,7 @@ body {
   font-family: "Montserrat", "Roboto", "Open Sans", sans-serif !important;
 }
 
+@import "./components/MainTemplate.scss";
 @import "./components/Header1.scss";
 @import "./components/Header2.scss";
 @import "./components/P2PTrading.scss";

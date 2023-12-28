@@ -20,7 +20,6 @@ import {
   deploy_domain,
   image_domain,
   localStorageVariable,
-  showAlertType,
 } from "src/constant";
 import {
   getHistoryWidthdraw,
@@ -28,11 +27,11 @@ import {
   transferToUsername,
 } from "src/util/userCallApi";
 import { getCoin, getUserWallet } from "src/redux/constant/coin.constant";
-import { showToast } from "src/function/showToast";
-import { showAlert } from "src/function/showAlert";
+
 import { historytransfer as historytransferApi } from "src/util/userCallApi";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 function FormWithdraw() {
   //
   const form = {
@@ -130,8 +129,7 @@ function FormWithdraw() {
         type: "1",
       })
         .then(() => {
-          showToast(
-            showAlertType.success,
+          callToastSuccess(
             t("createASuccessfulMoneyTransferOrderWaitingForAdminApproval")
           );
           setCallApiSubmitStatus(api_status.fulfilled);
@@ -146,13 +144,10 @@ function FormWithdraw() {
           const messageError = error?.response?.data?.message;
           switch (messageError) {
             case "Insufficient balance or incorrect withdrawal minimum amount.":
-              showAlert(
-                showAlertType.error,
-                t("insufficientBalanceOrWithdrawalAmount")
-              );
+              callToastError(t("insufficientBalanceOrWithdrawalAmount"));
               break;
             default:
-              showAlert(showAlertType.error, t("anErrorHasOccurred"));
+              callToastError(t("anErrorHasOccurred"));
               break;
           }
           setCallApiSubmitStatus(api_status.rejected);
@@ -247,7 +242,7 @@ function FormWithdraw() {
       note: messageElement.current.value,
     })
       .then((resp) => {
-        showToast(showAlertType.success, t("transferSuccessful"));
+        callToastSuccess(t("transferSuccessful"));
         userNameInputElement.current.value = "";
         setInputAmountCurrency("");
         messageElement.current.value = "";
@@ -261,20 +256,20 @@ function FormWithdraw() {
         console.log(error?.response?.data, errorMessage);
         switch (errorMessage) {
           case "UserName is not exit":
-            showAlert(showAlertType.error, t("userNameNotExists"));
+            callToastError(t("userNameNotExists"));
             break;
           case "Invalid balance":
-            showAlert(showAlertType.error, t("invalidBalance"));
+            callToastError(t("invalidBalance"));
             break;
           case "Not be empty":
             const errorMessage = error?.response?.data?.errors[0];
             errorMessage === "userName is not empty" &&
-              showAlert(showAlertType.error, t("userNameNotEmpty"));
+              callToastError(t("userNameNotEmpty"));
             errorMessage === "amount is not empty" &&
-              showAlert(showAlertType.error, t("amountNotEmpty"));
+              callToastError(t("amountNotEmpty"));
             break;
           default:
-            showAlert(showAlertType.error, t("anErrorHasOccurred"));
+            callToastError(t("anErrorHasOccurred"));
             break;
         }
         setCallApiSubmitStatus(api_url.rejected);

@@ -2,8 +2,8 @@
 import { Spin, Empty } from "antd";
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { api_status, showAlertType } from "src/constant";
-import { showToast } from "src/function/showToast";
+import { api_status } from "src/constant";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { currencySetFetchExchangeCount } from "src/redux/actions/currency.action";
 import {
   getExchange,
@@ -196,7 +196,7 @@ function Exchange() {
       editExchange(data)
         .then(() => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Success");
+          callToastSuccess("Success");
           return resolve(true);
         })
         .catch((error) => {
@@ -205,7 +205,7 @@ function Exchange() {
             case "value":
               break;
             default:
-              showToast(showAlertType.success, "Fail");
+              callToastError("Fail");
               break;
           }
           callApiStatus.current = api_status.rejected;
@@ -222,7 +222,7 @@ function Exchange() {
       addExchange(data)
         .then((resp) => {
           callApiStatus.current = api_status.fulfilled;
-          showToast(showAlertType.success, "Success");
+          callToastSuccess("Success");
           dispatch(currencySetFetchExchangeCount());
           return resolve(true);
         })
@@ -232,7 +232,7 @@ function Exchange() {
             case "value":
               break;
             default:
-              showToast(showAlertType.success, "Fail");
+              callToastError("Fail");
               break;
           }
           callApiStatus.current = api_status.rejected;
