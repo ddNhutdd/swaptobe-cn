@@ -610,14 +610,16 @@ export default function P2PTrading2({ history }) {
                 {t("creatingYourBuyingAd")}
               </button>
             </div>
-            <Pagination
-              defaultCurrent={1}
-              current={buySectionPage}
-              pageSize={5}
-              onChange={onChangeSectionBuyPaging}
-              total={buyListSectionTotalItems}
-              showSizeChanger={false}
-            />
+            <div className="custom-paging">
+              <Pagination
+                defaultCurrent={1}
+                current={buySectionPage}
+                pageSize={5}
+                onChange={onChangeSectionBuyPaging}
+                total={buyListSectionTotalItems}
+                showSizeChanger={false}
+              />
+            </div>
           </div>
         </div>
         <div className="sell">
@@ -691,14 +693,16 @@ export default function P2PTrading2({ history }) {
                 {t("creatingYourSellingAd")}
               </button>
             </div>
-            <Pagination
-              defaultCurrent={1}
-              current={sellSectionPage}
-              pageSize={5}
-              total={sellListSectionTotalItems}
-              showSizeChanger={false}
-              onChange={onChangeSectionSellPaging}
-            />
+            <div className="custom-paging">
+              <Pagination
+                defaultCurrent={1}
+                current={sellSectionPage}
+                pageSize={5}
+                total={sellListSectionTotalItems}
+                showSizeChanger={false}
+                onChange={onChangeSectionSellPaging}
+              />
+            </div>
           </div>
         </div>
       </div>

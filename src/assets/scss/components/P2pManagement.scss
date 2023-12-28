@@ -124,7 +124,7 @@
                 align-items: center;
                 justify-content: center;
 
-                input[type="radio"]:checked + label .p2pManagement__filter-dot {
+                input[type="radio"]:checked+label .p2pManagement__filter-dot {
                     display: block;
                 }
 
@@ -152,7 +152,7 @@
                     .p2pManagement__filter-dot {
                         width: 80%;
                         height: 80%;
-                        background-color: $header2-background;
+                        background-color: $new-primary-color-6;
                         border-radius: 50%;
                         display: none;
                     }

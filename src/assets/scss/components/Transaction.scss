@@ -1,6 +1,6 @@
 .transaction {
     margin-top: 90px;
-    background-color: $neutral-3;
+    background-color: $new-background-level-0;
     color: $neutral-20;
 
     .transaction--green {
@@ -12,7 +12,7 @@
     }
 
     .transaction--green-header {
-        color: $blue-16;
+        color: $blue-20;
     }
 
     .transaction--bold {
@@ -128,6 +128,7 @@
                         position: absolute;
                         top: 0;
                         left: 1px;
+                        color: $new-primary-color-6;
                         display: none;
                     }
                 }
@@ -220,7 +221,7 @@
 
                 i {
                     font-size: 60px;
-                    color: $header2-background;
+                    color: $neutral-20
                 }
 
                 .transaction__chat-header {
@@ -229,7 +230,7 @@
                 }
 
                 .transaction__chat-support {
-                    color: $blue-16;
+                    color: $blue-20;
                 }
             }
 

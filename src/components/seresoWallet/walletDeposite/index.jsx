@@ -431,7 +431,7 @@ function SeresoWalletDeposit() {
           <div id="historyEmpty" className="spin-container fadeInBottomToTop">
             <Empty />
           </div>
-          <div className="wallet-deposite-paging">
+          <div className="custom-paging wallet-deposite-paging">
             <Pagination defaultCurrent={1} total={10} />
           </div>
         </div>

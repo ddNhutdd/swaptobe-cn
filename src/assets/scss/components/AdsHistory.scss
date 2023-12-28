@@ -28,7 +28,6 @@
             input[type="checkbox"]#pendingCheckbox:checked+label {
                 i {
                     display: block;
-                    color: black;
                 }
             }
 
@@ -48,15 +47,16 @@
                     width: 15px;
                     height: 15px;
                     border: 1px solid $background-color-4;
-                    background-color: $white;
+                    background-color: $transparent;
                     border-radius: 3px;
                     position: relative;
 
                     i {
                         position: absolute;
-                        top: 0;
-                        left: 0;
+                        top: -1px;
+                        left: -1px;
                         display: none;
+                        color: $new-primary-color-6;
                     }
                 }
             }

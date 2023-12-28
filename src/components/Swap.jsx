@@ -363,9 +363,6 @@ export default function Swap() {
   return (
     <div className="swap">
       <div className="container">
-        <div>
-          <button onClick={showModalConfirm}>test</button>
-        </div>
         <div className="box">
           <h2 className="title">{t("swap")}</h2>
           <div className="field">
@@ -449,7 +446,7 @@ export default function Swap() {
         <div className="box" style={{ marginTop: 30 }}>
           <h2 className="title">{t("swapOrder")}</h2>
           {renderCoinSwapHistory()}
-          <div className="swap__history-paging">
+          <div className="custom-paging swap__history-paging">
             <Pagination
               onChange={historyPagingOnChangeHandle}
               total={swapHistoryTotalPage}

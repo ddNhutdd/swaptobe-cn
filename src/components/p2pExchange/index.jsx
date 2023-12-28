@@ -339,7 +339,7 @@ const P2pExchange = memo(function () {
             <Empty />
           </div>
         </div>
-        <div className="p2pExchange__paging">
+        <div className="custom-paging  p2pExchange__paging">
           <Pagination
             defaultCurrent={1}
             pageSize={limit.current}

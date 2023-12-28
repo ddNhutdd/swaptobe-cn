@@ -589,7 +589,7 @@ function FormWithdraw() {
             {showForm === form.Wallet ? (
               <>
                 {renderWithdrawHistory()}
-                <div className="paging">
+                <div className="custom-paging paging">
                   <Pagination
                     onChange={withdrawHistoryPagingOnChangeHandle}
                     total={withdrawHistoryTotalItems}
@@ -599,7 +599,7 @@ function FormWithdraw() {
             ) : (
               <>
                 {renderTransferHistory()}
-                <div className="paging">
+                <div className="custom-paging paging">
                   <Pagination
                     onChange={transferHistoryPagingOnChangeHandle}
                     total={transferHistoryTotalItems}

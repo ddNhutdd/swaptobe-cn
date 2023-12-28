@@ -19,7 +19,6 @@ $green-17: #00d728ff;
 $green-18: #00e42aff;
 $green-19: #00f22dff;
 $green-20: #00ff2fff;
-
 $blue-1: #000000ff;
 $blue-2: #00040dff;
 $blue-3: #00081bff;
@@ -40,7 +39,6 @@ $blue-17: #003dd7ff;
 $blue-18: #0040e4ff;
 $blue-19: #0044f2ff;
 $blue-20: #0048ffff;
-
 // New theme
 $new-primary-color: #000000;
 $new-primary-color-1: #aa9145;
@@ -61,7 +59,6 @@ $new-primary-color-15: #ecc939;
 $new-primary-color-16: #f7d342;
 $new-primary-color-17: #fbda3b;
 $new-primary-color-18: #f7d93b;
-
 $red-1: #000000;
 $red-2: #0d0000;
 $red-3: #1b0000;
@@ -82,7 +79,6 @@ $red-17: #d70000;
 $red-18: #e40000;
 $red-19: #f20000;
 $red-20: #ff0000;
-
 $neutral-1: #000000;
 $neutral-2: #0d0d0d;
 $neutral-3: #1b1b1b;
@@ -103,7 +99,6 @@ $neutral-17: #d7d7d7;
 $neutral-18: #e4e4e4;
 $neutral-19: #f2f2f2;
 $neutral-20: #ffffff;
-
 $new-text-color-1: $new-primary-color-18;
 $new-text-color-2: $new-primary-color-16;
 $new-text-color-3: $new-primary-color-14;
@@ -113,7 +108,6 @@ $new-text-color-6: $new-primary-color-8;
 $new-text-color-7: $new-primary-color-6;
 $new-text-color-white: #fff;
 $new-text-color-black: #000;
-
 $new-background-1: $neutral-1;
 $new-background-2: $neutral-2;
 $new-background-3: $neutral-3;
@@ -129,12 +123,10 @@ $new-primary-background-5: $new-primary-color-10;
 $new-primary-background-6: $new-primary-color-8;
 $new-primary-background-7: $new-primary-color-6;
 $new-primary-background-8: $new-primary-color-4;
-
 // $new-background-level-0: #141414;
 $new-background-level-0: transparent;
 $new-background-level-1: #1a1a1a;
 $new-background-level-2: #242424;
-
 //
 $primary-color: $neutral-4;
 $primary-color-dark: #27133a;
@@ -143,7 +135,6 @@ $primary-color-super-light: #f7e4ff;
 $header-background: $neutral-3;
 $header2-background: $neutral-2;
 $header2-background-light: $neutral-4;
-
 //
 $admin-background: #011022;
 $admin-background-light: #34404e;
@@ -664,6 +655,46 @@ h2.title {
   }
 }
 
+.custom-paging {
+
+  .ant-pagination-disabled .ant-pagination-item-link,
+  .ant-pagination-disabled:hover .ant-pagination-item-link {
+    background-color: $transparent;
+    color: $new-text-color-white;
+    border: none;
+  }
+
+  .ant-pagination-item {
+    background-color: $transparent;
+    color: $new-text-color-white;
+    border: none;
+
+    &:hover {
+      background-color: $new-primary-color-6;
+    }
+
+    a {
+      color: $new-text-color-white;
+    }
+
+    &.ant-pagination-item-active {
+      background-color: $new-primary-color-6 !important;
+    }
+  }
+
+  .ant-pagination-prev .ant-pagination-item-link,
+  .ant-pagination-next .ant-pagination-item-link {
+    background-color: $transparent;
+    color: $new-text-color-white;
+    border: none;
+  }
+
+  .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis,
+  .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis {
+    color: $new-text-color-white;
+  }
+}
+
 .error {
   font-weight: 500;
   color: red;
@@ -707,15 +738,12 @@ h2.title {
       &:nth-of-type(4) {
         fill: $new-primary-background-8;
       }
-
     }
 
     ellipse {
       fill: $new-primary-background-4;
     }
   }
-
-
 
   .ant-empty-description {
     color: $new-primary-background-6;

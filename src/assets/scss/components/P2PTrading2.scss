@@ -73,12 +73,6 @@
         }
       }
 
-      .item2 {
-        .item2-amount-number {
-          // font-weight: 500;
-        }
-      }
-
       .item4 {
         button {
           padding: 8px 20px;
@@ -99,8 +93,6 @@
 
           &.buy-coin {
             background-color: $green;
-
-            &:hover {}
           }
 
           &.sell-coin {
