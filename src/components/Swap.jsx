@@ -372,7 +372,7 @@ export default function Swap() {
             <div className="input-area">
               <input
                 style={{ paddingRight: "55px" }}
-                className="swap__input"
+                className="inputContainer--default"
                 value={fromCoinValueString}
                 onChange={fromCoinOnChange}
               />
