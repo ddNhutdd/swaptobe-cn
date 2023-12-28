@@ -40,7 +40,7 @@
           width: 30px;
           height: 30px;
           object-fit: cover;
-          margin-right: 5px;
+          margin-right: 10px;
           display: block;
         }
 
@@ -78,18 +78,21 @@
             color: $green;
             margin-right: 10px;
           }
-
-          span {
-            font-weight: 500;
-            font-size: 18px;
-          }
         }
 
         .left2 {
           margin-top: 10px;
           font-weight: bold;
-          font-size: 22px;
+          font-size: 18px;
           color: $green;
+
+          @media screen and (min-width: 600px) {
+            font-size: 20px;
+          }
+
+          @media screen and (min-width: 768px) {
+            font-size: 24px;
+          }
         }
 
         .buyNowBtn {
@@ -97,7 +100,11 @@
           background-color: $green;
           color: white;
           border: none;
+          font-size: 14px;
 
+          @media screen and (min-width: 768px) {
+            font-size: 16px;
+          }
           &:hover {
             opacity: 0.8;
           }
@@ -114,18 +121,21 @@
             color: $red;
             margin-right: 10px;
           }
-
-          span {
-            font-weight: 500;
-            font-size: 18px;
-          }
         }
 
         .right2 {
           margin-top: 10px;
           font-weight: bold;
-          font-size: 22px;
+          font-size: 18px;
           color: $red;
+
+          @media screen and (min-width: 600px) {
+            font-size: 20px;
+          }
+
+          @media screen and (min-width: 768px) {
+            font-size: 24px;
+          }
         }
 
         .sellNowBtn {
@@ -133,6 +143,11 @@
           background-color: $red;
           color: white;
           border: none;
+          font-size: 14px;
+
+          @media screen and (min-width: 768px) {
+            font-size: 16px;
+          }
 
           &:hover {
             opacity: 0.8;
@@ -144,9 +159,11 @@
     .bottom {
       width: 100%;
       margin-top: 15px;
+      font-size: 14px;
 
       @media screen and (min-width: 480px) {
         margin-top: 30px;
+        font-size: 16px;
       }
 
       i {
@@ -167,14 +184,19 @@
     }
 
     .box {
-      background-color: $neutral-3;
+      background-color: $new-background-level-1;
       padding: 15px;
 
-      @media screen and (min-width: 480px) {
+      @media screen and (min-width: 768px) {
         padding: 30px;
       }
     }
   }
+}
+
+.cardChooseCoin {
+  border: 0 !important;
+  background: transparent !important;
 }
 
 .p2ptrading__table {
@@ -184,77 +206,36 @@
         .ant-table-container {
           .ant-table-content {
             table {
+              background-color: $new-background-header-modal-antd;
+
               @media screen and (max-width: 576px) {
                 width: 100%;
               }
 
               .ant-table-thead {
-                @media screen and (max-width: 576px) {
-                  width: 100%;
-                  display: table;
-                  position: sticky;
-                  top: 0;
-                  z-index: 9;
-                }
+                background-color: $new-background-header-modal-antd;
 
-                tr {
-                  @media screen and (max-width: 576px) {
-                    width: 100%;
-                    display: flex;
-                    flex-wrap: wrap;
-                  }
-
-                  th {
-                    @media screen and (max-width: 576px) {
-                      display: block;
-                      width: 50%;
-                    }
-
-                    &:nth-of-type(2) {
-                      @media screen and (max-width: 576px) {
-                        border-top-right-radius: 5px;
-                      }
-                    }
-                  }
+                .ant-table-cell {
+                  border-color: #797979;
+                  background-color: $new-background-header-modal-antd;
+                  color: #fff;
                 }
               }
 
               .ant-table-tbody {
-                @media screen and (max-width: 576px) {
-                  width: 100%;
-                  display: block;
-
-                  .ant-table-placeholder {
+                .ant-table-row {
+                  &:hover {
                     .ant-table-cell {
-                      width: 100%;
+                      cursor: pointer;
+                      background-color: $new-background-level-2;
                     }
                   }
 
-                  &>tr {
-                    @media screen and (max-width: 576px) {
-                      width: 100%;
-                      display: flex;
-                      flex-wrap: wrap;
-                    }
-
-                    &>td {
-                      &:nth-of-type(1) {
-                        @media screen and (max-width: 576px) {
-                          border-bottom: none;
-                        }
-                      }
-
-                      &:nth-of-type(2) {
-                        @media screen and (max-width: 576px) {
-                          border-bottom: none;
-                        }
-                      }
-
-                      @media screen and (max-width: 576px) {
-                        display: block;
-                        width: 50%;
-                      }
-                    }
+                  .ant-table-cell {
+                    background-color: $new-background-level-1;
+                    color: #fff;
+                    border: 0;
+                    font-size: 14px;
                   }
                 }
               }

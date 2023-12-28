@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Card, Modal, Table } from "antd";
+import { Button as ButtonAntd, Card, Modal, Table } from "antd";
 import { Spin } from "antd";
 import { useHistory } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
@@ -32,6 +32,7 @@ import {
 } from "src/redux/reducers/p2pTradingShow";
 import P2pExchange from "./p2pExchange";
 import "react-toastify/dist/ReactToastify.css";
+import { Button } from "./Common/Button";
 //
 export default function P2PTrading({ history }) {
   const showContent = useSelector(getShow);
@@ -99,6 +100,7 @@ export default function P2PTrading({ history }) {
               display: "flex",
               gap: "5px",
               alignItems: "flex-start",
+              fontWeight: 500,
             }}
             onClick={() => handleSelectedRow(record)}
           >
@@ -125,11 +127,14 @@ export default function P2PTrading({ history }) {
       render: (_, { percent }) => {
         let color = "black";
         if (percent > 0) {
-          color = "green";
+          color = "#9ADE7B";
         } else if (percent < 0) {
-          color = "red";
+          color = "#B31312";
         }
-        return <span style={{ color: color }}>{percent}%</span>;
+
+        return (
+          <span style={{ color: color, fontWeight: 500 }}>{percent}%</span>
+        );
       },
     },
     {
@@ -199,7 +204,7 @@ export default function P2PTrading({ history }) {
                 <div className="left box">
                   <div className="left1">
                     <i className="fa-solid fa-flag"></i>
-                    <span>{t("sellingPrice")}:</span>
+                    <span className="titleContainer">{t("sellingPrice")}:</span>
                   </div>
                   <div className="left2">
                     {formatStringNumberCultureUS(
@@ -207,14 +212,14 @@ export default function P2PTrading({ history }) {
                     )}
                     <span> {userSelectedCurrency}</span>
                   </div>
-                  <Button onClick={buyNowClickHandle} className="buyNowBtn">
+                  <ButtonAntd onClick={buyNowClickHandle} className="buyNowBtn">
                     {t("buyNow")}
-                  </Button>
+                  </ButtonAntd>
                 </div>
                 <div className="right box">
                   <div className="right1">
                     <i className="fa-solid fa-flag"></i>
-                    <span>{t("buyingPrice")}:</span>
+                    <span className="titleContainer">{t("buyingPrice")}:</span>
                   </div>
                   <div className="right2">
                     {formatStringNumberCultureUS(
@@ -222,9 +227,12 @@ export default function P2PTrading({ history }) {
                     )}
                     <span> {userSelectedCurrency}</span>
                   </div>
-                  <Button onClick={sellNowClickHandle} className="sellNowBtn">
+                  <ButtonAntd
+                    onClick={sellNowClickHandle}
+                    className="sellNowBtn"
+                  >
                     {t("sellNow")}
-                  </Button>
+                  </ButtonAntd>
                 </div>
               </div>
               <div className="bottom box">
@@ -238,10 +246,12 @@ export default function P2PTrading({ history }) {
               onOk={handleOk}
               onCancel={handleCancel}
               footer={null}
+              width={700}
             >
-              <Card bodyStyle={{ padding: "0" }}>
+              <Card className="cardChooseCoin" bodyStyle={{ padding: "0" }}>
                 {data && data.length ? (
                   <Table
+                    scroll={{ x: 700 }}
                     className="p2ptrading__table"
                     columns={columns}
                     dataSource={data}

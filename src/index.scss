@@ -138,3 +138,23 @@ button[type="reset"] {
 .ant-progress-bg {
   background-color: $red;
 }
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fff;
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666666;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a5a5a5;
+}

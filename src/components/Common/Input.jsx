@@ -1,4 +1,12 @@
-export const Input = ({ value, onChange, type, placeholder, id, style }) => {
+export const Input = ({
+  value,
+  onChange,
+  type,
+  placeholder,
+  id,
+  style,
+  refEl,
+}) => {
   return (
     <input
       className="inputContainer--default"
@@ -8,6 +16,7 @@ export const Input = ({ value, onChange, type, placeholder, id, style }) => {
       placeholder={placeholder}
       style={style}
       id={id}
+      ref={refEl}
     />
   );
 };
