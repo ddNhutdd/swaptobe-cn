@@ -1,12 +1,13 @@
 .p2pManagement {
     padding-top: 130px;
     padding-bottom: 30px;
-    background: $new-background-3;
+    background: $new-background-level-0;
     color: $new-text-color-white;
 
     .container {
         @include container;
         border-radius: 5px;
+        background: $new-background-level-1;
         padding: 30px;
 
         .p2pManagement__header {

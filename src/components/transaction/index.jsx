@@ -500,7 +500,7 @@ ${symbol.current}`;
               <div className="transaction__input">
                 <label htmlFor="amountInput">I will pay:</label>
                 <Input
-                  refEl={amountInputFormBuy}
+                  ref={amountInputFormBuy}
                   onFocus={amountInputFormBuyFocusHandle}
                   onChange={amountInputFormBuyChangeHandle}
                   type="text"
@@ -539,7 +539,7 @@ ${symbol.current}`;
                   onFocus={amountInputFormSellFocusHandle}
                   onChange={amountInputFormSellChangeHandle}
                   id="amountInputFormSell"
-                  refEl={amountInputFormSell}
+                  ref={amountInputFormSell}
                   type="text"
                 />
                 <span className="transaction__unit">{symbol.current}</span>

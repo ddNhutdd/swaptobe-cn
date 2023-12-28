@@ -2,7 +2,6 @@
 import { useTranslation } from "react-i18next";
 import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useEffect, useRef } from "react";
 import {
   currency,
@@ -23,7 +22,7 @@ import {
 } from "src/redux/constant/listCoinRealTime.constant";
 import i18n from "src/translation/i18n";
 import { callToastSuccess } from "src/function/toast/callToast";
-const Header1 = memo(function ({ history }) {
+const Header1 = function ({ history }) {
   //
   const { isLogin, username } = useSelector((root) => root.loginReducer);
   const userSelectedCurrency = useSelector(getCurrent);
@@ -68,6 +67,10 @@ const Header1 = memo(function ({ history }) {
     userMenuElement.current.classList.toggle("show");
     walletMenuElement.current.classList.remove("show");
   };
+  const headerDown = function () {
+    const header = document.querySelector(".header1.fadeInTopToBottom");
+    header && header.classList.remove("up");
+  };
   const walletOnClickHandle = function (e) {
     e.stopPropagation();
     walletMenuElement.current.classList.toggle("show");
@@ -77,6 +80,7 @@ const Header1 = memo(function ({ history }) {
     if (userMenuElement.current && walletMenuElement.current) {
       userMenuElement.current.classList.remove("show");
       walletMenuElement.current.classList.remove("show");
+      headerDown();
     }
   };
   return (
@@ -91,13 +95,13 @@ const Header1 = memo(function ({ history }) {
                   <div className="header1__subMenu-item --no-hover">
                     {t("totalValue")} <i className="fa-regular fa-eye"></i>
                   </div>
-                  <div className="header1__subMenu-item">
+                  <div className="header1__subMenu-item --no-hover">
                     <div className="header1_icon-container">
                       <i className="fa-brands fa-bitcoin"></i>
                     </div>
                     {totalAssetsBtcRealTime}
                   </div>
-                  <div className="header1__subMenu-item">
+                  <div className="header1__subMenu-item --no-hover">
                     <div className="header1_icon-container">
                       <i className="fa-solid fa-dollar-sign"></i>
                     </div>
@@ -190,6 +194,5 @@ const Header1 = memo(function ({ history }) {
       </div>
     </header>
   );
-});
-
+};
 export default Header1;

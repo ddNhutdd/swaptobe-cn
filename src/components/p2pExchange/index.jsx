@@ -312,16 +312,10 @@ const P2pExchange = memo(function () {
         <div className="p2pExchange__search-container">
           <div className="p2pExchange__search-title">{t("quantity")}:</div>
           <div className="p2pExchange__input-container">
-            {/* <input
-              placeholder={renderPlaceholder()}
-              type="text"
-              ref={amountInputElement}
-              onChange={amountInputChangeHandle}
-            /> */}
             <Input
               placeholder={renderPlaceholder()}
               type="text"
-              refEl={amountInputElement}
+              ref={amountInputElement}
               onChange={amountInputChangeHandle}
               style={{
                 height: "45px",

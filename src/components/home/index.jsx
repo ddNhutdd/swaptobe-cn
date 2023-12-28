@@ -96,6 +96,12 @@ function Home() {
     );
     if (loginContainer) loginContainer.classList.toggle("--d-block");
   };
+  const scrollToContent = function (id) {
+    const ele = document.getElementById(id);
+    if (ele) {
+      ele.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <>
       <div className="home">
@@ -119,13 +125,8 @@ function Home() {
               <li>
                 <div
                   className="home__header__menu-item"
-                  onClick={(e) => {
-                    const ele = document.getElementById("home__benefit");
-                    if (ele) {
-                      ele.scrollIntoView({ behavior: "smooth" });
-                      headerBarButtonClickHandle(e);
-                    }
-                  }}
+                  name=""
+                  onClick={scrollToContent.bind(null, "home__benefit")}
                 >
                   COIN
                 </div>
@@ -133,13 +134,7 @@ function Home() {
               <li>
                 <div
                   className="home__header__menu-item"
-                  onClick={(e) => {
-                    const ele = document.getElementById("home__road-map");
-                    if (ele) {
-                      ele.scrollIntoView({ behavior: "smooth" });
-                      headerBarButtonClickHandle(e);
-                    }
-                  }}
+                  onClick={scrollToContent.bind(null, "home__road-map")}
                 >
                   ROADMAP
                 </div>
@@ -147,13 +142,7 @@ function Home() {
               <li>
                 <div
                   className="home__header__menu-item"
-                  onClick={(e) => {
-                    const ele = document.getElementById("home__app");
-                    if (ele) {
-                      ele.scrollIntoView({ behavior: "smooth" });
-                      headerBarButtonClickHandle(e);
-                    }
-                  }}
+                  onClick={scrollToContent.bind(null, "home__apps")}
                 >
                   APP
                 </div>
@@ -161,13 +150,7 @@ function Home() {
               <li>
                 <div
                   className="home__header__menu-item"
-                  onClick={(e) => {
-                    const ele = document.getElementById("home__faqs");
-                    if (ele) {
-                      ele.scrollIntoView({ behavior: "smooth" });
-                      headerBarButtonClickHandle(e);
-                    }
-                  }}
+                  onClick={scrollToContent.bind(null, "home__faqs")}
                 >
                   FAQ
                 </div>
@@ -438,7 +421,9 @@ function Home() {
             </div>
           </div>
         </div>
-        <PhoneApps />
+        <div id="home__apps">
+          <PhoneApps />
+        </div>
         <div id="home__faqs" className="home__faqs">
           <div className="container">
             <div className="home__faqs-content">

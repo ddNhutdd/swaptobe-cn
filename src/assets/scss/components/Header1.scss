@@ -5,7 +5,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 3;
 
   .container {
     @include container;
@@ -33,9 +33,9 @@
       background-color: $neutral-4;
       border-radius: 5px;
       padding: 5px 0;
-      min-width: 200px;
+      min-width: 250px;
       max-width: 500px;
-      z-index: -29;
+      z-index: 3;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       opacity: 0;
       display: flex;
@@ -43,11 +43,12 @@
       gap: 2px;
       transition: opacity 0.2s;
       overflow: hidden;
+      pointer-events: none;
 
       &.show {
         opacity: 1;
         z-index: 10;
-        max-height: 1000px;
+        pointer-events: auto;
       }
 
       .header1__subMenu__user-info {
@@ -68,6 +69,7 @@
         justify-content: flex-start;
         align-items: center;
         gap: 5px;
+        width: 100%;
 
         &.--no-hover {
           &:hover {
@@ -84,6 +86,8 @@
           cursor: pointer;
           background-color: $neutral-5;
         }
+
+
 
         .header1_icon-container {
           width: 20px;

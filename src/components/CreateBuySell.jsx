@@ -581,13 +581,13 @@ export default function CreateBuy() {
               </div>
             </div>
             <div className="col col-3">
-              <div className="" id="modalAction">
-                <Button
+              <div id="modalAction">
+                <button
                   onClick={modalButtonCreateClickHandle}
                   style={{ width: isMobileViewport ? "100%" : "fit-content" }}
                 >
                   {t(action).toUpperCase()}
-                </Button>
+                </button>
               </div>
             </div>
           </div>

@@ -442,7 +442,7 @@ function FormWithdraw() {
             </div>
             <div className="input">
               <p>{t("note")}</p>
-              <Input refEl={inputNoteValue} type="text" />
+              <Input ref={inputNoteValue} type="text" />
             </div>
             <div className="input">
               <p>
