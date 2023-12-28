@@ -10,7 +10,6 @@ import {
   regularExpress,
   url,
 } from "src/constant";
-
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
@@ -29,6 +28,7 @@ import {
 } from "src/util/common";
 import { createP2p, getListBanking } from "src/util/userCallApi";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { Input } from "../Common/Input";
 function Transaction() {
   const actionType = {
     sell: "sell",
@@ -335,6 +335,7 @@ ${symbol.current}`;
   };
   const closeDropdownPayment = function () {
     getClassListFromElementById("paymentDropdownMenu").remove("show");
+    getClassListFromElementById("paymentDropdownSelected").remove("active");
   };
   const setElementWidth = function () {
     const windowWidth =
@@ -443,6 +444,7 @@ ${symbol.current}`;
     renderErrorFromSell();
   };
   const amountInputFormSellChangeHandle = function (e) {
+    if (amountInputFormSell.current === null) return;
     const inputValue = e.target.value;
     const inputValueWithoutComma = inputValue.replaceAll(",", "");
     if (!regularExpress.checkNumber.test(inputValueWithoutComma)) {
@@ -497,8 +499,8 @@ ${symbol.current}`;
             >
               <div className="transaction__input">
                 <label htmlFor="amountInput">I will pay:</label>
-                <input
-                  ref={amountInputFormBuy}
+                <Input
+                  refEl={amountInputFormBuy}
                   onFocus={amountInputFormBuyFocusHandle}
                   onChange={amountInputFormBuyChangeHandle}
                   type="text"
@@ -511,7 +513,7 @@ ${symbol.current}`;
               </div>
               <div className="transaction__input">
                 <label htmlFor="receiveInput">{t("toReceive")}:</label>
-                <input
+                <Input
                   disabled
                   id="receiveInputTransactionFormBuy"
                   type="text"
@@ -532,12 +534,12 @@ ${symbol.current}`;
             >
               <div className="transaction__input">
                 <label>I pay:</label>
-                <input
+                <Input
                   name="amountInput"
                   onFocus={amountInputFormSellFocusHandle}
                   onChange={amountInputFormSellChangeHandle}
                   id="amountInputFormSell"
-                  ref={amountInputFormSell}
+                  refEl={amountInputFormSell}
                   type="text"
                 />
                 <span className="transaction__unit">{symbol.current}</span>
@@ -548,7 +550,7 @@ ${symbol.current}`;
               </div>
               <div className="transaction__input">
                 <label>{t("toReceive")}:</label>
-                <input id="receiveInputFormSell" disabled type="text" />
+                <Input id="receiveInputFormSell" disabled type="text" />
                 <span className="transaction__unit">VND</span>
               </div>
             </div>
@@ -563,7 +565,7 @@ ${symbol.current}`;
                   Vietcombank (Nguyen Trung Hieu: 08370383231)
                 </div>
                 <span>
-                  <i className="fa-solid fa-angle-down"></i>
+                  <i className="fa-solid fa-caret-down"></i>
                 </span>
               </div>
               <div

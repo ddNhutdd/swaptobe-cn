@@ -32,6 +32,7 @@ import { historytransfer as historytransferApi } from "src/util/userCallApi";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { Input } from "src/components/Common/Input";
 function FormWithdraw() {
   //
   const form = {
@@ -437,17 +438,17 @@ function FormWithdraw() {
             </div>
             <div className="input">
               <p>Address</p>
-              <input ref={addressElement} type="text" />
+              <Input refEl={addressElement} type="text" />
             </div>
             <div className="input">
               <p>{t("note")}</p>
-              <input ref={inputNoteValue} type="text" />
+              <Input refEl={inputNoteValue} type="text" />
             </div>
             <div className="input">
               <p>
                 {t("amountOf")} {coin}
               </p>
-              <input
+              <Input
                 value={inputAmountCurrency}
                 onChange={inputAmountCurrencyOnChangeHandles}
                 type="text"
@@ -520,7 +521,7 @@ function FormWithdraw() {
           >
             <div className="input">
               <p>{t("userName")}</p>
-              <input
+              <Input
                 onChange={usernameInputChangeHandle}
                 ref={userNameInputElement}
                 type="text"
@@ -530,7 +531,7 @@ function FormWithdraw() {
               <p>
                 {t("amountOf")} {coin}
               </p>
-              <input
+              <Input
                 value={inputAmountCurrency}
                 onChange={inputAmountCurrencyOnChangeHandles}
                 type="text"
@@ -589,7 +590,7 @@ function FormWithdraw() {
             {showForm === form.Wallet ? (
               <>
                 {renderWithdrawHistory()}
-                <div className="custom-paging paging">
+                <div className="paging">
                   <Pagination
                     onChange={withdrawHistoryPagingOnChangeHandle}
                     total={withdrawHistoryTotalItems}
@@ -599,7 +600,7 @@ function FormWithdraw() {
             ) : (
               <>
                 {renderTransferHistory()}
-                <div className="custom-paging paging">
+                <div className="paging">
                   <Pagination
                     onChange={transferHistoryPagingOnChangeHandle}
                     total={transferHistoryTotalItems}

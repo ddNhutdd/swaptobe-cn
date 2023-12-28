@@ -40,26 +40,52 @@
                 }
 
                 .transaction__input {
-                    @include userInput;
                     position: relative;
 
                     input {
-                        padding-right: 40px;
-                        color: $neutral-2;
-
-                        &.transaction__input-result {
-                            color: $neutral-20;
-                        }
+                        height: 35.56px;
                     }
 
                     .transaction__unit {
                         position: absolute;
-                        top: 41px;
+                        top: 39px;
                         right: 6px;
-                        color: $neutral-2;
+                        color: $neutral-20;
 
                         &.result {
                             color: $neutral-20;
+                        }
+                    }
+
+                    .transaction__input-result {
+                        border: 0;
+                        outline: none;
+                        padding: 5px 10px;
+                        border-radius: 5px;
+                        transition: 0.2s;
+                        width: 100%;
+                        color: $new-text-color-white;
+
+                        &.disabled {
+                            background-color: $background-color-4;
+                            color: #fff;
+
+                            &:hover {
+                                border-color: $background-color-4;
+                                cursor: not-allowed;
+                            }
+                        }
+
+                        &:hover {
+                            border-color: $header2-background;
+                        }
+
+                        &:focus {
+                            border-color: $header2-background;
+                        }
+
+                        &:focus-visible {
+                            outline: 1px solid $header2-background;
                         }
                     }
                 }
@@ -94,7 +120,7 @@
                 .transaction__payment-dropdown-menu-container {
                     @include userDropdownMenu;
                     position: absolute;
-                    top: 64px;
+                    top: 66px;
                     left: 0;
                 }
             }

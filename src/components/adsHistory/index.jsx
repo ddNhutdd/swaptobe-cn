@@ -503,7 +503,7 @@ function AdsHistory() {
           <div id="adsHistorySpinner" className="spin-container --d-none">
             <Spin />
           </div>
-          <div className="custom-paging ads-history__paging">
+          <div className="ads-history__paging">
             <Pagination
               defaultCurrent={1}
               showSizeChanger={false}

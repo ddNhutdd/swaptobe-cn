@@ -40,9 +40,7 @@ export default function Header2({ history }) {
           i18n.changeLanguage(item);
           closeDropdownLanguage();
         }}
-        className={`header2__model-dropdown-item ${
-          item === currentLanguage ? "active" : ""
-        }`}
+        className={`dropdown-item ${item === currentLanguage ? "active" : ""}`}
       >
         <span>
           <img
@@ -100,7 +98,7 @@ export default function Header2({ history }) {
     if (!containerElement) return;
     containerElement.innerHTML = "";
     for (const item of listExChange) {
-      containerElement.innerHTML += `<li class="header2__model-dropdown-item">${item.title}</li>`;
+      containerElement.innerHTML += `<li class="dropdown-item">${item.title}</li>`;
     }
     for (const item of containerElement.children) {
       item.addEventListener("click", selectCurrency.bind(null, item.innerHTML));
@@ -120,14 +118,11 @@ export default function Header2({ history }) {
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     setCurrentLanguage(language);
-    //
-    const element = document.querySelector(".header2");
-    element.classList.add("fadeInTopToBottom");
   }, []);
   //
   return (
     <>
-      <header className="header2">
+      <header className="header2 fadeInTopToBottom">
         <div className="container">
           <input type="checkbox" id="checkboxShowMenu" className="--d-none" />
           <div className="logo" onClick={() => history.push("/")}>
@@ -195,14 +190,14 @@ export default function Header2({ history }) {
                 </span>
                 <span>{availableLanguageMapper[currentLanguage]}</span>
                 <span>
-                  <i className="fa-solid fa-chevron-down"></i>
+                  <i className="fa-solid fa-caret-down"></i>
                 </span>
               </div>
               <div
                 id="dropdownLanguageMenu"
                 className="header2__modal-dropdown-menu-container"
               >
-                <ul className="header2__model-dropdown-menu">
+                <ul className="dropdown-menu">
                   {renderListLanguage(availableLanguage)}
                 </ul>
               </div>
@@ -221,20 +216,17 @@ export default function Header2({ history }) {
               >
                 <span id="dropdownCurrencySelectedText">USD</span>
                 <span>
-                  <i className="fa-solid fa-chevron-down"></i>
+                  <i className="fa-solid fa-caret-down"></i>
                 </span>
               </div>
               <div
                 id="dropdownCurrencyMenuContainer"
                 className="header2__modal-dropdown-menu-container"
               >
-                <ul
-                  id="dropdonwCurrencyMenyList"
-                  className="header2__model-dropdown-menu"
-                >
-                  <li className="header2__model-dropdown-item">USD</li>
-                  <li className="header2__model-dropdown-item">EUR</li>
-                  <li className="header2__model-dropdown-item">CVB</li>
+                <ul id="dropdonwCurrencyMenyList" className="dropdown-menu">
+                  <li className="dropdown-item">USD</li>
+                  <li className="dropdown-item">EUR</li>
+                  <li className="dropdown-item">CVB</li>
                 </ul>
               </div>
             </div>

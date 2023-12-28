@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useTranslation } from "react-i18next";
-import React from "react";
+import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useEffect, useRef } from "react";
@@ -23,7 +23,7 @@ import {
 } from "src/redux/constant/listCoinRealTime.constant";
 import i18n from "src/translation/i18n";
 import { callToastSuccess } from "src/function/toast/callToast";
-export default function Header1({ history }) {
+const Header1 = memo(function ({ history }) {
   //
   const { isLogin, username } = useSelector((root) => root.loginReducer);
   const userSelectedCurrency = useSelector(getCurrent);
@@ -38,9 +38,6 @@ export default function Header1({ history }) {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
-    //
-    const element = document.querySelector(".header1");
-    if (element) element.classList.add("fadeInTopToBottom");
     //
     window.addEventListener("click", closeAllSubMenu);
     //
@@ -83,7 +80,7 @@ export default function Header1({ history }) {
     }
   };
   return (
-    <header className="header1">
+    <header className="header1 fadeInTopToBottom">
       <div className="container">
         {isLogin ? (
           <>
@@ -193,4 +190,6 @@ export default function Header1({ history }) {
       </div>
     </header>
   );
-}
+});
+
+export default Header1;

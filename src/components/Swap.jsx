@@ -31,6 +31,7 @@ import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import socket from "src/util/socket";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { Input } from "./Common/Input";
 export default function Swap() {
   //
   const { isLogin } = useSelector((root) => root.loginReducer);
@@ -328,25 +329,25 @@ export default function Swap() {
       switch (match) {
         case "113hgh222":
           return (
-            <span className="swap__modal-confirm-content-main">
+            <span key={index} className="swap__modal-confirm-content-main">
               {fromCoinValueString}
             </span>
           );
         case "12ETH12":
           return (
-            <span className="swap__modal-confirm-content-main">
+            <span key={index} className="swap__modal-confirm-content-main">
               {swapFromCoin}
             </span>
           );
         case "122jjk999":
           return (
-            <span className="swap__modal-confirm-content-main">
+            <span key={index} className="swap__modal-confirm-content-main">
               {toCoinValueString}
             </span>
           );
         case "33BTC33":
           return (
-            <span className="swap__modal-confirm-content-main">
+            <span key={index} className="swap__modal-confirm-content-main">
               {swapToCoin}
             </span>
           );
@@ -370,16 +371,20 @@ export default function Swap() {
               {t("amountOf")} {swapFromCoin}
             </label>
             <div className="input-area">
-              <input
-                style={{ paddingRight: "55px" }}
-                className="inputContainer--default"
-                value={fromCoinValueString}
-                onChange={fromCoinOnChange}
-              />
-              <button onClick={maxClickHandle} className="max">
-                {t("max")}
-              </button>
-              <button className="selectBtn" onClick={showModal}>
+              <div className="input-area-input">
+                <Input
+                  value={fromCoinValueString}
+                  onChange={fromCoinOnChange}
+                  style={{ paddingRight: "60px" }}
+                />
+                <button onClick={maxClickHandle} className="max">
+                  {t("max")}
+                </button>
+              </div>
+              <button
+                className="selectBtn buttonContainer--transparent"
+                onClick={showModal}
+              >
                 <div className="selectBtn-container">
                   <img
                     src={`https://remitano.dk-tech.vn/images/${swapFromCoin}.png`}
@@ -412,13 +417,12 @@ export default function Swap() {
               {t("amountOf")} {swapToCoin}
             </label>
             <div className="input-area">
-              <input
-                className="swap__input disabled"
-                value={toCoinValueString}
-                readOnly
-              />
-              <button className="selectBtn" onClick={showModal2}>
-                <div className="selectBtn-container">
+              <Input value={toCoinValueString} disabled />
+              <button
+                className="selectBtn buttonContainer--transparent"
+                onClick={showModal2}
+              >
+                <div className="selectBtn-container  ">
                   <img
                     src={`https://remitano.dk-tech.vn/images/${swapToCoin}.png`}
                     alt="swapToCoin"
@@ -434,9 +438,7 @@ export default function Swap() {
           </div>
           <button
             onClick={mainButtonOnClickHandle}
-            className={`buyBtn ${
-              callApiSwapStatus === api_status.fetching ? "disabled" : ""
-            }`}
+            className={`buyBtn`}
             size="large"
             type="primary"
           >
@@ -446,7 +448,7 @@ export default function Swap() {
         <div className="box" style={{ marginTop: 30 }}>
           <h2 className="title">{t("swapOrder")}</h2>
           {renderCoinSwapHistory()}
-          <div className="custom-paging swap__history-paging">
+          <div className="swap__history-paging">
             <Pagination
               onChange={historyPagingOnChangeHandle}
               total={swapHistoryTotalPage}
@@ -462,15 +464,14 @@ export default function Swap() {
         onCancel={handleCancel}
         footer={null}
       >
-        <div style={{ padding: 20 }}>
-          <input
-            className="swap__modal-search"
+        <div className="swap__modal-coin">
+          <Input
             type="text"
             value={searchCoinName}
             placeholder="Enter the coin name."
             onChange={searchCoinOnChange}
           />
-          <div ref={searchCoinResult}>
+          <div className="swap__modal-list" ref={searchCoinResult}>
             {data
               .filter((item) =>
                 item.name.toLowerCase().includes(searchCoinName.toLowerCase())
@@ -478,8 +479,9 @@ export default function Swap() {
               .map((item, i) => {
                 return (
                   <button
-                    className="btn-choice-coin"
-                    type={item.name === swapFromCoin ? "primary" : "default"}
+                    className={`swap__modal-item ${
+                      item.name === swapFromCoin ? "active" : ""
+                    }`}
                     key={i}
                     onClick={() => {
                       setSwapFromCoin(item.name);
@@ -487,7 +489,7 @@ export default function Swap() {
                       setSearchCoinName("");
                     }}
                   >
-                    <div className="btn-choice-coin-content">
+                    <div>
                       <img src={DOMAIN + item.image} alt={item.image} />
                       <span>{item.name}</span>
                     </div>
@@ -504,37 +506,40 @@ export default function Swap() {
         onCancel={handleCancel2}
         footer={null}
       >
-        <div style={{ padding: 20 }}>
-          <input
+        <div className="swap__modal-coin">
+          <Input
             className="swap__modal-search"
             type="text"
             value={searchCoinName}
             placeholder="Enter the coin name."
             onChange={searchCoinOnChange}
           />
-          {data2
-            .filter((item) =>
-              item.name.toLowerCase().includes(searchCoinName.toLowerCase())
-            )
-            .map((item, i) => {
-              return (
-                <button
-                  className="btn-choice-coin"
-                  type={item.name === swapToCoin ? "primary" : "default"}
-                  key={i}
-                  onClick={() => {
-                    setSwapToCoin(item.name);
-                    setSearchCoinName("");
-                    setIsModalVisible2(false);
-                  }}
-                >
-                  <div className="btn-choice-coin-content">
-                    <img src={DOMAIN + item.image} alt={item.image} />
-                    <span>{item.name}</span>
-                  </div>
-                </button>
-              );
-            })}
+          <div className="swap__modal-list" ref={searchCoinResult}>
+            {data2
+              .filter((item) =>
+                item.name.toLowerCase().includes(searchCoinName.toLowerCase())
+              )
+              .map((item, i) => {
+                return (
+                  <button
+                    className={`swap__modal-item ${
+                      item.name === swapToCoin ? "active" : ""
+                    }`}
+                    key={i}
+                    onClick={() => {
+                      setSwapToCoin(item.name);
+                      setSearchCoinName("");
+                      setIsModalVisible2(false);
+                    }}
+                  >
+                    <div>
+                      <img src={DOMAIN + item.image} alt={item.image} />
+                      <span>{item.name}</span>
+                    </div>
+                  </button>
+                );
+              })}
+          </div>
         </div>
       </Modal>
       <Modal title={null} open={isModalConfirmOpen} footer={null}>

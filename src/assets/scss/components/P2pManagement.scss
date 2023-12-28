@@ -261,6 +261,8 @@
                                 border-color: $green;
 
                                 &:hover {
+                                    color: $green;
+                                    border-color: $green;
                                     cursor: default;
                                 }
                             }

@@ -603,7 +603,7 @@ function P2pManagement() {
           >
             <Spin />
           </div>
-          <div className="custom-paging p2pManagement__paging">
+          <div className="p2pManagement__paging">
             <Pagination
               defaultCurrent={1}
               onChange={pagingChangeHandle}

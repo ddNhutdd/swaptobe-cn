@@ -88,33 +88,14 @@
                 }
 
                 input {
-                    width: 100%;
-                    background-color: $white;
-                    max-width: 100%;
-                    vertical-align: middle;
-                    padding: 5px 10px;
-                    border: 0;
-                    border-radius: 5px;
-                    transition: 0.2s;
-
-                    &:hover {
-                        border-color: $header2-background;
-                    }
-
-                    &:focus {
-                        border-color: $header2-background;
-                    }
-
-                    &:focus-visible {
-                        outline: 1px solid $header2-background;
-                    }
+                    height: 35.56px;
                 }
 
                 .list-tag {
                     position: absolute;
                     display: flex;
                     justify-content: flex-end;
-                    top: 41px;
+                    top: 44px;
                     width: auto;
                     right: -6px;
                     gap: 5px;
@@ -123,18 +104,12 @@
                     height: 33px;
 
                     span {
-                        color: $text-color-3;
-                        font-family: "IBM Plex Sans";
+                        color: $new-text-color-white;
 
-                        &.active {
-                            height: 90%;
-                            padding: 0 10px;
-                            background: $background-color-6;
-                            border-radius: 7px;
-                            margin-left: 10px;
-                            cursor: pointer;
-                            display: flex;
-                            align-items: center;
+                        &:last-child {
+                            &:hover {
+                                cursor: pointer;
+                            }
                         }
                     }
                 }
@@ -224,33 +199,14 @@
                 }
 
                 input {
-                    width: 100%;
-                    background-color: $white;
-                    max-width: 100%;
-                    vertical-align: middle;
-                    padding: 5px 10px;
-                    border: 1px solid $border-color-4;
-                    border-radius: 5px;
-                    transition: 0.2s;
-
-                    &:hover {
-                        border-color: $header2-background;
-                    }
-
-                    &:focus {
-                        border-color: $header2-background;
-                    }
-
-                    &:focus-visible {
-                        outline: 1px solid $header2-background;
-                    }
+                    height: 35.56px;
                 }
 
                 .list-tag {
                     position: absolute;
                     display: flex;
                     justify-content: flex-end;
-                    top: 41px;
+                    top: 43px;
                     width: auto;
                     right: 0;
                     gap: 5px;
@@ -259,44 +215,30 @@
                     height: 33px;
 
                     span {
-                        color: $text-color-3;
-                        font-family: "IBM Plex Sans";
-
-                        &.active {
-                            height: 90%;
-                            padding: 0 10px;
-                            background: $background-color-6;
-                            border-radius: 7px;
-                            margin-left: 10px;
-                            cursor: pointer;
-                            display: flex;
-                            align-items: center;
-                        }
+                        color: $new-text-color-white;
                     }
                 }
 
                 textarea {
                     height: 150px;
-                    border: 1px solid $border-color-4;
                     width: 100%;
-                    vertical-align: middle;
-                    padding: 2px 15px;
-                    border-radius: 4px;
-                    transition:
-                        border-color 0.15s ease-in-out,
-                        box-shadow 0.15s ease-in-out;
-                    resize: none;
+                    color: #eaecef;
+                    font-size: 14px;
+                    background-color: #181a20;
+                    outline: none;
+                    border: 1px solid #797979;
+                    padding: 10px 16px;
+                    transition: border-color 0.3s ease;
+                    border-radius: 8px;
+                    line-height: 1;
+                    padding-bottom: 1px;
 
                     &:hover {
-                        border-color: $header2-background;
+                        border: 1px solid #cb9950;
                     }
 
                     &:focus {
-                        border-color: $header2-background;
-                    }
-
-                    &:focus-visible {
-                        outline: 1px solid $header2-background;
+                        border: 1px solid #cb9950;
                     }
                 }
             }
@@ -354,7 +296,6 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-
 
         @media screen and (max-width: 480px) {
             width: 100%;

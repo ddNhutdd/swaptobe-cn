@@ -62,94 +62,11 @@
                     }
 
                     .dropdown-content-selected {
-                        width: 100%;
-                        border: 1px solid $background-color-4;
-                        padding: 5px 10px;
-                        border-radius: 5px;
-                        color: $neutral-2;
-                        display: flex;
-                        align-items: center;
-                        background-color: $white;
-                        gap: 5px;
-                        cursor: default;
-
-                        &:hover {
-                            border-color: $header2-background;
-                        }
-
-                        &.active {
-                            border-color: $header2-background;
-                            outline: 1px solid $header2-background;
-                        }
-
-                        img {
-                            width: 20px;
-                            height: 20px;
-                            object-fit: cover;
-                        }
-
-                        .content {
-                            display: flex;
-                            gap: 5px;
-
-                            .main-content {
-                                font-weight: bold;
-                            }
-                        }
-
-                        i {
-                            margin-left: auto;
-                        }
+                        @include userDropdownSelected;
                     }
 
-                    .dropdown-menu {
-                        margin-top: 2px;
-                        border: 1px solid $background-color-4;
-                        background-color: $white;
-                        border-radius: 5px;
-                        padding: 10px 0;
-                        position: absolute;
-                        top: 67px;
-                        width: 100%;
-                        z-index: -1;
-                        transition: 0.2s;
-                        max-height: 0;
-                        opacity: 0;
-                        overflow: hidden;
-
-                        &.show {
-                            max-height: 300px;
-                            opacity: 1;
-                            overflow-y: auto;
-                            z-index: 7;
-                        }
-
-                        .dropdown-item-coin {
-                            padding: 5px 10px;
-                            transition: 0.2s;
-                            display: flex;
-                            gap: 5px;
-                            color: $neutral-2;
-
-                            &:hover {
-                                background-color: $background-color-6;
-                                cursor: pointer;
-                            }
-
-                            &.active {
-                                background-color: $background-color-6;
-                            }
-
-                            img {
-                                width: 20px;
-                                height: 20px;
-                                object-fit: cover;
-                            }
-
-                            .dropdown-item-key {
-                                font-weight: bold;
-                            }
-                        }
+                    .dropdown-menu-container {
+                        @include userDropdownMenu;
 
                         .dropdown-item-network {
                             padding: 5px 10px;

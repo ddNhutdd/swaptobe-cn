@@ -28,6 +28,7 @@ import {
 
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { Input } from "./Common/Input";
 export default function CreateBuy() {
   const actionType = {
     sell: "sell",
@@ -408,7 +409,7 @@ export default function CreateBuy() {
                 <label>
                   {t("amountOf")} {currentCoin}:
                 </label>
-                <input
+                <Input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
                   name="amount"
@@ -423,7 +424,7 @@ export default function CreateBuy() {
                 <label>
                   {t("minimumBTCAmount").replace("BTC", currentCoin)}:
                 </label>
-                <input
+                <Input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
                   name="mini"
@@ -468,7 +469,7 @@ export default function CreateBuy() {
               </div>
               <div className="field">
                 <label htmlFor="fullnameInput">{t("fullName")}:</label>
-                <input
+                <Input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
                   id="fullnameInput"
@@ -483,7 +484,7 @@ export default function CreateBuy() {
                 <label htmlFor="accountNumberInput">
                   {t("accountNumber")}:{" "}
                 </label>
-                <input
+                <Input
                   onChange={controlOnChangeHandle}
                   onFocus={controlOnfocusHandle}
                   id="accountNumberInput"
@@ -526,9 +527,10 @@ export default function CreateBuy() {
         <div className="create-buy-ads__modal-coin" style={{ padding: 20 }}>
           {data.current.map((item, i) => {
             return (
-              <Button
-                className="btn-choice-coin"
-                type={item.name === currentCoin ? "primary" : "default"}
+              <button
+                className={`btn-choice-coin ${
+                  currentCoin === item.name ? "active" : ""
+                }`}
                 key={i}
                 onClick={() => {
                   setCurrentCoin(item.name);
@@ -541,7 +543,7 @@ export default function CreateBuy() {
                   alt={item.image}
                 />
                 {item.name}
-              </Button>
+              </button>
             );
           })}
         </div>

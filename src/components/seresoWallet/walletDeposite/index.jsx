@@ -53,15 +53,19 @@ function SeresoWalletDeposit() {
     dropdownCoinClose();
   };
   const renderDropdownCoinMenu = function (listCoin) {
-    const dropdownCoinMenu = document.getElementById("coin-dropdown-menu");
+    const dropdownCoinMenu = document.getElementById("coinDropdownList");
     if (dropdownCoinMenu) {
       dropdownCoinMenu.innerHTML = "";
       for (const item of listCoin) {
         dropdownCoinMenu.innerHTML += `
-          <div class='dropdown-item-coin'>
-            <img src='${DOMAIN + item.image}' alt="${item.image}" />
-            <span class="dropdown-item-key">${item.name}</span>
-            <span>${item.token_key}</span>
+          <div class='dropdown-item'>
+            <span>
+              <img src='${DOMAIN + item.image}' alt="${item.image}" />
+            </span>
+            <span>
+              <span class="dropdown-content">${item.name}</span>
+              <span>${item.token_key}</span>
+            </span>
           </div>
           `;
       }
@@ -322,10 +326,17 @@ function SeresoWalletDeposit() {
                     <span className="main-content">BTC</span>
                     Bitcoin
                   </span>
-                  <i className="fa-solid fa-caret-down"></i>
+                  <span>
+                    <i className="fa-solid fa-caret-down"></i>
+                  </span>
                 </div>
-                <div id="coin-dropdown-menu" className="dropdown-menu">
-                  {/* js render here */}
+                <div
+                  id="coin-dropdown-menu"
+                  className="dropdown-menu-container"
+                >
+                  <div className="dropdown-menu" id="coinDropdownList">
+                    {/* js render here */}
+                  </div>
                 </div>
               </div>
             </li>
@@ -342,9 +353,14 @@ function SeresoWalletDeposit() {
                     <span className="main-content">TCB</span>
                     bitcon
                   </span>
-                  <i className="fa-solid fa-caret-down"></i>
+                  <span>
+                    <i className="fa-solid fa-caret-down"></i>
+                  </span>
                 </div>
-                <div id="coin-dropdown-network" className="dropdown-menu">
+                <div
+                  id="coin-dropdown-network"
+                  className="dropdown-menu --d-none"
+                >
                   <div className="dropdown-item-network">
                     <div className="dropdown-item-network-left">
                       <span>key</span>
@@ -431,7 +447,7 @@ function SeresoWalletDeposit() {
           <div id="historyEmpty" className="spin-container fadeInBottomToTop">
             <Empty />
           </div>
-          <div className="custom-paging wallet-deposite-paging">
+          <div className="wallet-deposite-paging">
             <Pagination defaultCurrent={1} total={10} />
           </div>
         </div>

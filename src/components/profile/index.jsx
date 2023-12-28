@@ -31,6 +31,7 @@ import {
   uploadKyc,
 } from "src/util/userCallApi";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { Input } from "../Common/Input";
 function Profile() {
   const kycControl = {
     fullName: "fullName",
@@ -106,7 +107,6 @@ function Profile() {
     fetchApiGetListBankingUser(1);
     //
     document.addEventListener("click", closeAllDropdown);
-
     //
     return () => {
       document.removeEventListener("click", closeAllDropdown);
@@ -463,7 +463,7 @@ function Profile() {
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__fullName">{t("fullName")}</label>
-              <input
+              <Input
                 onFocus={() => {
                   kycControlHandleFocus(kycControl.fullName);
                 }}
@@ -480,7 +480,7 @@ function Profile() {
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__address">{t("address")}</label>
-              <input
+              <Input
                 onFocus={() => {
                   kycControlHandleFocus(kycControl.address);
                 }}
@@ -497,7 +497,7 @@ function Profile() {
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__phone">{t("phone")}</label>
-              <input
+              <Input
                 onFocus={() => {
                   kycControlHandleFocus(kycControl.phone);
                 }}
@@ -511,7 +511,7 @@ function Profile() {
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__company">{t("company")}</label>
-              <input
+              <Input
                 onFocus={() => {
                   kycControlHandleFocus(kycControl.company);
                 }}
@@ -528,7 +528,7 @@ function Profile() {
           <div className="profile__form-item">
             <div className="profile__input">
               <label htmlFor="profile__passport">{t("passport")}</label>
-              <input
+              <Input
                 onFocus={() => {
                   kycControlHandleFocus(kycControl.passport);
                 }}
@@ -789,7 +789,6 @@ function Profile() {
     if (result !== null) getElementById("profilePaymentForm").reset();
     setBankDropdownSelected(listBank.current.at(0));
     enablePaymentButton();
-
     // render list
     fetchApiGetListBankingUser(1);
   };
@@ -988,181 +987,181 @@ function Profile() {
     <div className="profile">
       <div className="container">
         <div className="profile__info">
-          <div>
-            <div className="profile__card-container box">
-              <div className="profile__title">{t("profile")}</div>
-              <div className="profile__user-img">
-                <span className="profile__icon">
-                  <i className="fa-solid fa-user"></i>
-                </span>
-                <div className="profile__upload-avatar">
-                  <input
-                    type="file"
-                    className="--d-none"
-                    ref={inputFileLogo}
-                    onChange={inputFilelogoOnChangeHandle}
-                  />
-                  <button
-                    onClick={() => {
-                      inputFileLogo.current.click();
-                    }}
-                    className="profile__button"
-                  >
-                    {t("uploadAvatar")}
-                  </button>
-                </div>
-              </div>
-              <div className="profile__info-user">
-                <div className="profile__input">
-                  <label htmlFor="profile__info-email">{t("email")}</label>
-                  <input id="profile__info-email" disabled type="text" />
-                </div>
-                <div className="profile__input">
-                  <label htmlFor="profile__info-username">
-                    {t("username")}
-                  </label>
-                  <input id="profile__info-username" disabled type="text" />
-                </div>
+          <div className="profile__card-container box">
+            <div className="profile__title">{t("profile")}</div>
+            <div className="profile__user-img">
+              <span className="profile__icon">
+                <i className="fa-solid fa-user"></i>
+              </span>
+              <div className="profile__upload-avatar">
+                <input
+                  type="file"
+                  className="--d-none"
+                  ref={inputFileLogo}
+                  onChange={inputFilelogoOnChangeHandle}
+                />
+                <button
+                  onClick={() => {
+                    inputFileLogo.current.click();
+                  }}
+                  className="profile__button"
+                >
+                  {t("uploadAvatar")}
+                </button>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="profile__account">
-          <div className="box">
-            <div className="profile__card-container">
-              <div className="profile__title">{t("updateInfomation")}</div>
-              <ul className="profile__account-content">
-                <li>
-                  <img src={process.env.PUBLIC_URL + "/img/!.png"} alt="..." />
-                  <p>{t("toKeepYourAssetsSafeWeNeedToVerifyYourIdentity")}</p>
-                </li>
-                <li>
-                  <img src={process.env.PUBLIC_URL + "/img/!.png"} alt="..." />
-                  <p>
-                    {t(
-                      "pleaseFillInTheInformationCorrectlyOnceTheIdentityVerificationIsCompleteTheInformationCannotBeEditedAnymore"
-                    )}
-                  </p>
-                </li>
-              </ul>
-              {renderUserProfileControl()}
-            </div>
-          </div>
-        </div>
-        <div className="profile__payment">
-          <div className="box">
-            <div className="profile__card-container">
-              <div className="profile__title">Payment</div>
-              <div className="profile__payment-content">
-                <form id="profilePaymentForm">
-                  <div className="profile__input">
-                    <label>{t("bankName")}</label>
-                    <div className="profile__dropdown">
-                      <div
-                        onClick={bankDropdownClickHandle}
-                        className={`profile__dropdown__selector ${
-                          isShowBankDropdown ? "active" : ""
-                        }`}
-                      >
-                        {renderSelectorBankDropdown()}
-                        <span>
-                          <i className="fa-solid fa-chevron-down"></i>
-                        </span>
-                      </div>
-                      <div
-                        className={`profile__dropdown__menu-container ${
-                          isShowBankDropdown ? "show" : ""
-                        }`}
-                      >
-                        <ul className="dropdown-menu">
-                          {renderMenuBankDropdown()}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="profile__input">
-                    <label htmlFor="profile__payment-account-number">
-                      {t("accountNumber")}
-                    </label>
-                    <input
-                      onChange={paymentControlChangeHandle}
-                      onFocus={paymentControlFocusHandle}
-                      name="accountNumber"
-                      id="profile__payment-account-number"
-                      type="text"
-                    />
-                    <div
-                      id="profile__payment-account-number__error"
-                      className={`input__error`}
-                    ></div>
-                  </div>
-                  <div className="profile__input">
-                    <label htmlFor="profile__payment-account-name">
-                      {t("accountName")}
-                    </label>
-                    <input
-                      onChange={paymentControlChangeHandle}
-                      onFocus={paymentControlFocusHandle}
-                      name="accountName"
-                      id="profile__payment-account-name"
-                      type="text"
-                    />
-                    <div
-                      id="profile__payment-account-name__error"
-                      className={`input__error`}
-                    ></div>
-                  </div>
-                  <div className="profile__payment-action">
-                    <button
-                      id="paymentButtonSubmit"
-                      onClick={addBankingSubmitHandle}
-                      className="profile__payment-button"
-                    >
-                      <div className="loader --d-none"></div>
-                      Add banking
-                    </button>
-                  </div>
-                </form>
+            <div className="profile__info-user">
+              <div className="profile__input">
+                <label htmlFor="profile__info-email">{t("email")}</label>
+                <Input
+                  id="profile__info-email"
+                  className="disabled"
+                  disabled
+                  type="text"
+                />
               </div>
-              <div className="profile__title">Your list bank:</div>
-              <div className="profile__payment-list">{renderPaymenList()}</div>
-              <div>
-                <Pagination
-                  defaultCurrent={1}
-                  onChange={listPaymentPageChangeHandle}
-                  pageSize={listPaymentPageSize.current}
-                  total={listPaymentTotalItems}
+              <div className="profile__input">
+                <label htmlFor="profile__info-username">{t("username")}</label>
+                <Input
+                  id="profile__info-username"
+                  className="disabled"
+                  disabled
+                  type="text"
                 />
               </div>
             </div>
           </div>
         </div>
+        <div className="profile__account">
+          <div className="profile__card-container box">
+            <div className="profile__title">{t("updateInfomation")}</div>
+            <ul className="profile__account-content">
+              <li>
+                <img src={process.env.PUBLIC_URL + "/img/!.png"} alt="..." />
+                <p>{t("toKeepYourAssetsSafeWeNeedToVerifyYourIdentity")}</p>
+              </li>
+              <li>
+                <img src={process.env.PUBLIC_URL + "/img/!.png"} alt="..." />
+                <p>
+                  {t(
+                    "pleaseFillInTheInformationCorrectlyOnceTheIdentityVerificationIsCompleteTheInformationCannotBeEditedAnymore"
+                  )}
+                </p>
+              </li>
+            </ul>
+            {renderUserProfileControl()}
+          </div>
+        </div>
+        <div className="profile__payment">
+          <div className="profile__card-container box">
+            <div className="profile__title">Payment</div>
+            <div className="profile__payment-content">
+              <form id="profilePaymentForm">
+                <div className="profile__input">
+                  <label>{t("bankName")}</label>
+                  <div className="profile__dropdown">
+                    <div
+                      onClick={bankDropdownClickHandle}
+                      className={`profile__dropdown__selector ${
+                        isShowBankDropdown ? "active" : ""
+                      }`}
+                    >
+                      {renderSelectorBankDropdown()}
+                      <span>
+                        <i className="fa-solid fa-caret-down"></i>
+                      </span>
+                    </div>
+                    <div
+                      className={`profile__dropdown__menu-container ${
+                        isShowBankDropdown ? "show" : ""
+                      }`}
+                    >
+                      <ul className="dropdown-menu">
+                        {renderMenuBankDropdown()}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="profile__input">
+                  <label htmlFor="profile__payment-account-number">
+                    {t("accountNumber")}
+                  </label>
+                  <Input
+                    onChange={paymentControlChangeHandle}
+                    onFocus={paymentControlFocusHandle}
+                    name="accountNumber"
+                    id="profile__payment-account-number"
+                    type="text"
+                  />
+                  <div
+                    id="profile__payment-account-number__error"
+                    className={`input__error`}
+                  ></div>
+                </div>
+                <div className="profile__input">
+                  <label htmlFor="profile__payment-account-name">
+                    {t("accountName")}
+                  </label>
+                  <Input
+                    onChange={paymentControlChangeHandle}
+                    onFocus={paymentControlFocusHandle}
+                    name="accountName"
+                    id="profile__payment-account-name"
+                    type="text"
+                  />
+                  <div
+                    id="profile__payment-account-name__error"
+                    className={`input__error`}
+                  ></div>
+                </div>
+                <div className="profile__payment-action">
+                  <button
+                    id="paymentButtonSubmit"
+                    onClick={addBankingSubmitHandle}
+                    className="profile__payment-button"
+                  >
+                    <div className="loader --d-none"></div>
+                    Add banking
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div className="profile__title">Your list bank:</div>
+            <div className="profile__payment-list">{renderPaymenList()}</div>
+            <div className="profile__paging">
+              <Pagination
+                defaultCurrent={1}
+                onChange={listPaymentPageChangeHandle}
+                pageSize={listPaymentPageSize.current}
+                total={listPaymentTotalItems}
+              />
+            </div>
+          </div>
+        </div>
         <div className=" profile__security">
-          <div className="box">
-            <div className="profile__card-container">
-              <div className="profile__title">{t("security")}</div>
-              <div className="profile__security-item">
-                <div className="profile__left">
-                  <h4>{t("password")}</h4>
-                  <p>{t("doYouWantToChangeYourPasswordClickHereToChange")}</p>
-                </div>
-                <div className="profile__right">
-                  <button className="profile__button">
-                    {t("changePassword")}
-                  </button>
-                  <p>{t("youMustTurnOn2FAToChangePassword")}</p>
-                </div>
+          <div className="profile__card-container box">
+            <div className="profile__title">{t("security")}</div>
+            <div className="profile__security-item">
+              <div className="profile__left">
+                <h4>{t("password")}</h4>
+                <p>{t("doYouWantToChangeYourPasswordClickHereToChange")}</p>
               </div>
-              <div className="profile__security-item">
-                <div className="profile__left">
-                  <h4>2FA</h4>
-                  <p>{t("requiredToWithdrawOrUpdateTheSecurity")}</p>
-                </div>
-                <div className="profile__right">
-                  <button onClick={showModal2FA} className="profile__button">
-                    {isEnabled_twofa ? t("turnOff2FA") : t("turnOn2FA")}
-                  </button>
-                </div>
+              <div className="profile__right">
+                <button className="profile__button">
+                  {t("changePassword")}
+                </button>
+                <p>{t("youMustTurnOn2FAToChangePassword")}</p>
+              </div>
+            </div>
+            <div className="profile__security-item">
+              <div className="profile__left">
+                <h4>2FA</h4>
+                <p>{t("requiredToWithdrawOrUpdateTheSecurity")}</p>
+              </div>
+              <div className="profile__right">
+                <button onClick={showModal2FA} className="profile__button">
+                  {isEnabled_twofa ? t("turnOff2FA") : t("turnOn2FA")}
+                </button>
               </div>
             </div>
           </div>
