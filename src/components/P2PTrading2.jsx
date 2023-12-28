@@ -559,7 +559,7 @@ export default function P2PTrading2({ history }) {
               <button
                 id="buyChoiceCoinButton"
                 onClick={showBuyChooseCoinBuyModal}
-                className="buyChoiceCoin"
+                className="buyChoiceCoin buttonContainer--transparent"
               >
                 {buyCoin.current}
               </button>{" "}
@@ -570,6 +570,7 @@ export default function P2PTrading2({ history }) {
             <button onClick={sectionBuyButtonFilterClickHandle}>Search</button>
             <input
               id="amountSectionBuyFilterInput"
+              className="inputContainer--default"
               onChange={amountSectionBuyFilterChangeHandle}
               type="text"
               placeholder="Amount"
@@ -603,9 +604,7 @@ export default function P2PTrading2({ history }) {
             <div className="buy-ad">
               <button
                 onClick={createAdsSell}
-                type="primary"
-                size="large"
-                className="buyAdBtn"
+                className="buttonContainer--primary"
               >
                 {t("creatingYourBuyingAd")}
               </button>
@@ -631,6 +630,7 @@ export default function P2PTrading2({ history }) {
               <button
                 onClick={showChooseCoinSellModal}
                 id="sellChoiceCoinButton"
+                className="buttonContainer--transparent"
               >
                 {sellCoin.current}
               </button>{" "}
@@ -640,6 +640,7 @@ export default function P2PTrading2({ history }) {
           <div className="sell__filter">
             <button onClick={sectionSellButtonFilterClickHandle}>Search</button>
             <input
+              className="inputContainer--default"
               id="amountSectionSellFilterInput"
               onChange={amountSectionSellFilterChangeHandle}
               type="text"
@@ -684,9 +685,7 @@ export default function P2PTrading2({ history }) {
             <div className="sell-ad">
               <button
                 onClick={createAdsBuy}
-                type="primary"
-                size="large"
-                className="sellAdBtn"
+                className="buttonContainer--primary"
               >
                 {t("creatingYourSellingAd")}
               </button>

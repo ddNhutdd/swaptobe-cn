@@ -1,0 +1,88 @@
+/***************** BUTTON **********************/
+.buttonContainer--primary {
+    background-color: $new-background-color-button-primary;
+    transition: $new-transition-button;
+    color: $new-text-color-button-primary;
+    font-weight: $new-font-weight-button;
+    font-size: $new-font-size-button;
+    padding: $new-padding-button-lg;
+    border-radius: $new-border-radius-button-md;
+    border: $new-border-button-primary;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $new-background-color-button-primary-hover;
+    }
+}
+
+.buttonContainer--outline {
+    background-color: $new-background-color-button-outline;
+    transition: $new-transition-button;
+    color: $new-text-color-button-outline;
+    font-weight: $new-font-weight-button;
+    font-size: $new-font-size-button;
+    border: 1px solid $new-border-color-button-outline;
+    padding: $new-padding-button-lg;
+    border-radius: $new-border-radius-button-md;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $new-background-color-button-outline-hover;
+    }
+}
+
+.buttonContainer--transparent {
+    background-color: transparent;
+    font-weight: $new-font-weight-button;
+    font-size: $new-font-size-button;
+    border: 1px solid $background-color-4;
+    transition: $new-transition-button;
+    border-radius: $new-border-radius-button-md;
+    padding: $new-padding-button-xs;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $new-background-5;
+    }
+}
+/**********************************************/
+
+/***************** TITLE **********************/
+.titleContainer {
+    font-size: $new-font-size-lg;
+    font-weight: $new-font-weight-semibold;
+    letter-spacing: $new-letter-spacing-sm;
+
+    @media screen and (min-width: 480px) {
+        font-size: $new-font-size-xl;
+    }
+}
+/**********************************************/
+
+/***************** INPUT **********************/
+.inputContainer--default {
+    width: $new-width-input;
+    color: $new-text-color-input;
+    font-size: $new-font-size-input;
+    background-color: $new-background-color-input;
+    outline: none;
+    border: $new-border-input;
+    padding: $new-padding-input-lg;
+    transition: $new-transition-border-color-input;
+    border-radius: $new-border-radius-input;
+    line-height: $new-line-height-input;
+    padding-bottom: 1px;
+
+    &:hover,
+    &:focus {
+        border: $new-border-input-hover;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: $new-background-color-input-disabled;
+    }
+}
+/**********************************************/

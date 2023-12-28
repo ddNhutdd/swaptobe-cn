@@ -130,9 +130,77 @@ $new-primary-background-6: $new-primary-color-8;
 $new-primary-background-7: $new-primary-color-6;
 $new-primary-background-8: $new-primary-color-4;
 
+// REFACTOR  /////////////////////
+
+// font weight
+$new-font-weight-light: 300;
+$new-font-weight-normal: 400;
+$new-font-weight-medium: 500;
+$new-font-weight-semibold: 600;
+$new-font-weight-bold: 700;
+
+// font size
+$new-font-size-sm: 12px;
+$new-font-size-md: 14px;
+$new-font-size-base: 16px;
+$new-font-size-lg: 18px;
+$new-font-size-xl: 20px;
+$new-font-size-2xl: 24px;
+$new-font-size-3xl: 28px;
+
+// letter spacing
+$new-letter-spacing-sm: 0.2px;
+$new-letter-spacing-md: 0.4px;
+$new-letter-spacing-lg: 0.6px;
+
+// border
+$new-border-color: #2b3139;
+$new-border-color-hover: #cb9950;
+
+// background-color
 $new-background-level-0: #141414;
 $new-background-level-1: #1a1a1a;
 $new-background-level-2: #242424;
+
+// input
+$new-width-input: 100%;
+$new-padding-input-sm: 0 12px;
+$new-padding-input-md: 0 14px;
+$new-padding-input-lg: 0 16px;
+$new-text-color-input: #eaecef;
+$new-background-color-input: #181a20;
+$new-background-color-input-disabled: #1e2027;
+$new-font-size-input: 14px;
+$new-transition-border-color-input: border-color 0.3s ease;
+$new-border-input: 1px solid $neutral-10;
+$new-border-input-hover: 1px solid $new-border-color-hover;
+$new-border-radius-input: 8px;
+$new-line-height-input: 1;
+
+// button
+$new-line-height-button: 1;
+$new-padding-button-xs: 4px 8px;
+$new-padding-button-sm: 6px 10px;
+$new-padding-button-md: 8px 12px;
+$new-padding-button-lg: 10px 16px;
+$new-border-radius-button-md: 6px;
+$new-font-size-button: 14px;
+$new-font-weight-button: 600;
+$new-text-color-button-primary: #fff;
+$new-border-button-primary: none;
+$new-background-color-button-primary: #cb9950;
+$new-background-color-button-primary-hover: #e6b362;
+$new-background-color-button-outline: #1b1b1b;
+$new-background-color-button-outline-hover: #0d0d0d;
+$new-border-color-button-outline: #cb9950;
+$new-text-color-button-outline: #cb9950;
+$new-transition-button: background-color 0.3s ease;
+
+// modal
+$new-background-modal-antd: #1a1a1a;
+$new-background-header-modal-antd: #272727;
+
+//////////////////////////////////
 
 //
 $primary-color: $neutral-4;
@@ -640,7 +708,7 @@ $blue-light: #ceceff;
 
 .box {
   background-color: $neutral-5;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 15px;
 
   @media screen and (min-width: 480px) {
