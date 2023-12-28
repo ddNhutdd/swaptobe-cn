@@ -26,6 +26,7 @@ import {
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
 import { getCoin } from "src/redux/constant/coin.constant";
+import { Input } from "./Common/Input";
 export default function P2PTrading2({ history }) {
   // The list of users selling coins must be placed in the buy section on the interface.
   // The list of users buying coins must be placed in the sell section on the interface.
@@ -568,9 +569,16 @@ export default function P2PTrading2({ history }) {
           </div>
           <div className="buy__filter">
             <button onClick={sectionBuyButtonFilterClickHandle}>Search</button>
-            <input
+            {/* <input
               id="amountSectionBuyFilterInput"
               className="inputContainer--default"
+              onChange={amountSectionBuyFilterChangeHandle}
+              type="text"
+              placeholder="Amount"
+            /> */}
+
+            <Input
+              id="amountSectionBuyFilterInput"
               onChange={amountSectionBuyFilterChangeHandle}
               type="text"
               placeholder="Amount"
