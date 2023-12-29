@@ -16,7 +16,14 @@ const getButtonClasses = (type) => {
  * @param {type}: primary, outline,
  * @returns
  */
-export const Button = ({ onClick, id, style, children, type = "primary" }) => {
+export const Button = ({
+  onClick,
+  id,
+  style,
+  children,
+  name,
+  type = "primary",
+}) => {
   let typeClassesDefault = getButtonClasses(type);
 
   return (
@@ -25,6 +32,7 @@ export const Button = ({ onClick, id, style, children, type = "primary" }) => {
       className={typeClassesDefault}
       style={style}
       onClick={onClick}
+      name={name}
     >
       {children}
     </button>

@@ -45,6 +45,7 @@ export default function P2PTrading2({ history }) {
   const listCoin = useRef();
   const amountSectionBuyFilter = useRef("");
   const amountSectionSellFilter = useRef("");
+
   const [isBuyChooseCoinModalOpen, setIsBuyChooseCoinModalOpen] =
     useState(false);
   const [isSellChooseCoinModalOpen, setIsSellChooseCoinModalOpen] =
@@ -204,53 +205,104 @@ export default function P2PTrading2({ history }) {
       showBuySectionEmpty();
     } else {
       //render html
+      // for (const item of array) {
+      //   containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
+      //   <div>
+      //     <table>
+      //     <tbody>
+      //     <tr>
+      //       <td>${t("userName")}:</td>
+      //       <td>${item.userName}</td>
+      //     </tr>
+      //     <tr>
+      //     <td>${t("bankName")}:</td>
+      //     <td>${item.bankName}</td>
+      //    </tr>
+      //    <tr>
+      //     <td>${t("fullName")}:</td>
+      //     <td>${item.ownerAccount}</td>
+      //    </tr>
+      //    <tr>
+      //     <td>${t("accountNumber")}:</td>
+      //     <td>${item.numberBank}</td>
+      //    </tr>
+      //     </tbody>
+      //   </table>
+      //   </div>
+      //   <div class="item2">
+      //     <table>
+      //     <tbody>
+      //     <tr>
+      //     <td>${t("amount")}:</td>
+      //     <td class="item2-amount-number">${item.amount}</td>
+      //   </tr>
+      //   <tr>
+      //     <td>${t("amountMinimum")}:</td>
+      //     <td>${item.amountMinimum}</td>
+      //   </tr>
+      //   <tr>
+      //     <td>${t("createdAt")}:</td>
+      //     <td>${item.created_at}</td>
+      //   </tr>
+      //       </tbody>
+      //     </table>
+      //   </div>
+      //   <div class="item4">
+      //     <button class="buy-coin" name="${item.id}">${t("buy")}</button>
+      //   </div>
+      // </div>`;
+      // }
+
       for (const item of array) {
         containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
-        <div>
-          <table>
-          <tbody>
-          <tr>
-            <td>${t("userName")}:</td>
-            <td>${item.userName}</td>
-          </tr>
-          <tr>
-          <td>${t("bankName")}:</td>
-          <td>${item.bankName}</td>
-         </tr>
-         <tr>
-          <td>${t("fullName")}:</td>
-          <td>${item.ownerAccount}</td>
-         </tr>
-         <tr>
-          <td>${t("accountNumber")}:</td>
-          <td>${item.numberBank}</td>
-         </tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="item2">
-          <table>
-          <tbody>
-          <tr>
-          <td>${t("amount")}:</td>
-          <td class="item2-amount-number">${item.amount}</td>
-        </tr>
-        <tr>
-          <td>${t("amountMinimum")}:</td>
-          <td>${item.amountMinimum}</td>
-        </tr>
-        <tr>
-          <td>${t("createdAt")}:</td>
-          <td>${item.created_at}</td>
-        </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="item4">
-          <button class="buy-coin" name="${item.id}">${t("buy")}</button>
-        </div>
+          <div class="row">
+            <div class="col">
+              <span class="key">${t("userName")}:</span>
+              <span class="value">${item.userName}</span>
+            </div>
+                
+            <div class="col">
+              <span class="key">${t("fullName")}:</span>
+              <span class="value">${item.ownerAccount}</span>
+            </div>
+
+            <div class="col">
+              <span class="key">${t("bankName")}:</span>
+              <span class="value">${item.bankName}</span>
+            </div>
+
+                
+            <div class="col">
+              <span class="key">${t("accountNumber")}:</span>
+              <span class="value">${item.numberBank}</span>
+            </div>
+
+            <div class="col">
+              <span class="key">${t("amount")}:</span>
+              <span class="value">${item.amount}</span>
+            </div>
+
+            <div class="col">
+              <span class="key">${t("amountMinimum")}:</span>
+              <span class="value">${item.amountMinimum}</span>
+            </div>
+
+            <div class="col">
+              <span class="key">Available:</span>
+              <span class="value">${(item.amount - item.amountSuccess).toFixed(
+                8
+              )}</span>
+            </div>
+
+            <div class="col">
+              <span class="key">${t("createdAt")}:</span>
+              <span class="value">${item.created_at}</span>
+            </div>
+          </div>
+          <button class="sell-coin" name="${item.id}">${t("sell")}</button>
       </div>`;
       }
+
       // add event
       for (const item of containerElement.children) {
         const button = item.querySelector("button");
@@ -282,41 +334,76 @@ export default function P2PTrading2({ history }) {
     if (!array || array.length <= 0) {
       showSellSectionEmpty();
     } else {
+      // for (const item of array) {
+      // containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
+      //   <div>
+      //     <table>
+      //       <tbody>
+      //         <tr>
+      //           <td>${t("userName")}:</td>
+      //           <td>${item.userName}</td>
+      //         </tr>
+      //         <tr class="item2">
+      //           <td>${t("amount")}:</td>
+      //           <td class="item2-amount-number">${item.amount}</td>
+      //         </tr>
+      //       </tbody>
+      //     </table>
+      //   </div>
+      //   <div>
+      //     <table>
+      //       <tbody>
+      //       <tr>
+      //       <td>${t("amountMinimum")}:</td>
+      //       <td>${item.amountMinimum}</td>
+      //     </tr>
+      //         <tr>
+      //           <td>${t("createdAt")}:</td>
+      //           <td>${item.created_at}</td>
+      //         </tr>
+      //       </tbody>
+      //     </table>
+      //   </div>
+      //   <div class="item4">
+      //     <button class="sell-coin" name="${item.id}">${t("sell")}</button>
+      //   </div>
+      // </div>`;
+      // }
       for (const item of array) {
         containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
-          <div>
-            <table>
-              <tbody>
-                <tr>
-                  <td>${t("userName")}:</td>
-                  <td>${item.userName}</td>
-                </tr>
-                <tr class="item2">
-                  <td>${t("amount")}:</td>
-                  <td class="item2-amount-number">${item.amount}</td>
-                </tr>            
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <table>
-              <tbody>
-              <tr>
-              <td>${t("amountMinimum")}:</td>
-              <td>${item.amountMinimum}</td>
-            </tr>
-                <tr>
-                  <td>${t("createdAt")}:</td>
-                  <td>${item.created_at}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="item4">
+            <div class="row">
+              <div class="col">
+                <span class="key">${t("userName")}:</span>
+                <span class="value">${item.userName}</span>
+              </div>
+                
+              <div class="col">
+                <span class="key">${t("createdAt")}:</span>
+                <span class="value">${item.created_at}</span>
+              </div>
+
+              <div class="col">
+                <span class="key">${t("amount")}:</span>
+                <span class="value">${item.amount}</span>
+              </div>
+                
+              <div class="col">
+                <span class="key">${t("amountMinimum")}:</span>
+                <span class="value">${item.amountMinimum}</span>
+              </div>
+
+              <div class="col">
+                <span class="key">Available:</span>
+                <span class="value">${(
+                  item.amount - item.amountSuccess
+                ).toFixed(8)}</span>
+              </div>
+            </div>
             <button class="sell-coin" name="${item.id}">${t("sell")}</button>
-          </div>
         </div>`;
       }
+      // }
+
       // add event
       for (const item of containerElement.children) {
         const button = item.querySelector("button");
