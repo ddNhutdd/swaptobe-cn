@@ -3,18 +3,17 @@
         list-style: none;
 
         .list-item {
-            margin-bottom: 10px;
+            margin-bottom: 16px;
             border-radius: 6px;
             padding: 25px 20px;
             background: $new-background-level-1;
             box-shadow: 0 6px 4px rgba(0, 0, 0, 0.25);
             display: flex;
             flex-wrap: nowrap;
-            transition: background 0.3s ease-in;
-
+            transition: background 0.2s ease-in;
 
             &:hover {
-                background: $neutral-1;
+                background: $new-background-level-2;
             }
 
             @media screen and(max-width:768px) {
