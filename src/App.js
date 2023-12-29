@@ -113,10 +113,14 @@ function App() {
   };
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      const expiresInRefreshToken = JSON.parse(
-        localStorage.getItem("user")
-      ).expiresInRefreshToken;
-      if (expiresInRefreshToken < Date.now()) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      socket.emit("join", user.id);
+      ///// khi user login hoặc reload web hoặc app ở bất kì giao diện hay màn hình nào đều phải gọi hàm này
+      ///// thường để trong useEffect file app.js
+      socket.on("ok", (res) => {
+        console.log(res, "ok"); /// hàm này chạy tất là join thành công
+      });
+      if (user.expiresInRefreshToken < Date.now()) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
       }
@@ -129,6 +133,7 @@ function App() {
       dispatch(setTotalAssetsRealTime(total));
       dispatch(setTotalAssetsBtcRealTime(calTotalAssetsBtc(total, resp)));
     });
+
     //
     return () => {
       socket.disconnect();

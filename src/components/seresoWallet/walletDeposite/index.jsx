@@ -377,12 +377,12 @@ function SeresoWalletDeposit() {
             <li>
               <span className="number">3</span>
               <div className="address">
-                <p>
+                <span>
                   Desposite Address
                   <span>
                     <i className="fa-solid fa-pen-to-square"></i>
                   </span>
-                </p>
+                </span>
                 <div id="qrContainer" className="address-content">
                   <div
                     id="addressSpinner"

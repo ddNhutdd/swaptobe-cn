@@ -35,12 +35,12 @@ function Transaction() {
     buy: "buy",
   };
   const controlTouchedFormBuy = useRef({});
-  const controlErrorFormBuy = useRef({});
+  const [controlErrorFormBuy, setControlErrorFormBuy] = useState({});
   const controlFormBuy = useRef({
     amountInput: "amountInput",
   });
   const controlTouchedFormSell = useRef({});
-  const controlErrorFormSell = useRef({});
+  const [controlErrorFormSell, setControlErrorFormSell] = useState({});
   const controlFormSell = useRef({
     amountInput: "amountInput",
   });
@@ -91,29 +91,36 @@ function Transaction() {
   }, [listCoinRealtime, exchange]);
   const validateFormBuy = function () {
     let valid = true;
-    if (controlTouchedFormBuy.current[controlFormBuy.amountInput]) {
+    if (controlTouchedFormBuy.current[controlFormBuy.current.amountInput]) {
       if (!amountInputFormBuy.current.value) {
-        controlErrorFormBuy.current[controlFormBuy.amountInput] = t("require");
+        setControlErrorFormBuy((state) => {
+          const newState = {
+            ...state,
+            [controlFormBuy.current.amountInput]: t("require"),
+          };
+          return newState;
+        });
         valid &= false;
       } else if (Number(amountInputFormBuy.current.value) <= 0) {
-        controlErrorFormBuy.current[controlFormBuy.amountInput] = t("invalid");
+        setControlErrorFormBuy((state) => {
+          const newState = {
+            ...state,
+            [controlFormBuy.current.amountInput]: t("invalid"),
+          };
+          return newState;
+        });
         valid &= false;
       } else {
-        delete controlErrorFormBuy.current[controlFormBuy.amountInput];
+        setControlErrorFormBuy((state) => {
+          const newState = { ...state };
+          delete newState[controlFormBuy.current.amountInput];
+          return newState;
+        });
       }
     }
-    return Object.keys(controlErrorFormBuy).length <= 0 ? false : valid;
-  };
-  const renderErrorFormBuy = function () {
-    const ele = getElementById("amountInputErrorFormBuy");
-    if (
-      controlTouchedFormBuy.current[controlFormBuy.amountInput] &&
-      controlErrorFormBuy.current[controlFormBuy.amountInput]
-    ) {
-      ele.innerHTML = controlErrorFormBuy.current[controlFormBuy.amountInput];
-    } else {
-      ele.innerHTML = "";
-    }
+    return Object.keys(controlTouchedFormBuy.current).length <= 0
+      ? false
+      : valid;
   };
   const renderPrice = function () {
     if (!selectedAds) {
@@ -184,11 +191,12 @@ ${symbol.current}`;
     e.preventDefault();
     switch (currentAction) {
       case actionType.buy: {
-        for (const item of Object.keys(controlFormBuy)) {
+        for (const item of Object.keys(controlFormBuy.current)) {
           controlTouchedFormBuy.current[item] = true;
         }
         const valid = validateFormBuy();
         if (!valid) {
+          callToastError("Invalid data entered");
           return;
         }
         const acceptEula = getElementById("agreeCheckBox").checked;
@@ -211,11 +219,12 @@ ${symbol.current}`;
         break;
       }
       case actionType.sell: {
-        for (const item of Object.keys(controlFormSell)) {
+        for (const item of Object.keys(controlFormSell.current)) {
           controlTouchedFormSell.current[item] = true;
         }
         const valid = validateFormSell();
         if (!valid) {
+          callToastError("Invalid data entered");
           return;
         }
         const acceptEula = getElementById("agreeCheckBox").checked;
@@ -321,12 +330,10 @@ ${symbol.current}`;
     setValueInputReceive();
     //
     validateFormBuy();
-    renderErrorFormBuy();
   };
   const amountInputFormBuyFocusHandle = function () {
-    controlTouchedFormBuy.current[controlFormBuy.amountInput] = true;
+    controlTouchedFormBuy.current[controlFormBuy.current.amountInput] = true;
     validateFormBuy();
-    renderErrorFormBuy();
   };
   const dropdownPaymentToggle = function (e) {
     e.stopPropagation();
@@ -412,36 +419,32 @@ ${symbol.current}`;
     const inputValue = getElementById("amountInputFormSell").value;
     if (controlTouchedFormSell.current[controlFormSell.current.amountInput]) {
       if (!inputValue) {
-        controlErrorFormSell.current[controlFormSell.current.amountInput] =
-          t("require");
         valid &= false;
+        setControlErrorFormSell((state) => {
+          const newState = {
+            ...state,
+            [controlFormSell.current.amountInput]: t("require"),
+          };
+          return newState;
+        });
       } else {
-        delete controlErrorFormSell.current[
-          controlFormSell.current.amountInput
-        ];
+        setControlErrorFormSell((state) => {
+          const newState = {
+            ...state,
+          };
+          delete newState[controlFormSell.current.amountInput];
+          return newState;
+        });
       }
     }
     return Object.keys(controlTouchedFormSell).length <= 0
       ? false
       : Boolean(valid);
   };
-  const renderErrorFromSell = function () {
-    const element = getElementById("amountInputFormSellError");
-    if (
-      controlErrorFormSell.current[controlFormSell.current.amountInput] &&
-      controlTouchedFormSell.current[controlFormSell.current.amountInput]
-    ) {
-      element.innerHTML =
-        controlErrorFormSell.current[controlFormSell.current.amountInput];
-    } else {
-      element.innerHTML = "";
-    }
-  };
   const amountInputFormSellFocusHandle = function (e) {
     const name = e.target.name;
     controlTouchedFormSell.current[name] = true;
     validateFormSell();
-    renderErrorFromSell();
   };
   const amountInputFormSellChangeHandle = function (e) {
     if (amountInputFormSell.current === null) return;
@@ -462,7 +465,6 @@ ${symbol.current}`;
     setValueInputVND(inputValueWithoutComma);
     //
     validateFormSell();
-    renderErrorFromSell();
   };
   const setValueInputVND = function (value) {
     const elementOutput = getElementById("receiveInputFormSell");
@@ -504,12 +506,11 @@ ${symbol.current}`;
                   onFocus={amountInputFormBuyFocusHandle}
                   onChange={amountInputFormBuyChangeHandle}
                   type="text"
+                  errorMes={
+                    controlErrorFormBuy[controlFormBuy.current.amountInput]
+                  }
                 />
                 <span className="transaction__unit">VND</span>
-                <span
-                  id="amountInputErrorFormBuy"
-                  className="input__error"
-                ></span>
               </div>
               <div className="transaction__input">
                 <label htmlFor="receiveInput">{t("toReceive")}:</label>
@@ -541,12 +542,11 @@ ${symbol.current}`;
                   id="amountInputFormSell"
                   ref={amountInputFormSell}
                   type="text"
+                  errorMes={
+                    controlErrorFormSell[controlFormSell.current.amountInput]
+                  }
                 />
                 <span className="transaction__unit">{symbol.current}</span>
-                <span
-                  id="amountInputFormSellError"
-                  className="input__error"
-                ></span>
               </div>
               <div className="transaction__input">
                 <label>{t("toReceive")}:</label>

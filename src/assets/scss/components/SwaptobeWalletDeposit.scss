@@ -67,6 +67,9 @@
 
                     .dropdown-menu-container {
                         @include userDropdownMenu;
+                        position: absolute;
+                        top: 65px;
+                        left: 0;
 
                         .dropdown-item-network {
                             padding: 5px 10px;
@@ -102,7 +105,7 @@
                 .address {
                     flex: 1;
 
-                    p {
+                    span {
                         font-weight: bolder;
                         position: relative;
 
@@ -112,7 +115,7 @@
                             font-size: 16px;
                             position: absolute;
                             top: -8px;
-                            left: 123px;
+                            right: -20px;
                         }
                     }
 

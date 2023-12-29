@@ -36,7 +36,7 @@ const ToastError = function ({ content }) {
     <>
       <div className={css["toast-header"]}>
         <div className={css["toast-header-error-icon"]}>
-          <i class="fa-solid fa-circle-xmark red"></i>
+          <i className="fa-solid fa-circle-xmark red"></i>
         </div>
         <span>Error</span>
       </div>

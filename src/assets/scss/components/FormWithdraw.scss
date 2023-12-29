@@ -3,7 +3,6 @@
     gap: 50px;
     justify-content: center;
     align-items: flex-start;
-    font-family: "Roboto", "Open Sans", sans-serif;
 
     @media screen and (max-width: 1199px) {
         flex-direction: column;
@@ -41,7 +40,6 @@
                 font-weight: 600;
                 margin-bottom: 15px;
                 color: $new-text-color-6;
-                font-family: "IBM Plex Sans";
                 cursor: pointer;
 
                 &.disabled {
@@ -83,7 +81,6 @@
                 p {
                     font-size: 16px;
                     color: $new-text-color-white;
-                    font-family: "IBM Plex Sans";
                     margin-bottom: 15px;
                 }
 
@@ -126,13 +123,11 @@
                 span {
                     &:first-child {
                         font-size: 16px;
-                        font-family: "IBM Plex Sans";
                     }
 
                     &:last-child {
                         font-weight: 500;
                         font-size: 16px;
-                        font-family: "IBM Plex Sans";
                     }
                 }
             }
@@ -152,7 +147,6 @@
                     }
 
                     p {
-                        font-family: "IBM Plex Sans";
                         font-weight: 500;
                     }
                 }
@@ -194,7 +188,6 @@
                 p {
                     font-size: 16px;
                     color: $footer-text-1;
-                    font-family: "IBM Plex Sans";
                     margin-bottom: 15px;
                 }
 
@@ -254,13 +247,11 @@
                 span {
                     &:first-child {
                         font-size: 16px;
-                        font-family: "IBM Plex Sans";
                     }
 
                     &:last-child {
                         font-weight: 500;
                         font-size: 16px;
-                        font-family: "IBM Plex Sans";
                     }
                 }
             }

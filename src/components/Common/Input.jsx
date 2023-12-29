@@ -1,23 +1,39 @@
 import React from "react";
-
 export const Input = React.forwardRef(
   (
-    { value, onChange, type, placeholder, id, style, onFocus, disabled },
+    {
+      name,
+      value,
+      onChange,
+      type,
+      placeholder,
+      id,
+      style,
+      onFocus,
+      disabled,
+      errorMes,
+    },
     ref
   ) => {
     return (
-      <input
-        className="inputContainer--default"
-        value={value}
-        onChange={onChange}
-        onFocus={onFocus}
-        type={type}
-        placeholder={placeholder}
-        style={style}
-        id={id}
-        ref={ref}
-        disabled={disabled}
-      />
+      <>
+        <input
+          className="inputContainer--default"
+          value={value}
+          onChange={onChange}
+          onFocus={onFocus}
+          type={type}
+          placeholder={placeholder}
+          style={style}
+          id={id}
+          ref={ref}
+          name={name}
+          disabled={disabled}
+        />
+        {typeof errorMes === "string" && (
+          <span className="errorMessage--default">{errorMes}</span>
+        )}
+      </>
     );
   }
 );

@@ -63,6 +63,10 @@ function P2pManagement() {
     document.addEventListener("click", closeDropdown);
     fetchApiGetListAllCoin();
     fetchApiGetAllP2p(1);
+    socket.on("createP2p", (res) => {
+      console.log(res, "createP2p");
+      fetchApiGetAllP2p();
+    });
     return () => {
       document.removeEventListener("click", closeDropdown);
     };

@@ -11,6 +11,7 @@ import { getLocalStorage, removeLocalStorage } from "src/util/common";
 import i18n from "src/translation/i18n";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import socket from "src/util/socket";
 export default function Login({ history }) {
   //
   const [isLoading, setIsLoading] = useState(false);
@@ -56,6 +57,12 @@ export default function Login({ history }) {
       dispatch(userWalletFetchCount());
       // search previos page and redirect
       const previousPage = getLocalStorage(localStorageVariable.previousePage);
+      socket.emit("join", response.data.data.id);
+      ///// khi user login hoặc reload web hoặc app ở bất kì giao diện hay màn hình nào đều phải gọi hàm này
+      ///// thường để trong useEffect file app.js
+      socket.on("ok", (res) => {
+        console.log(res, "ok"); /// hàm này chạy tất là join thành công
+      });
       history.push("wallet-2");
       if (previousPage) {
         history.replace(previousPage.pathname + previousPage.search);
