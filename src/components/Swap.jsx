@@ -463,6 +463,7 @@ export default function Swap() {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        width={600}
       >
         <div className="swap__modal-coin">
           <Input
@@ -489,10 +490,10 @@ export default function Swap() {
                       setSearchCoinName("");
                     }}
                   >
-                    <div>
+                    <>
                       <img src={DOMAIN + item.image} alt={item.image} />
                       <span>{item.name}</span>
-                    </div>
+                    </>
                   </button>
                 );
               })}
@@ -505,6 +506,7 @@ export default function Swap() {
         onOk={handleOk2}
         onCancel={handleCancel2}
         footer={null}
+        width={600}
       >
         <div className="swap__modal-coin">
           <Input
@@ -532,10 +534,10 @@ export default function Swap() {
                       setIsModalVisible2(false);
                     }}
                   >
-                    <div>
+                    <>
                       <img src={DOMAIN + item.image} alt={item.image} />
                       <span>{item.name}</span>
-                    </div>
+                    </>
                   </button>
                 );
               })}
