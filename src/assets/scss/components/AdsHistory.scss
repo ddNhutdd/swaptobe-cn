@@ -12,7 +12,7 @@
         gap: 20px;
 
         .ads-history__content {
-            background: $new-background-4;
+            background: $new-background-level-1;
             padding: 15px;
 
             @media screen and (min-width: 480px) {
@@ -25,7 +25,7 @@
                 letter-spacing: 0.5px;
             }
 
-            input[type="checkbox"]#pendingCheckbox:checked+label {
+            input[type="checkbox"]#pendingCheckbox:checked + label {
                 i {
                     display: block;
                 }
@@ -89,7 +89,7 @@
 
             .ads-history__record {
                 margin-top: 12px;
-                background-color: $new-background-5;
+                background-color: $new-background-level-2;
                 color: $new-text-color-white;
                 padding: 10px;
                 font-size: 15px;
@@ -103,7 +103,7 @@
                     padding: 10px 15px;
                 }
 
-                &>div {
+                & > div {
                     @media screen and (max-width: 576px) {
                         width: 100%;
                     }
@@ -150,7 +150,7 @@
                                     }
                                 }
 
-                                &.logo-coin+td {
+                                &.logo-coin + td {
                                     span {
                                         display: block;
                                         transform: translateY(2px);
@@ -262,7 +262,6 @@
                     color: $new-primary-color-5;
                     border-color: $new-primary-color-5;
                 }
-
             }
         }
 

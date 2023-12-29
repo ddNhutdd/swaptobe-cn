@@ -69,7 +69,7 @@
         position: relative;
 
         input {
-          height: 35.56px
+          height: 35.56px;
         }
 
         .field__dropdown-selected {
@@ -116,9 +116,18 @@
 }
 
 .create-buy-ads__modal-coin {
-  display: flex;
-  flex-wrap: wrap;
+  padding: 16px 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+
+  @media screen and (min-width: 425px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
 
   .btn-choice-coin {
     @extend .buttonContainer--outline;
@@ -187,6 +196,7 @@
   border-radius: 5px;
   gap: 30px;
   margin: 15px;
+  margin-bottom: 0;
   padding: 15px;
   align-items: start;
   flex-direction: column;

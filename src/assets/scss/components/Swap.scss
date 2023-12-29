@@ -259,20 +259,30 @@
 
   .swap__modal-list {
     margin-top: 20px;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    flex-wrap: wrap;
+
+    @media screen and (min-width: 425px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
 
     .swap__modal-item {
       @extend .buttonContainer--outline;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
 
       img {
         width: 20px;
         height: 20px;
         object-fit: cover;
-        margin-right: 5px;
-        display: inline-block;
-        transform: translateY(-2px);
+        display: block;
       }
 
       &.active {
