@@ -67,6 +67,9 @@ function Transaction() {
   const idAds = useRef();
   let hasRun = useRef(false);
   const callApiStatus = useRef(api_status.pending);
+  const [showContent, setShowContent] = useState(
+    selectedAds.side === actionType.sell ? false : true
+  );
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
@@ -91,11 +94,11 @@ function Transaction() {
     amountInputFormSellChangeHandle();
   }, [listCoinRealtime, currency, exchangeRateDisparity, exchange]);
   useEffect(() => {
-    setValueInputReceive();
     if (!hasRun.current) {
       const etiVnd = calcUserPay();
-      console.log(etiVnd);
-      amountInputFormBuy.current.value = etiVnd;
+      amountInputFormBuy.current.value = new Intl.NumberFormat("en-US").format(
+        etiVnd
+      );
     }
     if (
       listCoinRealtime &&
@@ -104,7 +107,9 @@ function Transaction() {
       exchange.length
     ) {
       hasRun.current = true;
+      setShowContent(() => true);
     }
+    setValueInputReceive();
   }, [listCoinRealtime, exchange]);
   const validateFormBuy = function () {
     let valid = true;
@@ -160,6 +165,7 @@ function Transaction() {
     exchangeVND *= mt;
     result = amountMini * price * exchangeVND;
     console.log(mt, amountMini, price, exchangeVND);
+    mt = mt * mt * mt;
     return result / mt;
   };
   const renderPrice = function () {
@@ -530,7 +536,13 @@ ${symbol.current}`;
   };
   return (
     <>
-      <div className="transaction">
+      <div
+        style={{ marginTop: 200 }}
+        className={`spin-container ${showContent ? "--d-none" : ""}`}
+      >
+        <Spin />
+      </div>
+      <div className={`transaction ${showContent ? "" : "--visible-hidden"}`}>
         <div className="container">
           <div className="box transaction__box transaction__header">
             <div id="transactionTitle"></div>
@@ -744,9 +756,6 @@ ${symbol.current}`;
             </div>
           </div>
         </div>
-      </div>
-      <div className="spin-container">
-        <Spin />
       </div>
     </>
   );

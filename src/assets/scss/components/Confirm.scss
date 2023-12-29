@@ -117,67 +117,89 @@
     }
 }
 
-.paymentModalContent {
-    padding: 16px 24px;
+.confirm-modal {
+    .descriptionText {
+        margin-top: 10px;
+        padding: 0 20px;
+        color: $new-text-color-white;
 
-    td {
-        padding: 5px 20px 5px 0;
-
-        &:first-child {
-            font-weight: bold;
+        .descriptionText__remind {
+            display: block;
         }
     }
-}
 
-.descriptionText {
-    margin-top: 10px;
-    padding: 0 20px;
+    .paymentContent {
+        padding: 10px 20px 20px 20px;
+        color: $new-text-color-white;
 
-    .descriptionText__remind {
-        display: block;
-    }
-}
+        .ant-descriptions-bordered .ant-descriptions-row {
+            border-color: $neutral-8;
+        }
 
-.paymentContent {
-    padding: 10px 20px 20px 20px;
+        .ant-descriptions-bordered .ant-descriptions-view {
+            border-color: $neutral-8;
+        }
 
-    .ant-descriptions-item-content {
-        span {
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-            align-items: flex-start;
+        .ant-descriptions-bordered .ant-descriptions-item-label,
+        .ant-descriptions-bordered .ant-descriptions-item-content {
+            border-color: $neutral-8;
+        }
 
-            @media screen and (min-width: 600px) {
-                justify-content: space-between;
-                flex-direction: row;
-                align-items: center;
-            }
+        .ant-descriptions-item-content {
+            color: $new-text-color-white;
+        }
 
-            div {
-                &:first-of-type {
-                    flex-grow: 1;
+        .ant-descriptions-item-label {
+            color: $new-text-color-white;
+            background-color: $transparent !important;
+        }
+
+        .ant-descriptions-item-content {
+            span {
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+                align-items: flex-start;
+
+                @media screen and (min-width: 600px) {
+                    justify-content: space-between;
+                    flex-direction: row;
+                    align-items: center;
+                }
+
+                div {
+                    &:first-of-type {
+                        flex-grow: 1;
+                    }
                 }
             }
         }
+
+        .icon-copy {
+            color: $neutral-18;
+            cursor: pointer;
+        }
     }
 
-    .icon-copy {
-        color: $text-color-3;
-        cursor: pointer;
+    .ant-modal-footer {
+        border-color: $neutral-8;
+
+        button {
+            @extend .buttonContainer--primary;
+        }
     }
 }
 
 .green-text {
     font-weight: 600;
-    color: $green;
+    color: $green-14;
     display: inline-block;
 }
 
 .blue-text {
     font-weight: 600;
     display: inline-block;
-    color: $text-color-8;
+    color: $blue-16 !important;
 }
 
 .red-text {

@@ -12,74 +12,6 @@
   .container {
     @include container;
 
-    // .record-content {
-    //   margin-top: 16px;
-    //   background-color: $new-background-level-2;
-    //   padding: 10px 10px;
-    //   font-size: 14px;
-    //   display: flex;
-    //   justify-content: space-between;
-    //   align-items: center;
-    //   gap: 15px;
-    //   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
-
-    //   @media screen and (min-width: 480px) {
-    //     padding: 10px 15px;
-    //   }
-
-    //   @media screen and(max-width:992px) {
-    //     flex-direction: column;
-    //     align-items: flex-start;
-    //   }
-
-    //   @media screen and(max-width:576px) {
-    //     align-items: stretch;
-    //   }
-
-    //   table {
-    //     @media screen and (max-width: 576px) {
-    //       width: 100%;
-    //     }
-
-    //     tbody {
-    //       @media screen and (max-width: 576px) {
-    //         width: 100%;
-    //       }
-
-    //       tr {
-    //         padding: 2px 0;
-
-    //         td {
-    //           font-size: 14px;
-
-    //           @media screen and (max-width: 576px) {
-    //             border: 1px solid $background-color-4;
-    //           }
-
-    //           &:first-child {
-    //             font-weight: 600;
-    //             vertical-align: top;
-    //             text-align: right;
-
-    //             @media screen and (max-width: 576px) {
-    //               width: 50%;
-    //             }
-    //           }
-
-    //           vertical-align: bottom;
-    //           padding: 2px 5px;
-    //         }
-    //       }
-    //     }
-    //   }
-
-    //   .item4 {
-    //     button {
-    //       @extend .buttonContainer--primary;
-    //     }
-    //   }
-    // }
-
     #buyContent {
       .record-content {
         display: flex;
@@ -88,6 +20,7 @@
         font-size: 14px;
         margin-top: 12px;
         padding: 16px;
+        background-color: $new-background-level-2;
 
         @media screen and (min-width: 768px) {
           flex-direction: row;
@@ -139,6 +72,7 @@
         font-size: 14px;
         margin-top: 12px;
         padding: 16px;
+        background-color: $new-background-level-2;
 
         @media screen and (min-width: 768px) {
           flex-direction: row;

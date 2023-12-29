@@ -508,6 +508,7 @@ function ConfirmItem(props) {
           okButtonProps={{ style: { display: "none" } }}
           cancelText={t("close")}
           width={800}
+          className="confirm-modal"
         >
           <div className="descriptionText">
             {renderTitleModal()}
@@ -525,13 +526,7 @@ function ConfirmItem(props) {
               size={isMobileViewport ? "small" : "middle"}
             >
               <Descriptions.Item label={t("amount")}>
-                <div className="green-text">
-                  {new Intl.NumberFormat("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                    maximumSignificantDigits: 3,
-                  }).format(pay)}
-                </div>
+                <div className="green-text">{pay}</div>
                 <div className="icon-copy">
                   <i
                     onClick={copyButtonClickHandle.bind(
