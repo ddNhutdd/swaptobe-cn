@@ -123,7 +123,7 @@
     "transferHistory": "Lịch sử chuyển khoản",
     "withdrawalHistory": "Lịch sử rút tiền",
     "note": "Ghi chú",
-    "amount": "Số tiền",
+    "amount": "Số lượng",
     "type": "Loại",
     "aliases": "Bí danh",
     "userNameNotExists": "Tên người dùng không tồn tại.",

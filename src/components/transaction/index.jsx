@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Spin } from "antd";
 import {
   api_status,
   defaultLanguage,
@@ -18,6 +19,7 @@ import {
   addClassToElementById,
   capitalizeFirstLetter,
   convertStringToNumber,
+  findIntegerMultiplier,
   formatStringNumberCultureUS,
   getClassListFromElementById,
   getElementById,
@@ -63,6 +65,7 @@ function Transaction() {
   const amountInputFormBuy = useRef(null); // input element
   const amountInputFormSell = useRef(null);
   const idAds = useRef();
+  let hasRun = useRef(false);
   const callApiStatus = useRef(api_status.pending);
   useEffect(() => {
     const language =
@@ -85,9 +88,23 @@ function Transaction() {
   }, []);
   useEffect(() => {
     renderPrice();
+    amountInputFormSellChangeHandle();
   }, [listCoinRealtime, currency, exchangeRateDisparity, exchange]);
   useEffect(() => {
     setValueInputReceive();
+    if (!hasRun.current) {
+      const etiVnd = calcUserPay();
+      console.log(etiVnd);
+      amountInputFormBuy.current.value = etiVnd;
+    }
+    if (
+      listCoinRealtime &&
+      listCoinRealtime.length > 0 &&
+      exchange &&
+      exchange.length
+    ) {
+      hasRun.current = true;
+    }
   }, [listCoinRealtime, exchange]);
   const validateFormBuy = function () {
     let valid = true;
@@ -121,6 +138,29 @@ function Transaction() {
     return Object.keys(controlTouchedFormBuy.current).length <= 0
       ? false
       : valid;
+  };
+  const calcUserPay = function () {
+    if (
+      !listCoinRealtime ||
+      listCoinRealtime.length <= 0 ||
+      !exchange ||
+      exchange.length <= 0 ||
+      !selectedAds
+    ) {
+      return -1;
+    }
+    let result = 0;
+    let amountMini = selectedAds.amountMinimum;
+    const symbol = selectedAds.symbol;
+    let price = listCoinRealtime.find((item) => item.name === symbol)?.price;
+    let exchangeVND = exchange.find((item) => item.title === "VND")?.rate;
+    let mt = findIntegerMultiplier([price, amountMini, exchangeVND]);
+    amountMini *= mt;
+    price *= mt;
+    exchangeVND *= mt;
+    result = amountMini * price * exchangeVND;
+    console.log(mt, amountMini, price, exchangeVND);
+    return result / mt;
   };
   const renderPrice = function () {
     if (!selectedAds) {
@@ -171,6 +211,10 @@ function Transaction() {
       tempCA === actionType.buy ? "green" : "red"
     }">${capitalizeFirstLetter(tempCA)}</span> ${symbol.current} via Bank
     transfer (VND)`;
+    if (side.current === actionType.buy) {
+      amountInputFormSell.current.value = selectedAds.amountMinimum;
+    } else if (side.current === actionType.sell) {
+    }
     getElementById(
       "transactionAmountMini"
     ).innerHTML = `<span class="transaction--bold">
@@ -196,7 +240,6 @@ ${symbol.current}`;
         }
         const valid = validateFormBuy();
         if (!valid) {
-          callToastError("Invalid data entered");
           return;
         }
         const acceptEula = getElementById("agreeCheckBox").checked;
@@ -224,7 +267,6 @@ ${symbol.current}`;
         }
         const valid = validateFormSell();
         if (!valid) {
-          callToastError("Invalid data entered");
           return;
         }
         const acceptEula = getElementById("agreeCheckBox").checked;
@@ -446,9 +488,9 @@ ${symbol.current}`;
     controlTouchedFormSell.current[name] = true;
     validateFormSell();
   };
-  const amountInputFormSellChangeHandle = function (e) {
+  const amountInputFormSellChangeHandle = function () {
     if (amountInputFormSell.current === null) return;
-    const inputValue = e.target.value;
+    const inputValue = amountInputFormSell.current.value;
     const inputValueWithoutComma = inputValue.replaceAll(",", "");
     if (!regularExpress.checkNumber.test(inputValueWithoutComma)) {
       amountInputFormSell.current.value =
@@ -487,218 +529,226 @@ ${symbol.current}`;
     elementOutput.value = formatStringNumberCultureUS(result.toFixed(3));
   };
   return (
-    <div className="transaction">
-      <div className="container">
-        <div className="box transaction__box transaction__header">
-          <div id="transactionTitle"></div>
-        </div>
-        <div className="box transaction__box">
-          <form>
-            <div
-              className={`transaction__input-container ${
-                currentAction === actionType.buy ? " " : "--d-none"
-              }`}
-            >
-              <div className="transaction__input">
-                <label htmlFor="amountInput">I will pay:</label>
-                <Input
-                  ref={amountInputFormBuy}
-                  onFocus={amountInputFormBuyFocusHandle}
-                  onChange={amountInputFormBuyChangeHandle}
-                  type="text"
-                  errorMes={
-                    controlErrorFormBuy[controlFormBuy.current.amountInput]
-                  }
-                />
-                <span className="transaction__unit">VND</span>
+    <>
+      <div className="transaction">
+        <div className="container">
+          <div className="box transaction__box transaction__header">
+            <div id="transactionTitle"></div>
+          </div>
+          <div className="box transaction__box">
+            <form>
+              <div
+                className={`transaction__input-container ${
+                  currentAction === actionType.buy ? " " : "--d-none"
+                }`}
+              >
+                <div className="transaction__input">
+                  <label htmlFor="amountInput">I will pay:</label>
+                  <Input
+                    ref={amountInputFormBuy}
+                    onFocus={amountInputFormBuyFocusHandle}
+                    onChange={amountInputFormBuyChangeHandle}
+                    type="text"
+                    errorMes={
+                      controlErrorFormBuy[controlFormBuy.current.amountInput]
+                    }
+                  />
+                  <span className="transaction__unit">VND</span>
+                </div>
+                <div className="transaction__input">
+                  <label htmlFor="receiveInput">{t("toReceive")}:</label>
+                  <Input
+                    disabled
+                    id="receiveInputTransactionFormBuy"
+                    type="text"
+                    className="transaction__input-result"
+                  />
+                  <span
+                    id="receiveUnitTransaction"
+                    className="transaction__unit result"
+                  >
+                    USDT
+                  </span>
+                </div>
               </div>
-              <div className="transaction__input">
-                <label htmlFor="receiveInput">{t("toReceive")}:</label>
-                <Input
-                  disabled
-                  id="receiveInputTransactionFormBuy"
-                  type="text"
-                  className="transaction__input-result"
-                />
-                <span
-                  id="receiveUnitTransaction"
-                  className="transaction__unit result"
+              <div
+                className={`transaction__input-container ${
+                  currentAction === actionType.sell ? " " : "--d-none"
+                }`}
+              >
+                <div className="transaction__input">
+                  <label>I pay:</label>
+                  <Input
+                    name="amountInput"
+                    onFocus={amountInputFormSellFocusHandle}
+                    onChange={amountInputFormSellChangeHandle}
+                    id="amountInputFormSell"
+                    ref={amountInputFormSell}
+                    type="text"
+                    errorMes={
+                      controlErrorFormSell[controlFormSell.current.amountInput]
+                    }
+                  />
+                  <span className="transaction__unit">{symbol.current}</span>
+                </div>
+                <div className="transaction__input">
+                  <label>{t("toReceive")}:</label>
+                  <Input id="receiveInputFormSell" disabled type="text" />
+                  <span className="transaction__unit">VND</span>
+                </div>
+              </div>
+              <div className="transaction__dropdown">
+                <label htmlFor="amountInput">{t("chooseYourPayment")}:</label>
+                <div
+                  id="paymentDropdownSelected"
+                  onClick={dropdownPaymentToggle}
+                  className="transaction__payment-dropdown"
                 >
-                  USDT
-                </span>
-              </div>
-            </div>
-            <div
-              className={`transaction__input-container ${
-                currentAction === actionType.sell ? " " : "--d-none"
-              }`}
-            >
-              <div className="transaction__input">
-                <label>I pay:</label>
-                <Input
-                  name="amountInput"
-                  onFocus={amountInputFormSellFocusHandle}
-                  onChange={amountInputFormSellChangeHandle}
-                  id="amountInputFormSell"
-                  ref={amountInputFormSell}
-                  type="text"
-                  errorMes={
-                    controlErrorFormSell[controlFormSell.current.amountInput]
-                  }
-                />
-                <span className="transaction__unit">{symbol.current}</span>
-              </div>
-              <div className="transaction__input">
-                <label>{t("toReceive")}:</label>
-                <Input id="receiveInputFormSell" disabled type="text" />
-                <span className="transaction__unit">VND</span>
-              </div>
-            </div>
-            <div className="transaction__dropdown">
-              <label htmlFor="amountInput">{t("chooseYourPayment")}:</label>
-              <div
-                id="paymentDropdownSelected"
-                onClick={dropdownPaymentToggle}
-                className="transaction__payment-dropdown"
-              >
-                <div className="transaction__payment-dropdown-text">
-                  Vietcombank (Nguyen Trung Hieu: 08370383231)
+                  <div className="transaction__payment-dropdown-text">
+                    Vietcombank (Nguyen Trung Hieu: 08370383231)
+                  </div>
+                  <span>
+                    <i className="fa-solid fa-caret-down"></i>
+                  </span>
                 </div>
-                <span>
-                  <i className="fa-solid fa-caret-down"></i>
-                </span>
-              </div>
-              <div
-                id="paymentDropdownMenu"
-                className="transaction__payment-dropdown-menu-container"
-              >
-                <div id="paymentDropdownMenuContent" className="dropdown-menu">
-                  <div className="dropdown-item">{t("name")}</div>
+                <div
+                  id="paymentDropdownMenu"
+                  className="transaction__payment-dropdown-menu-container"
+                >
+                  <div
+                    id="paymentDropdownMenuContent"
+                    className="dropdown-menu"
+                  >
+                    <div className="dropdown-item">{t("name")}</div>
+                  </div>
                 </div>
               </div>
+              <input id="agreeCheckBox" type="checkbox" className="--d-none" />
+              <label className="transaction__checkbox" htmlFor="agreeCheckBox">
+                <div className="transaction__checkbox-square">
+                  <i className="fa-solid fa-check"></i>
+                </div>
+                <div className="transaction__checkbox-text">
+                  {t("byClickingContinueYouAgreeToSeresos")}{" "}
+                  <span className="transaction--green-header">
+                    {t("p2PTermsOfService")}
+                  </span>
+                </div>
+              </label>
+              <button
+                id="buyNowButton"
+                type="submit"
+                onClick={buyNowSubmitHandle}
+              >
+                <div className="loader --d-none"></div>
+                {t("buyNow")}
+              </button>
+            </form>
+          </div>
+          <h3 className="transaction__title transaction--bold">
+            {t("advertisementInformations")}
+          </h3>
+          <div className="box transaction__box">
+            <div className="transaction__box-item">
+              <span>{t("price")}:</span>
+              <span id="transaction__price"></span>
             </div>
-            <input id="agreeCheckBox" type="checkbox" className="--d-none" />
-            <label className="transaction__checkbox" htmlFor="agreeCheckBox">
-              <div className="transaction__checkbox-square">
-                <i className="fa-solid fa-check"></i>
-              </div>
-              <div className="transaction__checkbox-text">
-                {t("byClickingContinueYouAgreeToSeresos")}{" "}
-                <span className="transaction--green-header">
-                  {t("p2PTermsOfService")}
+            <div className="transaction__box-item amount">
+              <span>{t("amountLimits")}:</span>
+              <span className="transaction__box-amount-container">
+                <span
+                  id="transactionAmountMini"
+                  className="transaction__box-amount"
+                ></span>{" "}
+                <span className="transaction__box-amount-dash">-</span>{" "}
+                <span
+                  id="transactionAmount"
+                  className="transaction__box-amount"
+                ></span>
+              </span>
+            </div>
+            <div className="transaction__box-item">
+              <span>{t("method")}:</span>
+              <span id="transactionBankName" className="transaction--bold">
+                Vietcombank
+              </span>
+            </div>
+            <div className="transaction__box-item">
+              <span>{t("paymentWindow")}:</span>
+              <span>15 {t("minutes")}</span>
+            </div>
+          </div>
+          <h3 className="transaction__title transaction--bold">
+            infomation about partners
+          </h3>
+          <div className="box transaction__box">
+            <div className="transaction__box-item">
+              <span>{t("username")}:</span>
+              <span className="transaction__username" id="transactionUserName">
+                queencoin9999
+              </span>
+            </div>
+            <div className="transaction__box-item">
+              <span>{t("status")}:</span>
+              <span>{t("online")}</span>
+            </div>
+            <div className="transaction__box-item">
+              <span>{t("country")}:</span>
+              <span>Việt Nam</span>
+            </div>
+            <div className="transaction__box-item">
+              <span>{t("feedbackScore")}:</span>
+              <span>😃 X978</span>
+            </div>
+            <div className="transaction__box-item">
+              <span>KYC:</span>
+              <span className="transaction__kyc">
+                <span>
+                  <span>
+                    <i className="fa-solid fa-check"></i>
+                  </span>{" "}
+                  Phone number verified
                 </span>
-              </div>
-            </label>
-            <button
-              id="buyNowButton"
-              type="submit"
-              onClick={buyNowSubmitHandle}
-            >
-              <div className="loader --d-none"></div>
-              {t("buyNow")}
-            </button>
-          </form>
-        </div>
-        <h3 className="transaction__title transaction--bold">
-          {t("advertisementInformations")}
-        </h3>
-        <div className="box transaction__box">
-          <div className="transaction__box-item">
-            <span>{t("price")}:</span>
-            <span id="transaction__price"></span>
-          </div>
-          <div className="transaction__box-item amount">
-            <span>{t("amountLimits")}:</span>
-            <span className="transaction__box-amount-container">
-              <span
-                id="transactionAmountMini"
-                className="transaction__box-amount"
-              ></span>{" "}
-              <span className="transaction__box-amount-dash">-</span>{" "}
-              <span
-                id="transactionAmount"
-                className="transaction__box-amount"
-              ></span>
-            </span>
-          </div>
-          <div className="transaction__box-item">
-            <span>{t("method")}:</span>
-            <span id="transactionBankName" className="transaction--bold">
-              Vietcombank
-            </span>
-          </div>
-          <div className="transaction__box-item">
-            <span>{t("paymentWindow")}:</span>
-            <span>15 {t("minutes")}</span>
-          </div>
-        </div>
-        <h3 className="transaction__title transaction--bold">
-          infomation about partners
-        </h3>
-        <div className="box transaction__box">
-          <div className="transaction__box-item">
-            <span>{t("username")}:</span>
-            <span className="transaction__username" id="transactionUserName">
-              queencoin9999
-            </span>
-          </div>
-          <div className="transaction__box-item">
-            <span>{t("status")}:</span>
-            <span>{t("online")}</span>
-          </div>
-          <div className="transaction__box-item">
-            <span>{t("country")}:</span>
-            <span>Việt Nam</span>
-          </div>
-          <div className="transaction__box-item">
-            <span>{t("feedbackScore")}:</span>
-            <span>😃 X978</span>
-          </div>
-          <div className="transaction__box-item">
-            <span>KYC:</span>
-            <span className="transaction__kyc">
-              <span>
                 <span>
-                  <i className="fa-solid fa-check"></i>
-                </span>{" "}
-                Phone number verified
-              </span>
-              <span>
+                  <span>
+                    <i className="fa-solid fa-check"></i>
+                  </span>{" "}
+                  Identity and Residence Proof verified
+                </span>
                 <span>
-                  <i className="fa-solid fa-check"></i>
-                </span>{" "}
-                Identity and Residence Proof verified
+                  <span>
+                    <i className="fa-solid fa-check"></i>
+                  </span>{" "}
+                  Bank verified
+                </span>
               </span>
-              <span>
-                <span>
-                  <i className="fa-solid fa-check"></i>
-                </span>{" "}
-                Bank verified
-              </span>
-            </span>
-          </div>
-        </div>
-        <div className="box transaction__box">
-          <div className="transaction__chat-container">
-            <div className="transaction__chat-icon">
-              <i className="fa-solid fa-comments"></i>
             </div>
-            <div className="transaction__chat">
-              <div className="transaction__chat-header">
-                {t("needMoreHelp")}?
+          </div>
+          <div className="box transaction__box">
+            <div className="transaction__chat-container">
+              <div className="transaction__chat-icon">
+                <i className="fa-solid fa-comments"></i>
               </div>
-              <div className="transaction__chat-text">
-                {t("contactCustomerSupportVia")}{" "}
-                <span className="transaction__chat-support">
-                  Online support.
-                </span>{" "}
-                We are always ready to help
+              <div className="transaction__chat">
+                <div className="transaction__chat-header">
+                  {t("needMoreHelp")}?
+                </div>
+                <div className="transaction__chat-text">
+                  {t("contactCustomerSupportVia")}{" "}
+                  <span className="transaction__chat-support">
+                    Online support.
+                  </span>{" "}
+                  We are always ready to help
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="spin-container">
+        <Spin />
+      </div>
+    </>
   );
 }
 export default Transaction;

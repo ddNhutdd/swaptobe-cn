@@ -210,7 +210,7 @@ export default function P2PTrading2({ history }) {
           <table>
           <tbody>
           <tr>
-            <td>${t("userName")}:</td>
+            <td>${t("tenNguoiBan")}:</td>
             <td>${item.userName}</td>
           </tr>
           <tr>
@@ -238,6 +238,10 @@ export default function P2PTrading2({ history }) {
         <tr>
           <td>${t("amountMinimum")}:</td>
           <td>${item.amountMinimum}</td>
+        </tr>
+        <tr>
+          <td>${t("available")}:</td>
+          <td>${+(item.amount - item.amountSuccess).toFixed(8)}</td>
         </tr>
         <tr>
           <td>${t("createdAt")}:</td>
@@ -288,7 +292,7 @@ export default function P2PTrading2({ history }) {
             <table>
               <tbody>
                 <tr>
-                  <td>${t("userName")}:</td>
+                  <td>${t("tenNguoiMua")}:</td>
                   <td>${item.userName}</td>
                 </tr>
                 <tr class="item2">
@@ -301,10 +305,14 @@ export default function P2PTrading2({ history }) {
           <div>
             <table>
               <tbody>
-              <tr>
-              <td>${t("amountMinimum")}:</td>
-              <td>${item.amountMinimum}</td>
-            </tr>
+                <tr>
+                  <td>${t("amountMinimum")}:</td>
+                  <td>${item.amountMinimum}</td>
+                </tr>
+                <tr>
+                  <td>${t("available")}:</td>
+                  <td>${+(item.amount - item.amountSuccess).toFixed(8)}</td>
+                </tr>
                 <tr>
                   <td>${t("createdAt")}:</td>
                   <td>${item.created_at}</td>

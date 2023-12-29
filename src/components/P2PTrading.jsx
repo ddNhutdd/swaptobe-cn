@@ -131,7 +131,6 @@ export default function P2PTrading({ history }) {
         } else if (percent < 0) {
           color = "#B31312";
         }
-
         return (
           <span style={{ color: color, fontWeight: 500 }}>{percent}%</span>
         );
@@ -288,7 +287,6 @@ export default function P2PTrading({ history }) {
     }
   };
   //
-
   return (
     <>
       {renderContent()}

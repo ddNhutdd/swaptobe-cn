@@ -43,8 +43,8 @@ function Profile() {
     behindID: "behindID",
     portrait: "portrait",
   };
-  const kycTourch = {};
-  const kycError = {};
+  const kycTourch = useRef({});
+  const [kycError, setKycError] = useState({});
   const content = {
     undefined: -1,
     verifing: 2,
@@ -56,7 +56,7 @@ function Profile() {
     accountNumber: "accountNumber",
   });
   const paymentTourched = useRef({});
-  const paymentError = useRef({});
+  const [paymentError, setPaymentError] = useState({});
   const listPaymentPageSize = useRef(5);
   const listBank = useRef(getBankListV2());
   //
@@ -137,17 +137,17 @@ function Profile() {
   const openDailogChooseFile = function (e) {
     switch (e.target.name) {
       case "frontIdentityCardFile":
-        kycTourch[kycControl.frontID] = true;
+        kycTourch.current[kycControl.frontID] = true;
         kycRenderError();
         document.getElementById("frontIdentityCardFile").click();
         break;
       case "backOfIdentityCardFile":
-        kycTourch[kycControl.behindID] = true;
+        kycTourch.current[kycControl.behindID] = true;
         kycRenderError();
         document.getElementById("backOfIdentityCardFile").click();
         break;
       case "portraitFile":
-        kycTourch[kycControl.portrait] = true;
+        kycTourch.current[kycControl.portrait] = true;
         kycRenderError();
         document.getElementById("portraitFile").click();
         break;
@@ -223,60 +223,125 @@ function Profile() {
     const fullNameElement = document.getElementById("profile__fullName");
     if (!fullNameElement) return false;
     const fullNameElementValue = fullNameElement.value;
-    if (!fullNameElementValue && kycTourch[kycControl.fullName] === true) {
+    if (
+      !fullNameElementValue &&
+      kycTourch.current[kycControl.fullName] === true
+    ) {
       isValid &= false;
-      kycError[kycControl.fullName] = t("require");
+      setKycError((state) => ({
+        ...state,
+        [kycControl.fullName]: t("require"),
+      }));
     } else {
-      delete kycError[kycControl.fullName];
+      setKycError((state) => {
+        const newKycError = {
+          ...state,
+        };
+        delete newKycError[kycControl.fullName];
+        return newKycError;
+      });
     }
     // address
     const addressElement = document.getElementById("profile__address");
     const addressElementValue = addressElement.value;
-    if (!addressElementValue && kycTourch[kycControl.address] === true) {
+    if (
+      !addressElementValue &&
+      kycTourch.current[kycControl.address] === true
+    ) {
       isValid &= false;
-      kycError[kycControl.address] = t("require");
+      setKycError((state) => {
+        const newKycError = {
+          ...state,
+          [kycControl.address]: t("require"),
+        };
+        return newKycError;
+      });
     } else {
-      delete kycError[kycControl.address];
+      setKycError((state) => {
+        const newKycError = {
+          ...state,
+        };
+        delete newKycError[kycControl.address];
+        return newKycError;
+      });
     }
-    //phone
+    // phone
     const phoneElement = document.getElementById("profile__phone");
     const phoneElementValue = phoneElement.value ?? "";
     const phonePattern = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
-    if (kycTourch[kycControl.phone]) {
+    if (kycTourch.current[kycControl.phone]) {
       if (!phonePattern.test(phoneElementValue)) {
         isValid &= false;
-        kycError[kycControl.phone] = t("invalidData");
+        setKycError((state) => {
+          const newState = {
+            ...state,
+            [kycControl.phone]: t("invalidData"),
+          };
+          return newState;
+        });
       }
       if (!phoneElementValue) {
         isValid &= false;
-        kycError[kycControl.phone] = t("require");
+        setKycError((state) => {
+          const newState = {
+            ...state,
+            [kycControl.phone]: t("require"),
+          };
+          return newState;
+        });
       }
       if (phonePattern.test(phoneElementValue) && phoneElementValue) {
-        delete kycError[kycControl.phone];
+        setKycError((state) => {
+          const newState = {
+            ...state,
+          };
+          delete newState[kycControl.phone];
+          return newState;
+        });
       }
     }
     //company
     const companyElement = document.getElementById("profile__company");
     const companyElementValue = companyElement.value;
-    if (!companyElementValue && kycTourch[kycControl.company]) {
+    if (!companyElementValue && kycTourch.current[kycControl.company]) {
       isValid &= false;
-      kycError[kycControl.company] = t("require");
+      setKycError((state) => {
+        const newState = {
+          ...state,
+          [kycControl.company]: t("require"),
+        };
+        return newState;
+      });
     } else {
-      delete kycError[kycControl.company];
+      setKycError((state) => {
+        const newState = { ...state };
+        delete newState[kycControl.company];
+        return newState;
+      });
     }
     //passport
     const passportElement = document.getElementById("profile__passport");
     const passportElementValue = passportElement.value;
-    if (!passportElementValue && kycTourch[kycControl.passport]) {
+    if (!passportElementValue && kycTourch.current[kycControl.passport]) {
       isValid &= false;
-      kycError[kycControl.passport] = t("require");
+      setKycError((state) => {
+        const newState = {
+          ...state,
+          [kycControl.passport]: t("require"),
+        };
+        return newState;
+      });
     } else {
-      delete kycError[kycControl.passport];
+      setKycError((state) => {
+        const newState = { ...state };
+        delete newState[kycControl.passport];
+        return newState;
+      });
     }
     //frontID
     const frontIDElement = document.getElementById("frontIdentityCardFile");
     const frontIDElementValue = frontIDElement.files;
-    if (kycTourch[kycControl.frontID]) {
+    if (kycTourch.current[kycControl.frontID]) {
       if (!frontIDElementValue || frontIDElementValue.length <= 0) {
         kycError[kycControl.frontID] = t("require");
         isValid &= false;
@@ -287,7 +352,7 @@ function Profile() {
     //behindID
     const behindIDElement = document.getElementById("backOfIdentityCardFile");
     const behindIDElementValue = behindIDElement.files;
-    if (kycTourch[kycControl.behindID]) {
+    if (kycTourch.current[kycControl.behindID]) {
       if (!behindIDElementValue || behindIDElementValue.length <= 0) {
         kycError[kycControl.behindID] = t("require");
         isValid &= false;
@@ -298,7 +363,7 @@ function Profile() {
     //portrait
     const portraitElement = document.getElementById("portraitFile");
     const portraitElementValue = portraitElement.files;
-    if (kycTourch[kycControl.portrait]) {
+    if (kycTourch.current[kycControl.portrait]) {
       if (!portraitElementValue || portraitElementValue.length <= 0) {
         kycError[kycControl.portrait] = t("require");
         isValid &= false;
@@ -306,16 +371,18 @@ function Profile() {
         delete kycError[kycControl.portrait];
       }
     }
-    //
-    return Object.keys(kycTourch).length <= 0 ? false : Boolean(isValid);
+
+    return Object.keys(kycTourch.current).length <= 0
+      ? false
+      : Boolean(isValid);
   };
   const kycHandleSubmit = function (e) {
     e.preventDefault();
     //validate all control
-    for (let [key] of Object.entries(kycControl)) {
-      kycTourch[key] = true;
+    for (const [key] of Object.entries(kycControl)) {
+      kycTourch.current[key] = true;
     }
-    let isValid = kycValidate();
+    const isValid = kycValidate();
     if (!isValid) {
       kycRenderError();
       return;
@@ -372,34 +439,19 @@ function Profile() {
     kycRenderError();
   };
   const kycControlHandleFocus = function (control) {
-    kycTourch[control] = true;
+    kycTourch.current[control] = true;
     kycValidate();
     kycRenderError();
   };
   const kycRenderError = function () {
-    const fullname = document.getElementById("profile__fullName__error");
-    const address = document.getElementById("profile__address__error");
-    const phone = document.getElementById("profile__phone__error");
-    const company = document.getElementById("profile__company__error");
-    const passport = document.getElementById("profile__passport__error");
     const frontID = document.getElementById("frontIdentityCardFileError");
     const behindID = document.getElementById("behindIdentityCardFileError");
     const portraitID = document.getElementById("portraitIdentityCardFileError");
-    if (kycTourch[kycControl.fullName])
-      fullname.innerHTML = kycError[kycControl.fullName] ?? "";
-    if (kycTourch[kycControl.address])
-      address.innerHTML = kycError[kycControl.address] ?? "";
-    if (kycTourch[kycControl.phone])
-      phone.innerHTML = kycError[kycControl.phone] ?? "";
-    if (kycTourch[kycControl.company])
-      company.innerHTML = kycError[kycControl.company] ?? "";
-    if (kycTourch[kycControl.passport])
-      passport.innerHTML = kycError[kycControl.passport] ?? "";
-    if (kycTourch[kycControl.frontID])
+    if (kycTourch.current[kycControl.frontID])
       frontID.innerHTML = kycError[kycControl.frontID] ?? "";
-    if (kycTourch[kycControl.behindID])
+    if (kycTourch.current[kycControl.behindID])
       behindID.innerHTML = kycError[kycControl.behindID] ?? "";
-    if (kycTourch[kycControl.portrait])
+    if (kycTourch.current[kycControl.portrait])
       portraitID.innerHTML = kycError[kycControl.portrait] ?? "";
   };
   const fetchUserProfile = function () {
@@ -470,11 +522,8 @@ function Profile() {
                 onChange={kycControlHandleChange}
                 id="profile__fullName"
                 type="text"
+                errorMes={kycError[kycControl.fullName]}
               />
-              <div
-                id="profile__fullName__error"
-                className={`input__error`}
-              ></div>
             </div>
           </div>
           <div className="profile__form-item">
@@ -487,11 +536,8 @@ function Profile() {
                 onChange={kycControlHandleChange}
                 id="profile__address"
                 type="text"
+                errorMes={kycError[kycControl.address]}
               />
-              <div
-                id="profile__address__error"
-                className={`input__error`}
-              ></div>
             </div>
           </div>
           <div className="profile__form-item">
@@ -504,8 +550,8 @@ function Profile() {
                 onChange={kycControlHandleChange}
                 id="profile__phone"
                 type="text"
+                errorMes={kycError[kycControl.phone]}
               />
-              <div id="profile__phone__error" className={`input__error`}></div>
             </div>
           </div>
           <div className="profile__form-item">
@@ -518,11 +564,8 @@ function Profile() {
                 onChange={kycControlHandleChange}
                 id="profile__company"
                 type="text"
+                errorMes={kycError[kycControl.company]}
               />
-              <div
-                id="profile__company__error"
-                className={`input__error `}
-              ></div>
             </div>
           </div>
           <div className="profile__form-item">
@@ -535,11 +578,8 @@ function Profile() {
                 onChange={kycControlHandleChange}
                 id="profile__passport"
                 type="text"
+                errorMes={kycError[kycControl.passport]}
               />
-              <div
-                id="profile__passport__error"
-                className={`input__error`}
-              ></div>
             </div>
           </div>
           <div className="profile__form-item"></div>
@@ -773,12 +813,13 @@ function Profile() {
   const addBankingSubmitHandle = async function (e) {
     e.preventDefault();
     // validate
-    for (const item of Object.keys(paymentControl)) {
+    for (const item of Object.keys(paymentControl.current)) {
       paymentTourched.current[item] = true;
     }
     const valid = paymentValidate();
-    paymentErrorRender();
-    if (!valid) return;
+    if (!valid) {
+      return;
+    }
     //
     disablePaymentButton();
     const result = await fetApiUserAddBanking({
@@ -817,60 +858,54 @@ function Profile() {
       "profile__payment-account-number"
     ).value;
     const accountNameValue = getElementById(
-      "profile__payment-account-number"
+      "profile__payment-account-name"
     ).value;
     if (paymentTourched.current[paymentControl.current.accountNumber]) {
       if (!accountNumberValue) {
         valid &= false;
-        paymentError.current[paymentControl.current.accountNumber] =
-          t("require");
+        setPaymentError((state) => {
+          const newState = {
+            ...state,
+            [paymentControl.current.accountNumber]: t("require"),
+          };
+          return newState;
+        });
       } else {
-        delete paymentError.current[paymentControl.current.accountNumber];
+        setPaymentError((state) => {
+          const newState = { ...state };
+          delete newState[paymentControl.current.accountNumber];
+          return newState;
+        });
       }
     }
     if (paymentTourched.current[paymentControl.current.accountName]) {
       if (!accountNameValue) {
         valid &= false;
-        paymentError.current[paymentControl.current.accountName] = t("require");
+        setPaymentError((state) => {
+          const newState = {
+            ...state,
+            [paymentControl.current.accountName]: t("require"),
+          };
+          return newState;
+        });
       } else {
-        delete paymentError.current[paymentControl.current.accountName];
+        setPaymentError((state) => {
+          const newState = { ...state };
+          delete newState[paymentControl.current.accountName];
+          return newState;
+        });
       }
     }
     return Object.keys(paymentTourched).length <= 0 || Boolean(valid);
   };
-  const paymentErrorRender = function () {
-    const accountName = getElementById("profile__payment-account-name__error");
-    const accountNumber = getElementById(
-      "profile__payment-account-number__error"
-    );
-    if (
-      paymentTourched.current[paymentControl.current.accountNumber] &&
-      paymentError.current[paymentControl.current.accountNumber]
-    ) {
-      accountNumber.innerHTML =
-        paymentError.current[paymentControl.current.accountNumber];
-    } else {
-      accountNumber.innerHTML = "";
-    }
-    if (
-      paymentTourched.current[paymentControl.current.accountName] &&
-      paymentError.current[paymentControl.current.accountName]
-    ) {
-      accountName.innerHTML =
-        paymentError.current[paymentControl.current.accountName];
-    } else {
-      accountName.innerHTML = "";
-    }
-  };
+
   const paymentControlFocusHandle = function (e) {
     const name = e.target.name;
     paymentTourched.current[name] = true;
     paymentValidate();
-    paymentErrorRender();
   };
   const paymentControlChangeHandle = function () {
     paymentValidate();
-    paymentErrorRender();
   };
   /**
    * disable button and show loader
@@ -1092,11 +1127,10 @@ function Profile() {
                     name="accountNumber"
                     id="profile__payment-account-number"
                     type="text"
+                    errorMes={
+                      paymentError[paymentControl.current.accountNumber]
+                    }
                   />
-                  <div
-                    id="profile__payment-account-number__error"
-                    className={`input__error`}
-                  ></div>
                 </div>
                 <div className="profile__input">
                   <label htmlFor="profile__payment-account-name">
@@ -1108,11 +1142,8 @@ function Profile() {
                     name="accountName"
                     id="profile__payment-account-name"
                     type="text"
+                    errorMes={paymentError[paymentControl.current.accountName]}
                   />
-                  <div
-                    id="profile__payment-account-name__error"
-                    className={`input__error`}
-                  ></div>
                 </div>
                 <div className="profile__payment-action">
                   <button
@@ -1211,7 +1242,7 @@ function Profile() {
                 <label htmlFor="profile__modal-code">
                   {t("enterThe6DigitCodeFromAuthenticatorApp")}
                 </label>
-                <input id="profile__modal-code" type="text" />
+                <Input id="profile__modal-code" type="text" />
               </div>
             </div>
             <div className="profile__2faModal__footer">

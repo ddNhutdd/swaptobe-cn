@@ -343,3 +343,11 @@ export const processString = function (inputString, substringsList, callback) {
   }
   return <>{resultJSX}</>;
 };
+export const findIntegerMultiplier = function (numbers) {
+  const maxDecimalPlaces = Math.max(
+    ...numbers.map((num) => num.toString().split(".")[1]?.length || 0)
+  );
+  console.log(maxDecimalPlaces);
+  const result = +"1".padEnd(maxDecimalPlaces + 1, 0);
+  return result;
+};
