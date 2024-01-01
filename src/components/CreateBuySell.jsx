@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -25,7 +25,6 @@ import {
   regularExpress,
   url,
 } from "src/constant";
-
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "./Common/Input";
@@ -58,7 +57,7 @@ export default function CreateBuy() {
     accountNumber: "accountNumber",
   });
   const controlsTourched = useRef({});
-  const controlsErrors = useRef({});
+  const [controlsErrors, setControlsErrors] = useState({});
   const callApiStatus = useRef(api_status.pending);
   const isMobileViewport = window.innerWidth < 600;
   useEffect(() => {
@@ -69,6 +68,13 @@ export default function CreateBuy() {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
+    const currentLanguage = i18n.language;
+    i18n.on("languageChanged", (newLanguage) => {
+      if (newLanguage !== currentLanguage) {
+        validate();
+        return;
+      }
+    });
     //
     document.addEventListener("click", closeDropdownBank);
     bankDropdownSelect(selectedBank.current);
@@ -80,6 +86,7 @@ export default function CreateBuy() {
     callProfile().then((resp) => {
       userName.current = resp;
     });
+
     return () => {
       document.removeEventListener("click", closeDropdownBank);
     };
@@ -192,12 +199,26 @@ export default function CreateBuy() {
         amountElement.value
       ) {
         valid &= false;
-        controlsErrors.current[controls.current.amount] = "Format Incorrect";
+        setControlsErrors((state) => {
+          return {
+            ...state,
+            [controls.current.amount]: t("formatIncorrect"),
+          };
+        });
       } else if (!amountElement.value) {
         valid &= false;
-        controlsErrors.current[controls.current.amount] = t("require");
+        setControlsErrors((state) => {
+          return {
+            ...state,
+            [controls.current.amount]: t("require"),
+          };
+        });
       } else {
-        delete controlsErrors.current[controls.current.amount];
+        setControlsErrors((state) => {
+          const newState = { ...state };
+          delete newState[controls.current.amount];
+          return newState;
+        });
       }
     }
     if (controlsTourched.current[controls.current.mini]) {
@@ -206,29 +227,55 @@ export default function CreateBuy() {
         miniElement.value
       ) {
         valid &= false;
-        controlsErrors.current[controls.current.mini] = "Format Incorrect";
+        setControlsErrors((state) => ({
+          ...state,
+          [controls.current.mini]: t("formatIncorrect"),
+        }));
       } else if (!miniElement.value) {
         valid &= false;
-        controlsErrors.current[controls.current.mini] = t("require");
+        setControlsErrors((state) => ({
+          ...state,
+          [controls.current.mini]: t("require"),
+        }));
       } else {
-        delete controlsErrors.current[controls.current.mini];
+        setControlsErrors((state) => {
+          const newState = { ...state };
+          delete newState[controls.current.mini];
+        });
       }
     }
+    console.log(controlsTourched.current);
     if (action === actionType.sell) {
       if (controlsTourched.current[controls.current.fullname]) {
         if (!fullnameElement.value) {
           valid &= false;
-          controlsErrors.current[controls.current.fullname] = t("require");
+          setControlsErrors((state) => ({
+            ...state,
+            [controls.current.fullname]: t("require"),
+          }));
         } else {
-          delete controlsErrors.current[controls.current.fullname];
+          delete controlsErrors.current;
+          setControlsErrors((state) => {
+            const newState = { ...state };
+            delete newState[controls.current.fullname];
+            return newState;
+          });
         }
       }
       if (controlsTourched.current[controls.current.accountNumber]) {
         if (!accountNumberElement.value) {
           valid &= false;
-          controlsErrors.current[controls.current.accountNumber] = t("require");
+          setControlsErrors((state) => ({
+            ...state,
+            [controls.current.accountNumber]: t("require"),
+          }));
         } else {
-          delete controlsErrors.current[controls.current.accountNumber];
+          delete controlsErrors.current;
+          setControlsErrors((state) => {
+            const newState = { ...state };
+            delete newState[controls.current.accountNumber];
+            return newState;
+          });
         }
       }
     }
@@ -236,57 +283,13 @@ export default function CreateBuy() {
       ? false
       : Boolean(valid);
   };
-  const renderControlsError = function () {
-    //hide all
-    addClassToElementById("amountError", "--visible-hidden");
-    addClassToElementById("miniError", "--visible-hidden");
-    addClassToElementById("fullnameError", "--visible-hidden");
-    addClassToElementById("accountNumberError", "--visible-hidden");
-    // check
-    if (
-      controlsErrors.current[controls.current.amount] &&
-      controlsTourched.current[controls.current.amount]
-    ) {
-      getClassListFromElementById("amountError").remove("--visible-hidden");
-      getElementById("amountError").innerHTML =
-        controlsErrors.current[controls.current.amount];
-    }
-    if (
-      controlsErrors.current[controls.current.mini] &&
-      controlsTourched.current[controls.current.mini]
-    ) {
-      getClassListFromElementById("miniError").remove("--visible-hidden");
-      getElementById("miniError").innerHTML =
-        controlsErrors.current[controls.current.mini];
-    }
-    if (
-      controlsErrors.current[controls.current.fullname] &&
-      controlsTourched.current[controls.current.fullname]
-    ) {
-      getClassListFromElementById("fullnameError").remove("--visible-hidden");
-      getElementById("fullnameError").innerHTML =
-        controlsErrors.current[controls.current.fullname];
-    }
-    if (
-      controlsErrors.current[controls.current.accountNumber] &&
-      controlsTourched.current[controls.current.accountNumber]
-    ) {
-      getClassListFromElementById("accountNumberError").remove(
-        "--visible-hidden"
-      );
-      getElementById("accountNumberError").innerHTML =
-        controlsErrors.current[controls.current.accountNumber];
-    }
-  };
   const controlOnfocusHandle = function (e) {
     const name = e.target.name;
     controlsTourched.current[name] = true;
     validate();
-    renderControlsError();
   };
   const controlOnChangeHandle = function () {
     validate();
-    renderControlsError();
   };
   const callApiCreateAds = function (data) {
     return new Promise((resolve) => {
@@ -324,7 +327,6 @@ export default function CreateBuy() {
       controlsTourched.current[item.at(0)] = true;
     }
     const isValid = validate();
-    renderControlsError();
     if (!isValid) return;
     // get data
     showLoadingButtonSubmit();
@@ -415,10 +417,8 @@ export default function CreateBuy() {
                   name="amount"
                   key={"a1va"}
                   id="amoutInput"
+                  errorMes={controlsErrors[controls.current.amount]}
                 />
-                <small id="amountError" className="--visible-hidden">
-                  Errro
-                </small>
               </div>
               <div className="field">
                 <label>
@@ -430,10 +430,8 @@ export default function CreateBuy() {
                   name="mini"
                   key={"a2va"}
                   id="minimumAmoutInput"
+                  errorMes={controlsErrors[controls.current.mini]}
                 />
-                <small id="miniError" className="--visible-hidden">
-                  Errro
-                </small>
               </div>
             </div>
             <div
@@ -475,10 +473,8 @@ export default function CreateBuy() {
                   id="fullnameInput"
                   name="fullname"
                   type="text"
+                  errorMes={controlsErrors[controls.current.fullname]}
                 />
-                <small id="fullnameError" className="--visible-hidden">
-                  2
-                </small>
               </div>
               <div className="field">
                 <label htmlFor="accountNumberInput">
@@ -490,10 +486,8 @@ export default function CreateBuy() {
                   id="accountNumberInput"
                   name="accountNumber"
                   type="text"
+                  errorMes={controlsErrors[controls.current.accountNumber]}
                 />
-                <small id="accountNumberError" className="--visible-hidden">
-                  2
-                </small>
               </div>
             </div>
             <div className="review-area">
@@ -517,7 +511,7 @@ export default function CreateBuy() {
         </div>
       </div>
       <Modal
-        title="Choose your coin"
+        title={t("chooseYourCoin")}
         open={isModalCoinVisible}
         onOk={modalCoinHandleOk}
         onCancel={modalCoinHandleCancel}

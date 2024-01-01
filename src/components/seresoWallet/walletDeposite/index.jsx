@@ -11,10 +11,17 @@ import {
   getClassListFromElementById,
   getElementById,
   addClassToElementById,
+  getLocalStorage,
 } from "src/util/common";
 import { createWalletApi, getDepositHistory } from "src/util/userCallApi";
-import { api_status, image_domain } from "src/constant";
+import {
+  api_status,
+  defaultLanguage,
+  image_domain,
+  localStorageVariable,
+} from "src/constant";
 import { callToastSuccess } from "src/function/toast/callToast";
+import i18n from "src/translation/i18n";
 function SeresoWalletDeposit() {
   //
   const dropdownCoinMenuClickHandle = function (e) {
@@ -215,6 +222,7 @@ function SeresoWalletDeposit() {
     if (apiresp && apiresp.length > 0) {
       //render html
       const renderEle = getElementById("historyContent");
+      if (!renderEle) return;
       renderEle.innerHTML = ``;
       console.log(apiresp);
       for (const item of apiresp) {
@@ -230,7 +238,7 @@ function SeresoWalletDeposit() {
             +${item.amount} coins
           </div>
           <div class="wallet-deposite__history-final">
-            <span>Final Amount:</span>
+            <span>${t("finalAmount")}:</span>
             <span>${item.before_amount} <img src='${image_domain.replace(
           "USDT",
           item.coin_key.toUpperCase()
@@ -257,7 +265,8 @@ function SeresoWalletDeposit() {
     addClassToElementById("historySpinner", "--d-none");
   };
   const showHistorySpinner = function () {
-    getClassListFromElementById("historySpinner").remove("--d-none");
+    getClassListFromElementById("historySpinner") &&
+      getClassListFromElementById("historySpinner").remove("--d-none");
   };
   const showHistoryEmpty = function () {
     getClassListFromElementById("historyEmpty").remove("--d-none");
@@ -299,6 +308,20 @@ function SeresoWalletDeposit() {
     //
     renderHistory(selectedCoin.current || coinFromRedux, historyPage.current);
     //
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    let currentLanguage = i18n.language;
+    i18n.on("languageChanged", (newLanguage) => {
+      if (newLanguage !== currentLanguage) {
+        renderHistory(
+          selectedCoin.current || coinFromRedux,
+          historyPage.current
+        );
+        currentLanguage = newLanguage;
+        return;
+      }
+    });
     return () => {
       document.removeEventListener("click", closeAllDropdownMenu);
     };
@@ -378,7 +401,7 @@ function SeresoWalletDeposit() {
               <span className="number">3</span>
               <div className="address">
                 <span>
-                  Desposite Address
+                  {t("depositeAddress")}
                   <span>
                     <i className="fa-solid fa-pen-to-square"></i>
                   </span>
@@ -436,7 +459,9 @@ function SeresoWalletDeposit() {
           </div>
         </div>
         <div className="wallet-deposit-right">
-          <h3 id="historyTitle">Desposite {coinFromRedux} history</h3>
+          <h3 id="historyTitle">
+            {t("depositBtcHistory").replace("BTC", coinFromRedux)}
+          </h3>
           <div
             id="historyContent"
             className=" wallet-deposit__history fadeInBottomToTop"

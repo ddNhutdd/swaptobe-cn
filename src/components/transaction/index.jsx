@@ -25,6 +25,7 @@ import {
   getElementById,
   getLocalStorage,
   hideElement,
+  processString,
   roundDecimalValues,
   showElement,
 } from "src/util/common";
@@ -186,6 +187,50 @@ function Transaction() {
       String(result.toFixed(3))
     )}</span> ${currency}`;
   };
+  const renderHeader = function () {
+    if (!selectedAds) return;
+    let tempCA = "";
+    if (side.current === actionType.buy) {
+      tempCA = actionType.sell;
+    } else {
+      tempCA = actionType.buy;
+    }
+    const listString = ["122bu12y122", "122se12ll122", "45BTC54"];
+    const callback = function (match, index) {
+      switch (match) {
+        case listString.at(0):
+          return (
+            <span
+              key={index}
+              className={`transaction__title-action ${
+                tempCA === actionType.buy ? "green" : "red"
+              }`}
+            >
+              {t("buy")}
+            </span>
+          );
+        case listString.at(1):
+          return (
+            <span
+              key={index}
+              className={`transaction__title-action ${
+                tempCA === actionType.buy ? "green" : "red"
+              }`}
+            >
+              {t("sell")}
+            </span>
+          );
+        case listString.at(2):
+          return symbol.current;
+
+        default:
+          break;
+      }
+    };
+    return tempCA === actionType.buy
+      ? processString(t("buyBtcViaBankTransferVnd"), listString, callback)
+      : processString(t("sellEthViaBankTransferVnd"), listString, callback);
+  };
   const loadDataFirstTime = function () {
     if (!renderPaymentDropdown()) {
       callToastError(t("noBankFoundInAccount"));
@@ -201,22 +246,13 @@ function Transaction() {
     bankName.current = selectedAds.bankName;
     userName.current = selectedAds.userName;
     side.current = selectedAds.side;
-    let tempCA = "";
-    if (side.current === actionType.buy) {
-      setCurrentAction(actionType.sell);
-      tempCA = actionType.sell;
-    } else {
-      setCurrentAction(actionType.buy);
-      tempCA = actionType.buy;
-    }
     symbol.current = selectedAds.symbol;
     idAds.current = selectedAds.id;
-    getElementById(
-      "transactionTitle"
-    ).innerHTML = `<span class="transaction__title-action ${
-      tempCA === actionType.buy ? "green" : "red"
-    }">${capitalizeFirstLetter(tempCA)}</span> ${symbol.current} via Bank
-    transfer (VND)`;
+    if (side.current === actionType.buy) {
+      setCurrentAction(actionType.sell);
+    } else {
+      setCurrentAction(actionType.buy);
+    }
     if (side.current === actionType.buy) {
       amountInputFormSell.current.value = selectedAds.amountMinimum;
     } else if (side.current === actionType.sell) {
@@ -545,7 +581,7 @@ ${symbol.current}`;
       <div className={`transaction ${showContent ? "" : "--visible-hidden"}`}>
         <div className="container">
           <div className="box transaction__box transaction__header">
-            <div id="transactionTitle"></div>
+            <div>{renderHeader()}</div>
           </div>
           <div className="box transaction__box">
             <form>
@@ -555,7 +591,7 @@ ${symbol.current}`;
                 }`}
               >
                 <div className="transaction__input">
-                  <label htmlFor="amountInput">I will pay:</label>
+                  <label htmlFor="amountInput">{t("iWillPay")}:</label>
                   <Input
                     ref={amountInputFormBuy}
                     onFocus={amountInputFormBuyFocusHandle}
@@ -589,7 +625,7 @@ ${symbol.current}`;
                 }`}
               >
                 <div className="transaction__input">
-                  <label>I pay:</label>
+                  <label>{t("iPay")}:</label>
                   <Input
                     name="amountInput"
                     onFocus={amountInputFormSellFocusHandle}
@@ -691,48 +727,13 @@ ${symbol.current}`;
             </div>
           </div>
           <h3 className="transaction__title transaction--bold">
-            infomation about partners
+            {t("infomationAboutPartners")}
           </h3>
           <div className="box transaction__box">
             <div className="transaction__box-item">
-              <span>{t("username")}:</span>
+              <span>{t("trader")}:</span>
               <span className="transaction__username" id="transactionUserName">
                 queencoin9999
-              </span>
-            </div>
-            <div className="transaction__box-item">
-              <span>{t("status")}:</span>
-              <span>{t("online")}</span>
-            </div>
-            <div className="transaction__box-item">
-              <span>{t("country")}:</span>
-              <span>Việt Nam</span>
-            </div>
-            <div className="transaction__box-item">
-              <span>{t("feedbackScore")}:</span>
-              <span>😃 X978</span>
-            </div>
-            <div className="transaction__box-item">
-              <span>KYC:</span>
-              <span className="transaction__kyc">
-                <span>
-                  <span>
-                    <i className="fa-solid fa-check"></i>
-                  </span>{" "}
-                  Phone number verified
-                </span>
-                <span>
-                  <span>
-                    <i className="fa-solid fa-check"></i>
-                  </span>{" "}
-                  Identity and Residence Proof verified
-                </span>
-                <span>
-                  <span>
-                    <i className="fa-solid fa-check"></i>
-                  </span>{" "}
-                  Bank verified
-                </span>
               </span>
             </div>
           </div>
@@ -748,9 +749,9 @@ ${symbol.current}`;
                 <div className="transaction__chat-text">
                   {t("contactCustomerSupportVia")}{" "}
                   <span className="transaction__chat-support">
-                    Online support.
+                    {t("onlineSupport")}.
                   </span>{" "}
-                  We are always ready to help
+                  {t("weAreAlwaysReadyToHelp")}
                 </div>
               </div>
             </div>

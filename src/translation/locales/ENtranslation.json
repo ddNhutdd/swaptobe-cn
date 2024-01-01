@@ -263,5 +263,22 @@
     "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "Do you want to exchange 113hgh222 12ETH12 for 122jjk999 33BTC33 ?",
     "areYouSureYouWantToCancel": "Are you sure you want to cancel ?",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "finalAmount": "Final Amount",
+    "depositeAddress": "Desposite Address",
+    "depositBtcHistory": "Deposit BTC History",
+    "amountOfMoney": "Amount of Money",
+    "fromUser": "From User",
+    "toUser": "To User",
+    "buyBtcViaBankTransferVnd": "122bu12y122 45BTC54 via Bank Transfer (VND)",
+    "infomationAboutPartners": "Information About Partners",
+    "onlineSupport": "Online Support",
+    "weAreAlwaysReadyToHelp": "We Are Always Ready to Help",
+    "iPay": "I Pay",
+    "sellEthViaBankTransferVnd": "122se12ll122 45BTC54 via Bank Transfer (VND)",
+    "swapTo": "Swap To",
+    "swapFrom": "Swap From",
+    "enterTheCoinName": "Enter the Coin Name",
+    "formatIncorrect": "Format Incorrect",
+    "chooseYourCoin": "Choose Your Coin"
 }

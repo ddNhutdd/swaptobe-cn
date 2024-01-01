@@ -458,7 +458,7 @@ export default function Swap() {
         </div>
       </div>
       <Modal
-        title="Swap from"
+        title={t("swapFrom")}
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -469,7 +469,7 @@ export default function Swap() {
           <Input
             type="text"
             value={searchCoinName}
-            placeholder="Enter the coin name."
+            placeholder={t("enterTheCoinName")}
             onChange={searchCoinOnChange}
           />
           <div className="swap__modal-list" ref={searchCoinResult}>
@@ -501,7 +501,7 @@ export default function Swap() {
         </div>
       </Modal>
       <Modal
-        title="Swap to"
+        title={t("swapTo")}
         open={isModalVisible2}
         onOk={handleOk2}
         onCancel={handleCancel2}
@@ -513,7 +513,7 @@ export default function Swap() {
             className="swap__modal-search"
             type="text"
             value={searchCoinName}
-            placeholder="Enter the coin name."
+            placeholder={t("enterTheCoinName")}
             onChange={searchCoinOnChange}
           />
           <div className="swap__modal-list" ref={searchCoinResult}>

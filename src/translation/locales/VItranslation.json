@@ -263,5 +263,22 @@
     "doYouWantToExchange113hgh22212ETH12For122jjk99933BTC33": "Bạn có muốn đổi 113hgh222 12ETH12 thành 122jjk999 33BTC33 không?",
     "areYouSureYouWantToCancel": "Bạn có chắc chắn muốn hủy bỏ không?",
     "confirm": "Xác nhận",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "finalAmount": "Số dư cuối cùng",
+    "depositeAddress": "Địa chỉ gửi tiền",
+    "depositBtcHistory": "Lịch sử gửi BTC",
+    "amountOfMoney": "Số Tiền",
+    "fromUser": "Từ Người Dùng",
+    "toUser": "Đến Người Dùng",
+    "buyBtcViaBankTransferVnd": "122bu12y122 45BTC54 qua Chuyển Khoản Ngân Hàng (VND)",
+    "infomationAboutPartners": "Thông Tin Về Đối Tác",
+    "onlineSupport": "Hỗ Trợ Trực Tuyến",
+    "weAreAlwaysReadyToHelp": "Chúng Tôi Luôn Sẵn Sàng Hỗ Trợ",
+    "iPay": "Tôi Thanh Toán",
+    "sellEthViaBankTransferVnd": "122se12ll122 45BTC54 qua Chuyển Khoản Ngân Hàng (VND)",
+    "swapTo": "Chuyển Đến",
+    "swapFrom": "Chuyển Từ",
+    "enterTheCoinName": "Nhập Tên coin",
+    "formatIncorrect": "Định Dạng Không Đúng",
+    "chooseYourCoin": "Chọn Coin Của Bạn"
 }

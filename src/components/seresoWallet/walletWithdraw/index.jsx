@@ -324,7 +324,7 @@ function FormWithdraw() {
                 <div className="formWithdraw__Wallet-body">
                   <div>Coin: {item.coin_key.toUpperCase()}</div>
                   <div className="formWithdraw__Wallet-body-amount">
-                    Amount: {item.amount}{" "}
+                    {t("amount")}: {item.amount}{" "}
                     {
                       <img
                         src={image_domain.replace(
@@ -335,10 +335,18 @@ function FormWithdraw() {
                       />
                     }
                   </div>
-                  <div>Type : {item.type_exchange}</div>
-                  <div>Note: {item.note}</div>
-                  <div>From user: {item.address_form}</div>
-                  <div>To user: {item.address_to}</div>
+                  <div>
+                    {t("type")} : {item.type_exchange}
+                  </div>
+                  <div>
+                    {t("note")}: {item.note}
+                  </div>
+                  <div>
+                    {t("fromUser")}: {item.address_form}
+                  </div>
+                  <div>
+                    {t("toUser")}: {item.address_to}
+                  </div>
                 </div>
               </div>
             ))}
@@ -393,7 +401,7 @@ function FormWithdraw() {
                 callApiSubmitStatus === api_status.fetching ? "disabled" : ""
               }`}
             >
-              Wallet {coin}
+              {t("wallet")} {coin}
             </span>
             <span
               onClick={() => {
@@ -403,7 +411,7 @@ function FormWithdraw() {
                 callApiSubmitStatus === api_status.fetching ? "disabled" : ""
               }`}
             >
-              Aliases
+              {t("aliases")}
             </span>
           </div>
           <form
@@ -437,7 +445,7 @@ function FormWithdraw() {
               </span>
             </div>
             <div className="input">
-              <p>Address</p>
+              <p>{t("address")}</p>
               <Input refEl={addressElement} type="text" />
             </div>
             <div className="input">
