@@ -161,13 +161,14 @@ export default function CreateBuy() {
     }
   };
   const bankDropdownItemClickHandle = function (event) {
-    const element = event.target.closest(".dropdown-item");
+    const element = event.currentTarget;
     const name = element.querySelector(".dropdown-content").innerHTML;
-    const bankName = name.split(" ")[1].trim();
-    bankDropdownSelect(bankName);
+    const bankNameArr = name.split(" ");
+    const bankName = bankNameArr.slice(0, -1).join(" ");
+    bankDropdownSelect(bankName.trim());
   };
   const bankDropdownSelect = function (bankName) {
-    const item = getBankListV2().filter((item) => item.name === bankName)[0];
+    const item = getBankListV2().find((item) => item.name === bankName);
     if (!item) return;
     const selectedElement = getElementById("dropdownBankSelected");
     const selectedElementImg = selectedElement.querySelector("img");

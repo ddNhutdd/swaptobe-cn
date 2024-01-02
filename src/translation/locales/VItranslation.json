@@ -280,5 +280,11 @@
     "swapFrom": "Chuyển Từ",
     "enterTheCoinName": "Nhập Tên coin",
     "formatIncorrect": "Định Dạng Không Đúng",
-    "chooseYourCoin": "Chọn Coin Của Bạn"
+    "chooseYourCoin": "Chọn Coin Của Bạn",
+    "seller": "Người bán",
+    "buyer": "Người mua",
+    "available": "Có sẵn",
+    "can'tFindUserInformation": "Không thể tìm thấy thông tin người dùng",
+    "information": "Thông tin",
+    "ads": "Quảng cáo"
 }

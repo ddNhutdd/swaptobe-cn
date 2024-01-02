@@ -4,6 +4,12 @@
     padding-top: 140px;
     background: $new-background-level-0;
 
+    .swaptobe-wallet--hover {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
     .container {
         @include container;
 
@@ -20,9 +26,10 @@
                 justify-content: flex-start;
                 align-items: center;
 
-                img {
+                i {
                     display: inline-block;
                     margin-right: 5px;
+                    color: $new-primary-color-6;
                 }
             }
         }

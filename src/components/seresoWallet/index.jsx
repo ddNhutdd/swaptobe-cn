@@ -86,68 +86,68 @@ function SwaptobeWallet() {
     dispatch(setShow(actionContent.main));
   };
   return (
-    <>
-      <div className="swaptobe-wallet">
-        <div className="container">
-          <h5 className="title">
-            <span
-              style={
-                showActionContent !== actionContent.main
-                  ? { display: "none" }
-                  : {}
-              }
-            >
-              {t("walletOverview")}
-            </span>
-            <span
-              style={
-                showActionContent !== actionContent.withdraw
-                  ? { display: "none" }
-                  : {}
-              }
-              onClick={backToActionContentMainClickHandle}
-            >
-              <img src="./img/left-arrow.png" alt="left-arrow" />
-              {t("withdraw")}
-            </span>
-            <span
-              style={
-                showActionContent !== actionContent.desposite
-                  ? { display: "none" }
-                  : {}
-              }
-              onClick={backToActionContentMainClickHandle}
-            >
-              <img src="./img/left-arrow.png" alt="left-arrow" />
-              {t("deposit")} Cryto
-            </span>
-          </h5>
-          <div className="info">
-            <div className="left">
-              <div>{t("estimatedAssetsValue")}</div>
-              <div>
-                <span id="showTotalValue"></span>{" "}
-                {userSelectedCurrentcy.toUpperCase()}
-              </div>
-            </div>
-            <div className="right">
-              <div className="right-text">
-                {t("startBuyingAndSellingCryptoCurrencies")}
-              </div>
-              <div className="right-actions">
-                <button onClick={sellBuyNowHandleClick} className="buy">
-                  {t("buyNow")}
-                </button>
-                <button onClick={sellBuyNowHandleClick} className="sell">
-                  {t("sellNow")}
-                </button>
-              </div>
+    <div className="swaptobe-wallet">
+      <div className="container">
+        <h5 className="title">
+          <span
+            style={
+              showActionContent !== actionContent.main
+                ? { display: "none" }
+                : {}
+            }
+          >
+            {t("walletOverview")}
+          </span>
+          <span
+            className="swaptobe-wallet--hover"
+            style={
+              showActionContent !== actionContent.withdraw
+                ? { display: "none" }
+                : {}
+            }
+            onClick={backToActionContentMainClickHandle}
+          >
+            <i className="fa-solid fa-arrow-left-long"></i>
+            {t("withdraw")}
+          </span>
+          <span
+            className="swaptobe-wallet--hover"
+            style={
+              showActionContent !== actionContent.desposite
+                ? { display: "none" }
+                : {}
+            }
+            onClick={backToActionContentMainClickHandle}
+          >
+            <i className="fa-solid fa-arrow-left-long"></i>
+            {t("deposit")} Cryto
+          </span>
+        </h5>
+        <div className="info">
+          <div className="left">
+            <div>{t("estimatedAssetsValue")}</div>
+            <div>
+              <span id="showTotalValue"></span>{" "}
+              {userSelectedCurrentcy.toUpperCase()}
             </div>
           </div>
-          {renderActionContent()}
+          <div className="right">
+            <div className="right-text">
+              {t("startBuyingAndSellingCryptoCurrencies")}
+            </div>
+            <div className="right-actions">
+              <button onClick={sellBuyNowHandleClick} className="buy">
+                {t("buyNow")}
+              </button>
+              <button onClick={sellBuyNowHandleClick} className="sell">
+                {t("sellNow")}
+              </button>
+            </div>
+          </div>
         </div>
+        {renderActionContent()}
       </div>
-    </>
+    </div>
   );
 }
 export default SwaptobeWallet;

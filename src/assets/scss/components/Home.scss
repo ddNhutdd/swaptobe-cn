@@ -2,6 +2,8 @@
   width: 100%;
   min-height: 100vh;
 
+  @include backgroundStar;
+
   .home__header {
     width: 100%;
     background-color: $transparent;
@@ -10,10 +12,6 @@
     position: fixed;
     top: 0px;
     left: 0;
-
-    &.scroll {
-      background-color: $background-color-10;
-    }
 
     .container {
       @include container;
@@ -163,7 +161,7 @@
   .home__carousel {
     width: 100%;
     height: 1000px;
-    background: $neutral-3;
+    background: transparent;
     color: $new-text-color-white;
     font-size: 18px;
     font-weight: 600;
@@ -298,6 +296,7 @@
   .home__benefit {
     padding: 80px 0;
     position: relative;
+    background-color: $transparent;
 
     .container {
       @include container;
@@ -436,103 +435,9 @@
     }
   }
 
-  .home__road-map {
-    padding: 100px 0;
-
-    .container {
-      @include container;
-
-      .home__road-map__header {
-        text-align: center;
-
-        .home__road-map__title {
-          color: $background-color-1;
-          font-weight: bold;
-          font-size: 24px;
-        }
-
-        .home__road-map__text {
-          color: $text-color-7;
-          font-size: 14px;
-          margin-bottom: 15px;
-        }
-      }
-
-      .home__road-map__list {
-        margin-top: 50px;
-        display: flex;
-        justify-content: center;
-
-        @media screen and (max-width: 991px) {
-          flex-direction: column;
-          align-items: center;
-          gap: 30px;
-        }
-
-        .home__road-map__card {
-          box-shadow: $boxShadown-color-2 0px 3px 5px;
-          max-width: 200px;
-          border-radius: 20px;
-          text-align: center;
-          padding: 15px;
-          position: relative;
-
-          .home__road-map__card-time {
-            font-weight: 300;
-            color: $footer-text-1;
-            line-height: 2;
-            font-size: 19px;
-            margin-bottom: 0.5em;
-          }
-
-          .home__road-map__card-title {
-            color: $text-color-8;
-            font-weight: 700;
-          }
-
-          .home__road-map__card-text {
-            margin-top: 20px;
-          }
-
-          .home__road-map__next {
-            position: absolute;
-            top: 40px;
-            right: -25px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            color: $white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 3;
-
-            @media screen and (max-width: 991px) {
-              display: none;
-            }
-
-            &.green {
-              background-color: $green-10;
-            }
-
-            &.blue {
-              background-color: $blue-10;
-            }
-
-            &.yellow {
-              background-color: $yellow;
-            }
-
-            &.orange {
-              background-color: $orange-1;
-            }
-          }
-        }
-      }
-    }
-  }
-
   .home__faqs {
+    background-color: $neutral-20;
+
     @media screen and (max-width: 991px) {
       position: relative;
     }
@@ -677,72 +582,7 @@
     }
   }
 
-  .home__our-team {
-    background-color: $header2-background;
-    color: $white;
-    text-align: center;
-
-    .container {
-      @include container;
-      padding-top: 50px;
-      padding-bottom: 50px;
-
-      .home__our-team__title {
-        font-size: 40px;
-        text-align: center;
-        margin-bottom: 10px;
-        font-weight: 500;
-      }
-
-      .home__our-team__text {
-        font-size: 15px;
-        margin-bottom: 50px;
-      }
-
-      .home__our-team__list {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        justify-content: center;
-        margin-left: -20px;
-        margin-right: -20px;
-
-        @media screen and (max-width: 576px) {
-          margin: 0;
-          gap: 25px;
-        }
-
-        .home__our-team__item {
-          width: 20%;
-          padding: 20px;
-
-          @media screen and (max-width: 991px) {
-            width: 28%;
-          }
-
-          @media screen and (max-width: 576px) {
-            width: 100%;
-            padding: 0px;
-          }
-
-          img {
-            display: block;
-            width: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-
-            @media screen and (max-width: 576px) {
-              width: 50%;
-              margin: auto;
-            }
-          }
-
-          .home__our-team__name {
-            font-weight: bold;
-            margin-top: 20px;
-          }
-        }
-      }
-    }
+  .footer {
+    background-color: $transparent;
   }
 }

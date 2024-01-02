@@ -290,7 +290,6 @@ export default function P2PTrading({ history }) {
   return (
     <>
       {renderContent()}
-      <P2PTrading2 history={history} />
       <PhoneApps />
     </>
   );

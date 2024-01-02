@@ -19,8 +19,6 @@
         word-break: break-all;
     }
 
-    background-color: $neutral-3;
-
     .container {
         @include container2;
         padding-top: 0;
@@ -29,6 +27,7 @@
         table {
             @include adminTable;
             color: $neutral-19;
+            background-color: $new-background-level-1;
 
             tr {
                 &:hover {

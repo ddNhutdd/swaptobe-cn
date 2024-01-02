@@ -18,18 +18,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { getExchange } from "src/redux/constant/currency.constant";
 import { currencySetCurrent } from "src/redux/actions/currency.action";
 export default function Header2({ history }) {
-  //
-  const showModalSettings = () => {
-    setIsModalSettingsOpen(true);
-    setTimeout(() => {
-      renderDropdownCurrencyMenu(listExChange);
-    }, 0);
-  };
-  const handleCancel = () => {
-    setIsModalSettingsOpen(false);
-    closeAllDropdown();
-    document.removeEventListener("click", closeAllDropdown);
-  };
   const renderListLanguage = (availableLanguage) =>
     Object.keys(availableLanguage).map((item) => (
       <li
@@ -38,7 +26,6 @@ export default function Header2({ history }) {
           setCurrentLanguage(item);
           setLocalStorage(localStorageVariable.lng, item);
           i18n.changeLanguage(item);
-          closeDropdownLanguage();
         }}
         className={`dropdown-item ${item === currentLanguage ? "active" : ""}`}
       >
@@ -53,186 +40,140 @@ export default function Header2({ history }) {
         </span>
       </li>
     ));
-  const toggleDropdownLanguage = function (event) {
-    event.stopPropagation();
-    getClassListFromElementById("dropdownLanguageSelected").toggle("active");
-    getClassListFromElementById("dropdownLanguageMenu").toggle("show");
-    closeDropdownCurrency();
-  };
-  const toggleDropdownCurrency = function (e) {
-    e.stopPropagation();
-    getClassListFromElementById("dropdownCurrencySelected").toggle("active");
-    getClassListFromElementById("dropdownCurrencyMenuContainer").toggle("show");
-    closeDropdownLanguage();
-  };
-  const closeAllDropdown = function () {
-    closeDropdownLanguage();
-    closeDropdownCurrency();
-  };
-  const closeDropdownLanguage = function () {
-    getClassListFromElementById("dropdownLanguageSelected") &&
-      getClassListFromElementById("dropdownLanguageSelected").remove("active");
-    getClassListFromElementById("dropdownLanguageMenu") &&
-      getClassListFromElementById("dropdownLanguageMenu").remove("show");
-  };
-  const closeDropdownCurrency = function () {
-    getClassListFromElementById("dropdownCurrencySelected") &&
-      getClassListFromElementById("dropdownCurrencySelected").remove("active");
-    getClassListFromElementById("dropdownCurrencyMenuContainer") &&
-      getClassListFromElementById("dropdownCurrencyMenuContainer").remove(
-        "show"
-      );
-  };
   const selectCurrency = function (currency) {
     if (!currency) return;
-    closeAllDropdown();
     // edit html
     getElementById("dropdownCurrencySelectedText").innerHTML =
       currency.toUpperCase();
     // dispatch seleted currency to redux
     dispatch(currencySetCurrent(currency));
   };
-  const renderDropdownCurrencyMenu = function (listExChange) {
-    if (!listExChange || listExChange.length <= 0) return;
-    const containerElement = getElementById("dropdonwCurrencyMenyList");
-    if (!containerElement) return;
-    containerElement.innerHTML = "";
-    for (const item of listExChange) {
-      containerElement.innerHTML += `<li class="dropdown-item">${item.title}</li>`;
-    }
-    for (const item of containerElement.children) {
-      item.addEventListener("click", selectCurrency.bind(null, item.innerHTML));
-    }
-  };
-  const closeMenu = function () {
-    getElementById("checkboxShowMenu").checked = false;
-  };
-  //
   const [currentLanguage, setCurrentLanguage] = useState();
   const { t } = useTranslation();
   const listExChange = useSelector(getExchange);
   const dispatch = useDispatch();
-  const [isModalSettingsOpen, setIsModalSettingsOpen] = useState(false);
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     setCurrentLanguage(language);
   }, []);
-  //
   return (
-    <>
-      <header className="header2 fadeInTopToBottom">
-        <div className="container">
-          <input type="checkbox" id="checkboxShowMenu" className="--d-none" />
-          <div className="logo" onClick={() => history.push("/")}>
-            <img src="/img/logowhite.png" alt="Remitano Logo" />
-          </div>
-          <div className="menu">
-            <NavLink
-              exact
-              onClick={closeMenu}
-              className="navlink"
-              activeClassName="navlink-active"
-              to="/swap"
-            >
-              {t("swap")}
-            </NavLink>
-            <NavLink
-              exact
-              onClick={closeMenu}
-              className="navlink"
-              activeClassName="navlink-active"
-              to="/p2p-trading"
-            >
-              {t("p2pTrading")}
-            </NavLink>
-          </div>
-          <label
-            className="header__bar-button-container"
-            htmlFor="checkboxShowMenu"
-          >
-            <div className="bar-button">
-              <i className="fa-solid fa-bars-staggered"></i>
-            </div>
-          </label>
-          <div className="header2__setting">
-            <span onClick={showModalSettings}>
-              <i className="fa-solid fa-gear"></i>
-            </span>
-          </div>
+    <header className="header2 fadeInTopToBottom">
+      <div className="container">
+        <input type="checkbox" id="checkboxShowMenu" className="--d-none" />
+        <div className="logo" onClick={() => history.push("/")}>
+          <img src="/img/logowhite.png" alt="Remitano Logo" />
         </div>
-      </header>
-      <Modal open={isModalSettingsOpen} onCancel={handleCancel} footer={false}>
-        <div className="header2__modal">
-          <div className="header2__modal-title">{t("settings")}</div>
-          <div className="header2__modal-record">
-            <div className="header2__modal-record-left">
-              <i className="fa-solid fa-globe"></i>
-              <span>{t("language")}</span>
+        <div className="menu">
+          <NavLink
+            exact
+            className="navlink"
+            activeClassName="navlink-active"
+            to="/swap"
+          >
+            {t("swap")}
+          </NavLink>
+          <NavLink
+            exact
+            className="navlink"
+            activeClassName="navlink-active"
+            to="/p2p-trading"
+          >
+            {t("p2pTrading")}
+          </NavLink>
+        </div>
+        <label
+          className="header__bar-button-container"
+          htmlFor="checkboxShowMenu"
+        >
+          <div className="bar-button">
+            <i className="fa-solid fa-bars-staggered"></i>
+          </div>
+        </label>
+        <div className="header2__right show">
+          <div className="header2__language">
+            <div className="header2__language-seletor">
+              <img
+                src={process.env.PUBLIC_URL + "/img/iconvi.png"}
+                alt="language"
+              />
             </div>
-            <div className="header2__modal-record-right">
-              <div
-                id="dropdownLanguageSelected"
-                className="header2__modal-dropdown-selected"
-                onClick={toggleDropdownLanguage}
-              >
+            <div className="header2__language-menu">
+              <div className="header2__language-item active">
                 <span>
                   <img
-                    src={
-                      process.env.PUBLIC_URL +
-                      "/img/icon" +
-                      currentLanguage +
-                      ".png"
-                    }
-                    alt={currentLanguage}
+                    src={process.env.PUBLIC_URL + "/img/iconvi.png"}
+                    alt="vn"
                   />
                 </span>
-                <span>{availableLanguageMapper[currentLanguage]}</span>
-                <span>
-                  <i className="fa-solid fa-caret-down"></i>
-                </span>
+                <span>Vietnamese</span>
               </div>
-              <div
-                id="dropdownLanguageMenu"
-                className="header2__modal-dropdown-menu-container"
-              >
-                <ul className="dropdown-menu">
-                  {renderListLanguage(availableLanguage)}
-                </ul>
+              <div className="header2__language-item">
+                <span>
+                  <img
+                    src={process.env.PUBLIC_URL + "/img/iconen.png"}
+                    alt="en"
+                  />
+                </span>
+                <span>Vietnamese</span>
               </div>
             </div>
           </div>
-          <div className="header2__modal-record">
-            <div className="header2__modal-record-left">
-              <i className="fa-solid fa-coins"></i>
-              <span>Currency</span>
+          <div className="header2__currency">
+            <div className="header2__currency-selector">USD</div>
+            <div className="header2__currrency-menu">
+              <div className="header2__currrency-item active">USD</div>
+              <div className="header2__currrency-item">EUR</div>
             </div>
-            <div className="header2__modal-record-right">
-              <div
-                id="dropdownCurrencySelected"
-                className="header2__modal-dropdown-selected"
-                onClick={toggleDropdownCurrency}
-              >
-                <span id="dropdownCurrencySelectedText">USD</span>
-                <span>
-                  <i className="fa-solid fa-caret-down"></i>
-                </span>
+          </div>
+          <div className="header2__wallet">
+            <div className="header2__wallet-title">Wallet</div>
+            <div className="header2__wallet-menu">
+              <div className="header2__wallet-info">
+                <div className="header2__wallet-info-item">
+                  <span className="header2__wallet-info-icon">
+                    <i className="fa-brands fa-bitcoin"></i>
+                  </span>
+                  <span>data</span>
+                </div>
+                <div className="header2__wallet-info-item">
+                  <span className="header2__wallet-info-icon">
+                    <i className="fa-solid fa-dollar-sign"></i>
+                  </span>
+                  <span>data</span>
+                </div>
               </div>
-              <div
-                id="dropdownCurrencyMenuContainer"
-                className="header2__modal-dropdown-menu-container"
-              >
-                <ul id="dropdonwCurrencyMenyList" className="dropdown-menu">
-                  <li className="dropdown-item">USD</li>
-                  <li className="dropdown-item">EUR</li>
-                  <li className="dropdown-item">CVB</li>
-                </ul>
+              <div className="header2__wallet-item">
+                <i className="fa-solid fa-wallet"></i>
+                <span>Wallet</span>
+              </div>
+              <div className="header2__wallet-item">
+                <i className="fa-solid fa-rectangle-ad"></i>
+                <span>Advertising History</span>
+              </div>
+              <div className="header2__wallet-item">
+                <i className="fa-solid fa-comments-dollar"></i>
+                <span>p2pHistory</span>
               </div>
             </div>
           </div>
+          <div className="header2__user">
+            <div className="header2__username">test</div>
+            <div className="header2__user-info">
+              <div className="header2__user-info-item">
+                <i className="fa-regular fa-user"></i>
+                <span>Profile</span>
+              </div>
+              <div className="header2__user-info-item">
+                <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
+          <div className="header2__login">login / register</div>
         </div>
-      </Modal>
-    </>
+      </div>
+    </header>
   );
 }

@@ -164,6 +164,10 @@ export default function Swap() {
   const mainButtonOnClickHandle = function () {
     if (isLogin && callApiSwapStatus !== api_status.fetching) {
       const swapValue = convertStringToNumber(fromCoinValueString);
+      if (!userWallet[swapFromCoin.toLowerCase() + "_balance"]) {
+        callToastError(t("theAmountOfCryptocurrencyIsInsufficient"));
+        return;
+      }
       const maxAvailable = convertStringToNumber(
         userWallet[swapFromCoin.toLowerCase() + "_balance"].toString()
       );
@@ -171,7 +175,7 @@ export default function Swap() {
         callToastError(t("invalidValue"));
         return;
       } else if (swapValue > maxAvailable) {
-        callToastError(t("theAmountOfCryptocurrencyIsInsufficient."));
+        callToastError(t("theAmountOfCryptocurrencyIsInsufficient"));
         return;
       }
       showModalConfirm();
@@ -442,7 +446,7 @@ export default function Swap() {
             size="large"
             type="primary"
           >
-            {isLogin ? t("buy") + " " + swapToCoin : t("login")}
+            {isLogin ? t("swap") : t("login")}
           </button>
         </div>
         <div className="box" style={{ marginTop: 30 }}>
@@ -575,7 +579,7 @@ export default function Swap() {
                   callApiSwapStatus === api_status.fetching ? "" : "--d-none"
                 }`}
               ></div>
-              {t("ok")}
+              {t("swap")}
             </button>
           </div>
         </div>

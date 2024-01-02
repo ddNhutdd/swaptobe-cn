@@ -4,7 +4,7 @@ import { Pagination, Spin, Empty } from "antd";
 import socket from "src/util/socket";
 import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getCoin } from "src/redux/constant/coin.constant";
 import { DOMAIN } from "src/util/service";
 import {
@@ -22,6 +22,7 @@ import {
 } from "src/constant";
 import { callToastSuccess } from "src/function/toast/callToast";
 import i18n from "src/translation/i18n";
+import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
 function SeresoWalletDeposit() {
   //
   const dropdownCoinMenuClickHandle = function (e) {
@@ -277,6 +278,7 @@ function SeresoWalletDeposit() {
   //
   const address = useRef("");
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const coinFromRedux = useSelector(getCoin);
   const selectedCoin = useRef("");
   const listAllCoin = useRef(null);
@@ -324,6 +326,7 @@ function SeresoWalletDeposit() {
     });
     return () => {
       document.removeEventListener("click", closeAllDropdownMenu);
+      dispatch(setShow(actionContent.main));
     };
   }, []);
   //
@@ -434,19 +437,21 @@ function SeresoWalletDeposit() {
                       />
                     </div>
                   </div>
-                  <div
-                    id="addressCodeContainer"
-                    className="address-code fadeInBottomToTop --d-none"
-                  >
-                    <div className="address-code-title">address</div>
-                    <div id="addressCode" className="code"></div>
+                  <div className="address-code-container">
+                    <div
+                      id="addressCodeContainer"
+                      className="address-code fadeInBottomToTop --d-none"
+                    >
+                      <div className="address-code-title">address</div>
+                      <div id="addressCode" className="code"></div>
+                    </div>
+                    <span
+                      id="addressCodeButton"
+                      className="address-copy --d-none fadeInBottomToTop"
+                    >
+                      <i className="fa-regular fa-copy"></i>
+                    </span>
                   </div>
-                  <span
-                    id="addressCodeButton"
-                    className="address-copy --d-none fadeInBottomToTop"
-                  >
-                    <i className="fa-regular fa-copy"></i>
-                  </span>
                 </div>
               </div>
             </li>

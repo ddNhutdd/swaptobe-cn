@@ -263,8 +263,9 @@ function ConfirmItem(props) {
     setHeader(() => `${t("trading")} ${symbol}`);
     const date = created_at.split("T");
     const time = date.at(-1).split(".");
-    getElementById("createdAt" + index).innerHTML =
-      date.at(0) + " " + time.at(0);
+    const timerElement = getElementById("createdAt" + index);
+    if (!timerElement) return;
+    timerElement.innerHTML = date.at(0) + " " + time.at(0);
     setbankName(bankN);
     setOwnerAccount(account);
     setNumberBank(numAcc);
@@ -277,13 +278,11 @@ function ConfirmItem(props) {
       (side === actionType.buy && userId === profileId) ||
       (side === actionType.sell && userId !== profileId)
     ) {
-      //ban nhan
       setUserCurrentAction(() => actionType.buy);
     } else if (
       (side === actionType.buy && userId !== profileId) ||
       (side === actionType.sell && userId === profileId)
     ) {
-      // ban ban
       setUserCurrentAction(() => actionType.sell);
     }
     //
@@ -390,6 +389,28 @@ function ConfirmItem(props) {
     };
     return processString(inputString, substringsList, callback);
   };
+  const renderTraderEmail = function () {
+    const { typeUser, userid: userId } = content;
+    if (
+      (typeUser === 2 && userId === profileId) ||
+      (typeUser === 1 && userId === profileId)
+    ) {
+      return content.emailAds;
+    } else {
+      return content.email;
+    }
+  };
+  const renderTrader = function () {
+    const { typeUser, userid: userId } = content;
+    if (
+      (typeUser === 2 && userId === profileId) ||
+      (typeUser === 1 && userId === profileId)
+    ) {
+      return content.userNameAds;
+    } else {
+      return content.userName;
+    }
+  };
   return (
     <>
       <div className="confirm">
@@ -404,6 +425,21 @@ function ConfirmItem(props) {
               <tr>
                 <td>{t("transactionCode")}</td>
                 <td className="confirm--green">{code}</td>
+              </tr>
+              <tr>
+                <td>Thương nhân:</td>
+                <td>
+                  <div>
+                    Nếu cần hỗ trợ vui lòng liên hệ thương nhân{" "}
+                    <span className="confirm--green">{renderTrader()}</span>
+                  </div>
+                  <div>
+                    Email:{" "}
+                    <span className="confirm--green">
+                      {renderTraderEmail()}
+                    </span>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td>{t("status")}</td>

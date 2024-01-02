@@ -1,9 +1,6 @@
 .phone__apps {
     padding: 100px 0;
-    background: url(../../../../public/img/home-11.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    background-color: $transparent;
 
     .container {
         @include container;

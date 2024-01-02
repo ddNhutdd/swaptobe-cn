@@ -280,5 +280,11 @@
     "swapFrom": "Swap From",
     "enterTheCoinName": "Enter the Coin Name",
     "formatIncorrect": "Format Incorrect",
-    "chooseYourCoin": "Choose Your Coin"
+    "chooseYourCoin": "Choose Your Coin",
+    "seller": "Seller",
+    "buyer": "Buyer",
+    "available": "Available",
+    "can'tFindUserInformation": "Can't find user information",
+    "information": "Information",
+    "ads": "Advertisements"
 }

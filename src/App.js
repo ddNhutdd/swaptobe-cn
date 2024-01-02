@@ -116,7 +116,7 @@ function App() {
       const user = JSON.parse(localStorage.getItem("user"));
       socket.emit("join", user.id);
       socket.on("ok", (res) => {
-        console.log(res, "ok"); /// hàm này chạy tất là join thành công
+        console.log(res, "joined");
       });
       if (user.expiresInRefreshToken < Date.now()) {
         localStorage.removeItem("token");

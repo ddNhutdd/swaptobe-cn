@@ -130,9 +130,8 @@
                 }
 
                 button {
-                    padding: 0 5px;
-                    margin-right: 5px;
-                    color: $new-text-color-black;
+                    @extend .buttonContainer--outline;
+                    margin-right: 10px;
                 }
             }
 

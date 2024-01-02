@@ -207,7 +207,7 @@ export default function P2PTrading2({ history }) {
         containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
           <div class="row">
             <div class="col">
-              <span class="key">${t("userName")}:</span>
+              <span class="key">${t("seller")}:</span>
               <span class="value">${item.userName}</span>
             </div>
                 
@@ -238,7 +238,7 @@ export default function P2PTrading2({ history }) {
             </div>
 
             <div class="col">
-              <span class="key">Available:</span>
+              <span class="key">${t("available")}:</span>
               <span class="value">${+(item.amount - item.amountSuccess).toFixed(
                 8
               )}</span>
@@ -288,7 +288,7 @@ export default function P2PTrading2({ history }) {
         containerElement.innerHTML += `<div class="record-content box fadeInBottomToTop">
             <div class="row">
               <div class="col">
-                <span class="key">${t("userName")}:</span>
+                <span class="key">${t("buyer")}:</span>
                 <span class="value">${item.userName}</span>
               </div>
                 
@@ -308,7 +308,7 @@ export default function P2PTrading2({ history }) {
               </div>
 
               <div class="col">
-                <span class="key">Available:</span>
+                <span class="key">${t("available")}:</span>
                 <span class="value">${+(
                   item.amount - item.amountSuccess
                 ).toFixed(8)}</span>
@@ -523,10 +523,11 @@ export default function P2PTrading2({ history }) {
     let currentLanguage = i18n.language;
     i18n.on("languageChanged", (newLanguage) => {
       if (newLanguage !== currentLanguage) {
+        console.log("here");
         loadSectionBuy(buySectionPage);
         loadSectionSell(sellSectionPage);
-        return;
       }
+      currentLanguage = newLanguage;
     });
     //
     socket.once("listCoin", (resp) => {

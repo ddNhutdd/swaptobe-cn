@@ -33,6 +33,7 @@ import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "src/components/Common/Input";
+import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
 function FormWithdraw() {
   //
   const form = {
@@ -91,6 +92,9 @@ function FormWithdraw() {
     document
       .getElementsByClassName("FormWithdraw")[0]
       .classList.add("fadeInBottomToTop");
+    return () => {
+      dispatch(setShow(actionContent.main));
+    };
   }, []);
   const headerItemClickHandle = function (value) {
     setShowForm(() => value);
@@ -411,7 +415,7 @@ function FormWithdraw() {
                 callApiSubmitStatus === api_status.fetching ? "disabled" : ""
               }`}
             >
-              {t("aliases")}
+              {t("userName")}
             </span>
           </div>
           <form

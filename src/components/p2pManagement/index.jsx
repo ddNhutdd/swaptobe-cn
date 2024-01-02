@@ -8,7 +8,11 @@ import {
   localStorageVariable,
   url,
 } from "src/constant";
-import { capitalizeFirstLetter, getLocalStorage } from "src/util/common";
+import {
+  capitalizeFirstLetter,
+  findIntegerMultiplier,
+  getLocalStorage,
+} from "src/util/common";
 import i18n from "src/translation/i18n";
 import socket from "src/util/socket";
 import { useHistory } from "react-router-dom";
@@ -17,6 +21,12 @@ import {
   getListHistoryP2pPendding,
   getListHistoryP2pWhere,
 } from "src/util/userCallApi";
+import { useSelector } from "react-redux";
+import {
+  getCurrent,
+  getExchange,
+  getExchangeFetchStatus,
+} from "src/redux/constant/currency.constant";
 function P2pManagement() {
   const { t } = useTranslation();
   const advertisingStatusType = {
@@ -49,6 +59,9 @@ function P2pManagement() {
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [radioAction, setRadioAction] = useState(radioAcitonType.all);
   const dropdownSelected = useRef();
+  const exchange = useSelector(getExchange);
+  const exchangeFetchApiStatus = useSelector(getExchangeFetchStatus);
+  const currency = useSelector(getCurrent);
   useEffect(() => {
     const element = document.querySelector(".p2pManagement");
     element.classList.add("fadeInBottomToTop");
@@ -62,15 +75,19 @@ function P2pManagement() {
     //
     document.addEventListener("click", closeDropdown);
     fetchApiGetListAllCoin();
-    fetchApiGetAllP2p(1);
     socket.on("createP2p", (res) => {
       console.log(res, "createP2p");
-      fetchApiGetAllP2p();
+      loadData(currentPage);
     });
     return () => {
       document.removeEventListener("click", closeDropdown);
     };
   }, []);
+  useEffect(() => {
+    if (exchangeFetchApiStatus === api_status.fulfilled) {
+      loadData(currentPage);
+    }
+  }, [exchangeFetchApiStatus, currency]);
   useEffect(() => {
     loadDropdown();
   }, [advertisingStatus]);
@@ -86,7 +103,6 @@ function P2pManagement() {
       if (span.innerHTML.toLowerCase() === t(advertisingStatus)) return true;
       else return false;
     });
-
     if (ele && dropdownSelected.current) {
       dropdownSelected.current.innerHTML = ele.innerHTML;
     }
@@ -241,6 +257,17 @@ function P2pManagement() {
         });
     });
   };
+  const calcMoney = function (value) {
+    let rate = exchange.find((item) => item.title === currency)?.rate;
+    if (!rate) return;
+    let newValue = +value.toFixed(3);
+    const mt = findIntegerMultiplier([rate, newValue]);
+    const result = (rate * mt * (newValue * mt)) / (mt * mt);
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(result);
+  };
   const renderTable = function () {
     if (!dataTable || dataTable.length <= 0) return;
     const redirectConfirm = function (idP2p) {
@@ -286,6 +313,12 @@ function P2pManagement() {
         </td>
         <td>
           <div>
+            <div>{item.userNameAds}</div>
+            <div>{item.emailAds}</div>
+          </div>
+        </td>
+        <td>
+          <div>
             <div>{item.symbol}</div>
             <div>{item.amount}</div>
             <div>{item.rate}</div>
@@ -294,7 +327,7 @@ function P2pManagement() {
         </td>
         <td>
           <div>
-            <div>{item.pay}</div>
+            <div>{calcMoney(item.pay)}</div>
             <div>{item.created_at}</div>
           </div>
         </td>
@@ -589,7 +622,8 @@ function P2pManagement() {
               <thead>
                 <tr>
                   <th>{t("trader")}</th>
-                  <th>{t("infomation")}</th>
+                  <th>{t("ads")}</th>
+                  <th>{t("information")}</th>
                   <th>{t("value")}</th>
                   <th>{t("action")}</th>
                 </tr>

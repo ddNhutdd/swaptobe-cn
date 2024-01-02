@@ -125,40 +125,54 @@
                         align-items: center;
                         gap: 15px;
                         border-radius: 5px;
+                        flex-wrap: wrap;
 
-                        .address-content-qr-background {
-                            padding: 10px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background-color: $neutral-20;
-                        }
+                        .address-content-qr {
+                            width: 100%;
 
-                        .address-code {
-                            .code {
+                            .address-content-qr-background {
                                 padding: 10px;
-                                background-color: $white;
-                                border-radius: 3px;
-                                word-break: break-all;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
-                                gap: 10px;
-                                color: $neutral-2;
+                                background-color: $neutral-20;
                             }
                         }
 
-                        .address-copy {
-                            padding: 10px;
+                        .address-code-container {
                             display: flex;
+                            gap: 10px;
                             align-items: center;
                             justify-content: center;
-                            background-color: $background-color-6;
-                            border-radius: 3px;
-                            color: $black;
 
-                            &:hover {
-                                cursor: pointer;
+                            .address-code {
+                                width: 85%;
+
+                                .code {
+                                    padding: 10px;
+                                    background-color: $white;
+                                    border-radius: 3px;
+                                    word-break: break-all;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 10px;
+                                    color: $neutral-2;
+                                }
+                            }
+
+                            .address-copy {
+                                padding: 10px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                background-color: $background-color-6;
+                                border-radius: 3px;
+                                color: $black;
+
+                                &:hover {
+                                    cursor: pointer;
+                                }
                             }
                         }
                     }
@@ -226,7 +240,6 @@
 
                     .wallet-deposite__history-amount {
                         box-sizing: border-box;
-
                         color: $green;
                         font-weight: bold;
                     }
@@ -258,7 +271,6 @@
                         }
                     }
                 }
-
             }
         }
 

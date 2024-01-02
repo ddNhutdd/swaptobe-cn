@@ -24,15 +24,15 @@ export const availableLanguage = {
   id: "id",
 };
 export const availableLanguageMapper = {
-  vi: "Việt Nam",
+  vi: "Vietnamese",
   en: "English",
-  ko: "한국",
-  ja: "日本",
-  zh: "中国",
-  th: "ไทย",
-  km: "កម្ពុជា",
-  lo: "ພາສາລາວ",
-  id: "Indonesia",
+  ko: "Korean",
+  ja: "Japanese",
+  zh: "Chinese",
+  th: "Thai",
+  km: "Cambodian",
+  lo: "Lao",
+  id: "Indonesian",
 };
 // the translations
 const resources = {

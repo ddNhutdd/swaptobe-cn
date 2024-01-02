@@ -61,6 +61,7 @@
       .sell-coin {
         @extend .buttonContainer--primary;
         max-height: 35px;
+        white-space: nowrap;
       }
     }
 
@@ -118,6 +119,7 @@
       .sell-coin {
         @extend .buttonContainer--primary;
         max-height: 35px;
+        white-space: nowrap;
       }
     }
 

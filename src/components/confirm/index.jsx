@@ -1,22 +1,40 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { api_status, url } from "src/constant";
+import i18n from "src/translation/i18n";
+import {
+  api_status,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import { useParams, useHistory } from "react-router-dom";
 import { getInfoP2p, getProfile } from "src/util/userCallApi";
-
 import ConfirmItem from "./confirmItem";
 import { Spin } from "antd";
-import { getElementById, hideElement } from "src/util/common";
+import { getElementById, getLocalStorage, hideElement } from "src/util/common";
 import { callToastError } from "src/function/toast/callToast";
+import socket from "src/util/socket";
+import { useTranslation } from "react-i18next";
 function Confirm() {
   const idAds = useParams().id;
   const history = useHistory();
   const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
   const [data, setData] = useState(null);
   const [render, setRender] = useState(1);
+  const { t } = useTranslation();
   useEffect(() => {
     loadData();
   }, [render]);
+  useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
+    socket.on("operationP2p", (idP2p) => {
+      console.log(idP2p, "operationP2p");
+      loadData();
+    });
+  }, []);
   const fetchApiGetInfoP2p = function () {
     return new Promise((resolve) => {
       if (callApiStatus === api_status.fetching) {
@@ -45,7 +63,7 @@ function Confirm() {
           resolve(resp.data.data);
         })
         .catch((error) => {
-          callToastError("Can't find user information");
+          callToastError(t("can'tFindUserInformation"));
           resolve(false);
           console.log(error);
         });
@@ -57,14 +75,14 @@ function Confirm() {
   const loadData = async function () {
     const profile = await fetchApiGetProfile();
     if (!profile) {
-      callToastError("Can't find user information");
-      history.push(url.p2pTrading);
+      callToastError(t("can'tFindUserInformation"));
+      history.push(url.login);
       return;
     }
     const { id: profileId } = profile;
     const apiRes = await fetchApiGetInfoP2p();
     if (!apiRes) {
-      history.push(url.p2pTrading);
+      history.push(url.p2p_management);
       return;
     }
     const result = apiRes.map((item, index) => (
@@ -84,7 +102,6 @@ function Confirm() {
     display: "flex",
     gap: "30px",
     flexDirection: "column",
-    backgroundColor: "#1b1b1b",
   };
   return (
     <>
@@ -95,7 +112,6 @@ function Confirm() {
       >
         <Spin />
       </div>
-
       <div
         className={`${callApiStatus === api_status.fetching ? "--d-none" : ""}`}
         style={classStyle}
