@@ -10,6 +10,7 @@ import wallet2Reducer from "./reducers/wallet2Slice";
 import exchangeRateDisparityReducer from "./reducers/exchangeRateDisparitySlice";
 import adsSliceReducer from "./reducers/adsSlice";
 import p2pTradingShowSlice from "./reducers/p2pTradingShow";
+import walletWithdrawSlice from "./reducers/walletWithdraw";
 
 const rootReducer = combineReducers({
   coinReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   exchangeRateDisparityReducer,
   adsSliceReducer,
   p2pTradingShowSlice,
+  walletWithdrawSlice,
 });
 
 const middleWare = applyMiddleware(reduxThunk);

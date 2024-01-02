@@ -17,7 +17,14 @@ import { useHistory } from "react-router-dom";
 import { getUserWallet } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
-import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
+import {
+  actionContent,
+  setShow as setShowContent,
+} from "src/redux/reducers/wallet2Slice";
+import {
+  form,
+  setShow as setShowWithdrawTab,
+} from "src/redux/reducers/walletWithdraw";
 function SeresoWalletList() {
   //
   const history = useHistory();
@@ -83,22 +90,35 @@ function SeresoWalletList() {
           <button
             onClick={() => {
               dispatch(coinSetCoin(item.name));
-              dispatch(setShow(actionContent.desposite));
+              dispatch(setShowContent(actionContent.desposite));
               window.scrollTo(0, 0);
             }}
             className="primary-button"
           >
             {t("deposit")}
           </button>
+
           <button
             onClick={() => {
               dispatch(coinSetCoin(item.name));
-              dispatch(setShow(actionContent.withdraw));
+              dispatch(setShowContent(actionContent.withdraw));
+              dispatch(setShowWithdrawTab(form.Wallet));
               window.scrollTo(0, 0);
             }}
             className="seconary-button"
           >
             {t("withdraw")}
+          </button>
+          <button
+            onClick={() => {
+              dispatch(coinSetCoin(item.name));
+              dispatch(setShowContent(actionContent.withdraw));
+              dispatch(setShowWithdrawTab(form.Aliases));
+              window.scrollTo(0, 0);
+            }}
+            className="seconary-button"
+          >
+            {t("transfer")}
           </button>
           <button
             onClick={() => swapOnClickHandle(item.name, getMyCoin(item.name))}

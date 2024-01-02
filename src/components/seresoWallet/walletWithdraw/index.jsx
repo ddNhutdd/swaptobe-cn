@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Spin, Pagination, Empty } from "antd";
 import QRCode from "react-qr-code";
 import {
@@ -11,7 +11,6 @@ import {
   getLocalStorage,
   parseURLParameters,
 } from "src/util/common";
-import { useSelector } from "react-redux";
 import i18n from "src/translation/i18n";
 import {
   api_status,
@@ -34,19 +33,17 @@ import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "src/components/Common/Input";
 import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
+import { form, getShow } from "src/redux/reducers/walletWithdraw";
+import { setShow as setShowTabFromRedux } from "src/redux/reducers/walletWithdraw";
+
 function FormWithdraw() {
-  //
-  const form = {
-    Wallet: "wallet",
-    Aliases: "Aliases",
-  };
   const withdrawTypeEnum = {
     TRC20: "TRC20",
     ERC20: "ERC20",
     BEP20: "BEP20",
   };
-  //
-  const [showForm, setShowForm] = useState(form.Wallet);
+  const showFromRedux = useSelector(getShow);
+  const [showForm, setShowForm] = useState(showFromRedux);
   const { t } = useTranslation();
   const [withdrawType, setWithdrawType] = useState(withdrawTypeEnum.TRC20);
   const [inputAmountCurrency, setInputAmountCurrency] = useState("");
@@ -81,7 +78,6 @@ function FormWithdraw() {
     fetTransferHistory();
     // if url have variable set value for control
     const { username, note, amountCoin } = parseURLParameters(search);
-    // console.log
     if (username) {
       setShowForm(form.Aliases);
       setInputAmountCurrency(() => formatStringNumberCultureUS(amountCoin));
@@ -94,6 +90,7 @@ function FormWithdraw() {
       .classList.add("fadeInBottomToTop");
     return () => {
       dispatch(setShow(actionContent.main));
+      dispatch(setShowTabFromRedux(form.wallet));
     };
   }, []);
   const headerItemClickHandle = function (value) {
