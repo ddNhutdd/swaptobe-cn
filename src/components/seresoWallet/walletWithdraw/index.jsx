@@ -120,6 +120,7 @@ function FormWithdraw() {
     );
   };
   const submitFormWalletHandle = function (e) {
+    console.log(inputNoteValue, addressElement);
     e.preventDefault();
     if (callApiSubmitStatus !== api_status.fetching) {
       setCallApiSubmitStatus(api_status.fetching);
@@ -447,7 +448,7 @@ function FormWithdraw() {
             </div>
             <div className="input">
               <p>{t("address")}</p>
-              <Input refEl={addressElement} type="text" />
+              <Input ref={addressElement} type="text" />
             </div>
             <div className="input">
               <p>{t("note")}</p>

@@ -1,14 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useTranslation } from "react-i18next";
-import React, { memo } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
-import {
-  currency,
-  defaultLanguage,
-  localStorageVariable,
-  url,
-} from "src/constant";
+import { defaultLanguage, localStorageVariable, url } from "src/constant";
 import {
   formatStringNumberCultureUS,
   getLocalStorage,
@@ -55,7 +50,7 @@ const Header1 = function ({ history }) {
     localStorage.removeItem(localStorageVariable.user);
     localStorage.removeItem(localStorageVariable.token);
     removeLocalStorage(localStorageVariable.currency);
-    dispatch(currencySetCurrent(currency.usd));
+    dispatch(currencySetCurrent("USD"));
     removeLocalStorage(localStorageVariable.lng);
     removeLocalStorage(localStorageVariable.coin);
     history.push(url.home);

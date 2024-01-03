@@ -29,7 +29,12 @@ import {
   roundDecimalValues,
   showElement,
 } from "src/util/common";
-import { createP2p, getListBanking } from "src/util/userCallApi";
+import {
+  createP2p,
+  getListAdsBuy,
+  getListAdsSell,
+  getListBanking,
+} from "src/util/userCallApi";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "../Common/Input";
 function Transaction() {
@@ -58,6 +63,8 @@ function Transaction() {
   const amountMinimum = useRef();
   const bankName = useRef();
   const userName = useRef();
+  const [listAds, setListAds] = useState();
+  const [callApiAdsStatus, setCallApiAdsStatus] = useState(api_status.pending);
   const side = useRef(); // advertising type
   const [currentAction, setCurrentAction] = useState(actionType.buy); // user action
   const symbol = useRef();
@@ -65,6 +72,7 @@ function Transaction() {
   const idUserBanking = useRef();
   const amountInputFormBuy = useRef(null); // input element
   const amountInputFormSell = useRef(null);
+  const [isShowDropdownAds, setIsShowDropdownAds] = useState(false);
   const idAds = useRef();
   let hasRun = useRef(false);
   const callApiStatus = useRef(api_status.pending);
@@ -82,6 +90,7 @@ function Transaction() {
     }
     //
     loadDataFirstTime();
+    fetchApiLoadListAds();
     //
     document.addEventListener("click", closeDropdownPayment);
     setElementWidth();
@@ -222,7 +231,6 @@ function Transaction() {
           );
         case listString.at(2):
           return symbol.current;
-
         default:
           break;
       }
@@ -570,6 +578,68 @@ ${symbol.current}`;
     const result = amountCoin * price * excha;
     elementOutput.value = formatStringNumberCultureUS(result.toFixed(3));
   };
+  const fetchApiLoadListAds = function () {
+    if (callApiAdsStatus === api_status.fetching) return;
+    else setCallApiAdsStatus(api_status.fetching);
+    switch (side.current) {
+      case actionType.buy:
+        getListAdsBuy({ limit: 999999999999, page: 1, symbol: symbol.current })
+          .then((resp) => {
+            setCallApiAdsStatus(api_status.fulfilled);
+            console.log(resp);
+            setListAds(resp.data.data.array);
+          })
+          .catch((err) => {
+            console.log(err);
+            setCallApiAdsStatus(api_status.rejected);
+            setListAds([]);
+          });
+        break;
+      case actionType.sell:
+        getListAdsSell({
+          limit: 999999999999999999,
+          page: 1,
+          symbol: symbol.current,
+        })
+          .then((resp) => {
+            setCallApiAdsStatus(api_status.fulfilled);
+            console.log(resp);
+            setListAds(resp.data.data.array);
+          })
+          .catch((err) => {
+            console.log(err);
+            setCallApiAdsStatus(api_status.rejected);
+            setListAds([]);
+          });
+        break;
+      default:
+        break;
+    }
+  };
+  const renderClassAdsSpin = function () {
+    if (
+      callApiAdsStatus === api_status.pending ||
+      !listAds ||
+      listAds.length <= 0
+    )
+      return "";
+    else return "--d-none";
+  };
+  const renderClassAds = function () {
+    if (
+      callApiAdsStatus !== api_status.pending &&
+      listAds &&
+      listAds.length > 0
+    )
+      return "";
+    else return "--d-none";
+  };
+  const renderClassShowDropdownAds = function () {
+    return isShowDropdownAds ? "show" : "";
+  };
+  const dropdownAdsToggle = function () {
+    setIsShowDropdownAds((s) => !s);
+  };
   return (
     <>
       <div
@@ -582,6 +652,34 @@ ${symbol.current}`;
         <div className="container">
           <div className="box transaction__box transaction__header">
             <div>{renderHeader()}</div>
+          </div>
+          <div className="box transaction__box ">
+            <div className="transaction__user-dropdown">
+              <label>{t("thuong nhan")}:</label>
+              <div
+                onClick={dropdownAdsToggle}
+                className="transaction__user-selected"
+              >
+                <span>test</span>
+                <span>
+                  <i className="fa-solid fa-caret-down"></i>
+                </span>
+              </div>
+              <div
+                className={`transaction__user-menu ${renderClassShowDropdownAds()}`}
+              >
+                <div className="dropdown-menu ">
+                  <div className={renderClassAds()}>
+                    <div className="dropdown-item active">Dung</div>
+                    <div className="dropdown-item">huyen</div>
+                    <div className="dropdown-item">Thien</div>
+                  </div>
+                  <div className={`spin-container ${renderClassAdsSpin()}`}>
+                    <Spin />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="box transaction__box">
             <form>

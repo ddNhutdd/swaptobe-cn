@@ -733,7 +733,7 @@ $blue-light: #ceceff;
   z-index: 0;
 
   .main-template__bg-1 {
-    background-image: url(../../../../public/img/starsky.png);
+    background: url(../../../../public/img/starsky.png), url(../../../../public/img/them-1.png);
     position: fixed;
     top: 0;
     left: 0;
@@ -744,10 +744,10 @@ $blue-light: #ceceff;
   }
 
   .main-template__bg-2 {
-    background-image: url(../../../../public/img/starsky.png);
+    background-image: url(../../../../public/img/star-2.png);
     animation-name: zoomAnimation;
     transition-timing-function: ease;
-    animation-duration: 60s;
+    animation-duration: 40s;
     animation-iteration-count: infinite;
     z-index: -20;
     background-size: 100% 100%;
@@ -761,8 +761,8 @@ $blue-light: #ceceff;
   .main-template__bg-3 {
     background-image: url(../../../../public/img/starsky.png);
     animation-name: zoomAnimationTwo;
-    animation-duration: 60s;
-    transition-timing-function: ease;
+    animation-duration: 20s;
+    transition-timing-function: linear;
     animation-iteration-count: infinite;
     z-index: -19;
     background-size: 100% 100%;

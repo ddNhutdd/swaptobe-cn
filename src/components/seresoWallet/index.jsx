@@ -125,7 +125,7 @@ function SwaptobeWallet() {
         </h5>
         <div className="info">
           <div className="left">
-            <div>{t("estimatedAssetsValue")}</div>
+            <div>{t("amount")} USDT</div>
             <div>
               <span id="showTotalValue"></span>{" "}
               {userSelectedCurrentcy.toUpperCase()}

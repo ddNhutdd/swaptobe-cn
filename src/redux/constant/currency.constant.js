@@ -1,4 +1,8 @@
-import { api_status, localStorageVariable } from "src/constant";
+import {
+  api_status,
+  defaultCurrency,
+  localStorageVariable,
+} from "src/constant";
 import { getLocalStorage } from "src/util/common";
 
 export const currency = {
@@ -9,7 +13,7 @@ export const currency = {
 };
 
 export const defaultState = {
-  current: getLocalStorage(localStorageVariable.currency) || "USD",
+  current: getLocalStorage(localStorageVariable.currency) || defaultCurrency,
   exchange: [],
   exchangeFetchStatus: api_status.pending,
   fetchExchangeCount: 0,

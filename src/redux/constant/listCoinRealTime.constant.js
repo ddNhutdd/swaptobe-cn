@@ -5,7 +5,7 @@ export const listCoinRealTimeConstant = {
 };
 export const defaultState = {
   listCoinRealTime: null,
-  totalAssetsRealTime: 0,
+  totalAssetsRealTime: 0, // usd
   totalAssetsBtcRealTime: 0,
 };
 export const getListCoinRealTime = (state) =>

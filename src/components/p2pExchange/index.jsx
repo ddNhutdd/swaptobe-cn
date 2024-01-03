@@ -17,6 +17,7 @@ import {
   debounce,
   formatStringNumberCultureUS,
   getLocalStorage,
+  getRandomElementFromArray,
   setLocalStorage,
 } from "src/util/common";
 import {
@@ -74,7 +75,6 @@ const P2pExchange = memo(function () {
           })
             .then((resp) => {
               const data = resp.data.data;
-              console.log(data);
               setMainData(() => data.array);
               setTotalItems(() => data.total);
               setCurrentPage(() => page);
@@ -120,27 +120,15 @@ const P2pExchange = memo(function () {
       <div key={item.id} className="p2pExchange__data-content-item">
         <div className="p2pExchange__data-cell">User: {item.userName}</div>
         <div className="p2pExchange__data-cell amount">
-          Amount Available: {(item.amount - item.amountSuccess).toFixed(8)}
+          Amount Available: {+(item.amount - item.amountSuccess).toFixed(8)}
         </div>
         <div className="p2pExchange__data-cell minimum">
           Minimum: {item.amountMinimum}
         </div>
         <div className="p2pExchange__data-cell action">
           {item.side === p2pExchangeType.buy ? (
-            // <button
-            //   className="p2pExchange__button-sell"
-            //   onClick={buySellClickHandle.bind(null, item)}
-            // >
-            //   Sell
-            // </button>
             <Button onClick={buySellClickHandle.bind(null, item)}>Sell</Button>
           ) : (
-            // <button
-            //   className="p2pExchange__button-buy"
-            //   onClick={buySellClickHandle.bind(null, item)}
-            // >
-            //   Buy
-            // </button>
             <Button onClick={buySellClickHandle.bind(null, item)}>Buy</Button>
           )}
         </div>
@@ -295,6 +283,36 @@ const P2pExchange = memo(function () {
         break;
     }
   };
+  const renderClassQuickBuySell = function () {
+    if (callApiGetListCoinStatus === api_status.fetching) {
+      return "--d-none";
+    } else if (!mainData || mainData.length <= 0) {
+      return "--d-none";
+    } else {
+      return "";
+    }
+  };
+  const quickBuySellClickHandle = function () {
+    if (!isUserLogin) {
+      history.push(url.login);
+      return;
+    } else {
+      const item = getRandomElementFromArray(mainData);
+      setLocalStorage(localStorageVariable.adsItem, item);
+      history.push(url.transaction);
+      return;
+    }
+  };
+  const renderQuickBuySellButton = function () {
+    switch (type) {
+      case p2pExchangeType.buy:
+        return "Mua nhanh";
+      case p2pExchangeType.sell:
+        return "Ban nhanh";
+      default:
+        break;
+    }
+  };
   return (
     <div className="p2pExchange">
       <div className="container">
@@ -331,6 +349,12 @@ const P2pExchange = memo(function () {
             <div className="p2pExchange__type-list">
               <div className="p2pExchange__type-item">VND</div>
               <div className="p2pExchange__type-item">{coin}</div>
+              <div
+                onClick={quickBuySellClickHandle}
+                className={`p2pExchange__type-item ${renderClassQuickBuySell()}`}
+              >
+                {renderQuickBuySellButton()}
+              </div>
             </div>
           </div>
         </div>

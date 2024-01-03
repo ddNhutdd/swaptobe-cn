@@ -111,6 +111,7 @@
                     gap: 10px;
 
                     .p2pExchange__type-item {
+
                         @extend .buttonContainer--outline;
                         display: flex;
                         align-items: center;
@@ -119,6 +120,11 @@
 
                         &.active {
                             @extend .buttonContainer--primary;
+                        }
+
+                        &:last-child {
+                            @extend .buttonContainer--primary;
+                            margin-left: auto;
                         }
                     }
                 }

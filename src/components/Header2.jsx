@@ -1,177 +1,383 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import i18n from "../translation/i18n";
-import {
-  availableLanguage,
-  availableLanguageMapper,
-} from "../translation/i18n";
+import i18n, { availableLanguageMapper } from "../translation/i18n";
 import {
   getLocalStorage,
   setLocalStorage,
-  getClassListFromElementById,
-  getElementById,
+  removeLocalStorage,
+  findIntegerMultiplier,
 } from "../util/common";
-import { defaultLanguage, localStorageVariable } from "../constant";
-import { Modal } from "antd";
+import {
+  defaultCurrency,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "../constant";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getExchange } from "src/redux/constant/currency.constant";
+import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { currencySetCurrent } from "src/redux/actions/currency.action";
+import { callToastSuccess } from "src/function/toast/callToast";
+import {
+  getTotalAssetsBtcRealTime,
+  getTotalAssetsRealTime,
+} from "src/redux/constant/listCoinRealTime.constant";
 export default function Header2({ history }) {
-  const renderListLanguage = (availableLanguage) =>
-    Object.keys(availableLanguage).map((item) => (
-      <li
-        key={item}
-        onClick={() => {
-          setCurrentLanguage(item);
-          setLocalStorage(localStorageVariable.lng, item);
-          i18n.changeLanguage(item);
-        }}
-        className={`dropdown-item ${item === currentLanguage ? "active" : ""}`}
-      >
-        <span>
-          <img
-            src={process.env.PUBLIC_URL + "/img/icon" + item + ".png"}
-            alt={item}
-          />
-        </span>
-        <span className="header2__model-dropdown-content">
-          {availableLanguageMapper[item]}
-        </span>
-      </li>
-    ));
-  const selectCurrency = function (currency) {
-    if (!currency) return;
-    // edit html
-    getElementById("dropdownCurrencySelectedText").innerHTML =
-      currency.toUpperCase();
-    // dispatch seleted currency to redux
-    dispatch(currencySetCurrent(currency));
-  };
-  const [currentLanguage, setCurrentLanguage] = useState();
+  const { isLogin, username } = useSelector((root) => root.loginReducer);
+  const currencyFromRedux = useSelector(getCurrent);
+  const [currentLanguage, setCurrentLanguage] = useState(
+    getLocalStorage(localStorageVariable.lng) || defaultLanguage
+  );
+  const [currentCurrency, setCurrentCurrency] = useState(
+    currencyFromRedux || defaultCurrency
+  );
   const { t } = useTranslation();
+  const totalAssetsRealTime = useSelector(getTotalAssetsRealTime);
+  const totalAssetsBtcRealTime = useSelector(getTotalAssetsBtcRealTime);
   const listExChange = useSelector(getExchange);
+  const [isShowMenu, setIsShowMenu] = useState(false);
+  const [isShowMenuLanguage, setIsShowMenuLanguage] = useState(false);
+  const [isShowMenuCurrency, setIsShowMenuCurrency] = useState(false);
+  const [isShowMenuWallet, setIsShowMenuWallet] = useState(false);
+  const [isShowMenuUser, setIsShowMenuUser] = useState(false);
+  const [totalMoney, setTotalMoney] = useState(0); // it is the string it displays on the web
   const dispatch = useDispatch();
+  const location = useLocation();
+  const barButtonClickHandle = function () {
+    setIsShowMenu((s) => !s);
+  };
+  const renderClassShowMenu = function () {
+    return isShowMenu ? "show" : "";
+  };
+  const renderClassShowMenuLanguage = function () {
+    return isShowMenuLanguage ? "show" : "";
+  };
+  const renderClassShowMenuCurrency = function () {
+    return isShowMenuCurrency ? "show" : "";
+  };
+  const languageToggle = function (e) {
+    e.stopPropagation();
+    const temFlag = isShowMenuLanguage;
+    closeMenu();
+    setIsShowMenuLanguage((s) => !temFlag);
+  };
+  const redirectPageClickHandle = function (e) {
+    const container = e.target.closest(".container");
+    const listItem = container.querySelectorAll("[data-page]");
+    for (const item of listItem) {
+      item.classList.remove("active");
+    }
+    const url = e.currentTarget.dataset.page;
+    e.currentTarget.classList.add("active");
+    history.push(url);
+    setIsShowMenu(() => false);
+    return;
+  };
+  const languageItemClickHandle = function (e) {
+    const container = e.target.closest(".header2__language-menu");
+    for (const item of container.children) {
+      item.classList.remove("active");
+    }
+    e.currentTarget.classList.add("active");
+    setIsShowMenuLanguage(() => false);
+    setIsShowMenu(() => false);
+    setCurrentLanguage(this);
+    setLocalStorage(localStorageVariable.lng, this);
+    i18n.changeLanguage(this);
+  };
+  const renderMenuLanguage = function () {
+    const country = Object.values(availableLanguageMapper);
+    const countrySorted = country.sort();
+    return countrySorted.map((item) => {
+      let codeContry = "";
+      for (const [code, name] of Object.entries(availableLanguageMapper)) {
+        if (item === name) {
+          codeContry = code;
+          break;
+        }
+      }
+      return (
+        <div
+          onClick={languageItemClickHandle.bind(codeContry)}
+          key={codeContry}
+          className={`header2__language-item ${
+            codeContry === currentLanguage ? "active" : ""
+          }`}
+        >
+          <span>
+            <img
+              src={process.env.PUBLIC_URL + `/img/icon${codeContry}.png`}
+              alt={codeContry}
+            />
+          </span>
+          <span>{item}</span>
+        </div>
+      );
+    });
+  };
+  const renderListCurrency = function () {
+    const listCurr = listExChange.map((item) => item.title);
+    const listCurrSorted = listCurr.sort();
+    return listCurrSorted.map((item, index) => (
+      <div
+        key={index}
+        onClick={currencyItemClickHandle.bind(item)}
+        className={`header2__currrency-item ${
+          item === currentCurrency ? "active" : ""
+        } `}
+      >
+        {item}
+      </div>
+    ));
+  };
+  const currencyItemClickHandle = function () {
+    setCurrentCurrency(() => this);
+    setIsShowMenuCurrency(() => false);
+    setIsShowMenu(() => false);
+    dispatch(currencySetCurrent(this));
+  };
+  const currencyToggle = function (e) {
+    e.stopPropagation();
+    const temFlag = isShowMenuCurrency;
+    closeMenu();
+    setIsShowMenuCurrency(() => !temFlag);
+  };
+  const closeMenu = function () {
+    setIsShowMenuCurrency(() => false);
+    setIsShowMenuLanguage(() => false);
+    setIsShowMenuWallet(() => false);
+    setIsShowMenuUser(() => false);
+  };
+  const renderClassShowMenuWallet = function () {
+    return isShowMenuWallet ? "show" : "";
+  };
+  const walletToggle = function (e) {
+    e.stopPropagation();
+    const temFlag = isShowMenuWallet;
+    closeMenu();
+    setIsShowMenuWallet(() => !temFlag);
+  };
+  const renderClassShowMenuUser = function () {
+    return isShowMenuUser ? "show" : "";
+  };
+  const userToggle = function (e) {
+    e.stopPropagation();
+    const temFlag = isShowMenuUser;
+    closeMenu();
+    setIsShowMenuUser(() => !temFlag);
+  };
+  const logout = () => {
+    localStorage.removeItem(localStorageVariable.user);
+    localStorage.removeItem(localStorageVariable.token);
+    removeLocalStorage(localStorageVariable.currency);
+    dispatch(currencySetCurrent(defaultCurrency));
+    removeLocalStorage(localStorageVariable.lng);
+    removeLocalStorage(localStorageVariable.coin);
+    history.push(url.home);
+    dispatch({ type: "USER_LOGOUT" });
+    callToastSuccess(t("logOut"));
+  };
+  const redirectLogin = function () {
+    history.push(url.login);
+    return;
+  };
+  const renderClassWithLogin = function (loggedInClass, notLoggedInYetClass) {
+    return isLogin ? loggedInClass : notLoggedInYetClass;
+  };
+  const renderTotalMoney = function () {
+    if (
+      !totalAssetsRealTime ||
+      totalAssetsRealTime < 0 ||
+      !currentCurrency ||
+      !listExChange ||
+      listExChange.length <= 0
+    )
+      return;
+    const exchange = listExChange.find(
+      (item) => item.title === currentCurrency
+    );
+    if (!exchange) return;
+    const result = calcMoney(totalAssetsRealTime, exchange.rate);
+    setTotalMoney(() =>
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currentCurrency,
+      }).format(result)
+    );
+  };
+  const calcMoney = function (usd, exchange) {
+    const mt = findIntegerMultiplier([usd, exchange]);
+    const temUsd = usd * mt;
+    const temExchange = exchange * mt;
+    const result = (temUsd * temExchange) / (mt * mt);
+    return result;
+  };
+  const setActiveCurrentPage = function () {
+    const pathname = location.pathname;
+    const container = document.querySelector(".header2");
+    if (!container) return;
+    const listItem = container.querySelectorAll("[data-page]");
+    for (const item of listItem) {
+      if (item.dataset.page === pathname) {
+        item.classList.add("active");
+        break;
+      }
+    }
+  };
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     setCurrentLanguage(language);
+    //
+    setActiveCurrentPage();
+    //
+    document.addEventListener("click", closeMenu);
+    return () => {
+      document.removeEventListener("click", closeMenu);
+    };
   }, []);
+  useEffect(() => {
+    renderTotalMoney();
+  }, [totalAssetsRealTime, listExChange, currencyFromRedux]);
   return (
     <header className="header2 fadeInTopToBottom">
       <div className="container">
-        <input type="checkbox" id="checkboxShowMenu" className="--d-none" />
         <div className="logo" onClick={() => history.push("/")}>
           <img src="/img/logowhite.png" alt="Remitano Logo" />
         </div>
-        <div className="menu">
-          <NavLink
-            exact
+        <div className={`menu ${renderClassShowMenu()}`}>
+          <div
+            data-page={url.swap}
             className="navlink"
-            activeClassName="navlink-active"
-            to="/swap"
+            onClick={redirectPageClickHandle}
           >
             {t("swap")}
-          </NavLink>
-          <NavLink
-            exact
+          </div>
+          <div
+            onClick={redirectPageClickHandle}
             className="navlink"
-            activeClassName="navlink-active"
-            to="/p2p-trading"
+            data-page={url.p2pTrading}
           >
             {t("p2pTrading")}
-          </NavLink>
-        </div>
-        <label
-          className="header__bar-button-container"
-          htmlFor="checkboxShowMenu"
-        >
-          <div className="bar-button">
-            <i className="fa-solid fa-bars-staggered"></i>
           </div>
-        </label>
-        <div className="header2__right show">
+        </div>
+        <div onClick={barButtonClickHandle} className="bar-button">
+          <i className="fa-solid fa-bars-staggered"></i>
+        </div>
+        <div className={`header2__right ${renderClassShowMenu()}`}>
           <div className="header2__language">
-            <div className="header2__language-seletor">
+            <div onClick={languageToggle} className="header2__language-seletor">
               <img
-                src={process.env.PUBLIC_URL + "/img/iconvi.png"}
+                src={process.env.PUBLIC_URL + `/img/icon${currentLanguage}.png`}
                 alt="language"
               />
             </div>
-            <div className="header2__language-menu">
-              <div className="header2__language-item active">
-                <span>
-                  <img
-                    src={process.env.PUBLIC_URL + "/img/iconvi.png"}
-                    alt="vn"
-                  />
-                </span>
-                <span>Vietnamese</span>
-              </div>
-              <div className="header2__language-item">
-                <span>
-                  <img
-                    src={process.env.PUBLIC_URL + "/img/iconen.png"}
-                    alt="en"
-                  />
-                </span>
-                <span>Vietnamese</span>
-              </div>
+            <div
+              className={`header2__language-menu ${renderClassShowMenuLanguage()}`}
+            >
+              {renderMenuLanguage()}
             </div>
           </div>
-          <div className="header2__currency">
-            <div className="header2__currency-selector">USD</div>
-            <div className="header2__currrency-menu">
-              <div className="header2__currrency-item active">USD</div>
-              <div className="header2__currrency-item">EUR</div>
+          <div className={`header2__currency`}>
+            <div
+              onClick={currencyToggle}
+              className="header2__currency-selector"
+            >
+              {currentCurrency}
+            </div>
+            <div
+              className={`header2__currrency-menu ${renderClassShowMenuCurrency()}`}
+            >
+              {renderListCurrency()}
             </div>
           </div>
-          <div className="header2__wallet">
-            <div className="header2__wallet-title">Wallet</div>
-            <div className="header2__wallet-menu">
+          <div
+            className={`header2__wallet ${renderClassWithLogin(
+              "",
+              "--d-none"
+            )}`}
+          >
+            <div onClick={walletToggle} className="header2__wallet-title">
+              {t("wallet")}
+            </div>
+            <div
+              className={`header2__wallet-menu ${renderClassShowMenuWallet()}`}
+            >
               <div className="header2__wallet-info">
                 <div className="header2__wallet-info-item">
                   <span className="header2__wallet-info-icon">
                     <i className="fa-brands fa-bitcoin"></i>
                   </span>
-                  <span>data</span>
+                  <span>
+                    {new Intl.NumberFormat("en-US", {
+                      maximumSignificantDigits: 8,
+                    }).format(totalAssetsBtcRealTime)}
+                  </span>
                 </div>
                 <div className="header2__wallet-info-item">
                   <span className="header2__wallet-info-icon">
-                    <i className="fa-solid fa-dollar-sign"></i>
+                    <i className="fa-solid fa-coins"></i>
                   </span>
-                  <span>data</span>
+                  <span>{totalMoney}</span>
                 </div>
               </div>
-              <div className="header2__wallet-item">
+              <div
+                onClick={redirectPageClickHandle}
+                data-page={url.wallet}
+                className="header2__wallet-item"
+              >
                 <i className="fa-solid fa-wallet"></i>
-                <span>Wallet</span>
+                <span>{t("wallet")}</span>
               </div>
-              <div className="header2__wallet-item">
+              <div
+                onClick={redirectPageClickHandle}
+                data-page={url.ads_history}
+                className="header2__wallet-item"
+              >
                 <i className="fa-solid fa-rectangle-ad"></i>
-                <span>Advertising History</span>
+                <span>{t("advertisingHistory")}</span>
               </div>
-              <div className="header2__wallet-item">
+              <div
+                onClick={redirectPageClickHandle}
+                data-page={url.p2p_management}
+                className="header2__wallet-item"
+              >
                 <i className="fa-solid fa-comments-dollar"></i>
-                <span>p2pHistory</span>
+                <span>{t("p2PHistory")}</span>
               </div>
             </div>
           </div>
-          <div className="header2__user">
-            <div className="header2__username">test</div>
-            <div className="header2__user-info">
-              <div className="header2__user-info-item">
+          <div
+            className={`header2__user ${renderClassWithLogin("", "--d-none")}`}
+          >
+            <div onClick={userToggle} className="header2__username">
+              {username}
+            </div>
+            <div className={`header2__user-info ${renderClassShowMenuUser()}`}>
+              <div
+                onClick={redirectPageClickHandle}
+                data-page={url.profile}
+                className="header2__user-info-item"
+              >
                 <i className="fa-regular fa-user"></i>
-                <span>Profile</span>
+                <span>{t("profile")}</span>
               </div>
-              <div className="header2__user-info-item">
+              <div onClick={logout} className="header2__user-info-item">
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                <span>Logout</span>
+                <span>{t("logOut")}</span>
               </div>
             </div>
           </div>
-          <div className="header2__login">login / register</div>
+          <div
+            onClick={redirectLogin}
+            className={`header2__login ${renderClassWithLogin("--d-none", "")}`}
+          >
+            {t("login")}
+            {" / "}
+            {t("register")}
+          </div>
         </div>
       </div>
     </header>

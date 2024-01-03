@@ -350,3 +350,13 @@ export const findIntegerMultiplier = function (numbers) {
   const result = +"1".padEnd(maxDecimalPlaces + 1, 0);
   return result;
 };
+/**
+ * The function randomly selects an element in the array, returns that element, if the array is empty, returns null
+ * @param {array} arr list items
+ * @returns new item
+ */
+export const getRandomElementFromArray = function (arr) {
+  if (!arr || arr.length <= 0) return null;
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
+};
