@@ -288,7 +288,6 @@ function ConfirmItem(props) {
     //
     const actionContainer = getElementById("actionConfirm" + index);
     actionContainer.innerHTML = "";
-    console.log(typeUser, userId, profileId);
     if (typeUser === 2 && userId === profileId) {
       // confirm button
       const confirmButton = document.createElement("button");
