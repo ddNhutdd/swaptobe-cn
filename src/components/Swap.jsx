@@ -127,7 +127,7 @@ export default function Swap() {
   };
   const setToCoinValueCalc = function () {
     if (data.length > 0) {
-      const fromCoin = convertStringToNumber(fromCoinValueString);
+      const fromCoin = convertStringToNumber(fromCoinValueString.toString());
       const fromPrice = data.filter((item) => item.name === swapFromCoin)[0]
         .price;
       const toPrice = data.filter((item) => item.name === swapToCoin)[0].price;
@@ -220,7 +220,7 @@ export default function Swap() {
       callApiHistoryStatus !== api_status.fetching &&
       coinSwapHistory.length <= 0
     ) {
-      return <Empty />;
+      return <Empty description={<span>{t("noData")}</span>} />;
     } else if (
       callApiHistoryStatus !== api_status.fetching &&
       coinSwapHistory.length > 0

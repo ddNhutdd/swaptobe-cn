@@ -321,7 +321,7 @@ function P2pManagement() {
           <div>
             <div>{item.symbol}</div>
             <div>{item.amount}</div>
-            <div>{item.rate}</div>
+            <div>{calcMoney(item.rate)}</div>
             <div>{t(item.side)}</div>
           </div>
         </td>
@@ -452,6 +452,9 @@ function P2pManagement() {
       }
       //
     });
+  };
+  const renderTitle = function () {
+    return t("list" + capitalizeFirstLetter(advertisingStatus));
   };
   return (
     <div className="p2pManagement">
@@ -614,9 +617,7 @@ function P2pManagement() {
           </div>
         </div>
         <div className="p2pManagement__content">
-          <div className="p2pManagement__content-title">
-            {t("list")} {capitalizeFirstLetter(advertisingStatus)}
-          </div>
+          <div className="p2pManagement__content-title">{renderTitle()}</div>
           <div className={`p2pManagement__content-data ${renderClassTable()}`}>
             <table>
               <thead>
@@ -634,7 +635,7 @@ function P2pManagement() {
           <div
             className={`p2pManagement__content-empty spin-container ${renderClassEmpty()} `}
           >
-            <Empty />
+            <Empty description={<span>{t("noData")}</span>} />
           </div>
           <div
             className={`p2pManagement__content-spinner spin-container ${renderClassSpin()}`}

@@ -194,6 +194,13 @@ export default function CreateBuy() {
     const miniElement = getElementById("minimumAmoutInput");
     const fullnameElement = getElementById("fullnameInput");
     const accountNumberElement = getElementById("accountNumberInput");
+    if (
+      !amountElement ||
+      !miniElement ||
+      !fullnameElement ||
+      !accountNumberElement
+    )
+      return false;
     if (controlsTourched.current[controls.current.amount]) {
       if (
         !regularExpress.checkNumber.test(amountElement.value) &&
@@ -242,10 +249,10 @@ export default function CreateBuy() {
         setControlsErrors((state) => {
           const newState = { ...state };
           delete newState[controls.current.mini];
+          return newState;
         });
       }
     }
-    console.log(controlsTourched.current);
     if (action === actionType.sell) {
       if (controlsTourched.current[controls.current.fullname]) {
         if (!fullnameElement.value) {

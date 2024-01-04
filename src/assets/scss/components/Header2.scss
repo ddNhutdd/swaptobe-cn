@@ -297,6 +297,10 @@
               padding: 4px 0;
               justify-content: flex-start;
 
+              &.user {
+                padding-left: 27px;
+              }
+
               .header2__wallet-info-icon {
                 width: 25px;
                 display: flex;
@@ -308,6 +312,7 @@
                   padding: 8px 0;
                 }
               }
+
             }
           }
 

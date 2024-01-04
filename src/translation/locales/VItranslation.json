@@ -286,5 +286,17 @@
     "available": "Có sẵn",
     "can'tFindUserInformation": "Không thể tìm thấy thông tin người dùng",
     "information": "Thông tin",
-    "ads": "Quảng cáo"
+    "ads": "Quảng cáo",
+    "theAmountOfCryptocurrencyIsInsufficient": "Số lượng tiền điện tử không đủ.",
+    "transfer": "Chuyển khoản",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "Nếu bạn cần sự hỗ trợ, vui lòng liên hệ với thương nhân 114455t56est999.",
+    "content": "Nội dung",
+    "error": "Lỗi",
+    "noData": "Không có dữ liệu",
+    "listAdvertisementBuy": "Danh sách Quảng cáo Mua",
+    "listAdvertisementSell": "Danh sách Quảng cáo Bán",
+    "yourListBank": "Danh sách Ngân hàng của Bạn",
+    "addBanking": "Thêm Thông tin Ngân hàng",
+    "buyQuickly": "Mua Nhanh",
+    "sellQuickly": "Bán Nhanh"
 }

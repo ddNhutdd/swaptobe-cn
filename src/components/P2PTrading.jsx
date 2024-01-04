@@ -184,6 +184,14 @@ export default function P2PTrading({ history }) {
       redirectPage.push(url.login);
     }
   };
+  const createAdsSell = function () {
+    setLocalStorage(localStorageVariable.createAds, coin);
+    history.push(url.create_ads_sell);
+  };
+  const createAdsBuy = function () {
+    setLocalStorage(localStorageVariable.createAds, coin);
+    history.push(url.create_ads_buy);
+  };
   const renderContent = function () {
     switch (showContent) {
       case showP2pType.p2pTrading:
@@ -211,9 +219,20 @@ export default function P2PTrading({ history }) {
                     )}
                     <span> {userSelectedCurrency}</span>
                   </div>
-                  <ButtonAntd onClick={buyNowClickHandle} className="buyNowBtn">
-                    {t("buyNow")}
-                  </ButtonAntd>
+                  <div className="left3">
+                    <ButtonAntd
+                      onClick={buyNowClickHandle}
+                      className="buyNowBtn"
+                    >
+                      {t("buyNow")}
+                    </ButtonAntd>
+                    <button
+                      onClick={createAdsBuy}
+                      className="p2pTrading__createAds"
+                    >
+                      {t("creatingYourBuyingAd")}
+                    </button>
+                  </div>
                 </div>
                 <div className="right box">
                   <div className="right1">
@@ -226,12 +245,20 @@ export default function P2PTrading({ history }) {
                     )}
                     <span> {userSelectedCurrency}</span>
                   </div>
-                  <ButtonAntd
-                    onClick={sellNowClickHandle}
-                    className="sellNowBtn"
-                  >
-                    {t("sellNow")}
-                  </ButtonAntd>
+                  <div className="right3">
+                    <ButtonAntd
+                      onClick={sellNowClickHandle}
+                      className="sellNowBtn"
+                    >
+                      {t("sellNow")}
+                    </ButtonAntd>
+                    <button
+                      onClick={createAdsSell}
+                      className="p2pTrading__createAds"
+                    >
+                      {t("creatingYourSellingAd")}
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="bottom box">

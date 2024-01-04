@@ -14,22 +14,21 @@ import {
 } from "src/util/common";
 import { defaultLanguage, localStorageVariable, url } from "src/constant";
 import i18n from "src/translation/i18n";
-import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+
 import { coinSetCoin } from "src/redux/actions/coin.action";
 import {
   actionContent,
   getShow,
   setShow,
 } from "src/redux/reducers/wallet2Slice";
-import { getTotalAssetsRealTime } from "src/redux/constant/listCoinRealTime.constant";
+import { getUserWallet } from "src/redux/constant/coin.constant";
+import { DOMAIN } from "src/util/service";
 function SwaptobeWallet() {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
   const { search } = useLocation();
-  const totalValue = useSelector(getTotalAssetsRealTime);
-  const userSelectedCurrentcy = useSelector(getCurrent);
-  const exchange = useSelector(getExchange);
+  const userWallet = useSelector(getUserWallet);
   const isLogin = useSelector((root) => root.loginReducer.isLogin);
   const dispatch = useDispatch();
   const showActionContent = useSelector(getShow);
@@ -49,19 +48,14 @@ function SwaptobeWallet() {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
-    //
-    const element = document.querySelector(".swaptobe-wallet");
-    element.classList.add("fadeInBottomToTop");
   }, []);
   useEffect(() => {
-    if (!exchange || exchange.length <= 0 || !userSelectedCurrentcy) return;
-    const rate =
-      exchange.filter((item) => item.title === userSelectedCurrentcy)[0]
-        ?.rate || 0;
-    const result = formatStringNumberCultureUS((totalValue * rate).toFixed(3));
     const ele = document.getElementById("showTotalValue");
-    if (ele) ele.innerHTML = result;
-  }, [userSelectedCurrentcy, exchange, totalValue]);
+    if (ele)
+      ele.innerHTML = new Intl.NumberFormat("en-US").format(
+        userWallet["usdt_balance"] || 0
+      );
+  }, [userWallet]);
   const sellBuyNowHandleClick = function () {
     if (isLogin) {
       history.push(url.p2pTrading);
@@ -86,7 +80,7 @@ function SwaptobeWallet() {
     dispatch(setShow(actionContent.main));
   };
   return (
-    <div className="swaptobe-wallet">
+    <div className="swaptobe-wallet fadeInBottomToTop">
       <div className="container">
         <h5 className="title">
           <span
@@ -128,7 +122,7 @@ function SwaptobeWallet() {
             <div>{t("amount")} USDT</div>
             <div>
               <span id="showTotalValue"></span>{" "}
-              {userSelectedCurrentcy.toUpperCase()}
+              <img src={DOMAIN + "images/USDT.png"} alt="usdt" />
             </div>
           </div>
           <div className="right">

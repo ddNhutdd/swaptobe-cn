@@ -10,7 +10,6 @@ const walletWithdrawSlice = createSlice({
   },
   reducers: {
     setShow: (state, action) => {
-      console.log("here");
       state.show = action.payload;
     },
   },

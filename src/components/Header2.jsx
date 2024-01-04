@@ -168,18 +168,21 @@ export default function Header2({ history }) {
     setIsShowMenuUser(() => !temFlag);
   };
   const logout = () => {
+    const tem = t("logOut");
+    const temTitle = t("success");
+    removeLocalStorage(localStorageVariable.lng);
     localStorage.removeItem(localStorageVariable.user);
     localStorage.removeItem(localStorageVariable.token);
     removeLocalStorage(localStorageVariable.currency);
     dispatch(currencySetCurrent(defaultCurrency));
-    removeLocalStorage(localStorageVariable.lng);
     removeLocalStorage(localStorageVariable.coin);
     history.push(url.home);
     dispatch({ type: "USER_LOGOUT" });
-    callToastSuccess(t("logOut"));
+    callToastSuccess(tem, temTitle);
   };
   const redirectLogin = function () {
     history.push(url.login);
+    setIsShowMenu(() => false);
     return;
   };
   const renderClassWithLogin = function (loggedInClass, notLoggedInYetClass) {
@@ -306,6 +309,9 @@ export default function Header2({ history }) {
               className={`header2__wallet-menu ${renderClassShowMenuWallet()}`}
             >
               <div className="header2__wallet-info">
+                <div className="header2__wallet-info-item user">
+                  <span>{username}</span>
+                </div>
                 <div className="header2__wallet-info-item">
                   <span className="header2__wallet-info-icon">
                     <i className="fa-brands fa-bitcoin"></i>

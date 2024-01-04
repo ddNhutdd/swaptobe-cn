@@ -185,7 +185,7 @@ function FormWithdraw() {
       callApiGetWithdrawHistoryStatus !== api_status.fetching &&
       withdrawHistory.length <= 0
     ) {
-      return <Empty />;
+      return <Empty description={<span>{t("noData")}</span>} />;
     } else if (
       callApiGetWithdrawHistoryStatus !== api_status.fetching &&
       withdrawHistory.length > 0
@@ -306,7 +306,7 @@ function FormWithdraw() {
       callApiGetTransferHistoryStatus !== api_status.fetching &&
       historytransfer.length <= 0
     ) {
-      return <Empty />;
+      return <Empty description={<span>{t("noData")}</span>} />;
     } else if (
       callApiGetTransferHistoryStatus !== api_status.fetching &&
       historytransfer.length > 0

@@ -286,5 +286,17 @@
     "available": "ມີຢູ່",
     "can'tFindUserInformation": "ບໍ່ສາມາດຊອກຫາຂໍ້ມູນຜູ້ໃຊ້",
     "information": "ຂໍ້ມູນ",
-    "ads": "ສະແດງສິນເຊື່ອ"
+    "ads": "ສະແດງສິນເຊື່ອ",
+    "theAmountOfCryptocurrencyIsInsufficient": "ຈຳນວນ​ບັນຊີ​ສະກຸນທີ່​ບໍ່​ພໍລະ​ມີຄວາມ​ຕ້ອງ.",
+    "transfer": "ການ​ຍື່ນ​ຕໍ່",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "ຖ້າ​ທ່ານ​ຕ້ອງ​ການ​ງຽນ​ການ, ກະ​ລຸ​ນາ​ຕິດ​ຕໍ່​ການ​ສະ​ໜັກ​ 114455t56est999.",
+    "content": "ເນື້ອຫາ",
+    "error": "ຜິດ​ພວກ​",
+    "noData": "ບໍ່ມີຂໍ້ມູນ",
+    "listAdvertisementBuy": "ລາຍຊື່ການຊື້ສິນຄ້າ",
+    "listAdvertisementSell": "ລາຍຊື່ການຂາຍສິນຄ້າ",
+    "yourListBank": "ລາຍຊື່ຂອງທ່ານທັງໝົດ",
+    "addBanking": "ເພີ່ມຂໍ້ມູນທະນາຄານ",
+    "buyQuickly": "ຊື້ດ້ວຍຄົນໄວ້",
+    "sellQuickly": "ຂາຍດ້ວຍຄົນໄວ້"
 }

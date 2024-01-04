@@ -210,40 +210,32 @@ export default function P2PTrading2({ history }) {
               <span class="key">${t("seller")}:</span>
               <span class="value">${item.userName}</span>
             </div>
-                
             <div class="col">
               <span class="key">${t("fullName")}:</span>
               <span class="value">${item.ownerAccount}</span>
             </div>
-
             <div class="col">
               <span class="key">${t("bankName")}:</span>
               <span class="value">${item.bankName}</span>
             </div>
-
-                
             <div class="col">
               <span class="key">${t("accountNumber")}:</span>
               <span class="value">${item.numberBank}</span>
             </div>
-
             <div class="col">
               <span class="key">${t("amount")}:</span>
               <span class="value">${item.amount}</span>
             </div>
-
             <div class="col">
               <span class="key">${t("amountMinimum")}:</span>
               <span class="value">${item.amountMinimum}</span>
             </div>
-
             <div class="col">
               <span class="key">${t("available")}:</span>
               <span class="value">${+(item.amount - item.amountSuccess).toFixed(
                 8
               )}</span>
             </div>
-
             <div class="col">
               <span class="key">${t("createdAt")}:</span>
               <span class="value">${item.created_at}</span>
@@ -252,7 +244,6 @@ export default function P2PTrading2({ history }) {
           <button class="sell-coin" name="${item.id}">${t("buy")}</button>
       </div>`;
       }
-
       // add event
       for (const item of containerElement.children) {
         const button = item.querySelector("button");
@@ -291,22 +282,18 @@ export default function P2PTrading2({ history }) {
                 <span class="key">${t("buyer")}:</span>
                 <span class="value">${item.userName}</span>
               </div>
-                
               <div class="col">
                 <span class="key">${t("createdAt")}:</span>
                 <span class="value">${item.created_at}</span>
               </div>
-
               <div class="col">
                 <span class="key">${t("amount")}:</span>
                 <span class="value">${item.amount}</span>
               </div>
-                
               <div class="col">
                 <span class="key">${t("amountMinimum")}:</span>
                 <span class="value">${item.amountMinimum}</span>
               </div>
-
               <div class="col">
                 <span class="key">${t("available")}:</span>
                 <span class="value">${+(
@@ -318,7 +305,6 @@ export default function P2PTrading2({ history }) {
         </div>`;
       }
       // }
-
       // add event
       for (const item of containerElement.children) {
         const button = item.querySelector("button");
@@ -523,7 +509,6 @@ export default function P2PTrading2({ history }) {
     let currentLanguage = i18n.language;
     i18n.on("languageChanged", (newLanguage) => {
       if (newLanguage !== currentLanguage) {
-        console.log("here");
         loadSectionBuy(buySectionPage);
         loadSectionSell(sellSectionPage);
       }

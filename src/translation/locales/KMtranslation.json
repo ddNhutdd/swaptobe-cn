@@ -286,5 +286,17 @@
     "available": "មានអ្នកប្រើប្រាស់",
     "can'tFindUserInformation": "មិនអាចរកឃើញព័ត៌មានអ្នកប្រើប្រាស់",
     "information": "ព័ត៌មាន",
-    "ads": "ការផ្សព្វផ្សាយ"
+    "ads": "ការផ្សព្វផ្សាយ",
+    "theAmountOfCryptocurrencyIsInsufficient": "ចំនួន​នៃ​វាល​ប្រាប់ខ្នាត​អន្តរកិច្ចមិន​គ្រាន់តែ​គ្មាន​ស្ថានភាព​ទេ។",
+    "transfer": "ផ្ទេរ",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "ប្រសិន​បើ​អ្នក​ត្រូវ​គាំទ្រ​សូម​ទាក់ទង​មក​គាំទ្រ​នាម​ដែល​សាកល្បង 114455t56est999។",
+    "content": "មាតិកា",
+    "error": "កំហុស",
+    "noData": "គ្មាន​ទិន្នន័យ",
+    "listAdvertisementBuy": "បញ្ជីទិញព័ត៌មានទីផ្សារ",
+    "listAdvertisementSell": "បញ្ជីលក់ព័ត៌មានទីផ្សារ",
+    "yourListBank": "បញ្ជីធនាគាររបស់អ្នក",
+    "addBanking": "បន្ថែមព័ត៌មានធនាគារ",
+    "buyQuickly": "ទិញដោយរហ័ស",
+    "sellQuickly": "លក់ដោយរហ័ស"
 }

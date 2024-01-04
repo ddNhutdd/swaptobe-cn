@@ -286,5 +286,17 @@
     "available": "Available",
     "can'tFindUserInformation": "Can't find user information",
     "information": "Information",
-    "ads": "Advertisements"
+    "ads": "Advertisements",
+    "theAmountOfCryptocurrencyIsInsufficient": "The amount of cryptocurrency is insufficient.",
+    "transfer": "Transfer",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "If you need assistance, please contact the 114455t56est999 merchant.",
+    "content": "Content",
+    "error": "Error",
+    "noData": "No Data",
+    "listAdvertisementBuy": "Advertisement Buying List",
+    "listAdvertisementSell": "Advertisement Selling List",
+    "yourListBank": "Your List of Banks",
+    "addBanking": "Add Banking Information",
+    "buyQuickly": "Buy Quickly",
+    "sellQuickly": "Sell Quickly"
 }

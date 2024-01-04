@@ -25,7 +25,7 @@
                 letter-spacing: 0.5px;
             }
 
-            input[type="checkbox"]#pendingCheckbox:checked + label {
+            input[type="checkbox"]#pendingCheckbox:checked+label {
                 i {
                     display: block;
                 }
@@ -37,7 +37,7 @@
                 margin-bottom: 15px;
                 align-items: center;
                 color: $new-text-color-white;
-                font-size: 16px;
+                font-size: 14px;
 
                 label {
                     margin-bottom: 0;
@@ -103,7 +103,7 @@
                     padding: 10px 15px;
                 }
 
-                & > div {
+                &>div {
                     @media screen and (max-width: 576px) {
                         width: 100%;
                     }
@@ -132,6 +132,7 @@
                                 &:first-child {
                                     font-weight: 600;
                                     text-align: right;
+                                    color: $neutral-10;
 
                                     @media screen and (max-width: 992px) {
                                         width: 152px;
@@ -150,7 +151,7 @@
                                     }
                                 }
 
-                                &.logo-coin + td {
+                                &.logo-coin+td {
                                     span {
                                         display: block;
                                         transform: translateY(2px);
@@ -215,6 +216,7 @@
 
 .ads-history__modal-container {
     padding: 16px 24px;
+    color: $new-text-color-white;
 
     .ads-history__modal-header {
         font-size: 20px;

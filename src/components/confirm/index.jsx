@@ -81,7 +81,10 @@ function Confirm() {
     }
     const { id: profileId } = profile;
     const apiRes = await fetchApiGetInfoP2p();
-    if (!apiRes) {
+    console.log();
+    if (callApiStatus === api_status.fetching) {
+      return;
+    } else if (!apiRes) {
       history.push(url.p2p_management);
       return;
     }

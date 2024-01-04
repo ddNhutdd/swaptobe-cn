@@ -791,7 +791,7 @@ function Profile() {
     } else if (qrValue.addressCode === null) {
       return (
         <div className={style}>
-          <Empty />
+          <Empty description={<span>{t("noData")}</span>} />
         </div>
       );
     } else {
@@ -955,7 +955,7 @@ function Profile() {
     } else if (listPayment.length <= 0) {
       return (
         <div className="spin-container">
-          <Empty />
+          <Empty description={<span>{t("noData")}</span>} />
         </div>
       );
     } else {
@@ -1089,7 +1089,7 @@ function Profile() {
         </div>
         <div className="profile__payment">
           <div className="profile__card-container box">
-            <div className="profile__title">Payment</div>
+            <div className="profile__title">{t("payment")}</div>
             <div className="profile__payment-content">
               <form id="profilePaymentForm">
                 <div className="profile__input">
@@ -1152,12 +1152,12 @@ function Profile() {
                     className="profile__payment-button"
                   >
                     <div className="loader --d-none"></div>
-                    Add banking
+                    {t("addBanking")}
                   </button>
                 </div>
               </form>
             </div>
-            <div className="profile__title">Your list bank:</div>
+            <div className="profile__title">{t("yourListBank")}:</div>
             <div className="profile__payment-list">{renderPaymenList()}</div>
             <div className="profile__paging">
               <Pagination

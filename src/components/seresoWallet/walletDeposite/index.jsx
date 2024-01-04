@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pagination, Spin, Empty } from "antd";
 import socket from "src/util/socket";
 import { useTranslation } from "react-i18next";
@@ -106,7 +106,7 @@ function SeresoWalletDeposit() {
       selectedCoin.current || coinFromRedux
     );
     addressCloseSpinner();
-    address.current = responFromApi;
+    setAddress(responFromApi);
     if (responFromApi) {
       getElementById("addressCode").innerHTML = responFromApi;
       addressShowQr();
@@ -276,7 +276,7 @@ function SeresoWalletDeposit() {
     addClassToElementById("historyEmpty", "--d-none");
   };
   //
-  const address = useRef("");
+  const [address, setAddress] = useState("");
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const coinFromRedux = useSelector(getCoin);
@@ -420,7 +420,7 @@ function SeresoWalletDeposit() {
                     id="addressEmpty"
                     className={`fadeInBottomToTop spin-container --d-none`}
                   >
-                    <Empty />
+                    <Empty description={<span>{t("noData")}</span>} />
                   </div>
                   <div
                     id="address"
@@ -433,7 +433,7 @@ function SeresoWalletDeposit() {
                           maxWidth: "100%",
                           width: "100%",
                         }}
-                        value={address.current ?? ""}
+                        value={address ?? ""}
                       />
                     </div>
                   </div>
@@ -442,7 +442,7 @@ function SeresoWalletDeposit() {
                       id="addressCodeContainer"
                       className="address-code fadeInBottomToTop --d-none"
                     >
-                      <div className="address-code-title">address</div>
+                      <div className="address-code-title">{t("address")}</div>
                       <div id="addressCode" className="code"></div>
                     </div>
                     <span
@@ -475,7 +475,7 @@ function SeresoWalletDeposit() {
             <Spin />
           </div>
           <div id="historyEmpty" className="spin-container fadeInBottomToTop">
-            <Empty />
+            <Empty description={<span>{t("noData")}</span>} />
           </div>
           <div className="wallet-deposite-paging">
             <Pagination defaultCurrent={1} total={10} />

@@ -286,5 +286,17 @@
     "available": "利用可能",
     "can'tFindUserInformation": "ユーザー情報が見つかりません",
     "information": "情報",
-    "ads": "広告"
+    "ads": "広告",
+    "theAmountOfCryptocurrencyIsInsufficient": "仮想通貨の量が不足しています。",
+    "transfer": "転送",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "サポートが必要な場合は、114455t56est999商人にお問い合わせください。",
+    "content": "コンテンツ",
+    "error": "エラー",
+    "noData": "データがありません",
+    "listAdvertisementBuy": "広告購入リスト",
+    "listAdvertisementSell": "広告販売リスト",
+    "yourListBank": "銀行リスト",
+    "addBanking": "銀行情報を追加",
+    "buyQuickly": "素早く購入",
+    "sellQuickly": "素早く販売"
 }

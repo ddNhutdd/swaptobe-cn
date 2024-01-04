@@ -208,12 +208,6 @@ function AdsHistory() {
       return;
     } else {
       const listRecord = [];
-      const hideClass = function () {
-        if (action.current === actionType.buy) {
-          return "--d-none";
-        }
-        return "";
-      };
       for (const item of apiRes) {
         const price = listCoin.current.find(
           (c) => c.name === item.symbol
@@ -229,18 +223,6 @@ function AdsHistory() {
                   <tr>
                     <td>{t("userName")}:</td>
                     <td>{item.userName}</td>
-                  </tr>
-                  <tr className={hideClass()}>
-                    <td>{t("bankName")}:</td>
-                    <td>{item.bankName}</td>
-                  </tr>
-                  <tr className={hideClass()}>
-                    <td>{t("accountName")}:</td>
-                    <td>{item.ownerAccount}</td>
-                  </tr>
-                  <tr className={hideClass()}>
-                    <td>{t("accountNumber")}:</td>
-                    <td>{item.numberBank}</td>
                   </tr>
                 </tbody>
               </table>
@@ -323,7 +305,7 @@ function AdsHistory() {
                           }}
                           id={"adsHistoryActionCancelButton" + item.id}
                         >
-                          Cancel
+                          {t("cancel")}
                         </button>
                       </div>
                     </td>
@@ -450,6 +432,12 @@ function AdsHistory() {
   const modalConfirmOkClickHandle = function () {
     if (callApiCancelStatus === api_status.fetching) return;
     cancelAds(cancelAdsId.current);
+    closeModal();
+  };
+  const renderTitle = function () {
+    return action.current === actionType.buy
+      ? t("listAdvertisementBuy")
+      : t("listAdvertisementSell");
   };
   return (
     <div className="ads-history">
@@ -492,13 +480,10 @@ function AdsHistory() {
               </label>
             </div>
           </div>
-          <h3>
-            {t("list")} advertisement{" "}
-            <span id="adsTypeList">{action.current}</span>
-          </h3>
+          <h3>{renderTitle()}</h3>
           <div id="ads-history__content">{listRecord}</div>
           <div id="adsHistoryEmpty" className="spin-container --d-none">
-            <Empty />
+            <Empty description={<span>{t("noData")}</span>} />
           </div>
           <div id="adsHistorySpinner" className="spin-container --d-none">
             <Spin />

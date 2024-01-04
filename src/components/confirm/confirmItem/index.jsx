@@ -83,7 +83,7 @@ function ConfirmItem(props) {
       (item) => item.title === currentCurrency
     ).rate;
     const result = money * currencyRate;
-    return new Intl.NumberFormat(currencyMapper[currentCurrency], {
+    return new Intl.NumberFormat(currencyMapper["USD"], {
       style: "currency",
       currency: currentCurrency,
     }).format(result);
@@ -326,7 +326,7 @@ function ConfirmItem(props) {
   };
   const copyButtonClickHandle = async function (text) {
     await navigator.clipboard.writeText(text);
-    callToastSuccess("Success");
+    callToastSuccess(t("success"));
   };
   const renderBankInfo = function () {
     const inputString = t("accountInfoVietcomBank");
@@ -411,6 +411,26 @@ function ConfirmItem(props) {
       return content.userName;
     }
   };
+  const renderSectionTrader = function () {
+    const listString = ["114455t56est999"];
+    const callback = function (match, index) {
+      switch (match) {
+        case listString.at(0):
+          return (
+            <span key={index} className="confirm--green">
+              {renderTrader()}
+            </span>
+          );
+        default:
+          break;
+      }
+    };
+    return processString(
+      t("ifYouNeedAssistancePleaseContactTheTestMerchant"),
+      listString,
+      callback
+    );
+  };
   return (
     <>
       <div className="confirm">
@@ -427,14 +447,11 @@ function ConfirmItem(props) {
                 <td className="confirm--green">{code}</td>
               </tr>
               <tr>
-                <td>Thương nhân:</td>
+                <td>{t("trader")}:</td>
                 <td>
+                  <div>{renderSectionTrader()}</div>
                   <div>
-                    Nếu cần hỗ trợ vui lòng liên hệ thương nhân{" "}
-                    <span className="confirm--green">{renderTrader()}</span>
-                  </div>
-                  <div>
-                    Email:{" "}
+                    {t("email")}:{" "}
                     <span className="confirm--green">
                       {renderTraderEmail()}
                     </span>
@@ -491,7 +508,7 @@ function ConfirmItem(props) {
                 <td>
                   <div className="confirm__money">
                     <span className="confirm--red">
-                      {new Intl.NumberFormat("vi-VN", {
+                      {new Intl.NumberFormat(currencyMapper["USD"], {
                         style: "currency",
                         currency: "VND",
                       }).format(pay)}
@@ -536,7 +553,7 @@ function ConfirmItem(props) {
           </div>
         </div>
         <Modal
-          title={<div style={{ textAlign: "center" }}>Payment Info</div>}
+          title={<div style={{ textAlign: "center" }}>{t("paymentInfo")}</div>}
           open={isModalOpen}
           onOk={handleCancelModalPayment}
           onCancel={handleCancelModalPayment}
@@ -577,7 +594,7 @@ function ConfirmItem(props) {
                   ></i>
                 </div>
               </Descriptions.Item>
-              <Descriptions.Item label="Nội dung">
+              <Descriptions.Item label={t("content")}>
                 <div className="green-text">{code}</div>
                 <div className="icon-copy">
                   <i

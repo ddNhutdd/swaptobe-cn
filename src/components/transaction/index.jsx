@@ -27,6 +27,7 @@ import {
   hideElement,
   processString,
   roundDecimalValues,
+  setLocalStorage,
   showElement,
 } from "src/util/common";
 import {
@@ -58,7 +59,9 @@ function Transaction() {
   const currency = useSelector(getCurrent);
   const exchangeRateDisparity = useSelector(getExchangeRateDisparity);
   const exchange = useSelector(getExchange);
-  const selectedAds = getLocalStorage(localStorageVariable.adsItem);
+  const [selectedAds, setSelectedAds] = useState(
+    getLocalStorage(localStorageVariable.adsItem)
+  );
   const amount = useRef();
   const amountMinimum = useRef();
   const bankName = useRef();
@@ -72,9 +75,10 @@ function Transaction() {
   const idUserBanking = useRef();
   const amountInputFormBuy = useRef(null); // input element
   const amountInputFormSell = useRef(null);
+  const available = useRef(null);
   const [isShowDropdownAds, setIsShowDropdownAds] = useState(false);
   const idAds = useRef();
-  let hasRun = useRef(false);
+  const hasRun = useRef(false);
   const callApiStatus = useRef(api_status.pending);
   const [showContent, setShowContent] = useState(
     selectedAds.side === actionType.sell ? false : true
@@ -89,14 +93,14 @@ function Transaction() {
       return;
     }
     //
-    loadDataFirstTime();
+    loadDataFirstTime(selectedAds);
     fetchApiLoadListAds();
     //
-    document.addEventListener("click", closeDropdownPayment);
+    document.addEventListener("click", closeDropdown);
     setElementWidth();
     window.addEventListener("resize", setElementWidth);
     return () => {
-      document.removeEventListener("click", closeDropdownPayment);
+      document.removeEventListener("click", closeDropdown);
     };
   }, []);
   useEffect(() => {
@@ -105,7 +109,7 @@ function Transaction() {
   }, [listCoinRealtime, currency, exchangeRateDisparity, exchange]);
   useEffect(() => {
     if (!hasRun.current) {
-      const etiVnd = calcUserPay();
+      const etiVnd = calcUserPay(selectedAds);
       amountInputFormBuy.current.value = new Intl.NumberFormat("en-US").format(
         etiVnd
       );
@@ -154,7 +158,7 @@ function Transaction() {
       ? false
       : valid;
   };
-  const calcUserPay = function () {
+  const calcUserPay = function (selectedAds) {
     if (
       !listCoinRealtime ||
       listCoinRealtime.length <= 0 ||
@@ -174,7 +178,6 @@ function Transaction() {
     price *= mt;
     exchangeVND *= mt;
     result = amountMini * price * exchangeVND;
-    console.log(mt, amountMini, price, exchangeVND);
     mt = mt * mt * mt;
     return result / mt;
   };
@@ -239,7 +242,7 @@ function Transaction() {
       ? processString(t("buyBtcViaBankTransferVnd"), listString, callback)
       : processString(t("sellEthViaBankTransferVnd"), listString, callback);
   };
-  const loadDataFirstTime = function () {
+  const loadDataFirstTime = function (selectedAds) {
     if (!renderPaymentDropdown()) {
       callToastError(t("noBankFoundInAccount"));
       history.push(url.profile);
@@ -256,6 +259,7 @@ function Transaction() {
     side.current = selectedAds.side;
     symbol.current = selectedAds.symbol;
     idAds.current = selectedAds.id;
+    available.current = selectedAds.amount - selectedAds.amountSuccess;
     if (side.current === actionType.buy) {
       setCurrentAction(actionType.sell);
     } else {
@@ -280,6 +284,8 @@ ${symbol.current}`;
     getElementById("transactionBankName").innerHTML = bankName.current;
     getElementById("transactionUserName").innerHTML = userName.current;
     getElementById("receiveUnitTransaction").innerHTML = symbol.current;
+    getElementById("transactionAvailable").innerHTML =
+      +available.current.toFixed(8) + " " + symbol.current;
   };
   const buyNowSubmitHandle = async function (e) {
     e.preventDefault();
@@ -429,12 +435,19 @@ ${symbol.current}`;
   };
   const dropdownPaymentToggle = function (e) {
     e.stopPropagation();
-    getClassListFromElementById("paymentDropdownSelected").toggle("active");
-    getClassListFromElementById("paymentDropdownMenu").toggle("show");
+    const temp = getClassListFromElementById(
+      "paymentDropdownSelected"
+    ).contains("active");
+    closeDropdown();
+    if (!temp) {
+      getClassListFromElementById("paymentDropdownSelected").add("active");
+      getClassListFromElementById("paymentDropdownMenu").add("show");
+    }
   };
-  const closeDropdownPayment = function () {
+  const closeDropdown = function () {
     getClassListFromElementById("paymentDropdownMenu").remove("show");
     getClassListFromElementById("paymentDropdownSelected").remove("active");
+    setIsShowDropdownAds(() => false);
   };
   const setElementWidth = function () {
     const windowWidth =
@@ -578,6 +591,27 @@ ${symbol.current}`;
     const result = amountCoin * price * excha;
     elementOutput.value = formatStringNumberCultureUS(result.toFixed(3));
   };
+  const renderListAds = function () {
+    if (!listAds || listAds.length <= 0) return;
+    return listAds.map((item) => (
+      <div
+        onClick={adsClickHandle.bind(null, item)}
+        key={item.id}
+        className="dropdown-item active"
+      >
+        {item.userName}
+      </div>
+    ));
+  };
+  const adsClickHandle = function (item) {
+    setSelectedAds(item);
+    loadDataFirstTime(item);
+    const etiVnd = calcUserPay(item);
+    amountInputFormBuy.current.value = new Intl.NumberFormat("en-US").format(
+      etiVnd
+    );
+    setLocalStorage(localStorageVariable.adsItem, item);
+  };
   const fetchApiLoadListAds = function () {
     if (callApiAdsStatus === api_status.fetching) return;
     else setCallApiAdsStatus(api_status.fetching);
@@ -586,7 +620,6 @@ ${symbol.current}`;
         getListAdsBuy({ limit: 999999999999, page: 1, symbol: symbol.current })
           .then((resp) => {
             setCallApiAdsStatus(api_status.fulfilled);
-            console.log(resp);
             setListAds(resp.data.data.array);
           })
           .catch((err) => {
@@ -603,7 +636,6 @@ ${symbol.current}`;
         })
           .then((resp) => {
             setCallApiAdsStatus(api_status.fulfilled);
-            console.log(resp);
             setListAds(resp.data.data.array);
           })
           .catch((err) => {
@@ -637,8 +669,11 @@ ${symbol.current}`;
   const renderClassShowDropdownAds = function () {
     return isShowDropdownAds ? "show" : "";
   };
-  const dropdownAdsToggle = function () {
-    setIsShowDropdownAds((s) => !s);
+  const dropdownAdsToggle = function (e) {
+    e.stopPropagation();
+    const temp = isShowDropdownAds;
+    closeDropdown();
+    setIsShowDropdownAds(() => !temp);
   };
   return (
     <>
@@ -655,12 +690,12 @@ ${symbol.current}`;
           </div>
           <div className="box transaction__box ">
             <div className="transaction__user-dropdown">
-              <label>{t("thuong nhan")}:</label>
+              <label>{t("trader")}:</label>
               <div
                 onClick={dropdownAdsToggle}
                 className="transaction__user-selected"
               >
-                <span>test</span>
+                <span>{selectedAds.userName}</span>
                 <span>
                   <i className="fa-solid fa-caret-down"></i>
                 </span>
@@ -669,11 +704,7 @@ ${symbol.current}`;
                 className={`transaction__user-menu ${renderClassShowDropdownAds()}`}
               >
                 <div className="dropdown-menu ">
-                  <div className={renderClassAds()}>
-                    <div className="dropdown-item active">Dung</div>
-                    <div className="dropdown-item">huyen</div>
-                    <div className="dropdown-item">Thien</div>
-                  </div>
+                  <div className={renderClassAds()}>{renderListAds()}</div>
                   <div className={`spin-container ${renderClassAdsSpin()}`}>
                     <Spin />
                   </div>
@@ -799,6 +830,12 @@ ${symbol.current}`;
               <span>{t("price")}:</span>
               <span id="transaction__price"></span>
             </div>
+            <div className="transaction__box-item">
+              <span>{t("trader")}:</span>
+              <span className="transaction__username" id="transactionUserName">
+                queencoin9999
+              </span>
+            </div>
             <div className="transaction__box-item amount">
               <span>{t("amountLimits")}:</span>
               <span className="transaction__box-amount-container">
@@ -814,6 +851,12 @@ ${symbol.current}`;
               </span>
             </div>
             <div className="transaction__box-item">
+              <span>{t("available")}:</span>
+              <span id="transactionAvailable" className="transaction--bold">
+                Vietcombank
+              </span>
+            </div>
+            <div className="transaction__box-item">
               <span>{t("method")}:</span>
               <span id="transactionBankName" className="transaction--bold">
                 Vietcombank
@@ -822,17 +865,6 @@ ${symbol.current}`;
             <div className="transaction__box-item">
               <span>{t("paymentWindow")}:</span>
               <span>15 {t("minutes")}</span>
-            </div>
-          </div>
-          <h3 className="transaction__title transaction--bold">
-            {t("infomationAboutPartners")}
-          </h3>
-          <div className="box transaction__box">
-            <div className="transaction__box-item">
-              <span>{t("trader")}:</span>
-              <span className="transaction__username" id="transactionUserName">
-                queencoin9999
-              </span>
             </div>
           </div>
           <div className="box transaction__box">

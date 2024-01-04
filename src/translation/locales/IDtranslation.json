@@ -286,5 +286,17 @@
     "available": "Tersedia",
     "can'tFindUserInformation": "Tidak dapat menemukan informasi pengguna",
     "information": "Informasi",
-    "ads": "Iklan"
+    "ads": "Iklan",
+    "theAmountOfCryptocurrencyIsInsufficient": "Jumlah cryptocurrency tidak mencukupi.",
+    "transfer": "Transfer",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "Jika Anda memerlukan bantuan, silakan hubungi pedagang uji coba 114455t56est999.",
+    "content": "Konten",
+    "error": "Kesalahan",
+    "noData": "Tidak Ada Data",
+    "listAdvertisementBuy": "Daftar Pembelian Iklan",
+    "listAdvertisementSell": "Daftar Penjualan Iklan",
+    "yourListBank": "Daftar Bank Anda",
+    "addBanking": "Tambahkan Informasi Perbankan",
+    "buyQuickly": "Beli dengan Cepat",
+    "sellQuickly": "Jual dengan Cepat"
 }

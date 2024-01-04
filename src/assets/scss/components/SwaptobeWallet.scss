@@ -67,6 +67,16 @@
                     font-size: 28px;
                     font-weight: 700;
                     word-break: break-word;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+
+                img {
+                    width: 30px;
+                    height: 30px;
+                    object-fit: cover;
                 }
             }
 

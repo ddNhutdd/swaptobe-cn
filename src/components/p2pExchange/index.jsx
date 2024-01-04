@@ -118,18 +118,29 @@ const P2pExchange = memo(function () {
     if (!mainData || mainData.length <= 0) return;
     return mainData.map((item) => (
       <div key={item.id} className="p2pExchange__data-content-item">
-        <div className="p2pExchange__data-cell">User: {item.userName}</div>
+        <div className="p2pExchange__data-cell">
+          <span className="p2pExchange__data-cell-title"> User:</span>{" "}
+          {item.userName}
+        </div>
         <div className="p2pExchange__data-cell amount">
-          Amount Available: {+(item.amount - item.amountSuccess).toFixed(8)}
+          <span className="p2pExchange__data-cell-title">
+            Amount Available:
+          </span>{" "}
+          {+(item.amount - item.amountSuccess).toFixed(8)}
         </div>
         <div className="p2pExchange__data-cell minimum">
-          Minimum: {item.amountMinimum}
+          <span className="p2pExchange__data-cell-title">Minimum:</span>{" "}
+          {item.amountMinimum}
         </div>
         <div className="p2pExchange__data-cell action">
           {item.side === p2pExchangeType.buy ? (
-            <Button onClick={buySellClickHandle.bind(null, item)}>Sell</Button>
+            <Button onClick={buySellClickHandle.bind(null, item)}>
+              {t("sell")}
+            </Button>
           ) : (
-            <Button onClick={buySellClickHandle.bind(null, item)}>Buy</Button>
+            <Button onClick={buySellClickHandle.bind(null, item)}>
+              {t("buy")}
+            </Button>
           )}
         </div>
       </div>
@@ -306,9 +317,9 @@ const P2pExchange = memo(function () {
   const renderQuickBuySellButton = function () {
     switch (type) {
       case p2pExchangeType.buy:
-        return "Mua nhanh";
+        return t("buyQuickly");
       case p2pExchangeType.sell:
-        return "Ban nhanh";
+        return t("sellQuickly");
       default:
         break;
     }
@@ -337,7 +348,7 @@ const P2pExchange = memo(function () {
               onChange={amountInputChangeHandle}
               style={{
                 height: "45px",
-                fontSize: "16px",
+                fontSize: "14px",
                 border: 0,
                 letterSpacing: "0.5px",
               }}
@@ -370,7 +381,7 @@ const P2pExchange = memo(function () {
           <div
             className={`spin-container p2pExchange__data-empty ${renderClassEmpty()}`}
           >
-            <Empty />
+            <Empty description={<span>{t("noData")}</span>} />
           </div>
         </div>
         <div className="p2pExchange__paging">
@@ -395,7 +406,7 @@ const P2pExchange = memo(function () {
           </span>
         </div>
         <Modal
-          title="Choose the coin you want"
+          title={t("chooseTheCoinYouWant")}
           open={isModalOpen}
           onCancel={handleCancelModalChooseCoin}
           width={600}

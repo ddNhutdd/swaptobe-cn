@@ -286,5 +286,17 @@
     "available": "사용 가능",
     "can'tFindUserInformation": "사용자 정보를 찾을 수 없습니다",
     "information": "정보",
-    "ads": "광고"
+    "ads": "광고",
+    "theAmountOfCryptocurrencyIsInsufficient": "암호화폐의 양이 부족합니다.",
+    "transfer": "이전",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "도움이 필요한 경우 114455t56est999 상인에게 문의하십시오.",
+    "content": "콘텐츠",
+    "error": "오류",
+    "noData": "데이터 없음",
+    "listAdvertisementBuy": "광고 구매 목록",
+    "listAdvertisementSell": "광고 판매 목록",
+    "yourListBank": "당신의 은행 목록",
+    "addBanking": "은행 정보 추가",
+    "buyQuickly": "빠르게 구매",
+    "sellQuickly": "빠르게 판매"
 }

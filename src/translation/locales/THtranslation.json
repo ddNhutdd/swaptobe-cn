@@ -286,5 +286,17 @@
     "available": "มี",
     "can'tFindUserInformation": "ไม่พบข้อมูลผู้ใช้",
     "information": "ข้อมูล",
-    "ads": "โฆษณา"
+    "ads": "โฆษณา",
+    "theAmountOfCryptocurrencyIsInsufficient": "จำนวน cryptocurrency ไม่เพียงพอ",
+    "transfer": "โอน",
+    "ifYouNeedAssistancePleaseContactTheTestMerchant": "หากคุณต้องการความช่วยเหลือ โปรดติดต่อ 114455t56est999 ผู้ประกอบการ",
+    "content": "เนื้อหา",
+    "error": "ข้อผิดพลาด",
+    "noData": "ไม่มีข้อมูล",
+    "listAdvertisementBuy": "รายการซื้อโฆษณา",
+    "listAdvertisementSell": "รายการขายโฆษณา",
+    "yourListBank": "รายการธนาคารของคุณ",
+    "addBanking": "เพิ่มข้อมูลการทำธุรกรรมทางธนาคาร",
+    "buyQuickly": "ซื้อด่วน",
+    "sellQuickly": "ขายด่วน"
 }
