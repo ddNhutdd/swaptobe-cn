@@ -288,6 +288,7 @@ function ConfirmItem(props) {
     //
     const actionContainer = getElementById("actionConfirm" + index);
     actionContainer.innerHTML = "";
+    console.log(typeUser, userId, profileId);
     if (typeUser === 2 && userId === profileId) {
       // confirm button
       const confirmButton = document.createElement("button");
@@ -432,193 +433,189 @@ function ConfirmItem(props) {
     );
   };
   return (
-    <>
-      <div className="confirm">
-        <div className="container">
-          <table id="confirm__table">
-            <thead>
-              <tr className="confirm__header">
-                <td colSpan={2}>{header} </td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{t("transactionCode")}</td>
-                <td className="confirm--green">{code}</td>
-              </tr>
-              <tr>
-                <td>{t("trader")}:</td>
-                <td>
-                  <div>{renderSectionTrader()}</div>
-                  <div>
-                    {t("email")}:{" "}
-                    <span className="confirm--green">
-                      {renderTraderEmail()}
-                    </span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>{t("status")}</td>
-                <td>
-                  <div className="confirm__status">
-                    <span>
-                      <div className="confirm__status-text confirm--blue">
-                        <div className="loader"></div>
-                        {t("waitingForPayment")}
-                      </div>
-                    </span>
-                    <span className="confirm--red confirm__status-time">
-                      {counter}
-                    </span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>{t("payment")}</td>
-                <td>
-                  <div className="confirm__payment">
-                    <button onClick={showModalPayment}>
-                      {t("openPaymentScreen")}
-                    </button>
-                    <span className="confirm--green">
-                      {t(
-                        "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify"
-                      )}
-                    </span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  {userCurrentAction === actionType.buy
-                    ? t("youAreBuying")
-                    : t("youAreSelling")}
-                </td>
-                <td className="confirm--red">
-                  {amount} {symbol}
-                </td>
-              </tr>
-              <tr>
-                <td>{t("rate")}</td>
-                <td className="confirm--red">{calcMoney(rate)}</td>
-              </tr>
-              <tr>
-                <td>{t("amount")}</td>
-                <td>
-                  <div className="confirm__money">
-                    <span className="confirm--red">
-                      {new Intl.NumberFormat(currencyMapper["USD"], {
-                        style: "currency",
-                        currency: "VND",
-                      }).format(pay)}
-                    </span>
-                    <span>{t("transactionFee")}</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>{t("time")}</td>
-                <td
-                  id={"createdAt" + index}
-                  className="confirm--green confirm__time"
-                >
-                  13-12-2023 | 04:29
-                </td>
-              </tr>
-              <tr>
-                <td>{t("note")}</td>
-                <td className="confirm__comment">
-                  <li>{t("makePayment")}</li>
-                  <li>{t("cryptoOnly")}</li>
-                  <li>{t("websiteTransaction")}</li>
-                  <li>{t("paymentDelayOrError")}</li>
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={2}>
-                  <div
-                    className="confirm__action"
-                    id={"actionConfirm" + index}
-                  ></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div
-            id={"confirm__spinner" + index}
-            className="spin-container --d-none"
-          >
-            <Spin />
+    <div className="confirm">
+      <div className="container">
+        <table id="confirm__table">
+          <thead>
+            <tr className="confirm__header">
+              <td colSpan={2}>{header} </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{t("transactionCode")}</td>
+              <td className="confirm--green">{code}</td>
+            </tr>
+            <tr>
+              <td>{t("trader")}:</td>
+              <td>
+                <div>{renderSectionTrader()}</div>
+                <div>
+                  {t("email")}:{" "}
+                  <span className="confirm--green">{renderTraderEmail()}</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>{t("status")}</td>
+              <td>
+                <div className="confirm__status">
+                  <span>
+                    <div className="confirm__status-text confirm--blue">
+                      <div className="loader"></div>
+                      {t("waitingForPayment")}
+                    </div>
+                  </span>
+                  <span className="confirm--red confirm__status-time">
+                    {counter}
+                  </span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>{t("payment")}</td>
+              <td>
+                <div className="confirm__payment">
+                  <button onClick={showModalPayment}>
+                    {t("openPaymentScreen")}
+                  </button>
+                  <span className="confirm--green">
+                    {t(
+                      "youConfirmThatYouHaveMadeTheTransferPleaseWaitForUsToVerify"
+                    )}
+                  </span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {userCurrentAction === actionType.buy
+                  ? t("youAreBuying")
+                  : t("youAreSelling")}
+              </td>
+              <td className="confirm--red">
+                {amount} {symbol}
+              </td>
+            </tr>
+            <tr>
+              <td>{t("rate")}</td>
+              <td className="confirm--red">{calcMoney(rate)}</td>
+            </tr>
+            <tr>
+              <td>{t("amount")}</td>
+              <td>
+                <div className="confirm__money">
+                  <span className="confirm--red">
+                    {new Intl.NumberFormat(currencyMapper["USD"], {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(pay)}
+                  </span>
+                  <span>{t("transactionFee")}</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>{t("time")}</td>
+              <td
+                id={"createdAt" + index}
+                className="confirm--green confirm__time"
+              >
+                13-12-2023 | 04:29
+              </td>
+            </tr>
+            <tr>
+              <td>{t("note")}</td>
+              <td className="confirm__comment">
+                <li>{t("makePayment")}</li>
+                <li>{t("cryptoOnly")}</li>
+                <li>{t("websiteTransaction")}</li>
+                <li>{t("paymentDelayOrError")}</li>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2}>
+                <div
+                  className="confirm__action"
+                  id={"actionConfirm" + index}
+                ></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          id={"confirm__spinner" + index}
+          className="spin-container --d-none"
+        >
+          <Spin />
+        </div>
+      </div>
+      <Modal
+        title={<div style={{ textAlign: "center" }}>{t("paymentInfo")}</div>}
+        open={isModalOpen}
+        onOk={handleCancelModalPayment}
+        onCancel={handleCancelModalPayment}
+        okText="Gửi hình thanh toán"
+        okButtonProps={{ style: { display: "none" } }}
+        cancelText={t("close")}
+        width={800}
+        className="confirm-modal"
+      >
+        <div className="descriptionText">
+          {renderTitleModal()}
+          <div className="blue-text descriptionText__remind">
+            {t(
+              "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow"
+            )}
           </div>
         </div>
-        <Modal
-          title={<div style={{ textAlign: "center" }}>{t("paymentInfo")}</div>}
-          open={isModalOpen}
-          onOk={handleCancelModalPayment}
-          onCancel={handleCancelModalPayment}
-          okText="Gửi hình thanh toán"
-          okButtonProps={{ style: { display: "none" } }}
-          cancelText={t("close")}
-          width={800}
-          className="confirm-modal"
-        >
-          <div className="descriptionText">
-            {renderTitleModal()}
-            <div className="blue-text descriptionText__remind">
-              {t(
-                "pleaseMakeThePaymentForTheCorrectAmountContentAndAccountNumberBelow"
-              )}
-            </div>
-          </div>
-          <div className="paymentContent">
-            <Descriptions
-              column={1}
-              title=""
-              bordered
-              size={isMobileViewport ? "small" : "middle"}
-            >
-              <Descriptions.Item label={t("amount")}>
-                <div className="green-text">{pay}</div>
-                <div className="icon-copy">
-                  <i
-                    onClick={copyButtonClickHandle.bind(
-                      null,
-                      new Intl.NumberFormat("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                        maximumSignificantDigits: 3,
-                      }).format(pay)
-                    )}
-                    className="fa-solid fa-copy"
-                  ></i>
-                </div>
-              </Descriptions.Item>
-              <Descriptions.Item label={t("content")}>
-                <div className="green-text">{code}</div>
-                <div className="icon-copy">
-                  <i
-                    onClick={copyButtonClickHandle.bind(null, code)}
-                    className="fa-solid fa-copy"
-                  ></i>
-                </div>
-              </Descriptions.Item>
-              <Descriptions.Item label={t("accountNumber")}>
-                <div>
-                  <div>{renderBankInfo()}</div>
-                </div>
-                <div className="icon-copy">
-                  <i
-                    onClick={copyButtonClickHandle.bind(null, numberBank)}
-                    className="fa-solid fa-copy"
-                  ></i>
-                </div>
-              </Descriptions.Item>
-            </Descriptions>
-          </div>
-        </Modal>
-      </div>
-    </>
+        <div className="paymentContent">
+          <Descriptions
+            column={1}
+            title=""
+            bordered
+            size={isMobileViewport ? "small" : "middle"}
+          >
+            <Descriptions.Item label={t("amount")}>
+              <div className="green-text">{pay}</div>
+              <div className="icon-copy">
+                <i
+                  onClick={copyButtonClickHandle.bind(
+                    null,
+                    new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                      maximumSignificantDigits: 3,
+                    }).format(pay)
+                  )}
+                  className="fa-solid fa-copy"
+                ></i>
+              </div>
+            </Descriptions.Item>
+            <Descriptions.Item label={t("content")}>
+              <div className="green-text">{code}</div>
+              <div className="icon-copy">
+                <i
+                  onClick={copyButtonClickHandle.bind(null, code)}
+                  className="fa-solid fa-copy"
+                ></i>
+              </div>
+            </Descriptions.Item>
+            <Descriptions.Item label={t("accountNumber")}>
+              <div>
+                <div>{renderBankInfo()}</div>
+              </div>
+              <div className="icon-copy">
+                <i
+                  onClick={copyButtonClickHandle.bind(null, numberBank)}
+                  className="fa-solid fa-copy"
+                ></i>
+              </div>
+            </Descriptions.Item>
+          </Descriptions>
+        </div>
+      </Modal>
+    </div>
   );
 }
 export default ConfirmItem;

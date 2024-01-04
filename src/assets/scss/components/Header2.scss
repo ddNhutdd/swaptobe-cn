@@ -299,6 +299,11 @@
 
               &.user {
                 padding-left: 27px;
+                display: none;
+
+                @media screen and (max-width:992px) {
+                  display: block;
+                }
               }
 
               .header2__wallet-info-icon {
