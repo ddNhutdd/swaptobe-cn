@@ -17,7 +17,6 @@ import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDispari
 import i18n from "src/translation/i18n";
 import {
   addClassToElementById,
-  capitalizeFirstLetter,
   convertStringToNumber,
   findIntegerMultiplier,
   formatStringNumberCultureUS,
@@ -675,6 +674,17 @@ ${symbol.current}`;
     closeDropdown();
     setIsShowDropdownAds(() => !temp);
   };
+  const renderMainButton = function () {
+    if (!selectedAds) return;
+    switch (side.current) {
+      case actionType.sell:
+        return t("buyNow");
+      case actionType.buy:
+        return t("sellNow");
+      default:
+        break;
+    }
+  };
   return (
     <>
       <div
@@ -818,7 +828,7 @@ ${symbol.current}`;
                 onClick={buyNowSubmitHandle}
               >
                 <div className="loader --d-none"></div>
-                {t("buyNow")}
+                {renderMainButton()}
               </button>
             </form>
           </div>
