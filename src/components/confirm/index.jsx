@@ -40,6 +40,7 @@ function Confirm() {
       if (callApiStatus === api_status.fetching) {
         return resolve(false);
       }
+
       getInfoP2p({
         idP2p: idAds,
       })
@@ -81,13 +82,11 @@ function Confirm() {
     }
     const { id: profileId } = profile;
     const apiRes = await fetchApiGetInfoP2p();
-    console.log();
-    if (callApiStatus === api_status.fetching) {
-      return;
-    } else if (!apiRes) {
+    if (!apiRes) {
       history.push(url.p2p_management);
       return;
     }
+    console.log("pass");
     const result = apiRes.map((item, index) => (
       <ConfirmItem
         key={index}

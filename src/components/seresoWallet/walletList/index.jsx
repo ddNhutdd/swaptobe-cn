@@ -69,17 +69,20 @@ function SeresoWalletList() {
         </div>
         <div className="price">
           <span>
+            {userSelectedCurrency === currency.usd && "$"}
+            {userSelectedCurrency === currency.eur && "€"}
+            {userSelectedCurrency === currency.vnd && "đ"}
             {formatStringNumberCultureUS(
               String(
                 convertCurrency(item.price, userSelectedCurrency, exchange)
               )
             )}
-            {userSelectedCurrency === currency.usd && "$"}
-            {userSelectedCurrency === currency.eur && "€"}
-            {userSelectedCurrency === currency.vnd && "đ"}
           </span>
           <span>
-            Own: {getMyCoin(item.name, myListCoin)}{" "}
+            Own:{" "}
+            {new Intl.NumberFormat("de-DE", {
+              maximumSignificantDigits: 8,
+            }).format(getMyCoin(item.name, myListCoin))}
             <img
               src={image_domain.replace("USDT", item.name)}
               alt={item.name}

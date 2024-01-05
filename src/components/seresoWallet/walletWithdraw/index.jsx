@@ -241,7 +241,7 @@ function FormWithdraw() {
     transferToUsername({
       symbol: coin,
       userName: userNameInputElement.current.value,
-      amount: inputAmountCurrency,
+      amount: inputAmountCurrency.toString().replace(",", ""),
       note: messageElement.current.value,
     })
       .then((resp) => {
