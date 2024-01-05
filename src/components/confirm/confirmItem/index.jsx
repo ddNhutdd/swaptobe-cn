@@ -360,9 +360,9 @@ function ConfirmItem(props) {
   const renderTitleModal = function () {
     let inputString = "";
     if (userCurrentAction === actionType.buy)
-      inputString = t("youAreBuyingBitcoinThroughSereso");
-    else inputString = t("youAreSellingBitcoinThroughSereso");
-    const substringsList = ["0.abc00012346787889456", "BTC", "Sereso"];
+      inputString = t("youAreBuyingBitcoinThroughSerepay");
+    else inputString = t("youAreSellingBitcoinThroughSerepay");
+    const substringsList = ["0.abc00012346787889456", "BTC", "Serepay"];
     const callback = (match, i) => {
       switch (match) {
         case "0.abc00012346787889456":
@@ -377,10 +377,10 @@ function ConfirmItem(props) {
               {symbol}
             </div>
           );
-        case "Sereso":
+        case "Serepay":
           return (
             <div key={i} className="blue-text">
-              {"Sereso"}
+              {"Serepay"}
             </div>
           );
         default:

@@ -588,7 +588,7 @@ export default function CreateBuy() {
                   onClick={modalButtonCreateClickHandle}
                   style={{ width: isMobileViewport ? "100%" : "fit-content" }}
                 >
-                  {t(action).toUpperCase()}
+                  {t("create")}
                 </button>
               </div>
             </div>

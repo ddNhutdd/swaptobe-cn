@@ -2,10 +2,10 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import FormWithdraw from "./walletWithdraw";
-import SeresoWalletList from "./walletList";
+import SerepayWalletList from "./walletList";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import SeresoWalletDeposit from "./walletDeposite";
+import SerepayWalletDeposit from "./walletDeposite";
 import {
   formatStringNumberCultureUS,
   getLocalStorage,
@@ -67,11 +67,11 @@ function SwaptobeWallet() {
   const renderActionContent = () => {
     switch (showActionContent) {
       case actionContent.main:
-        return <SeresoWalletList />;
+        return <SerepayWalletList />;
       case actionContent.withdraw:
         return <FormWithdraw />;
       case actionContent.desposite:
-        return <SeresoWalletDeposit />;
+        return <SerepayWalletDeposit />;
       default:
         return;
     }

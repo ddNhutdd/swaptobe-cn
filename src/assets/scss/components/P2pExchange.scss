@@ -33,8 +33,21 @@
                 text-align: center;
             }
 
+            .p2pExchange__coin {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-start;
+                align-items: center;
+
+                img {
+                    width: 30px;
+                    height: 30px;
+                    object-fit: cover;
+                }
+            }
+
             .p2pExchange__button-select {
-                padding: 20px;
+                padding: 24px;
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -111,13 +124,26 @@
                         justify-content: center;
                         gap: 10px;
 
+                        padding: 3px 16px !important;
+                        height: 36px;
+
                         &.active {
                             @extend .buttonContainer--primary;
                         }
 
                         &:last-child {
-                            @extend .buttonContainer--primary;
+                            border: none;
                             margin-left: auto;
+
+                            &:hover {
+                                background-color: #1A1A1A !important;
+                                cursor: default;
+                            }
+                        }
+
+                        .p2pExchange__type-button {
+                            @extend .buttonContainer--primary;
+
                         }
                     }
                 }
@@ -224,6 +250,8 @@
             flex-direction: column;
             font-size: 14px;
             gap: 4px;
+            justify-content: flex-start;
+            align-items: flex-start;
 
             .p2pExchange__footer-item {
                 cursor: pointer;

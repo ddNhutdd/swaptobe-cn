@@ -31,24 +31,27 @@ function Confirm() {
     i18n.changeLanguage(language);
     //
     socket.on("operationP2p", (idP2p) => {
-      console.log(idP2p, "operationP2p");
-      loadData();
+      // console.log(idP2p, "operationP2p");
+      setTimeout(() => {
+        loadData();
+      }, 1000);
     });
   }, []);
   const fetchApiGetInfoP2p = function () {
-    return new Promise((resolve) => {
-      if (callApiStatus === api_status.fetching) return resolve(false);
-      else setCallApiStatus(api_status.fetching);
+    return new Promise((resolve, rejected) => {
+      if (callApiStatus === api_status.fetching) resolve(false);
+      else setCallApiStatus(() => api_status.fetching);
       getInfoP2p({
         idP2p: idAds,
       })
         .then((resp) => {
-          setCallApiStatus(api_status.fulfilled);
-          return resolve(resp.data.data);
+          setCallApiStatus(() => api_status.fulfilled);
+          resolve(resp.data.data);
         })
         .catch((error) => {
-          setCallApiStatus(api_status.rejected);
-          return resolve(false);
+          setCallApiStatus(() => api_status.rejected);
+          console.log("reject from api ", idAds);
+          rejected(false);
         })
         .finally(() => {
           hideElement(getElementById("confirm__spinner"));
@@ -79,25 +82,24 @@ function Confirm() {
       return;
     }
     const { id: profileId } = profile;
-    const apiRes = await fetchApiGetInfoP2p();
-    if (
-      !apiRes &&
-      (callApiStatus === api_status.fulfilled ||
-        callApiStatus === api_status.rejected)
-    ) {
-      history.push(url.p2p_management);
-      return;
-    } else if (!apiRes) return;
-    const result = apiRes.map((item, index) => (
-      <ConfirmItem
-        key={index}
-        index={index}
-        content={item}
-        profileId={profileId}
-        render={setRender}
-      />
-    ));
-    setData(() => result);
+    fetchApiGetInfoP2p()
+      .then((respon) => {
+        if (!respon) return;
+        const result = respon.map((item, index) => (
+          <ConfirmItem
+            key={index}
+            index={index}
+            content={item}
+            profileId={profileId}
+            render={setRender}
+          />
+        ));
+        setData(() => result);
+      })
+      .catch((error) => {
+        history.push(url.p2p_management);
+        return;
+      });
   };
   const classStyle = {
     paddingTop: "120px",

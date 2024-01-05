@@ -352,6 +352,7 @@
           .header2__user-info-item {
             @include menu-item;
 
+
             @media screen and (max-width:992px) {
               width: 100%;
 
@@ -359,6 +360,10 @@
                 background-color: $transparent;
                 border-radius: 0;
               }
+            }
+
+            span {
+              white-space: nowrap;
             }
           }
         }

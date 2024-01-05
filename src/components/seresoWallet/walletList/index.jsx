@@ -25,7 +25,7 @@ import {
   form,
   setShow as setShowWithdrawTab,
 } from "src/redux/reducers/walletWithdraw";
-function SeresoWalletList() {
+function SerepayWalletList() {
   //
   const history = useHistory();
   const allCoin = useSelector(getListCoinRealTime);
@@ -147,4 +147,4 @@ function SeresoWalletList() {
     </div>
   );
 }
-export default SeresoWalletList;
+export default SerepayWalletList;

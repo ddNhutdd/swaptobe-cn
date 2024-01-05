@@ -23,7 +23,7 @@ import {
 import { callToastSuccess } from "src/function/toast/callToast";
 import i18n from "src/translation/i18n";
 import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
-function SeresoWalletDeposit() {
+function SerepayWalletDeposit() {
   //
   const dropdownCoinMenuClickHandle = function (e) {
     e.stopPropagation();
@@ -485,4 +485,4 @@ function SeresoWalletDeposit() {
     </div>
   );
 }
-export default SeresoWalletDeposit;
+export default SerepayWalletDeposit;

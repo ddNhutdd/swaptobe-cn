@@ -177,7 +177,7 @@ function Home() {
                 Cryptocurrency Wallet - Buy/Sell Bitcoin, Ethereum and Altcoins
               </h1>
               <p className="home__carousel__text">
-                Sereso is a multi-industry eco-system that helps to deepen the
+                Serepay is a multi-industry eco-system that helps to deepen the
                 application of cryptocurrencies to each business and as an
                 alternative to traditional exchanges.
               </p>
@@ -221,15 +221,15 @@ function Home() {
           <div className="home__why__video-overlay"></div>
         </div>
         <div className="home__why__content">
-          <h3>Why to choose Sereso?</h3>
+          <h3>Why to choose Serepay?</h3>
           <p>
-            Sereso is a pioneer multifunctional wallet in the field of
+            Serepay is a pioneer multifunctional wallet in the field of
             Blockchain and digital asset storage!
           </p>
           <small>
             Users can send, receive, and exchange their electronic money
-            conveniently and easily. Sereso meets all the needs of the community
-            of token users as well as other cryptocurrencies.
+            conveniently and easily. Serepay meets all the needs of the
+            community of token users as well as other cryptocurrencies.
           </small>
         </div>
       </div>
@@ -266,7 +266,7 @@ function Home() {
                   />
                   <h3 className="home__benefit__title">Strong Network</h3>
                   <p className="home__benefit__text">
-                    Sereso is designed to resist the change of data once the
+                    Serepay is designed to resist the change of data once the
                     data is accepted by the network, there is no way to change
                     it.
                   </p>
@@ -280,7 +280,7 @@ function Home() {
                   />
                   <h3 className="home__benefit__title">Mobile Apps</h3>
                   <p className="home__benefit__text">
-                    Sereso is compatible with iOS, Android, and Website
+                    Serepay is compatible with iOS, Android, and Website
                     operating systems.
                   </p>
                 </div>
@@ -314,7 +314,7 @@ function Home() {
                 <p>
                   Advanced security features, intuitive user interface and easy
                   navigation. Easy to pair web wallet with mobile device by
-                  scanning QR code. Buy and sell directly through Sereso your.
+                  scanning QR code. Buy and sell directly through Serepay your.
                 </p>
               </div>
               <img
@@ -350,46 +350,46 @@ function Home() {
               </ul>
               <div className="home__faqs-tab-content --d-none" data-name={1}>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>
@@ -397,25 +397,26 @@ function Home() {
               <div className="home__faqs-tab-content --d-none" data-name={2}>
                 <div className="home__faqs-card">
                   <div className="home__faqs-card-header">
-                    Is Sereso App available on Android and IOS?
+                    Is Serepay App available on Android and IOS?
                   </div>
                   <div className="home__faqs-card-content">
                     1.Register with an Cryptocurrency Exchange. To participate
                     in an ICO you need cryptocurrencies, usually Ether.... You
-                    can install Sereso application on both Appstore and Google
-                    Play. For Google Play store: You just need to input “Sereso”
-                    at search box and install. For Appstore store: You have to
-                    input “TestFlight” at search box and install. Then, open
-                    TestFlight and you will see Sereso application in there.
+                    can install Serepay application on both Appstore and Google
+                    Play. For Google Play store: You just need to input
+                    “Serepay” at search box and install. For Appstore store: You
+                    have to input “TestFlight” at search box and install. Then,
+                    open TestFlight and you will see Serepay application in
+                    there.
                   </div>
                 </div>
                 <div className="home__faqs-card">
                   <div className="home__faqs-card-header">
-                    What documents do users need for KYC level 1 on Sereso?
+                    What documents do users need for KYC level 1 on Serepay?
                   </div>
                   <div className="home__faqs-card-content">
-                    In order to use Sereso app, users need to verify the account
-                    step 1 with personal information, pictures of
+                    In order to use Serepay app, users need to verify the
+                    account step 1 with personal information, pictures of
                     government-issued ID card (2 sides), and a full face photo.
                   </div>
                 </div>
@@ -437,35 +438,35 @@ function Home() {
                   </div>
                 </div>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>
@@ -498,13 +499,13 @@ function Home() {
                   </div>
                 </div>
                 <div className="home__faqs-card">
-                  <div className="home__faqs-card-header">What is Sereso?</div>
+                  <div className="home__faqs-card-header">What is Serepay?</div>
                   <div className="home__faqs-card-content">
-                    Sereso is a Decentralized Coin Wallet which combines P2P
+                    Serepay is a Decentralized Coin Wallet which combines P2P
                     trading platform to help the startup community reach out to
-                    investors from the Sereso community in more than 40
+                    investors from the Serepay community in more than 40
                     countries. The users community can both store coins and
-                    trade coins into fiat currency with the lowest fees. Sereso
+                    trade coins into fiat currency with the lowest fees. Serepay
                     is one of 12 ecosystems of Tobe Chain.
                   </div>
                 </div>

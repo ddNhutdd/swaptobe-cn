@@ -29,7 +29,7 @@ import {
   p2pExchangeType,
   setShow,
   showP2pType,
-} from "src/redux/reducers/p2pTradingShow";
+} from "src/redux/reducers/p2pTrading";
 import P2pExchange from "./p2pExchange";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "./Common/Button";
