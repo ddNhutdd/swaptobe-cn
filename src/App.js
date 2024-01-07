@@ -43,11 +43,12 @@ import { exchangeRateDisparity as exchangeRateDisparityCallApi } from "src/util/
 import ExchangeRateDisparity from "./components/admin/exchangeRateDisparity";
 import { api_status, url } from "./constant";
 import Ads from "./components/admin/ads";
-import Transaction from "./components/transaction";
+import TransactionSell from "./components/transactionSell";
 import Confirm from "./components/confirm";
 import AdsHistory from "./components/adsHistory";
 import Exchange from "./components/admin/exchange";
 import P2pManagement from "./components/p2pManagement";
+import TransactionBuy from "./components/transactionBuy";
 function App() {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -185,7 +186,11 @@ function App() {
         <Switch>
           <MainTemplate path={url.ads_history} component={AdsHistory} />
           <MainTemplate path={url.confirm} component={Confirm} />
-          <MainTemplate path={url.transaction} component={Transaction} />
+          <MainTemplate path={url.transaction_buy} component={TransactionBuy} />
+          <MainTemplate
+            path={url.transaction_sell}
+            component={TransactionSell}
+          />
           <MainTemplate path={url.profile} component={Profile} />
           <MainTemplate path={url.wallet} component={SwaptobeWallet} />
           <MainTemplate path={url.p2p_management} component={P2pManagement} />

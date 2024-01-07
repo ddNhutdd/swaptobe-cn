@@ -173,6 +173,7 @@ export default function Header2({ history }) {
     removeLocalStorage(localStorageVariable.lng);
     localStorage.removeItem(localStorageVariable.user);
     localStorage.removeItem(localStorageVariable.token);
+    removeLocalStorage(localStorageVariable.amountFromP2pExchange);
     removeLocalStorage(localStorageVariable.currency);
     dispatch(currencySetCurrent(defaultCurrency));
     removeLocalStorage(localStorageVariable.coin);

@@ -1,17 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { actionTrading } from "src/constant";
 export const showP2pType = {
   p2pTrading: "p2pTrading",
   p2pExchange: "p2pExchange",
-};
-export const p2pExchangeType = {
-  buy: "buy",
-  sell: "sell",
 };
 const p2pTradingShowSlice = createSlice({
   name: "p2pTradingShow",
   initialState: {
     show: showP2pType.p2pTrading,
-    p2pExchangeType: p2pExchangeType.buy,
+    p2pExchangeType: actionTrading.buy,
   },
   reducers: {
     setShow: (state, action) => {

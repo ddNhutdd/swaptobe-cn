@@ -3,30 +3,13 @@ import React, { useEffect } from "react";
 import { Spin } from "antd";
 import { Input } from "../Common/Input";
 import { useSelector } from "react-redux";
-import { getInitialTransaction } from "src/redux/reducers/transactionSlice";
 import { useHistory } from "react-router-dom";
 import { url } from "src/constant";
-function Transaction() {
+function TransactionSell() {
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const history = useHistory();
-  const initialValue = useSelector(getInitialTransaction);
-  const { amount, adsSide } = initialValue;
-  console.log(amount, adsSide);
 
-  const validationPageLoad = function () {
-    if (!isLogin) {
-      history.push(url.login);
-      return;
-    }
-    if (adsSide === null) {
-      history.push(url.p2pTrading);
-      return;
-    }
-  };
-
-  useEffect(() => {
-    validationPageLoad();
-  }, []);
+  useEffect(() => {}, []);
   return (
     <div className={`transaction`}>
       <div className="container">
@@ -179,4 +162,4 @@ function Transaction() {
     </div>
   );
 }
-export default Transaction;
+export default TransactionSell;

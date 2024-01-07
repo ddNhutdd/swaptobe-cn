@@ -9,6 +9,7 @@ export const localStorageVariable = {
   coin: "coin",
   adsItem: "adsItem",
   createAds: "createAds",
+  amountFromP2pExchange: "amFP2PE",
 };
 
 export const deploy_domain = "http://192.168.1.15:3000/wallet-2";
@@ -28,7 +29,8 @@ export const url = {
   admin_ads: "/admin/ads",
   admin_exchange: "/admin/exchange",
   ads_history: "/ads-history",
-  transaction: "/transaction",
+  transaction_sell: "/transaction-sell",
+  transaction_buy: "/transaction-buy",
   confirm: "/confirm/:id",
   p2p_management: "/p2p-management",
 };
@@ -63,4 +65,9 @@ export const defaultLanguage = availableLanguage.en;
 export const defaultCurrency = "USD";
 export const regularExpress = {
   checkNumber: /^[+-]?([0-9]*[.])?[0-9]*$/,
+};
+
+export const actionTrading = {
+  buy: "buy",
+  sell: "sell",
 };

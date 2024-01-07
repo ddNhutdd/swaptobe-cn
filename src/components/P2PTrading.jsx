@@ -4,7 +4,6 @@ import { Spin } from "antd";
 import { useHistory } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import P2PTrading2 from "./P2PTrading2";
 import { useTranslation } from "react-i18next";
 import {
   formatStringNumberCultureUS,
@@ -12,6 +11,7 @@ import {
   setLocalStorage,
 } from "src/util/common";
 import {
+  actionTrading,
   currency,
   defaultLanguage,
   localStorageVariable,
@@ -24,12 +24,7 @@ import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import PhoneApps from "./PhoneApps";
 import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
-import {
-  getShow,
-  p2pExchangeType,
-  setShow,
-  showP2pType,
-} from "src/redux/reducers/p2pTrading";
+import { getShow, setShow, showP2pType } from "src/redux/reducers/p2pTrading";
 import P2pExchange from "./p2pExchange";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "./Common/Button";
@@ -172,14 +167,14 @@ export default function P2PTrading({ history }) {
   };
   const buyNowClickHandle = function () {
     if (isLogin) {
-      dispatch(setShow([showP2pType.p2pExchange, p2pExchangeType.buy]));
+      dispatch(setShow([showP2pType.p2pExchange, actionTrading.buy]));
     } else {
       redirectPage.push(url.login);
     }
   };
   const sellNowClickHandle = function () {
     if (isLogin) {
-      dispatch(setShow([showP2pType.p2pExchange, p2pExchangeType.sell]));
+      dispatch(setShow([showP2pType.p2pExchange, actionTrading.sell]));
     } else {
       redirectPage.push(url.login);
     }
