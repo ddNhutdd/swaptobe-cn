@@ -59,6 +59,11 @@ function Sidebar() {
     element.classList.add("active");
     history.push(url.admin_kyc);
   };
+  const redirectWidthdraw = function (e) {
+    clearSelectedItem();
+    e.currentTarget.classList.add("active");
+    history.push(url.admin_widthdraw);
+  };
   const redirectExchangeRateDisparity = function (e) {
     clearSelectedItem();
     const element = e.target.closest("#exchangeRateDisparity");
@@ -77,11 +82,11 @@ function Sidebar() {
     element.classList.add("active");
     history.push(url.admin_exchange);
   };
-  //
+
   return (
     <div className="admin-sidebar">
       <ul id="listItem">
-        <li className="active">
+        <li className="--d-none active">
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-house"></i>
           </span>
@@ -99,7 +104,6 @@ function Sidebar() {
           </span>
           <span className="admin-sidebar__item">Exchange Rate Disparity</span>
         </li>
-
         <li onClick={redirectAds} id="ads">
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-rectangle-ad"></i>
@@ -112,7 +116,17 @@ function Sidebar() {
           </span>
           <span className="admin-sidebar__item">Exchange</span>
         </li>
-        <li id="funding-item" onClick={fundingItemClickHandle}>
+        <li onClick={redirectWidthdraw}>
+          <span className="admin-sidebar__icon">
+            <i className="fa-solid fa-money-bill"></i>
+          </span>
+          <span className="admin-sidebar__item">Widthdraw</span>
+        </li>
+        <li
+          className="--d-none"
+          id="funding-item"
+          onClick={fundingItemClickHandle}
+        >
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-coins"></i>
           </span>
@@ -130,8 +144,11 @@ function Sidebar() {
           <li>Withdraw</li>
           <li>Transfer</li>
         </ul>
-
-        <li id="history-item" onClick={historyItemClickHandle}>
+        <li
+          className="--d-none"
+          id="history-item"
+          onClick={historyItemClickHandle}
+        >
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-clock-rotate-left"></i>
           </span>
@@ -148,25 +165,19 @@ function Sidebar() {
           <li>History Profit</li>
           <li>History Set Result</li>
         </ul>
-        <li>
-          <span className="admin-sidebar__icon">
-            <i className="fa-solid fa-money-bill-wave"></i>
-          </span>
-          <span className="admin-sidebar__item">commission</span>
-        </li>
-        <li>
+        <li className="--d-none">
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-paper-plane"></i>
           </span>
           <span className="admin-sidebar__item">Send mail / otifications</span>
         </li>
-        <li>
+        <li className="--d-none">
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-circle-notch"></i>
           </span>
           <span className="admin-sidebar__item">Lucky Spin</span>
         </li>
-        <li>
+        <li className="--d-none">
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-newspaper"></i>
           </span>

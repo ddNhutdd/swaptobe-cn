@@ -9,7 +9,8 @@ export const localStorageVariable = {
   coin: "coin",
   adsItem: "adsItem",
   createAds: "createAds",
-  amountFromP2pExchange: "amFP2PE",
+  coinFromP2pExchange: "amFP2PE",
+  moneyFromP2pExchange: "amFP2PEM",
 };
 
 export const deploy_domain = "http://192.168.1.15:3000/wallet-2";
@@ -28,6 +29,7 @@ export const url = {
   create_ads_buy: "/create-ads/buy",
   admin_ads: "/admin/ads",
   admin_exchange: "/admin/exchange",
+  admin_widthdraw: "/admin/widthdraw",
   ads_history: "/ads-history",
   transaction_sell: "/transaction-sell",
   transaction_buy: "/transaction-buy",

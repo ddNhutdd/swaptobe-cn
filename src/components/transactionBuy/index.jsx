@@ -7,30 +7,43 @@ import { useHistory } from "react-router-dom";
 import {
   api_status,
   currencyMapper,
+  defaultLanguage,
   localStorageVariable,
   url,
 } from "src/constant";
-import { getListBanking, searchSellQuick } from "src/util/userCallApi";
-import { coin, getCoin } from "src/redux/constant/coin.constant";
+import {
+  createP2p,
+  getListBanking,
+  searchSellQuick,
+} from "src/util/userCallApi";
+import { getCoin } from "src/redux/constant/coin.constant";
 import {
   findIntegerMultiplier,
   formatStringNumberCultureUS,
   getLocalStorage,
   getRandomElementFromArray,
+  processString,
+  roundIntl,
 } from "src/util/common";
-import { callToastError } from "src/function/toast/callToast";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import i18n from "src/translation/i18n";
+import { useTranslation } from "react-i18next";
 function TransactionBuy() {
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const history = useHistory();
-  const amount = getLocalStorage(
-    localStorageVariable.amountFromP2pExchange || 0
-  );
+  const amount = getLocalStorage(localStorageVariable.coinFromP2pExchange || 0); // Number of coins sent from p2pExchange
   const selectedCoinRedux = useSelector(getCoin);
+
   const [callApiLoadTraderStatus, setCallApiLoadTraderStatus] = useState(
     api_status.pending
   );
+  const [callApiLoadPaymentStatus, setCallApiLoadPaymentStatus] = useState(
+    api_status.pending
+  );
+  const [callApiCreateP2p, setCallApiCreateP2p] = useState(api_status.pending);
+
   const [selectedDropdownTrader, setSelectedDropdownTrader] = useState({
     userName: "Random",
   }); // variable used to display on the interface, dropdown trader
@@ -40,29 +53,31 @@ function TransactionBuy() {
   const [isShowDropdownPayment, setIsShowDropdownPayment] = useState(false);
   const [userListBank, setUserListBank] = useState();
   const [selectedBank, setSelectedBank] = useState();
-  const [callApiLoadPaymentStatus, setCallApiLoadPaymentStatus] = useState(
-    api_status.pending
-  );
   const currencyRedux = useSelector(getCurrent);
   const listCoinRealTime = useSelector(getListCoinRealTime);
   const exchangeRedux = useSelector(getExchange);
-  const inputMoneyElement = useRef();
   const [price, setPrice] = useState();
+  const inputCoinElement = useRef();
+  const inputMoneyElement = useRef();
   const control = useRef({
     amount: "amount",
   });
+  const { t } = useTranslation();
+  const [eulaChecked, setEulaChecked] = useState(false);
   const touchedControl = useRef({});
   const [errorControl, setErrorControl] = useState({});
+  const hasRunFlag = useRef(false); // variable to identify a function that is run once
 
   const validate = function () {
     let valid = true;
     if (touchedControl.current[control.current.amount]) {
-      const coinInput = inputMoneyElement.current?.value;
-      if (!coinInput) {
+      const moneyInput = inputMoneyElement.current?.value;
+      if (!moneyInput) {
+        valid &= false;
         setErrorControl((error) => {
           return {
             ...error,
-            [control.current.amount]: "Require",
+            [control.current.amount]: t("require"),
           };
         });
       } else {
@@ -163,11 +178,11 @@ function TransactionBuy() {
     return (
       <>
         <div className="transaction__box-item">
-          <span>Price:</span>
+          <span>{t("price")}:</span>
           <span>{price}</span>
         </div>
         <div className="transaction__box-item amount">
-          <span>amountLimits:</span>
+          <span>{t("amountLimits")}:</span>
           <span className="transaction__box-amount-container">
             <span className="transaction__box-amount">
               {selectedTrader.amountMinimum}
@@ -179,18 +194,18 @@ function TransactionBuy() {
           </span>
         </div>
         <div className="transaction__box-item">
-          <span>available: </span>
+          <span>{t("available")}: </span>
           <span className="transaction--bold">
             {selectedTrader.amount - selectedTrader.amountSuccess}
           </span>
         </div>
         <div className="transaction__box-item">
-          <span>method:</span>
+          <span>{t("method")}:</span>
           <span className="transaction--bold">{selectedTrader.bankName}</span>
         </div>
         <div className="transaction__box-item">
-          <span>paymentWindow:</span>
-          <span>15 minutes</span>
+          <span>{t("paymentWindow")}:</span>
+          <span>15 {t("minutes")}</span>
         </div>
       </>
     );
@@ -228,10 +243,34 @@ function TransactionBuy() {
         }
       })
       .catch((err) => {
-        callToastError("Người dùng chưa có thông tin tài khoản");
+        callToastError(t("can'tFindUserInformation"));
         history.push(url.profile);
         return;
       });
+  };
+  const loadInputCoin = function () {
+    let result;
+    let amount = +getLocalStorage(localStorageVariable.moneyFromP2pExchange);
+    if (!amount) {
+      amount = +getLocalStorage(localStorageVariable.coinFromP2pExchange) || 0;
+      result = calcVnd(
+        listCoinRealTime,
+        selectedCoinRedux,
+        exchangeRedux,
+        amount
+      );
+    } else {
+      const vnd = calVNDFromOtherCurrencies(
+        exchangeRedux,
+        currencyRedux,
+        amount
+      );
+      result = vnd;
+    }
+    inputMoneyElement.current.value = new Intl.NumberFormat(
+      currencyMapper.USD,
+      roundIntl(3)
+    ).format(result);
   };
   const renderUserListBank = function () {
     if (!userListBank || userListBank.length <= 0) return;
@@ -326,14 +365,136 @@ function TransactionBuy() {
     const result = newVnd / newExchangeVnd / newPriceUsd;
     return result * mt;
   };
+  const calcVnd = function (listCoin, coinName, exchange, amountCoin) {
+    if (
+      !listCoin ||
+      listCoin.length <= 0 ||
+      !coinName ||
+      !exchange ||
+      exchange.length <= 0 ||
+      !amountCoin
+    )
+      return 0;
+    const priceUsd = listCoin.find((item) => item.name === coinName)?.price;
+    const rate = exchange.find((item) => item.title === "VND")?.rate;
+    const mt = findIntegerMultiplier([priceUsd, rate, amountCoin]);
+    const newPriceUsd = priceUsd * mt;
+    const newRate = rate * mt;
+    const newAmountCoin = amountCoin * mt;
+    const result = (newAmountCoin * newPriceUsd * newRate) / (mt * mt * mt);
+    return result;
+  };
+  const calVNDFromOtherCurrencies = function (exchange, currency, amountMoney) {
+    const rateDollarToVnd = exchange.find((item) => item.title === "VND")?.rate;
+    const rateCurrentToDollar = exchange.find(
+      (item) => item.title === currency
+    )?.rate;
+    const mt = findIntegerMultiplier([
+      rateDollarToVnd,
+      rateCurrentToDollar,
+      amountMoney,
+    ]);
+    const newRateDollarToVnd = rateDollarToVnd * mt;
+    const newRateCurrentToDollar = rateCurrentToDollar * mt;
+    const newAmountMoney = amountMoney * mt;
+    const result =
+      (newRateCurrentToDollar * newRateDollarToVnd * newAmountMoney) /
+      (mt * mt * mt);
+    return result;
+  };
   const roundRule = function (value) {
     if (value > 10000) return 8;
     else if (value >= 100 && value <= 9999) return 6;
     else return 2;
   };
-  const inputCoinElement = useRef();
+  const submitHandle = function (e) {
+    e.preventDefault();
+    touchedControl.current[control.current.amount] = true;
+    const valid = validate();
+    if (!valid) return;
+    const amount = inputCoinElement.current.value.replaceAll(",", "");
+    const idP2p = selectedTrader.id;
+    const idBankingUser = selectedBank.id;
+    fetchApiCreateP2p(amount, idP2p, idBankingUser)
+      .then(() => {
+        history.push(url.confirm.replace(":id", idP2p));
+      })
+      .catch(() => {});
+  };
+  const renderClassMainButton = function () {
+    const condition1 = callApiLoadTraderStatus === api_status.fetching;
+    const condition2 = callApiLoadPaymentStatus === api_status.fetching;
+    let condition3 = !eulaChecked;
+    const condition4 = callApiCreateP2p === api_status.fetching;
+
+    if (condition1 || condition2 || condition3 || condition4) return "disable";
+    else return "";
+  };
+  const eulaCheckboxChangeHandle = function () {
+    setEulaChecked(!eulaChecked);
+  };
+  const fetchApiCreateP2p = function (amount, idP2p, idBankingUser) {
+    return new Promise((resolve, reject) => {
+      if (callApiCreateP2p === api_status.fetching) reject(false);
+      else setCallApiCreateP2p(() => api_status.fetching);
+
+      createP2p({
+        amount,
+        idP2p,
+        idBankingUser,
+      })
+        .then((resp) => {
+          callToastSuccess(t("success"));
+          setCallApiCreateP2p(() => api_status.fulfilled);
+          resolve(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          const mess = err.response.data.message;
+          switch (mess) {
+            case "You cannot buy your own advertising":
+              callToastError("You cannot buy your own advertising");
+              break;
+            case "The quantity is too small to create an order":
+              callToastError(t("theQuantityIsTooSmallToCreateAnOrder"));
+              break;
+            case "The quantity is too much and the order cannot be created":
+              callToastError(
+                t("theQuantityIsTooMuchAndTheOrderCannotBeCreated")
+              );
+              break;
+            default:
+              break;
+          }
+          setCallApiCreateP2p(() => api_status.rejected);
+          reject(false);
+        });
+    });
+  };
+  const renderHeader = function () {
+    const str = t("buyBtcViaBankTransferVnd");
+    const listSubString = ["122bu12y122", "45BTC54"];
+    const callback = function (matched, index) {
+      switch (matched) {
+        case listSubString.at(0):
+          return (
+            <span key={index} className="transaction__title-action green">
+              {t("buy")}
+            </span>
+          );
+        case listSubString.at(1):
+          return selectedCoinRedux;
+        default:
+          break;
+      }
+    };
+    return processString(str, listSubString, callback);
+  };
 
   useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
     validationPageLoad();
     firstLoad();
     document.addEventListener("click", closeAllDrodown);
@@ -355,39 +516,54 @@ function TransactionBuy() {
         currency: currencyRedux,
       }).format(price)
     );
-    // calculates the value for input vnd
+
+    // calculates the value for input coin
     try {
       const amountCoin = calcCoin(
         listCoinRealTime,
         selectedCoinRedux,
         exchangeRedux,
-        +inputMoneyElement.current.value.replace(",", "")
+        +inputMoneyElement.current.value.replaceAll(",", "")
       );
-      const price = listCoinRealTime.find(
-        (item) => item.name === selectedCoinRedux
-      )?.price;
-
-      inputCoinElement.current.value = new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: roundRule(price),
-      }).format(amountCoin);
+      if (!amountCoin || Number.isNaN(amountCoin)) {
+        inputCoinElement.current.value = 0;
+      } else {
+        const price = listCoinRealTime.find(
+          (item) => item.name === selectedCoinRedux
+        )?.price;
+        inputCoinElement.current.value = new Intl.NumberFormat(
+          currencyMapper.USD,
+          roundIntl(roundRule(price))
+        ).format(amountCoin);
+      }
     } catch (error) {
       inputCoinElement.current.value = 0;
+    }
+
+    // calculates the value for input vnd
+    if (
+      listCoinRealTime &&
+      listCoinRealTime.length > 0 &&
+      selectedCoinRedux &&
+      exchangeRedux &&
+      exchangeRedux.length > 0 &&
+      currencyRedux &&
+      !hasRunFlag.current
+    ) {
+      loadInputCoin();
+      hasRunFlag.current = true;
     }
   }, [listCoinRealTime, selectedCoinRedux, exchangeRedux, currencyRedux]);
 
   return (
-    <div className={`transaction`}>
+    <div className={`transaction fadeInBottomToTop`}>
       <div className="container">
         <div className="box transaction__box transaction__header">
-          <div>
-            <span className="transaction__title-action green">Mua</span>{" "}
-            {selectedCoinRedux} qua chuyen khoan ngan hang
-          </div>
+          <div>{renderHeader()}</div>
         </div>
         <div className="box transaction__box ">
           <div className="transaction__user-dropdown">
-            <label>Trader:</label>
+            <label>{t("trader")}:</label>
             <div
               onClick={dropdownTraderToggle}
               className="transaction__user-selected"
@@ -410,10 +586,10 @@ function TransactionBuy() {
           </div>
         </div>
         <div className="box transaction__box">
-          <form>
+          <form onSubmit={submitHandle}>
             <div className={`transaction__input-container`}>
               <div className="transaction__input">
-                <label htmlFor="amountInput">I will pay:</label>
+                <label htmlFor="amountInput">{t("iWillPay")}:</label>
                 <Input
                   onChange={inputCoinChangeHandle}
                   onFocus={inputCoinFocusHandle}
@@ -424,7 +600,7 @@ function TransactionBuy() {
                 <span className="transaction__unit">VND</span>
               </div>
               <div className="transaction__input">
-                <label htmlFor="receiveInput">to receive:</label>
+                <label htmlFor="receiveInput">{t("toReceive")}:</label>
                 <Input
                   ref={inputCoinElement}
                   disabled
@@ -442,7 +618,7 @@ function TransactionBuy() {
             <div
               className={`transaction__dropdown ${renderClassPaymentDropdown()}`}
             >
-              <label htmlFor="amountInput">chooseYourPayment:</label>
+              <label htmlFor="amountInput">{t("chooseYourPayment")}:</label>
               <div
                 onClick={dropdownPaymentToggle}
                 className="transaction__payment-dropdown"
@@ -463,25 +639,32 @@ function TransactionBuy() {
             <div className={`spin-container ${renderClassPaymentSpin()}`}>
               <Spin />
             </div>
-            <input id="agreeCheckBox" type="checkbox" className="--d-none" />
+            <input
+              checked={eulaChecked}
+              onChange={eulaCheckboxChangeHandle}
+              id="agreeCheckBox"
+              type="checkbox"
+              className="--d-none"
+            />
             <label className="transaction__checkbox" htmlFor="agreeCheckBox">
               <div className="transaction__checkbox-square">
                 <i className="fa-solid fa-check"></i>
               </div>
               <div className="transaction__checkbox-text">
-                byClickingContinueYouAgreeToSerepays
+                {t("byClickingContinueYouAgreeToSerepays")}{" "}
                 <span className="transaction--green-header">
-                  p2PTermsOfService
+                  {t("p2PTermsOfService")}
                 </span>
               </div>
             </label>
-            <button className="disable" type="submit">
-              <div className="loader --d-none"></div>
+            <button className={renderClassMainButton()} type="submit">
               Buy
             </button>
           </form>
         </div>
-        <h3 className="transaction__title transaction--bold">fdsafdsfd</h3>
+        <h3 className="transaction__title transaction--bold">
+          {t("advertisementInformations")}
+        </h3>
         <div className="box transaction__box">
           {renderAdsInfo()}
           <div className={`spin-container ${renderClassAdsSpin()}`}>
@@ -494,13 +677,15 @@ function TransactionBuy() {
               <i className="fa-solid fa-comments"></i>
             </div>
             <div className="transaction__chat">
-              <div className="transaction__chat-header">needMoreHelp?</div>
+              <div className="transaction__chat-header">
+                {t("needMoreHelp")}
+              </div>
               <div className="transaction__chat-text">
-                contactCustomerSupportVia
+                {t("contactCustomerSupportVia")}{" "}
                 <span className="transaction__chat-support">
-                  onlineSupport.
+                  {t("onlineSupport")}.
                 </span>{" "}
-                weAreAlwaysReadyToHelp
+                {t("weAreAlwaysReadyToHelp")}
               </div>
             </div>
           </div>

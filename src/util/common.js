@@ -360,3 +360,15 @@ export const getRandomElementFromArray = function (arr) {
   const randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
 };
+
+export const roundIntl = function (maximum) {
+  return {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: maximum,
+  };
+};
+export const rountRange = function (price) {
+  if (price > 10000) return 8;
+  else if (price > 100 && price <= 9999) return 6;
+  else if (price <= 99) return 2;
+};

@@ -5,11 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import {
   currency,
+  currencyMapper,
   image_domain,
   localStorageVariable,
   url,
 } from "src/constant";
-import { formatStringNumberCultureUS, getLocalStorage } from "src/util/common";
+import {
+  formatStringNumberCultureUS,
+  getLocalStorage,
+  roundIntl,
+  rountRange,
+} from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { Spin } from "antd";
 import { coinSetAmountCoin, coinSetCoin } from "src/redux/actions/coin.action";
@@ -59,6 +65,22 @@ function SerepayWalletList() {
       exchange.filter((item) => item.title === currency)[0]?.rate ?? 0;
     return (usd * rate).toFixed(3);
   };
+  const renderButton = function (name) {
+    return name === "USDT" ? (
+      <button
+        onClick={() => {
+          dispatch(coinSetCoin(name));
+          dispatch(setShowContent(actionContent.desposite));
+          window.scrollTo(0, 0);
+        }}
+        className="primary-button"
+      >
+        {t("deposit")}
+      </button>
+    ) : (
+      ""
+    );
+  };
   const renderListCurrency = (listCurrencyData) => {
     return listCurrencyData?.map((item) => (
       <li key={item.token_key} className="list-item">
@@ -78,29 +100,22 @@ function SerepayWalletList() {
               )
             )}
           </span>
-          <span>
-            Own:{" "}
-            {new Intl.NumberFormat("de-DE", {
-              maximumSignificantDigits: 8,
-            }).format(getMyCoin(item.name, myListCoin))}
-            <img
-              src={image_domain.replace("USDT", item.name)}
-              alt={item.name}
-            />
+          <span className="swaptobeWalletList__own">
+            <span>Own:</span>
+            <span>
+              {new Intl.NumberFormat(
+                currencyMapper.USD,
+                roundIntl(rountRange(item.price))
+              ).format(getMyCoin(item.name, myListCoin))}
+              <img
+                src={image_domain.replace("USDT", item.name)}
+                alt={item.name}
+              />
+            </span>
           </span>
         </div>
         <div className="action">
-          <button
-            onClick={() => {
-              dispatch(coinSetCoin(item.name));
-              dispatch(setShowContent(actionContent.desposite));
-              window.scrollTo(0, 0);
-            }}
-            className="primary-button"
-          >
-            {t("deposit")}
-          </button>
-
+          {renderButton(item.name)}
           <button
             onClick={() => {
               dispatch(coinSetCoin(item.name));
@@ -108,7 +123,7 @@ function SerepayWalletList() {
               dispatch(setShowWithdrawTab(form.Wallet));
               window.scrollTo(0, 0);
             }}
-            className="seconary-button"
+            className="primary-button"
           >
             {t("withdraw")}
           </button>

@@ -21,6 +21,7 @@ import {
   debounce,
   findIntegerMultiplier,
   formatStringNumberCultureUS,
+  roundDecimalValues,
   setLocalStorage,
 } from "src/util/common";
 import { coinSetCoin } from "src/redux/actions/coin.action";
@@ -54,7 +55,8 @@ const P2pExchange = memo(function () {
   const [listCoin, setListCoin] = useState();
   const currencyFromRedux = useSelector(getCurrent);
   const listExchangeFromRedux = useSelector(getExchange);
-  const amountCoin = useRef(); //coin that the user enters in the input, if the user filters money, then change that money to coin
+  const amountCoin = useRef(); // coin that the user enters in the input, if the user filters money, then change that money to coin
+  const amountMoney = useRef(null); // The amount of money that the user enters in the input. If the user enters coin, the value of the variable is set to null
 
   const fetchListCoin = function () {
     setCallApiFetchListCoinStatus(() => api_status.fetching);
@@ -209,21 +211,26 @@ const P2pExchange = memo(function () {
   const searchAdsEx = async function () {
     if (callApiSearchStatus === api_status.fetching) return;
     setCallApiSearchStatus(api_status.fetching);
-    let amount = inputElement?.current?.value.toString().replace(",", "");
+    let amount = inputElement?.current?.value.toString().replaceAll(",", "");
     amountCoin.current = amount;
+    amountMoney.current = amount;
     if (filter === filterType.coin) {
+      amountMoney.current = null;
       searchAds(selectedCoin, amount);
     } else {
       await fetchListCoin();
-      const amountCoin = convertCurrencyToCoin(
+      const coinPrice = listCoin.find(
+        (item) => item.name === selectedCoin
+      )?.price;
+      const amountCoinlc = convertCurrencyToCoin(
         amount,
         currencyFromRedux,
         selectedCoin,
         listExchangeFromRedux,
         listCoin
       );
-      amountCoin.current = amountCoin;
-      searchAds(selectedCoin, amountCoin);
+      amountCoin.current = roundDecimalValues(amountCoinlc, coinPrice);
+      searchAds(selectedCoin, amountCoinlc);
     }
   };
   const formatValueInput = function () {
@@ -288,16 +295,24 @@ const P2pExchange = memo(function () {
   };
   const buyClickHandle = function () {
     setLocalStorage(
-      localStorageVariable.amountFromP2pExchange,
+      localStorageVariable.coinFromP2pExchange,
       amountCoin.current
+    );
+    setLocalStorage(
+      localStorageVariable.moneyFromP2pExchange,
+      amountMoney.current
     );
     history.push(url.transaction_buy);
     return;
   };
   const sellClickHandle = function () {
     setLocalStorage(
-      localStorageVariable.amountFromP2pExchange,
+      localStorageVariable.coinFromP2pExchange,
       amountCoin.current
+    );
+    setLocalStorage(
+      localStorageVariable.moneyFromP2pExchange,
+      amountMoney.current
     );
     history.push(url.transaction_sell);
     return;

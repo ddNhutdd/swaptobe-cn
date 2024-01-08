@@ -272,3 +272,12 @@ export const companyCancelP2p = function (data) {
     console.log(error);
   }
 };
+export const createWalletBEP20 = function () {
+  try {
+    return axiosService.post("/api/blockico/createWalletBEP20", {
+      symbol: "USDT.BEP20",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

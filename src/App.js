@@ -49,6 +49,7 @@ import AdsHistory from "./components/adsHistory";
 import Exchange from "./components/admin/exchange";
 import P2pManagement from "./components/p2pManagement";
 import TransactionBuy from "./components/transactionBuy";
+import Widthdraw from "./components/admin/widthdraw";
 function App() {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -203,6 +204,7 @@ function App() {
           <MainTemplate path="/wallet" component={Wallet} />
           <AdminTemplate path="/admin/dashboard" component={Dashboard} />
           <AdminTemplate path="/admin/ads" component={Ads} />
+          <AdminTemplate path={url.admin_widthdraw} component={Widthdraw} />
           <AdminTemplate path={url.admin_exchange} component={Exchange} />
           <AdminTemplate path="/admin/kyc" component={KYC} />
           <AdminTemplate

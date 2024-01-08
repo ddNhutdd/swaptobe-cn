@@ -88,6 +88,7 @@ function Profile() {
   );
   const [listPaymentTotalItems, setListPaymentTotalItems] = useState(1);
   const [, setListPaymentCurrentPage] = useState(1);
+
   useEffect(() => {
     const dataUser = getLocalStorage(localStorageVariable.user);
     if (!dataUser) {
@@ -112,6 +113,7 @@ function Profile() {
       document.removeEventListener("click", closeAllDropdown);
     };
   }, []);
+
   const inputFileLogo = useRef(null);
   //
   const handleFileChange = function (e) {
