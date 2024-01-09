@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef } from "react";
-import { Empty, Spin } from "antd";
+import { Spin } from "antd";
 import {
   addClassToElementById,
   getClassListFromElementById,
@@ -15,6 +15,7 @@ import {
 import { api_status } from "src/constant";
 import { updateExchangeRateDisparity } from "src/util/userCallApi";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { EmptyCustom } from "src/components/Common/Empty";
 function ExchangeRateDisparity() {
   const rateFromRedux = useSelector(getExchangeRateDisparity);
   const rateStatusFromRedux = useSelector(exchangeRateDisparityApiStatus);
@@ -195,7 +196,7 @@ function ExchangeRateDisparity() {
         <Spin />
       </div>
       <div id="empty" className="spin-container --d-none">
-        <Empty />
+        <EmptyCustom />
       </div>
     </div>
   );

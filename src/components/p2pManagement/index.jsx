@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Empty, Spin, Pagination } from "antd";
+import { Spin, Pagination } from "antd";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -27,6 +27,7 @@ import {
   getExchange,
   getExchangeFetchStatus,
 } from "src/redux/constant/currency.constant";
+import { EmptyCustom } from "../Common/Empty";
 function P2pManagement() {
   const { t } = useTranslation();
   const advertisingStatusType = {
@@ -635,7 +636,7 @@ function P2pManagement() {
           <div
             className={`p2pManagement__content-empty spin-container ${renderClassEmpty()} `}
           >
-            <Empty description={<span>{t("noData")}</span>} />
+            <EmptyCustom stringData={t("noData")} />
           </div>
           <div
             className={`p2pManagement__content-spinner spin-container ${renderClassSpin()}`}

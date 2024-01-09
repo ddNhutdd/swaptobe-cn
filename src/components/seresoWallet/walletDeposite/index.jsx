@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Pagination, Spin, Empty } from "antd";
+import { Pagination, Spin } from "antd";
 
 import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
@@ -23,6 +23,7 @@ import {
 import { callToastSuccess } from "src/function/toast/callToast";
 import i18n from "src/translation/i18n";
 import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
+import { EmptyCustom } from "src/components/Common/Empty";
 function SerepayWalletDeposit() {
   const dropdownNetworkMenuClickHandle = function (e) {
     e.stopPropagation();
@@ -317,7 +318,7 @@ function SerepayWalletDeposit() {
             <Spin />
           </div>
           <div id="historyEmpty" className="spin-container fadeInBottomToTop">
-            <Empty description={<span>{t("noData")}</span>} />
+            <EmptyCustom stringData={t("noData")} />
           </div>
           <div className="wallet-deposite-paging">
             <Pagination defaultCurrent={1} total={10} />

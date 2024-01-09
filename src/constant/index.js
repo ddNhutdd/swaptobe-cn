@@ -73,3 +73,7 @@ export const actionTrading = {
   buy: "buy",
   sell: "sell",
 };
+
+export const commontString = {
+  noData: "No Data",
+};

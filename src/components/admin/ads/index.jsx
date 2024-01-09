@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Pagination, Spin, Empty, Modal } from "antd";
+import { Pagination, Spin, Modal } from "antd";
 import {
   addClassToElementById,
   getClassListFromElementById,
@@ -17,6 +17,7 @@ import {
   refuseAds,
 } from "src/util/adminCallApi";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { EmptyCustom } from "src/components/Common/Empty";
 
 function Ads() {
   const actionType = {
@@ -580,7 +581,7 @@ function Ads() {
           id="ads_content_empty"
           className="ads__content-empty spin-container --d-none"
         >
-          <Empty />
+          <EmptyCustom />
         </div>
       </div>
       <Modal

@@ -15,10 +15,7 @@
         }
 
         .admin-kyc-users__title {
-            color: $white;
-            margin-bottom: 0;
-            font-size: 24px;
-            font-weight: bold;
+            @extend .titleContainerAdmin;
         }
 
         .admin-kyc-users__search-form {

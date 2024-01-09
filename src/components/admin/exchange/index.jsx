@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Spin, Empty } from "antd";
+import { Spin } from "antd";
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { EmptyCustom } from "src/components/Common/Empty";
 import { api_status } from "src/constant";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { currencySetFetchExchangeCount } from "src/redux/actions/currency.action";
@@ -311,7 +312,7 @@ function Exchange() {
             <tr>
               <td colSpan="8">
                 <div className="spin-container">
-                  <Empty />
+                  <EmptyCustom />
                 </div>
               </td>
             </tr>

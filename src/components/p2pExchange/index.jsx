@@ -4,6 +4,7 @@ import { Spin, Modal } from "antd";
 import {
   actionTrading,
   api_status,
+  defaultLanguage,
   image_domain,
   localStorageVariable,
   url,
@@ -11,6 +12,7 @@ import {
 import { Input } from "../Common/Input";
 import socket from "src/util/socket";
 import { DOMAIN } from "src/util/service";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getCoin } from "src/redux/constant/coin.constant";
@@ -21,10 +23,12 @@ import {
   debounce,
   findIntegerMultiplier,
   formatStringNumberCultureUS,
+  getLocalStorage,
   roundDecimalValues,
   setLocalStorage,
 } from "src/util/common";
 import { coinSetCoin } from "src/redux/actions/coin.action";
+import i18n from "src/translation/i18n";
 const P2pExchange = memo(function () {
   const filterType = {
     coin: "coin",
@@ -34,6 +38,7 @@ const P2pExchange = memo(function () {
   const apiParamLimit = useRef(1);
   const [filter, setFilter] = useState(filterType.coin); // indicates the user is filtering ads by currency or cryptocurrency
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const inputElement = useRef();
   const actionFromRedux = useSelector(getType);
   const [currentAction, setCurrentAction] = useState(actionFromRedux); // action represents the action of the user looking to buy or sell coins. If a user is looking to buy, search for an ad for sale
@@ -319,6 +324,9 @@ const P2pExchange = memo(function () {
   };
 
   useEffect(() => {
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
     fetchListCoin();
   }, []);
   useEffect(() => {
@@ -331,7 +339,7 @@ const P2pExchange = memo(function () {
   return (
     <div className="p2pExchange fadeInBottomToTop">
       <div className="container">
-        <div className="p2pExchange__title">p2pExchange</div>
+        <div className="p2pExchange__title">{t("p2pExchange")}</div>
         <div className="p2pExchange__selected">
           <span className="p2pExchange__coin">
             <img
@@ -341,15 +349,17 @@ const P2pExchange = memo(function () {
             {selectedCoin}
           </span>
           <button onClick={showModal} className="p2pExchange__button-select">
-            <span>chooseAnotherCoin</span>
+            <span>{t("chooseAnotherCoin")}</span>
             <i className="fa-solid fa-caret-down"></i>
           </button>
         </div>
         <div className="p2pExchange__search-container">
           <div className="p2pExchange__search-title">
-            <span className={renderClassInputFilterTitleCoin()}>Số lượng:</span>
+            <span className={renderClassInputFilterTitleCoin()}>
+              {t("amount")}:
+            </span>
             <span className={renderClassInputFilterTitleCurrency()}>
-              Số tiền:
+              {t("amountOfMoney")}:
             </span>
           </div>
           <div className="p2pExchange__input-container">
@@ -375,7 +385,7 @@ const P2pExchange = memo(function () {
             </span>
           </div>
           <div className="p2pExchange__type">
-            <div className="p2pExchange__type-title">Nhập với:</div>
+            <div className="p2pExchange__type-title">{t("enterWith")}:</div>
             <div className="p2pExchange__type-list">
               <div
                 onClick={filterByCurrencyClickHandle}
@@ -416,12 +426,12 @@ const P2pExchange = memo(function () {
             onClick={redirectToP2pTrading}
             className="p2pExchange__footer-item"
           >
-            Quay lại
+            {t("goBack")}
           </span>
         </div>
       </div>
       <Modal
-        title={"chooseTheCoinYouWant"}
+        title={t("chooseTheCoinYouWant")}
         open={isModalOpen}
         onCancel={handleCancelModal}
         width={600}

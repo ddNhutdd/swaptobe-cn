@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Pagination, Empty, Spin } from "antd";
+import { Pagination, Spin } from "antd";
 import { Modal } from "antd";
 import { useHistory } from "react-router-dom";
 import i18n from "src/translation/i18n";
@@ -30,6 +30,7 @@ import {
   getListAdsSellToUser,
 } from "src/util/userCallApi";
 import socket from "src/util/socket";
+import { EmptyCustom } from "../Common/Empty";
 function AdsHistory() {
   useEffect(() => {
     const language =
@@ -483,7 +484,7 @@ function AdsHistory() {
           <h3>{renderTitle()}</h3>
           <div id="ads-history__content">{listRecord}</div>
           <div id="adsHistoryEmpty" className="spin-container --d-none">
-            <Empty description={<span>{t("noData")}</span>} />
+            <EmptyCustom stringData={t("noData")} />
           </div>
           <div id="adsHistorySpinner" className="spin-container --d-none">
             <Spin />

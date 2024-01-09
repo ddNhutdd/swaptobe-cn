@@ -69,3 +69,38 @@ export const editExchange = function (data) {
     console.log(error);
   }
 };
+export const getListWidthdrawCoinAll = function (data) {
+  try {
+    return axiosService.post("/api/admin/getListWidthdrawCoinAll", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListWidthdrawCoin = function (data) {
+  try {
+    return axiosService.post("/api/admin/getListWidthdrawCoin", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getListWidthdrawCoinPendding = function (data) {
+  try {
+    return axiosService.post("/api/admin/getListWidthdrawCoinPendding", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const activeWidthdraw = function (data) {
+  try {
+    return axiosService.post("/api/admin/activeWidthdraw", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const cancelWidthdraw = function (data) {
+  try {
+    return axiosService.post("/api/admin/cancelWidthdraw", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

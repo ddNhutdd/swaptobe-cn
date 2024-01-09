@@ -507,7 +507,7 @@ function TransactionSell() {
           <form onSubmit={submitHandle}>
             <div className={`transaction__input-container `}>
               <div className="transaction__input">
-                <label>I pay:</label>
+                <label>{t("iPay")}:</label>
                 <Input
                   ref={payInputElement}
                   onChange={payInputChangeHandle}
@@ -518,7 +518,7 @@ function TransactionSell() {
                 <span className="transaction__unit">{selectedCoinRedux}</span>
               </div>
               <div className="transaction__input">
-                <label>toReceive:</label>
+                <label>{t("toReceive")}:</label>
                 <Input ref={receiveInputElement} disabled type="text" />
                 <span className="transaction__unit">VND</span>
               </div>
@@ -526,7 +526,7 @@ function TransactionSell() {
             <div
               className={`transaction__dropdown ${renderClassPaymentDropdown()}`}
             >
-              <label htmlFor="amountInput">chooseYourPayment:</label>
+              <label htmlFor="amountInput">{t("chooseYourPayment")}:</label>
               <div
                 onClick={dropdownPaymentToggle}
                 className="transaction__payment-dropdown"
@@ -559,18 +559,20 @@ function TransactionSell() {
                 <i className="fa-solid fa-check"></i>
               </div>
               <div className="transaction__checkbox-text">
-                byClickingContinueYouAgreeToSerepays
+                {t("byClickingContinueYouAgreeToSerepays")}{" "}
                 <span className="transaction--green-header">
-                  p2PTermsOfService
+                  {t("p2PTermsOfService")}
                 </span>
               </div>
             </label>
             <button className={renderClassMainButton()} type="submit">
-              Sell
+              {t("sell")}
             </button>
           </form>
         </div>
-        <h3 className="transaction__title transaction--bold">fdsafdsfd</h3>
+        <h3 className="transaction__title transaction--bold">
+          {t("advertisementInformations")}
+        </h3>
         <div className="box transaction__box">
           {renderAdsInfo()}
           <div className={`spin-container ${renderClassAdsSpin()}`}>
@@ -583,13 +585,15 @@ function TransactionSell() {
               <i className="fa-solid fa-comments"></i>
             </div>
             <div className="transaction__chat">
-              <div className="transaction__chat-header">needMoreHelp?</div>
+              <div className="transaction__chat-header">
+                {t("needMoreHelp")}
+              </div>
               <div className="transaction__chat-text">
-                contactCustomerSupportVia
+                {t("contactCustomerSupportVia")}{" "}
                 <span className="transaction__chat-support">
-                  onlineSupport.
+                  {t("onlineSupport")}.
                 </span>{" "}
-                weAreAlwaysReadyToHelp
+                {t("weAreAlwaysReadyToHelp")}
               </div>
             </div>
           </div>

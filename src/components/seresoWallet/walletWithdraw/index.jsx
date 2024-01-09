@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Spin, Pagination, Empty } from "antd";
+import { Spin, Pagination } from "antd";
 import QRCode from "react-qr-code";
 import {
   convertStringToNumber,
@@ -35,6 +35,7 @@ import { Input } from "src/components/Common/Input";
 import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
 import { form, getShow } from "src/redux/reducers/walletWithdraw";
 import { setShow as setShowTabFromRedux } from "src/redux/reducers/walletWithdraw";
+import { EmptyCustom } from "src/components/Common/Empty";
 
 function FormWithdraw() {
   const withdrawTypeEnum = {
@@ -185,7 +186,7 @@ function FormWithdraw() {
       callApiGetWithdrawHistoryStatus !== api_status.fetching &&
       withdrawHistory.length <= 0
     ) {
-      return <Empty description={<span>{t("noData")}</span>} />;
+      return <EmptyCustom stringData={t("noData")} />;
     } else if (
       callApiGetWithdrawHistoryStatus !== api_status.fetching &&
       withdrawHistory.length > 0
@@ -306,7 +307,7 @@ function FormWithdraw() {
       callApiGetTransferHistoryStatus !== api_status.fetching &&
       historytransfer.length <= 0
     ) {
-      return <Empty description={<span>{t("noData")}</span>} />;
+      return <EmptyCustom stringData={t("noData")} />;
     } else if (
       callApiGetTransferHistoryStatus !== api_status.fetching &&
       historytransfer.length > 0

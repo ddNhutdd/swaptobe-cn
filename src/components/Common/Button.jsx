@@ -1,14 +1,20 @@
 const getButtonClasses = (type) => {
   switch (type) {
-    case "outline":
-      return "buttonContainer--primary";
+    case buttonClassesType.outline:
+      return "buttonContainer--outline";
 
-    case "transparent":
+    case buttonClassesType.transparent:
       return "buttonContainer--transparent";
 
     default:
       return "buttonContainer--primary";
   }
+};
+
+export const buttonClassesType = {
+  outline: "outline",
+  transparent: "transparent",
+  primary: "primary",
 };
 
 /**
@@ -17,6 +23,7 @@ const getButtonClasses = (type) => {
  * @returns
  */
 export const Button = ({
+  className,
   onClick,
   id,
   style,
@@ -29,7 +36,7 @@ export const Button = ({
   return (
     <button
       id={id}
-      className={typeClassesDefault}
+      className={typeClassesDefault + " " + className}
       style={style}
       onClick={onClick}
       name={name}

@@ -12,13 +12,14 @@ export const Input = React.forwardRef(
       onFocus,
       disabled,
       errorMes,
+      className,
     },
     ref
   ) => {
     return (
       <>
         <input
-          className="inputContainer--default"
+          className={"inputContainer--default " + className}
           value={value}
           onChange={onChange}
           onFocus={onFocus}

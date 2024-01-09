@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Spin, Empty, Pagination } from "antd";
+import { Spin, Pagination } from "antd";
 import { getBankListV2 } from "src/assets/resource/getBankListV2";
 import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
@@ -32,6 +32,7 @@ import {
 } from "src/util/userCallApi";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "../Common/Input";
+import { EmptyCustom } from "../Common/Empty";
 function Profile() {
   const kycControl = {
     fullName: "fullName",
@@ -793,7 +794,7 @@ function Profile() {
     } else if (qrValue.addressCode === null) {
       return (
         <div className={style}>
-          <Empty description={<span>{t("noData")}</span>} />
+          <EmptyCustom stringData={t("noData")} />
         </div>
       );
     } else {
@@ -957,7 +958,7 @@ function Profile() {
     } else if (listPayment.length <= 0) {
       return (
         <div className="spin-container">
-          <Empty description={<span>{t("noData")}</span>} />
+          <EmptyCustom stringData={t("noData")} />
         </div>
       );
     } else {
