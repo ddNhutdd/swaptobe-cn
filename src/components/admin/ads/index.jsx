@@ -605,4 +605,5 @@ function Ads() {
     </div>
   );
 }
+
 export default Ads;

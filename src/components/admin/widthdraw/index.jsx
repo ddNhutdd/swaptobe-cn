@@ -15,7 +15,7 @@ import socket from "src/util/socket";
 import { ModalConfirm } from "src/components/Common/ModalConfirm";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "src/components/Common/Input";
-import { Tag, TagType } from "src/components/Common/Tag";
+import { TagCustom, TagType } from "src/components/Common/Tag";
 
 function Widthdraw() {
   const [callApiLoadMainDataStatus, setCallApiLoadMainDataStatus] = useState(
@@ -97,14 +97,14 @@ function Widthdraw() {
   };
   const renderStatus = function (status) {
     switch (status) {
-      case 1:
-        return <Tag type={TagType.success} />;
       case 0:
-        return <> {"Reject"}</>;
+        return <TagCustom type={TagType.error} />;
+      case 1:
+        return <TagCustom type={TagType.success} />;
       case 2:
-        return <>{"Pending"}</>;
+        return <TagCustom type={TagType.pending} />;
       default:
-        return <></>;
+        return null;
     }
   };
   const renderDataTable = function () {

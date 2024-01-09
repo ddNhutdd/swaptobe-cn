@@ -8,10 +8,7 @@
         margin-bottom: 20px;
 
         .admin-exchange-rate-disparity__title {
-            color: $white;
-            margin-bottom: 0;
-            font-size: 24px;
-            font-weight: bold;
+            @extend .titleContainerAdmin;
         }
     }
 
@@ -47,23 +44,21 @@
             }
         }
 
-        .admin-exchange-rate-disparity__action {
-            button {
-                width: 150px;
-                @include adminButtonPrimary;
-
-                .loader {
-                    position: absolute;
-                    top: 7px;
-                    left: 35px;
-                }
-            }
-        }
 
         .admin-exchange-rate-disparity__form {
             display: flex;
             flex-direction: column;
             gap: 20px;
+
+            .admin-exchange-rate-disparity__action {
+                button {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                }
+            }
         }
     }
 }

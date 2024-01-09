@@ -30,6 +30,7 @@ export const Button = ({
   children,
   name,
   type = "primary",
+  disabled,
 }) => {
   let typeClassesDefault = getButtonClasses(type);
 
@@ -40,6 +41,7 @@ export const Button = ({
       style={style}
       onClick={onClick}
       name={name}
+      disabled={disabled}
     >
       {children}
     </button>

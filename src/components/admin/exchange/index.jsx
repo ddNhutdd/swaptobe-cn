@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Spin } from "antd";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Button } from "src/components/Common/Button";
 import { EmptyCustom } from "src/components/Common/Empty";
 import { api_status } from "src/constant";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
@@ -22,7 +23,7 @@ function Exchange() {
   const dispatch = useDispatch();
   const exchanges = useSelector(getExchange);
   const exchangesFetchStatus = useSelector(getExchangeFetchStatus);
-  const callApiStatus = useRef(api_status.pending);
+  const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
   useEffect(() => {
     return () => {
       dispatch(currencySetFetchExchangeCount());
@@ -190,13 +191,13 @@ function Exchange() {
   };
   const fetchEditExchange = function (data) {
     return new Promise((resolve) => {
-      if (callApiStatus.current === api_status.fetching) {
+      if (callApiStatus === api_status.fetching) {
         return resolve(false);
       }
-      callApiStatus.current = api_status.fetching;
+      setCallApiStatus(() => api_status.fetching);
       editExchange(data)
         .then(() => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(() => api_status.fulfilled);
           callToastSuccess("Success");
           return resolve(true);
         })
@@ -209,20 +210,20 @@ function Exchange() {
               callToastError("Fail");
               break;
           }
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(() => api_status.rejected);
           return resolve(false);
         });
     });
   };
   const fetchAddExchange = function (data) {
     return new Promise((resolve) => {
-      if (callApiStatus.current === api_status.fetching) {
+      if (callApiStatus === api_status.fetching) {
         return resolve(false);
       }
-      callApiStatus.current = api_status.fetching;
+      setCallApiStatus(() => api_status.fetching);
       addExchange(data)
         .then((resp) => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(() => api_status.fulfilled);
           callToastSuccess("Success");
           dispatch(currencySetFetchExchangeCount());
           return resolve(true);
@@ -236,7 +237,7 @@ function Exchange() {
               callToastError("Fail");
               break;
           }
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(() => api_status.rejected);
           return resolve(false);
         });
     });
@@ -271,13 +272,13 @@ function Exchange() {
       <div className="admin-exchange__header">
         <div className="admin-exchange__title">Exchange</div>
         <div>
-          <button
+          <Button
+            disabled={callApiStatus === api_status.fetching ? true : false}
             onClick={addExchangeButtonClickHandle}
             id="addExchangeButton"
-            className="admin-exchange__create-button"
           >
-            <div className="loader --d-none"></div>Create
-          </button>
+            Create
+          </Button>
         </div>
       </div>
       <div className="admin-exchange__content">

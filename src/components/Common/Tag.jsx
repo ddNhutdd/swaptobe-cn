@@ -5,6 +5,7 @@ import {
   ExclamationCircleOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
+import { Tag } from "antd";
 
 export const TagType = {
   success: "success",
@@ -14,7 +15,7 @@ export const TagType = {
   default: "default",
 };
 
-export const Tag = function (props) {
+export const TagCustom = function (props) {
   const { type, content } = props;
   switch (type) {
     case TagType.success:
@@ -32,7 +33,7 @@ export const Tag = function (props) {
     case TagType.error:
       return (
         <Tag icon={<CloseCircleOutlined />} color="error">
-          {content || "Error"}
+          {content || "Reject"}
         </Tag>
       );
     case TagType.warning:

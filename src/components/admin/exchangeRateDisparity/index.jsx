@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd";
 import {
   addClassToElementById,
@@ -16,6 +16,7 @@ import { api_status } from "src/constant";
 import { updateExchangeRateDisparity } from "src/util/userCallApi";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { EmptyCustom } from "src/components/Common/Empty";
+import { Button } from "src/components/Common/Button";
 function ExchangeRateDisparity() {
   const rateFromRedux = useSelector(getExchangeRateDisparity);
   const rateStatusFromRedux = useSelector(exchangeRateDisparityApiStatus);
@@ -23,7 +24,7 @@ function ExchangeRateDisparity() {
   const controlTourched = useRef({});
   const controlErrors = useRef({});
   const dispatch = useDispatch();
-  const callApiStatus = useRef(api_status.pending);
+  const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
   useEffect(() => {
     return () => {
       dispatch(fetchExchangeRateDisparity());
@@ -118,9 +119,8 @@ function ExchangeRateDisparity() {
       renderError();
     } else {
       // call api
-      if (callApiStatus.current === api_status.fetching) return;
-      else callApiStatus.current = api_status.fetching;
-      openButtonSubmitLoader();
+      if (callApiStatus === api_status.fetching) return;
+      else setCallApiStatus(() => api_status.fetching);
       const newValueElement = getElementById("newValueInput");
       if (!newValueElement) return;
       updateExchangeRateDisparity({
@@ -128,7 +128,7 @@ function ExchangeRateDisparity() {
         value: newValueElement.value,
       })
         .then((resp) => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(() => api_status.fulfilled);
           callToastSuccess("Thành Công");
           const value = getElementById("newValueInput").value;
           getElementById("rateInput").value = value;
@@ -136,7 +136,7 @@ function ExchangeRateDisparity() {
         })
         .catch((error) => {
           closeButtonSubmitLoader();
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(() => api_status.rejected);
           console.log(error);
           const mess = error?.response?.data?.message;
           switch (mess) {
@@ -149,11 +149,6 @@ function ExchangeRateDisparity() {
           }
         });
     }
-  };
-  const openButtonSubmitLoader = function () {
-    console.log("here ");
-    addClassToElementById("buttonSubmit", "disabled");
-    getClassListFromElementById("buttonSubmitLoader").remove("--d-none");
   };
   const closeButtonSubmitLoader = function () {
     getClassListFromElementById("buttonSubmit").remove("disabled");
@@ -185,10 +180,13 @@ function ExchangeRateDisparity() {
             </small>
           </div>
           <div className="admin-exchange-rate-disparity__action">
-            <button id="buttonSubmit" onClick={submitHandle} type="submit">
-              <div id="buttonSubmitLoader" className="loader --d-none"></div>
+            <Button
+              disabled={callApiStatus === api_status.fetching ? true : false}
+              id="buttonSubmit"
+              onClick={submitHandle}
+            >
               Save
-            </button>
+            </Button>
           </div>
         </form>
       </div>

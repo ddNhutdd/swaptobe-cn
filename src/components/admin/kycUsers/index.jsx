@@ -10,6 +10,8 @@ import { api_status } from "src/constant";
 import { DOMAIN } from "src/util/service";
 import { zoomImage } from "src/util/common";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { Button, buttonClassesType } from "src/components/Common/Button";
+import { TagCustom, TagType } from "src/components/Common/Tag";
 function KYC() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [listKycUserData, setListKycUserData] = useState();
@@ -61,17 +63,16 @@ function KYC() {
           <td>{item.phone}</td>
           <td>{item.passport}</td>
           <td>
-            <div className="admin-kyc-users__status">Pending</div>
+            <TagCustom type={TagType.pending} />
           </td>
           <td>
-            <button
+            <Button
               onClick={() => {
                 showModal(item);
               }}
-              className="admin-kyc-users__check"
             >
               Check
-            </button>
+            </Button>
           </td>
         </tr>
       ));
@@ -299,31 +300,22 @@ function KYC() {
           </div>
           <div className="admin-kyc-user__modal-image-container"></div>
           <div className="admin-kyc-users__modal-control">
-            <button
+            <Button
               id="button-confirm"
-              className={`admin-kyc-users__modal-confirm confirm  ${
-                callApiStatus === api_status.fetching ? "disable" : ""
-              }`}
+              disabled={callApiStatus === api_status.fetching ? true : false}
             >
-              <div
-                className={`loader ${
-                  callApiStatus === api_status.fetching ? "" : "--d-none"
-                }`}
-              ></div>
-              confirm
-            </button>
-            <button
+              Confirm
+            </Button>
+            <Button
+              disabled={callApiStatus === api_status.fetching ? true : false}
+              type={buttonClassesType.outline}
               id="button-reject"
-              className="admin-kyc-users__modal-reject"
             >
               reject
-            </button>
-            <button
-              onClick={handleCancel}
-              className="admin-kyc-users__modal-close"
-            >
+            </Button>
+            <Button type={buttonClassesType.outline} onClick={handleCancel}>
               close
-            </button>
+            </Button>
           </div>
         </div>
       </Modal>
