@@ -298,5 +298,10 @@
     "yourListBank": "Your List of Banks",
     "addBanking": "Add Banking Information",
     "buyQuickly": "Buy Quickly",
-    "sellQuickly": "Sell Quickly"
+    "sellQuickly": "Sell Quickly",
+    "youCannotBuyYourOwnAdvertising": "You cannot buy your own advertising",
+    "random": "Random",
+    "own": "Own",
+    "enterQuantityOfCoins": "Enter quantity of coins",
+    "enterAmountOfMoney": "Enter amount of money"
 }

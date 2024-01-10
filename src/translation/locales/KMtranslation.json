@@ -298,5 +298,10 @@
     "yourListBank": "បញ្ជីធនាគាររបស់អ្នក",
     "addBanking": "បន្ថែមព័ត៌មានធនាគារ",
     "buyQuickly": "ទិញដោយរហ័ស",
-    "sellQuickly": "លក់ដោយរហ័ស"
+    "sellQuickly": "លក់ដោយរហ័ស",
+    "youCannotBuyYourOwnAdvertising": "អ្នកមិនអាចទិញទូទាត់គ advertis របស់អ្នកខ្ញុំបានទេ",
+    "random": "ច្បាស់",
+    "own": "ខ្ញុំ",
+    "enterQuantityOfCoins": "បញ្ចូលបរិមាណនៃរូបិយប័ណ្ណ",
+    "enterAmountOfMoney": "បញ្ចូលចំនួនទឹកប្រាក់"
 }

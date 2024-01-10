@@ -96,6 +96,7 @@ const P2pExchange = memo(function () {
   const coinItemClickHandle = function (coinName) {
     setSelectedCoin(() => coinName);
     dispatch(coinSetCoin(coinName));
+
     handleCancelModal();
     searchWhenInputHasValue();
   };
@@ -115,7 +116,7 @@ const P2pExchange = memo(function () {
           onClick={setCurrentActionIsSell}
           className="p2pExchange__footer-item"
         >
-          Bạn có muốn bán {selectedCoin} ?
+          {t("searchForBTCToSell").replace("BTC", selectedCoin)} ?
         </span>
       );
     else
@@ -124,7 +125,7 @@ const P2pExchange = memo(function () {
           onClick={setCurrentActionIsBuy}
           className="p2pExchange__footer-item"
         >
-          Bạn có muốn mua {selectedCoin} ?
+          {t("searchToBuyBTC").replace("BTC", selectedCoin)} ?
         </span>
       );
   };
@@ -165,9 +166,16 @@ const P2pExchange = memo(function () {
     return filter === filterType.currency ? "" : "--d-none";
   };
   const renderPlaceHolder = function () {
-    return filter === filterType.coin ? "Nhập số lượng coin" : "Nhập số tiền";
+    return filter === filterType.coin
+      ? t("enterQuantityOfCoins")
+      : t("enterAmountOfMoney");
   };
-  const fetchApiSeachBuyQuick = function (symbol, amount) {
+  /**
+   * A quick buy search will return for sale listings
+   * @param {string} symbol
+   * @param {number} amount
+   */
+  const fetchApiSearchBuyQuick = function (symbol, amount) {
     new Promise((resolve) => {
       searchBuyQuick({
         limit: apiParamLimit.current,
@@ -186,6 +194,11 @@ const P2pExchange = memo(function () {
         });
     });
   };
+  /**
+   * a quick sale search will return buy listings
+   * @param {string} symbol
+   * @param {number} amount
+   */
   const fetchApiSearchSellQuick = function (symbol, amount) {
     new Promise((resolve) => {
       searchSellQuick({
@@ -216,7 +229,7 @@ const P2pExchange = memo(function () {
   const searchAdsEx = async function () {
     if (callApiSearchStatus === api_status.fetching) return;
     setCallApiSearchStatus(api_status.fetching);
-    let amount = inputElement?.current?.value.toString().replaceAll(",", "");
+    let amount = +inputElement?.current?.value.toString().replaceAll(",", "");
     amountCoin.current = amount;
     amountMoney.current = amount;
     if (filter === filterType.coin) {
@@ -254,9 +267,9 @@ const P2pExchange = memo(function () {
   const searchAds = function (coinName, amountCoin) {
     setCallApiSearchStatus(api_status.fetching);
     if (currentAction === actionTrading.buy) {
-      fetchApiSearchSellQuick(coinName, amountCoin);
+      fetchApiSearchBuyQuick(coinName, amountCoin);
     } else {
-      fetchApiSeachBuyQuick(coinName, amountCoin);
+      fetchApiSearchSellQuick(coinName, amountCoin);
     }
   };
   const searchAdsExDebounce = debounce(searchAdsEx, 1000);
@@ -307,6 +320,7 @@ const P2pExchange = memo(function () {
       localStorageVariable.moneyFromP2pExchange,
       amountMoney.current
     );
+    setLocalStorage(localStorageVariable.coinNameFromP2pExchange, selectedCoin);
     history.push(url.transaction_buy);
     return;
   };
@@ -319,6 +333,7 @@ const P2pExchange = memo(function () {
       localStorageVariable.moneyFromP2pExchange,
       amountMoney.current
     );
+    setLocalStorage(localStorageVariable.coinNameFromP2pExchange, selectedCoin);
     history.push(url.transaction_sell);
     return;
   };

@@ -556,12 +556,12 @@ $blue-light: #ceceff;
     transition: 0.2s;
 
     &:hover {
-      border-color: $white;
+      border-color: $new-primary-color-6;
       cursor: pointer;
     }
 
     &.active {
-      border-color: $white;
+      border-color: $new-primary-color-6;
       cursor: pointer;
     }
 

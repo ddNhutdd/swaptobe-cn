@@ -7,8 +7,10 @@ import {
   setLocalStorage,
   removeLocalStorage,
   findIntegerMultiplier,
+  roundIntl,
 } from "../util/common";
 import {
+  currencyMapper,
   defaultCurrency,
   defaultLanguage,
   localStorageVariable,
@@ -319,9 +321,10 @@ export default function Header2({ history }) {
                     <i className="fa-brands fa-bitcoin"></i>
                   </span>
                   <span>
-                    {new Intl.NumberFormat("en-US", {
-                      maximumSignificantDigits: 8,
-                    }).format(totalAssetsBtcRealTime)}
+                    {new Intl.NumberFormat(
+                      currencyMapper.USD,
+                      roundIntl(8)
+                    ).format(totalAssetsBtcRealTime)}
                   </span>
                 </div>
                 <div className="header2__wallet-info-item">

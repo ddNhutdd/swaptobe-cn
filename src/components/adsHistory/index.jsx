@@ -12,10 +12,13 @@ import {
   getLocalStorage,
   hideElement,
   roundDecimalValues,
+  roundIntl,
+  rountRange,
   showElement,
 } from "src/util/common";
 import {
   api_status,
+  currencyMapper,
   defaultLanguage,
   image_domain,
   localStorageVariable,
@@ -222,8 +225,12 @@ function AdsHistory() {
               <table>
                 <tbody>
                   <tr>
-                    <td>{t("userName")}:</td>
-                    <td>{item.userName}</td>
+                    <td>{t("amount")}:</td>
+                    <td>{item.amount}</td>
+                  </tr>
+                  <tr>
+                    <td>{t("amountMinimum")}:</td>
+                    <td>{item.amountMinimum}</td>
                   </tr>
                 </tbody>
               </table>
@@ -232,16 +239,13 @@ function AdsHistory() {
               <table>
                 <tbody>
                   <tr>
-                    <td>{t("amount")}:</td>
-                    <td>{item.amount}</td>
-                  </tr>
-                  <tr>
-                    <td>{t("amountMinimum")}:</td>
-                    <td>{item.amountMinimum}</td>
-                  </tr>
-                  <tr>
-                    <td>{t("createdAt")}:</td>
-                    <td>{item.created_at}</td>
+                    <td>Quantity Remaining:</td>
+                    <td>
+                      {new Intl.NumberFormat(
+                        currencyMapper.USD,
+                        roundIntl(rountRange(price))
+                      ).format(item.amount - item.amountSuccess)}
+                    </td>
                   </tr>
                   <tr>
                     <td className="logo-coin">
@@ -265,15 +269,8 @@ function AdsHistory() {
               <table>
                 <tbody>
                   <tr>
-                    <td>Quantity Remaining:</td>
-                    <td>
-                      {Number(
-                        roundDecimalValues(
-                          item.amount - item.amountSuccess,
-                          price
-                        )
-                      )}
-                    </td>
+                    <td>{t("createdAt")}:</td>
+                    <td>{item.created_at}</td>
                   </tr>
                   <tr>
                     <td

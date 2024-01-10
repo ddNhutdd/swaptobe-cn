@@ -11,6 +11,7 @@ export const localStorageVariable = {
   createAds: "createAds",
   coinFromP2pExchange: "amFP2PE",
   moneyFromP2pExchange: "amFP2PEM",
+  coinNameFromP2pExchange: "cnfP2PE",
 };
 
 export const deploy_domain = "http://192.168.1.15:3000/wallet-2";

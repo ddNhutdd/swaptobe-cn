@@ -576,12 +576,17 @@ function ConfirmItem(props) {
             size={isMobileViewport ? "small" : "middle"}
           >
             <Descriptions.Item label={t("amount")}>
-              <div className="green-text">{pay}</div>
+              <div className="green-text">
+                {new Intl.NumberFormat(currencyMapper["USD"], {
+                  style: "currency",
+                  currency: "VND",
+                }).format(pay)}
+              </div>
               <div className="icon-copy">
                 <i
                   onClick={copyButtonClickHandle.bind(
                     null,
-                    new Intl.NumberFormat("vi-VN", {
+                    new Intl.NumberFormat(currencyMapper.USD, {
                       style: "currency",
                       currency: "VND",
                       maximumSignificantDigits: 3,

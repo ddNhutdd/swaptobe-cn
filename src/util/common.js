@@ -363,6 +363,7 @@ export const getRandomElementFromArray = function (arr) {
 
 export const roundIntl = function (maximum) {
   return {
+    style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: maximum,
   };

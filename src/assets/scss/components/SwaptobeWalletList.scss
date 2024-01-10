@@ -130,50 +130,12 @@
                 }
 
                 .primary-button {
-                    background: $new-primary-background-7;
-                    color: $new-text-color-white;
-                    padding: 8px 16px;
-                    box-sizing: border-box;
-                    border: none;
-                    border-radius: 5px;
-                    line-height: 1 !important;
-                    height: fit-content;
-                    transition: all 0.3s ease-out;
-                    width: 100%;
-                    font-weight: 500;
-                    font-size: 15px;
-
-
-                    &:hover {
-                        background: $new-primary-background-6;
-                        cursor: pointer;
-                    }
-
                     @media screen and (max-width: 480px) {
                         width: fit-content;
                     }
                 }
 
                 .seconary-button {
-                    padding: 8px 16px;
-                    box-sizing: border-box;
-                    border-radius: 5px;
-                    line-height: 1 !important;
-                    height: fit-content;
-                    width: 100%;
-                    border: 1px solid $new-primary-background-7;
-                    background: $neutral-3;
-                    color: $new-primary-background-7;
-                    cursor: pointer;
-                    font-size: 15px;
-                    transition: all 0.3s ease-out;
-                    width: 100%;
-
-
-                    &:hover {
-                        background: $neutral-2;
-                    }
-
                     @media screen and (max-width: 480px) {
                         width: fit-content;
                     }

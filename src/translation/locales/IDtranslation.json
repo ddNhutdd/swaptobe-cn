@@ -298,5 +298,10 @@
     "yourListBank": "Daftar Bank Anda",
     "addBanking": "Tambahkan Informasi Perbankan",
     "buyQuickly": "Beli dengan Cepat",
-    "sellQuickly": "Jual dengan Cepat"
+    "sellQuickly": "Jual dengan Cepat",
+    "youCannotBuyYourOwnAdvertising": "Anda tidak dapat membeli iklan sendiri",
+    "random": "Acak",
+    "own": "Sendiri",
+    "enterQuantityOfCoins": "Masukkan jumlah koin",
+    "enterAmountOfMoney": "Masukkan jumlah uang"
 }

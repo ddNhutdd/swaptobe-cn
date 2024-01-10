@@ -3,141 +3,111 @@
 
     .ads__header {
         display: flex;
+        flex-direction: column;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: flex-start;
         margin-bottom: 20px;
-        gap: 20px;
+        gap: 10px;
         justify-content: flex-start;
 
         .ads__title {
-            color: $white;
-            margin-bottom: 0;
-            font-size: 24px;
-            font-weight: bold;
-            width: 50px;
-
-            @media screen and (max-width:1200px) {
-                width: 100%;
-            }
+            @extend .titleContainerAdmin;
         }
 
-        .ads__filter {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            align-items: center;
-            margin-right: auto;
+        .ads__filterContainer {
+            .ads__filter {
+                padding: 0;
 
-            @media screen and (max-width:1200px) {
-                width: 100%;
-                justify-content: flex-start;
-            }
+                .ads__dropdown-action {
+                    display: flex;
+                    align-items: center;
+                    gap: .3125rem;
+                    padding-bottom: 15px;
+                    padding-left: 0;
 
-            @media screen and (max-width:992px) {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+                    .ads__dropdown {
+                        @include adminDropdown;
+                        width: 100%;
+                        min-width: 100px;
+                        max-width: 200px;
 
-            .ads__dropdown {
-                @include adminDropdown;
-            }
+                        .admin__dropdown-selected {
+                            width: 100%;
+                        }
 
-            .ads__dropdown-action {
-                display: flex;
-                align-items: center;
-                gap: .3125rem;
+                    }
 
-                .admin__dropdown-selected {
-                    @media screen and (max-width: 576px) {
+                    label {
+                        margin-bottom: 0;
+                    }
+                }
+
+                .ads__checkbox {
+                    padding: 0;
+
+                    .ads__checkbox-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+
+                        margin-bottom: 0;
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+
+                        .ads__checkbox__control {
+                            width: 15px;
+                            height: 15px;
+                            border: 1px solid $background-color-4;
+                            border-radius: 3px;
+                            position: relative;
+
+                            i {
+                                color: $new-primary-color-6;
+                                position: absolute;
+                                top: -1px;
+                                right: 0px;
+                                display: none;
+                            }
+                        }
+                    }
+
+                    input[type="checkbox"]:checked+label {
+                        i {
+                            display: block;
+                        }
+                    }
+                }
+
+                .ads__dropdown-coin {
+                    @include adminDropdown;
+                    display: flex;
+                    align-items: center;
+                    gap: .3125rem;
+                    padding-left: 0;
+
+                    label {
+                        margin-bottom: 0;
+                    }
+
+                    .admin__dropdown-selected {
                         width: 100px;
                     }
                 }
-
-                label {
-                    margin-bottom: 0;
-                }
             }
 
-            .ads__checkbox {
-                .ads__checkbox-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 5px;
-                    position: relative;
-                    margin-bottom: 0;
-
-                    &:hover {
-                        cursor: pointer;
-                    }
-
-                    .ads__checkbox__control {
-                        width: 15px;
-                        height: 15px;
-                        border: 1px solid $background-color-4;
-                        border-radius: 3px;
-                    }
-
-                    i {
-                        position: absolute;
-                        top: 4px;
-                        right: 1px;
-                        display: none;
-                    }
-                }
-
-                input[type="checkbox"]:checked+label {
-                    i {
-                        display: block;
-                    }
-                }
-            }
-
-            .ads__dropdown-coin {
+            .ads__paging {
+                padding-right: 0;
                 display: flex;
-                align-items: center;
-                gap: .3125rem;
+                align-items: flex-end;
+                justify-content: flex-end;
+                padding-bottom: 0;
+                padding-left: 0;
 
-                label {
-                    margin-bottom: 0;
-                }
-
-                .admin__dropdown-selected {
-                    width: 100px;
-                }
-            }
-        }
-
-        .ads__paging {
-            text-align: right;
-            margin-left: -12px;
-            margin-right: -12px;
-
-            .ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-link-icon,
-            .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-link-icon {
-                color: $admin-text-color;
-            }
-
-            li {
-                background-color: $transparent;
-                border: none;
-
-                &.ant-pagination-item-active {
-                    border: 1px solid $background-color-4;
-                }
-
-                .ant-pagination-item-ellipsis {
-                    color: $admin-text-color;
-                }
-
-                a {
-                    color: $admin-text-color;
-                    border: none;
-                }
-
-                button {
-                    background-color: $transparent;
-                    color: $admin-text-color;
-                    border: none;
+                @media screen and (max-width:768px) {
+                    align-items: center;
+                    justify-content: flex-start;
                 }
             }
         }
@@ -150,33 +120,23 @@
         .ads__table {
             @include adminTable;
 
-            .ads_pending {
-                color: $blue;
-            }
-
-            .ads_accepted {
-                color: $green-2;
-            }
-
-            .ads_rejected {
-                color: $red-light;
-            }
-
-            .ads__content-action {
-                display: flex;
-                gap: 10px;
-
-                .ads__content-reject {
-                    @include adminButtonGhost;
-
-                    &:hover {
-                        color: $red-1;
-                        border-color: $red-1;
+            thead {
+                tr {
+                    th {
+                        white-space: nowrap;
                     }
                 }
+            }
 
-                .ads__content-accept {
-                    @include adminButtonGhost;
+            tbody {
+                tr {
+                    td {
+                        .ads__content-action {
+                            display: flex;
+                            gap: 5px;
+                        }
+                    }
+
                 }
             }
         }
@@ -187,34 +147,10 @@
     display: flex;
     flex-wrap: wrap;
     padding: 16px 24px;
-    gap: 20px;
+    gap: 10px;
 
-    .ads-modal-coin-content__item {
-        border: 1px solid $background-color-4;
-        border-radius: 5px;
-        padding: 5px 10px;
-        transition: .2s;
-        display: flex;
-        gap: 5px;
-
-        &:hover {
-            cursor: pointer;
-            border-color: $header2-background;
-        }
-
-        &.active {
-            color: $white;
-            border-color: $header2-background;
-            background-color: $header2-background;
-        }
-
-        .ads-modal-coin-content__img {
-            img {
-                display: block;
-                width: 20px;
-                height: 20px;
-                object-fit: cover;
-            }
-        }
+    .ads-modal-coin-content__item.active {
+        background-color: $new-primary-color-6;
+        color: $new-text-color-white;
     }
 }

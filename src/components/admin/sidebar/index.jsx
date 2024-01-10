@@ -1,8 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useRef, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { url } from "src/constant";
-import { addClassToElementById, getElementById } from "src/util/common";
+import { useDispatch } from "react-redux";
+import { localStorageVariable, url } from "src/constant";
+import { callToastSuccess } from "src/function/toast/callToast";
+import {
+  addClassToElementById,
+  getElementById,
+  removeLocalStorage,
+} from "src/util/common";
 function Sidebar() {
   const rightIconFunding = useRef();
   const submenuFunding = useRef();
@@ -10,6 +16,8 @@ function Sidebar() {
   const submenuHistory = useRef();
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const urlList = location.pathname.split("/");
     const page = urlList[urlList.length - 1];
@@ -81,6 +89,16 @@ function Sidebar() {
     const element = e.target.closest("#exchange");
     element.classList.add("active");
     history.push(url.admin_exchange);
+  };
+  const logout = () => {
+    localStorage.removeItem(localStorageVariable.user);
+    localStorage.removeItem(localStorageVariable.token);
+    removeLocalStorage(localStorageVariable.currency);
+    removeLocalStorage(localStorageVariable.lng);
+    removeLocalStorage(localStorageVariable.coin);
+    history.push(url.home);
+    dispatch({ type: "USER_LOGOUT" });
+    callToastSuccess("Logged out");
   };
 
   return (
@@ -183,7 +201,7 @@ function Sidebar() {
           </span>
           <span className="admin-sidebar__item">Update homepage</span>
         </li>
-        <li>
+        <li onClick={logout}>
           <span className="admin-sidebar__icon">
             <i className="fa-solid fa-right-from-bracket"></i>
           </span>

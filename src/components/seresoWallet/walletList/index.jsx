@@ -31,6 +31,7 @@ import {
   form,
   setShow as setShowWithdrawTab,
 } from "src/redux/reducers/walletWithdraw";
+import { Button, buttonClassesType } from "src/components/Common/Button";
 function SerepayWalletList() {
   //
   const history = useHistory();
@@ -67,7 +68,7 @@ function SerepayWalletList() {
   };
   const renderButton = function (name) {
     return name === "USDT" ? (
-      <button
+      <Button
         onClick={() => {
           dispatch(coinSetCoin(name));
           dispatch(setShowContent(actionContent.desposite));
@@ -76,7 +77,7 @@ function SerepayWalletList() {
         className="primary-button"
       >
         {t("deposit")}
-      </button>
+      </Button>
     ) : (
       ""
     );
@@ -101,7 +102,7 @@ function SerepayWalletList() {
             )}
           </span>
           <span className="swaptobeWalletList__own">
-            <span>Own:</span>
+            <span>{t("own")}:</span>
             <span>
               {new Intl.NumberFormat(
                 currencyMapper.USD,
@@ -116,34 +117,34 @@ function SerepayWalletList() {
         </div>
         <div className="action">
           {renderButton(item.name)}
-          <button
+          <Button
             onClick={() => {
               dispatch(coinSetCoin(item.name));
               dispatch(setShowContent(actionContent.withdraw));
               dispatch(setShowWithdrawTab(form.Wallet));
               window.scrollTo(0, 0);
             }}
-            className="primary-button"
+            type={buttonClassesType.outline}
           >
             {t("withdraw")}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               dispatch(coinSetCoin(item.name));
               dispatch(setShowContent(actionContent.withdraw));
               dispatch(setShowWithdrawTab(form.Aliases));
               window.scrollTo(0, 0);
             }}
-            className="seconary-button"
+            type={buttonClassesType.outline}
           >
             {t("transfer")}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => swapOnClickHandle(item.name, getMyCoin(item.name))}
-            className="seconary-button"
+            type={buttonClassesType.outline}
           >
             {t("swap")}
-          </button>
+          </Button>
         </div>
       </li>
     ));

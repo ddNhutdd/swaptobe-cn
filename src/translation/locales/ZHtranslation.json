@@ -298,5 +298,10 @@
     "yourListBank": "您的银行列表",
     "addBanking": "添加银行信息",
     "buyQuickly": "快速购买",
-    "sellQuickly": "快速出售"
+    "sellQuickly": "快速出售",
+    "youCannotBuyYourOwnAdvertising": "您不能购买自己的广告",
+    "random": "随机",
+    "own": "拥有",
+    "enterQuantityOfCoins": "输入硬币数量",
+    "enterAmountOfMoney": "输入金额"
 }

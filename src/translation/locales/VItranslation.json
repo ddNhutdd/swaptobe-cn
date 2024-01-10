@@ -298,5 +298,10 @@
     "yourListBank": "Danh sách Ngân hàng của Bạn",
     "addBanking": "Thêm Thông tin Ngân hàng",
     "buyQuickly": "Mua Nhanh",
-    "sellQuickly": "Bán Nhanh"
+    "sellQuickly": "Bán Nhanh",
+    "youCannotBuyYourOwnAdvertising": "Bạn không thể mua quảng cáo của chính mình",
+    "random": "Ngẫu nhiên",
+    "own": "Sở hữu",
+    "enterQuantityOfCoins": "Nhập số lượng coin",
+    "enterAmountOfMoney": "Nhập số tiền"
 }

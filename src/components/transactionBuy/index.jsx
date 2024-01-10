@@ -14,7 +14,7 @@ import {
 import {
   createP2p,
   getListBanking,
-  searchSellQuick,
+  searchBuyQuick,
 } from "src/util/userCallApi";
 import { getCoin } from "src/redux/constant/coin.constant";
 import {
@@ -34,8 +34,11 @@ function TransactionBuy() {
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const history = useHistory();
   const amount = getLocalStorage(localStorageVariable.coinFromP2pExchange || 0); // Number of coins sent from p2pExchange
-  const selectedCoinRedux = useSelector(getCoin);
+  const selectedCoin = getLocalStorage(
+    localStorageVariable.coinNameFromP2pExchange
+  );
 
+  const { t } = useTranslation();
   const [callApiLoadTraderStatus, setCallApiLoadTraderStatus] = useState(
     api_status.pending
   );
@@ -45,7 +48,7 @@ function TransactionBuy() {
   const [callApiCreateP2p, setCallApiCreateP2p] = useState(api_status.pending);
 
   const [selectedDropdownTrader, setSelectedDropdownTrader] = useState({
-    userName: "Random",
+    userName: t("random"),
   }); // variable used to display on the interface, dropdown trader
   const [selectedTrader, setSelectedTrader] = useState();
   const [listTrader, setListTrader] = useState();
@@ -62,11 +65,11 @@ function TransactionBuy() {
   const control = useRef({
     amount: "amount",
   });
-  const { t } = useTranslation();
   const [eulaChecked, setEulaChecked] = useState(false);
   const touchedControl = useRef({});
   const [errorControl, setErrorControl] = useState({});
   const hasRunFlag = useRef(false); // variable to identify a function that is run once
+  const isSelectedDropdownRandom = useRef(true); // for multilingual part
 
   const validate = function () {
     let valid = true;
@@ -104,16 +107,16 @@ function TransactionBuy() {
     return new Promise((resolve) => {
       if (callApiLoadTraderStatus === api_status.fetching)
         return resolve(false);
-      else setCallApiLoadTraderStatus(api_status.fetching);
-      searchSellQuick({
+      else setCallApiLoadTraderStatus(() => api_status.fetching);
+      searchBuyQuick({
         limit: 999999999999999999,
         page: 1,
-        symbol: selectedCoinRedux,
+        symbol: selectedCoin,
         amount,
       })
         .then((resp) => {
           setCallApiLoadTraderStatus();
-          setListTrader(resp.data.data.array);
+          setListTrader(() => resp.data.data.array);
           return resolve(resp.data.data.array);
         })
         .catch((err) => {
@@ -128,7 +131,7 @@ function TransactionBuy() {
     const listResult = [];
     listResult.push(
       <span onClick={traderRandomSelect} key={-1} className="dropdown-item">
-        Random
+        {t("random")}
       </span>
     );
     return listResult.concat(
@@ -146,13 +149,15 @@ function TransactionBuy() {
   const traderSelect = function (item) {
     setSelectedTrader(() => item);
     setSelectedDropdownTrader(() => item);
+    isSelectedDropdownRandom.current = false;
   };
   const renderClassAdsSpin = function () {
     return callApiLoadTraderStatus === api_status.fetching ? "" : "--d-none";
   };
   const traderRandomSelect = function () {
-    setSelectedDropdownTrader(() => ({ userName: "Random" }));
+    setSelectedDropdownTrader(() => ({ userName: t("random") }));
     setSelectedTrader(() => getRandomElementFromArray(listTrader));
+    isSelectedDropdownRandom.current = true;
   };
   const closeAllDrodown = function () {
     setIsShowDropdownTrader(() => false);
@@ -232,7 +237,7 @@ function TransactionBuy() {
   };
   const firstLoad = function () {
     fetchApiTrader().then((resp) => {
-      setSelectedDropdownTrader(() => ({ userName: "Random" }));
+      setSelectedDropdownTrader(() => ({ userName: t("random") }));
       setSelectedTrader(() => getRandomElementFromArray(resp));
     });
     fetchApiGetListBank()
@@ -253,12 +258,7 @@ function TransactionBuy() {
     let amount = +getLocalStorage(localStorageVariable.moneyFromP2pExchange);
     if (!amount) {
       amount = +getLocalStorage(localStorageVariable.coinFromP2pExchange) || 0;
-      result = calcVnd(
-        listCoinRealTime,
-        selectedCoinRedux,
-        exchangeRedux,
-        amount
-      );
+      result = calcVnd(listCoinRealTime, selectedCoin, exchangeRedux, amount);
     } else {
       const vnd = calVNDFromOtherCurrencies(
         exchangeRedux,
@@ -453,7 +453,7 @@ function TransactionBuy() {
           const mess = err.response.data.message;
           switch (mess) {
             case "You cannot buy your own advertising":
-              callToastError("You cannot buy your own advertising");
+              callToastError(t("youCannotBuyYourOwnAdvertising"));
               break;
             case "The quantity is too small to create an order":
               callToastError(t("theQuantityIsTooSmallToCreateAnOrder"));
@@ -483,7 +483,7 @@ function TransactionBuy() {
             </span>
           );
         case listSubString.at(1):
-          return selectedCoinRedux;
+          return selectedCoin;
         default:
           break;
       }
@@ -495,6 +495,14 @@ function TransactionBuy() {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
+    let currentLanguage = i18n.language;
+    i18n.on("languageChanged", (newLanguage) => {
+      if (newLanguage !== currentLanguage) {
+        isSelectedDropdownRandom.current &&
+          setSelectedDropdownTrader({ userName: t("random") });
+      }
+      currentLanguage = newLanguage;
+    });
     validationPageLoad();
     firstLoad();
     document.addEventListener("click", closeAllDrodown);
@@ -506,7 +514,7 @@ function TransactionBuy() {
     // Display price in the advertising information section
     const price = calcPrice(
       listCoinRealTime,
-      selectedCoinRedux,
+      selectedCoin,
       exchangeRedux,
       currencyRedux
     );
@@ -521,7 +529,7 @@ function TransactionBuy() {
     try {
       const amountCoin = calcCoin(
         listCoinRealTime,
-        selectedCoinRedux,
+        selectedCoin,
         exchangeRedux,
         +inputMoneyElement.current.value.replaceAll(",", "")
       );
@@ -529,7 +537,7 @@ function TransactionBuy() {
         inputCoinElement.current.value = 0;
       } else {
         const price = listCoinRealTime.find(
-          (item) => item.name === selectedCoinRedux
+          (item) => item.name === selectedCoin
         )?.price;
         inputCoinElement.current.value = new Intl.NumberFormat(
           currencyMapper.USD,
@@ -544,7 +552,7 @@ function TransactionBuy() {
     if (
       listCoinRealTime &&
       listCoinRealTime.length > 0 &&
-      selectedCoinRedux &&
+      selectedCoin &&
       exchangeRedux &&
       exchangeRedux.length > 0 &&
       currencyRedux &&
@@ -553,7 +561,7 @@ function TransactionBuy() {
       loadInputCoin();
       hasRunFlag.current = true;
     }
-  }, [listCoinRealTime, selectedCoinRedux, exchangeRedux, currencyRedux]);
+  }, [listCoinRealTime, selectedCoin, exchangeRedux, currencyRedux]);
 
   return (
     <div className={`transaction fadeInBottomToTop`}>
@@ -611,7 +619,7 @@ function TransactionBuy() {
                   id="receiveUnitTransaction"
                   className="transaction__unit result"
                 >
-                  {selectedCoinRedux}
+                  {selectedCoin}
                 </span>
               </div>
             </div>

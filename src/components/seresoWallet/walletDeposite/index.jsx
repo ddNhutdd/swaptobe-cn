@@ -140,7 +140,9 @@ function SerepayWalletDeposit() {
       getClassListFromElementById("historySpinner").remove("--d-none");
   };
   const showHistoryEmpty = function () {
-    getClassListFromElementById("historyEmpty").remove("--d-none");
+    const historyEmpty = getElementById("historyEmpty");
+    if (!historyEmpty) return;
+    historyEmpty.remove("--d-none");
   };
   const closeHistoryEmpty = function () {
     addClassToElementById("historyEmpty", "--d-none");
@@ -153,7 +155,6 @@ function SerepayWalletDeposit() {
   };
 
   const [address, setAddress] = useState("");
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const coinFromRedux = useSelector(getCoin);

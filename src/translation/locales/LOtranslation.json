@@ -274,7 +274,7 @@
     "infomationAboutPartners": "ຂໍ້ມູນກ່ຽວກັບຄູ່ຜູ້ດຽວ",
     "onlineSupport": "ສະຖານະຕິດຕາມອີກເທື່ອ",
     "weAreAlwaysReadyToHelp": "ພວກເຮົາປະຕິບັດຢູ່ກັບການຊ່ວຍເຫຼືອ",
-    "iPay": "I Pay",
+    "iPay": "ຂ້ອຍຈ່າຍ",
     "sellEthViaBankTransferVnd": "ຂາຍ 122se12ll122 45BTC54 ຂື້ນອນດ້ານບັນຊີ (VND)",
     "swapTo": "ປ່ຽນໄປ",
     "swapFrom": "ປ່ຽນຈາກ",
@@ -298,5 +298,10 @@
     "yourListBank": "ລາຍຊື່ຂອງທ່ານທັງໝົດ",
     "addBanking": "ເພີ່ມຂໍ້ມູນທະນາຄານ",
     "buyQuickly": "ຊື້ດ້ວຍຄົນໄວ້",
-    "sellQuickly": "ຂາຍດ້ວຍຄົນໄວ້"
+    "sellQuickly": "ຂາຍດ້ວຍຄົນໄວ້",
+    "youCannotBuyYourOwnAdvertising": "ທ່ານບໍ່ສາມາດຊື້ຄວາມຜິດຊອບຂອງທ່ານໄດ້",
+    "random": "ປະຕິທິ",
+    "own": "ຂອບ",
+    "enterQuantityOfCoins": "ໃສ່ຈຳນວນເງິນ",
+    "enterAmountOfMoney": "ໃສ່ຈຳນວນເງິນ"
 }

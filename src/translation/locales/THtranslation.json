@@ -274,7 +274,7 @@
     "infomationAboutPartners": "ข้อมูลเกี่ยวกับพาร์ทเนอร์",
     "onlineSupport": "สนับสนุนออนไลน์",
     "weAreAlwaysReadyToHelp": "เราพร้อมช่วยเสมอตลอดเวลา",
-    "iPay": "I Pay",
+    "iPay": "ฉันจ่าย",
     "sellEthViaBankTransferVnd": "ขาย 122se12ll122 45BTC54 ผ่านการโอนเงินทางธนาคาร (VND)",
     "swapTo": "สลับไปที่",
     "swapFrom": "สลับจาก",
@@ -298,5 +298,10 @@
     "yourListBank": "รายการธนาคารของคุณ",
     "addBanking": "เพิ่มข้อมูลการทำธุรกรรมทางธนาคาร",
     "buyQuickly": "ซื้อด่วน",
-    "sellQuickly": "ขายด่วน"
+    "sellQuickly": "ขายด่วน",
+    "youCannotBuyYourOwnAdvertising": "คุณไม่สามารถซื้อโฆษณาของคุณเองได้",
+    "random": "สุ่ม",
+    "own": "ตัวเอง",
+    "enterQuantityOfCoins": "ป้อนปริมาณเหรียญ",
+    "enterAmountOfMoney": "ป้อนจำนวนเงิน"
 }

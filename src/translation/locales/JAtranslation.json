@@ -298,5 +298,10 @@
     "yourListBank": "銀行リスト",
     "addBanking": "銀行情報を追加",
     "buyQuickly": "素早く購入",
-    "sellQuickly": "素早く販売"
+    "sellQuickly": "素早く販売",
+    "youCannotBuyYourOwnAdvertising": "自分の広告は購入できません",
+    "random": "ランダム",
+    "own": "自分の",
+    "enterQuantityOfCoins": "コインの数量を入力してください",
+    "enterAmountOfMoney": "金額を入力してください"
 }

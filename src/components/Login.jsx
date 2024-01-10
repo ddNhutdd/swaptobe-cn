@@ -49,19 +49,18 @@ export default function Login({ history }) {
         userName: e,
         password: p,
       });
+      const profile = JSON.stringify(response.data.data);
       callToastSuccess(t("loggedInSuccessfully"));
       localStorage.setItem("token", response.data.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.data));
+      localStorage.setItem("user", profile);
       dispatch({ type: "USER_LOGIN" });
       // menu load list mycoin
       dispatch(userWalletFetchCount());
       // search previos page and redirect
       const previousPage = getLocalStorage(localStorageVariable.previousePage);
       socket.emit("join", response.data.data.id);
-      ///// khi user login hoặc reload web hoặc app ở bất kì giao diện hay màn hình nào đều phải gọi hàm này
-      ///// thường để trong useEffect file app.js
       socket.on("ok", (res) => {
-        console.log(res, "ok"); /// hàm này chạy tất là join thành công
+        console.log(res, "ok");
       });
       history.push("wallet-2");
       if (previousPage) {
@@ -70,11 +69,19 @@ export default function Login({ history }) {
       } else {
         history.push(url.p2pTrading);
       }
+      //redirect to admin
+      redirecToAdmin(response.data.data);
     } catch (error) {
       callToastError(error?.response?.data?.message);
     } finally {
       setIsLoading(false);
     }
+  };
+  const redirecToAdmin = function (userProfile) {
+    const { id } = userProfile;
+    console.log("1", typeof userProfile);
+    if (id === 1) history.push(url.admin_ads);
+    return;
   };
 
   return (

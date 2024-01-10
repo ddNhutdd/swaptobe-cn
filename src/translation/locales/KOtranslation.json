@@ -274,7 +274,7 @@
     "infomationAboutPartners": "파트너에 관한 정보",
     "onlineSupport": "온라인 지원",
     "weAreAlwaysReadyToHelp": "언제든지 도움을 드릴 준비가 되어 있습니다",
-    "iPay": "I Pay",
+    "iPay": "나는 지불합니다",
     "sellEthViaBankTransferVnd": "은행 송금을 통한 122se12ll122 45BTC54 (VND) 판매",
     "swapTo": "스왑 대상",
     "swapFrom": "스왑 소스",
@@ -298,5 +298,10 @@
     "yourListBank": "당신의 은행 목록",
     "addBanking": "은행 정보 추가",
     "buyQuickly": "빠르게 구매",
-    "sellQuickly": "빠르게 판매"
+    "sellQuickly": "빠르게 판매",
+    "youCannotBuyYourOwnAdvertising": "자신의 광고를 구매할 수 없습니다",
+    "random": "무작위",
+    "own": "자체",
+    "enterQuantityOfCoins": "동전 수량 입력",
+    "enterAmountOfMoney": "금액 입력"
 }
