@@ -1,10 +1,11 @@
 .p2pExchange {
     padding-top: 100px;
     background: url(../../../../public/img/background.png);
-    background-position: center;
+    background-position: center 100%;
     background-size: cover;
     background-repeat: no-repeat;
     color: $new-text-color-white;
+    height: fit-content;
 
     .container {
         @include container1;

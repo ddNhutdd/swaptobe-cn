@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import SerepayWalletDeposit from "./walletDeposite";
 import {
-  formatStringNumberCultureUS,
   getLocalStorage,
   parseURLParameters,
   setLocalStorage,
@@ -15,7 +14,10 @@ import {
 import { defaultLanguage, localStorageVariable, url } from "src/constant";
 import i18n from "src/translation/i18n";
 
-import { coinSetCoin } from "src/redux/actions/coin.action";
+import {
+  coinSetCoin,
+  userWalletFetchCount,
+} from "src/redux/actions/coin.action";
 import {
   actionContent,
   getShow,
@@ -48,6 +50,8 @@ function SwaptobeWallet() {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
+
+    dispatch(userWalletFetchCount());
   }, []);
   useEffect(() => {
     const ele = document.getElementById("showTotalValue");

@@ -7,16 +7,19 @@ import {
   localStorageVariable,
   url,
 } from "src/constant";
+import { useDispatch } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 import { getInfoP2p, getProfile } from "src/util/userCallApi";
 import ConfirmItem from "./confirmItem";
 import { Spin } from "antd";
 import { getElementById, getLocalStorage, hideElement } from "src/util/common";
 import { callToastError } from "src/function/toast/callToast";
-import socket from "src/util/socket";
 import { useTranslation } from "react-i18next";
+import socket from "src/util/socket";
+import { userWalletFetchCount } from "src/redux/actions/coin.action";
 function Confirm() {
-  const idAds = useParams().id;
+  const { id: idAds } = useParams();
+  const dispatch = useDispatch();
   const history = useHistory();
   const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
   const [data, setData] = useState(null);
@@ -30,17 +33,18 @@ function Confirm() {
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     //
+    socket.off("operationP2p");
     socket.on("operationP2p", (idP2p) => {
-      // console.log(idP2p, "operationP2p");
-      setTimeout(() => {
-        loadData();
-      }, 1000);
+      console.log(idP2p, "operationP2p");
+      loadData();
     });
+    return () => {
+      dispatch(userWalletFetchCount());
+    };
   }, []);
   const fetchApiGetInfoP2p = function () {
     return new Promise((resolve, rejected) => {
-      if (callApiStatus === api_status.fetching) resolve(false);
-      else setCallApiStatus(() => api_status.fetching);
+      console.log("fetch ", idAds);
       getInfoP2p({
         idP2p: idAds,
       })
@@ -50,7 +54,6 @@ function Confirm() {
         })
         .catch((error) => {
           setCallApiStatus(() => api_status.rejected);
-          console.log("reject from api ", idAds);
           rejected(false);
         })
         .finally(() => {
@@ -75,6 +78,8 @@ function Confirm() {
    * fetch data and render html
    */
   const loadData = async function () {
+    if (callApiStatus === api_status.fetching) return;
+    else setCallApiStatus(() => api_status.fetching);
     const profile = await fetchApiGetProfile();
     if (!profile) {
       callToastError(t("can'tFindUserInformation"));

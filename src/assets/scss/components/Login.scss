@@ -15,10 +15,10 @@
     form {
       margin-top: 50px;
 
-
       .field {
         margin-bottom: 18px;
         position: relative;
+
 
         span {
           position: absolute;
@@ -27,6 +27,11 @@
 
           &:hover {
             cursor: pointer;
+          }
+
+          &#eyeShow,
+          &#eyeHide {
+            color: $new-text-color-black;
           }
         }
       }

@@ -343,6 +343,9 @@ const P2pExchange = memo(function () {
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     fetchListCoin();
+    return () => {
+      dispatch(setShow([showP2pType.p2pTrading, actionTrading.buy]));
+    };
   }, []);
   useEffect(() => {
     searchWhenInputHasValue();
@@ -352,7 +355,7 @@ const P2pExchange = memo(function () {
   }, [currencyFromRedux]);
 
   return (
-    <div className="p2pExchange fadeInBottomToTop">
+    <div className="p2pExchange">
       <div className="container">
         <div className="p2pExchange__title">{t("p2pExchange")}</div>
         <div className="p2pExchange__selected">

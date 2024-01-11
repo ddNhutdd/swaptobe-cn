@@ -24,6 +24,7 @@ function Exchange() {
   const exchanges = useSelector(getExchange);
   const exchangesFetchStatus = useSelector(getExchangeFetchStatus);
   const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
+
   useEffect(() => {
     return () => {
       dispatch(currencySetFetchExchangeCount());
@@ -32,6 +33,7 @@ function Exchange() {
   useEffect(() => {
     renderTable();
   }, [exchangesFetchStatus]);
+
   const renderTable = function () {
     closeExchangeContent();
     closeExchangeEmpty();

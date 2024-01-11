@@ -286,7 +286,7 @@ function Ads() {
     if (type !== actionType.all) {
       result.push(`side='${type}'`);
     }
-    if (symbol !== "All") {
+    if (symbol !== "ALL") {
       result.push(`symbol='${selectedCoin}'`);
     }
     if (isPending) {
