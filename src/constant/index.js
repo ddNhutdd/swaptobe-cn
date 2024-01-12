@@ -36,6 +36,7 @@ export const url = {
   transaction_buy: "/transaction-buy",
   confirm: "/confirm/:id",
   p2p_management: "/p2p-management",
+  admin_user: "/admin/user",
 };
 
 export const api_url = {
@@ -77,4 +78,6 @@ export const actionTrading = {
 
 export const commontString = {
   noData: "No Data",
+  error: "Error",
+  success: "Success",
 };

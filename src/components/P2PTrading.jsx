@@ -28,6 +28,7 @@ import { getShow, setShow, showP2pType } from "src/redux/reducers/p2pTrading";
 import P2pExchange from "./p2pExchange";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "./Common/Button";
+import { getProfile } from "src/util/userCallApi";
 //
 export default function P2PTrading({ history }) {
   const showContent = useSelector(getShow);
@@ -44,6 +45,7 @@ export default function P2PTrading({ history }) {
   const exchangeRateDisparityFromRedux = useSelector(getExchangeRateDisparity);
   const exchange = useRef();
   const [coinFullName, setCoinFullName] = useState();
+  const [typeAds, setTypeAds] = useState(0);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   useEffect(() => {
@@ -57,8 +59,19 @@ export default function P2PTrading({ history }) {
     if (element) {
       element.classList.add("fadeInBottomToTop");
     }
-    //
+    fetchApiGetProfile();
   }, []);
+
+  const renderClassTypeAds = function () {
+    switch (typeAds) {
+      case 0:
+        return "--d-none";
+      case 1:
+        return "";
+      default:
+        break;
+    }
+  };
   useEffect(() => {
     if (data && data.length !== 0) {
       const x = data.find((item) => item.name === coin);
@@ -223,7 +236,7 @@ export default function P2PTrading({ history }) {
                     </ButtonAntd>
                     <button
                       onClick={createAdsBuy}
-                      className="p2pTrading__createAds"
+                      className={`p2pTrading__createAds + ${renderClassTypeAds()}`}
                     >
                       {t("creatingYourBuyingAd")}
                     </button>
@@ -249,7 +262,7 @@ export default function P2PTrading({ history }) {
                     </ButtonAntd>
                     <button
                       onClick={createAdsSell}
-                      className="p2pTrading__createAds"
+                      className={`p2pTrading__createAds ${renderClassTypeAds()}`}
                     >
                       {t("creatingYourSellingAd")}
                     </button>
@@ -307,6 +320,13 @@ export default function P2PTrading({ history }) {
       default:
         break;
     }
+  };
+  const fetchApiGetProfile = function () {
+    getProfile()
+      .then((resp) => {
+        setTypeAds(() => resp.data.data.type_ads);
+      })
+      .catch((error) => {});
   };
   //
   return (

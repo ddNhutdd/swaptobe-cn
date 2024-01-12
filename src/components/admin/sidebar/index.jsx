@@ -57,6 +57,9 @@ function Sidebar() {
       case "exchange":
         addClassToElementById("exchange", "active");
         break;
+      case "user":
+        addClassToElementById("user", "active");
+        break;
       default:
         break;
     }
@@ -83,6 +86,12 @@ function Sidebar() {
     const element = e.target.closest("#ads");
     element.classList.add("active");
     history.push(url.admin_ads);
+  };
+  const redirectUser = function (e) {
+    clearSelectedItem();
+    const element = e.target.closest("#user");
+    element.classList.add("active");
+    history.push(url.admin_user);
   };
   const redirectExchange = function (e) {
     clearSelectedItem();
@@ -115,6 +124,12 @@ function Sidebar() {
             <i className="fa-solid fa-user-shield"></i>
           </span>
           <span className="admin-sidebar__item">KYC users</span>
+        </li>
+        <li onClick={redirectUser} id="user">
+          <span className="admin-sidebar__icon">
+            <i className="fa-solid fa-user"></i>
+          </span>
+          <span className="admin-sidebar__item">Users</span>
         </li>
         <li onClick={redirectExchangeRateDisparity} id="exchangeRateDisparity">
           <span className="admin-sidebar__icon">

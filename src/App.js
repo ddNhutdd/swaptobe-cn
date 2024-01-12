@@ -50,6 +50,7 @@ import Exchange from "./components/admin/exchange";
 import P2pManagement from "./components/p2pManagement";
 import TransactionBuy from "./components/transactionBuy";
 import Widthdraw from "./components/admin/widthdraw";
+import User from "./components/admin/user";
 function App() {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -207,6 +208,7 @@ function App() {
           <AdminTemplate path={url.admin_widthdraw} component={Widthdraw} />
           <AdminTemplate path={url.admin_exchange} component={Exchange} />
           <AdminTemplate path="/admin/kyc" component={KYC} />
+          <AdminTemplate path={url.admin_user} component={User} />
           <AdminTemplate
             path={url.admin_exchangeRateDisparity}
             component={ExchangeRateDisparity}

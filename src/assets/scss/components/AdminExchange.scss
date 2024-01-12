@@ -17,47 +17,14 @@
             min-width: 500px;
 
             input {
-                outline: none;
-                border: 1px solid $background-color-4;
-                border-radius: 5px;
-                padding: 3px 5px;
-                background: $transparent;
-
-
-                &:hover {
-                    outline: none;
-                }
-
-                &:focus-visible {
-                    outline: none;
-                }
+                height: 35.56px;
             }
 
             .exchange__action {
                 display: flex;
                 align-items: center;
                 gap: 5px;
-
-                button {
-
-                    &:last-child {
-                        &:hover {
-                            color: $red-dark;
-                            border-color: $red-dark;
-                        }
-                    }
-
-                    @include adminButtonGhost;
-
-                    .loader {
-                        width: 16px;
-                        height: 16px;
-                        opacity: 0.3;
-                    }
-                }
             }
-
-
         }
     }
 }

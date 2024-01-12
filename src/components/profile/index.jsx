@@ -785,6 +785,13 @@ function Profile() {
       alignItems: "center",
       justifyContent: "center",
     };
+    const style2 = {
+      background: "white",
+      padding: "5px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    };
     if (callApi2FAStatus === api_status.fetching) {
       return (
         <div className={style}>
@@ -800,14 +807,16 @@ function Profile() {
     } else {
       return (
         <>
-          <QRCode
-            style={{
-              height: "auto",
-              maxWidth: "200px",
-              width: "100%",
-            }}
-            value={qrValue.addressCode}
-          />
+          <div style={style2}>
+            <QRCode
+              style={{
+                height: "auto",
+                maxWidth: "200px",
+                width: "100%",
+              }}
+              value={qrValue.addressCode}
+            />
+          </div>
           <div>{qrValue.textCode}</div>
         </>
       );

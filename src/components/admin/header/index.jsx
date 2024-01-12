@@ -34,7 +34,10 @@ function Header() {
             alt="logo"
           />
         </Link>
-        <button onClick={showSettingBar} className="admin-header__settings">
+        <button
+          onClick={showSettingBar}
+          className="admin-header__settings --d-none"
+        >
           <i className="fa-solid fa-gear"></i>
           <span>Setting</span>
         </button>
@@ -43,7 +46,7 @@ function Header() {
           ref={overlayElement}
           className="admin-header__overlay --d-none"
         ></div>
-        <div ref={settingBarElement} className="admin-header__setting-bar">
+        <div ref={settingBarElement} className="admin-header__setting-bar ">
           <div className="admin-header__setting-bar-header">
             <i onClick={closeSettingBar} className="fa-solid fa-xmark"></i>
             <span className="admin-header__setting-bar-header-text">

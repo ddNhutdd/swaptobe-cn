@@ -6,21 +6,14 @@ import { useHistory } from "react-router-dom";
 import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
 import {
-  addClassToElementById,
-  getClassListFromElementById,
   getElementById,
   getLocalStorage,
   hideElement,
-  roundDecimalValues,
-  roundIntl,
-  rountRange,
   showElement,
 } from "src/util/common";
 import {
   api_status,
-  currencyMapper,
   defaultLanguage,
-  image_domain,
   localStorageVariable,
   url,
 } from "src/constant";
@@ -34,6 +27,7 @@ import {
 } from "src/util/userCallApi";
 import socket from "src/util/socket";
 import { EmptyCustom } from "../Common/Empty";
+import AdsHistoryRecord, { AdsHistoryRecordType } from "../adsHistoryRecord";
 function AdsHistory() {
   useEffect(() => {
     const language =
@@ -43,9 +37,7 @@ function AdsHistory() {
       loadData(currentPage);
     });
     // get list coin
-    closeContent();
-    closeEmpty();
-    showSpinner();
+
     fetchListCoin().then((resp) => {
       renderTable(1, fetchListAdsBuyToUser);
     });
@@ -54,7 +46,7 @@ function AdsHistory() {
     };
   }, []);
   const history = useHistory();
-  const callApiStatus = useRef(api_status.pending);
+  const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
   const listCoin = useRef();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = useRef(10);
@@ -79,38 +71,32 @@ function AdsHistory() {
     if (callApiCancelStatus === api_status.fetching) return;
     setIsModalConfirmOpen(false);
   };
-  const closeEmpty = function () {
-    addClassToElementById("adsHistoryEmpty", "--d-none");
+
+  const renderClassEmpty = function () {
+    console.log(callApiStatus, listRecord, listRecord.length);
+    return callApiStatus !== api_status.fetching &&
+      (!listRecord || listRecord.length <= 0)
+      ? ""
+      : "--d-none";
   };
-  const showEmpty = function () {
-    getClassListFromElementById("adsHistoryEmpty").remove("--d-none");
+  const renderClassSpin = function () {
+    return callApiStatus === api_status.fetching ? "" : "--d-none";
   };
-  const closeSpinner = function () {
-    addClassToElementById("adsHistorySpinner", "--d-none");
-  };
-  const showSpinner = function () {
-    getClassListFromElementById("adsHistorySpinner").remove("--d-none");
-  };
-  const closeContent = function () {
-    addClassToElementById("ads-history__content", "--d-none");
-  };
-  const showContent = function () {
-    getClassListFromElementById("ads-history__content").remove("--d-none");
-  };
+
   const fetchListAdsSellToUser = function (page) {
     return new Promise((resolve) => {
-      if (callApiStatus.current === api_status.fetching) resolve({});
-      else callApiStatus.current = api_status.fetching;
+      if (callApiStatus === api_status.fetching) resolve({});
+      else setCallApiStatus(() => api_status.fetching);
       getListAdsSellToUser({
         limit: limit.current,
         page: page,
       })
         .then((resp) => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(() => api_status.fulfilled);
           resolve(resp.data.data);
         })
         .catch((error) => {
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(() => api_status.rejected);
           console.log(error);
           resolve({});
         });
@@ -118,21 +104,21 @@ function AdsHistory() {
   };
   const fetchListAdsBuyToUser = function (page) {
     return new Promise((resolve) => {
-      if (callApiStatus.current === api_status.fetching) {
+      if (callApiStatus === api_status.fetching) {
         return resolve({});
       } else {
-        callApiStatus.current = api_status.fetching;
+        setCallApiStatus(() => api_status.fetching);
       }
       getListAdsBuyToUser({
         limit: limit.current,
         page: page,
       })
         .then((resp) => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(() => api_status.fulfilled);
           return resolve(resp.data.data);
         })
         .catch((error) => {
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(() => api_status.rejected);
           console.log(error);
           return resolve({});
         });
@@ -140,21 +126,21 @@ function AdsHistory() {
   };
   const fetchListAdsBuyPenddingToUser = function (page) {
     return new Promise((resolve) => {
-      if (callApiStatus.current === api_status.fetching) {
+      if (callApiStatus === api_status.fetching) {
         return resolve({});
       } else {
-        callApiStatus.current = api_status.fetching;
+        setCallApiStatus(() => api_status.fetching);
       }
       getListAdsBuyPenddingToUser({
         limit: limit.current,
         page: page,
       })
         .then((resp) => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(() => api_status.fulfilled);
           return resolve(resp.data.data);
         })
         .catch((error) => {
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(() => api_status.rejected);
           console.log(error);
           return resolve({});
         });
@@ -162,7 +148,7 @@ function AdsHistory() {
   };
   const fetchListAdsSellPenddingToUser = function (page) {
     return new Promise((resolve) => {
-      if (callApiStatus.current === api_status.fetching) {
+      if (callApiStatus === api_status.fetching) {
         return resolve({});
       }
       getListAdsSellPenddingToUser({
@@ -170,12 +156,12 @@ function AdsHistory() {
         page: page,
       })
         .then((resp) => {
-          callApiStatus.current = api_status.fulfilled;
+          setCallApiStatus(() => api_status.fulfilled);
           return resolve(resp.data.data);
         })
         .catch((error) => {
           console.log(error);
-          callApiStatus.current = api_status.rejected;
+          setCallApiStatus(() => api_status.rejected);
           return resolve({});
         });
     });
@@ -192,23 +178,14 @@ function AdsHistory() {
   };
   const renderTable = async function (page, fn) {
     if (!listCoin.current) return;
-    closeContent();
-    closeEmpty();
-    showSpinner();
     disableFilter();
     if (!fn) {
-      closeSpinner();
-      closeContent();
-      showEmpty();
       return;
     }
     const { array: apiRes, total } = await fn(page);
-    closeSpinner();
     enableFilter();
+    setListRecord(() => []);
     if (!apiRes || apiRes.length <= 0) {
-      closeContent();
-      closeSpinner();
-      showEmpty();
       return;
     } else {
       const listRecord = [];
@@ -217,105 +194,17 @@ function AdsHistory() {
           (c) => c.name === item.symbol
         ).price;
         listRecord.push(
-          <div
-            key={item.id}
-            className="box fadeInBottomToTop ads-history__record"
-          >
-            <div>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>{t("amount")}:</td>
-                    <td>{item.amount}</td>
-                  </tr>
-                  <tr>
-                    <td>{t("amountMinimum")}:</td>
-                    <td>{item.amountMinimum}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Quantity Remaining:</td>
-                    <td>
-                      {new Intl.NumberFormat(
-                        currencyMapper.USD,
-                        roundIntl(rountRange(price))
-                      ).format(item.amount - item.amountSuccess)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="logo-coin">
-                      <img
-                        src={image_domain.replace(
-                          "USDT",
-                          item.symbol.toUpperCase()
-                        )}
-                        alt={item.symbol}
-                      />
-                      :{" "}
-                    </td>
-                    <td>
-                      <span>{item.symbol}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>{t("createdAt")}:</td>
-                    <td>{item.created_at}</td>
-                  </tr>
-                  <tr>
-                    <td
-                      className="ads-history-action"
-                      id={"adsHistoryAction" + item.id}
-                      colSpan="2"
-                    >
-                      <div
-                        className="spin-container"
-                        id={"adsHistoryActionSpinner" + item.id}
-                      >
-                        <Spin />
-                      </div>
-                      <div className="ads-history-action-container">
-                        <button
-                          className="--d-none"
-                          id={"adsHistoryActionCheckButton" + item.id}
-                          onClick={redirectConfirm.bind(null, item.id)}
-                        >
-                          Check
-                        </button>
-                        {item.type === 1 || item.type === 2 ? "" : ""}
-                        <button
-                          className={`cancel ${
-                            item.type === 1 || item.type === 2 ? "" : "--d-none"
-                          }`}
-                          onClick={() => {
-                            cancelAdsId.current = item.id;
-                            showModal();
-                          }}
-                          id={"adsHistoryActionCancelButton" + item.id}
-                        >
-                          {t("cancel")}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <AdsHistoryRecord
+            item={item}
+            price={price}
+            showModal={showModal}
+            redirectConfirm={redirectConfirm}
+            cancelAdsId={cancelAdsId}
+            type={AdsHistoryRecordType.user}
+          />
         );
       }
       setListRecord(() => listRecord);
-      showContent();
     }
     //
     const listId = apiRes.map((item) => item.id);
@@ -480,10 +369,16 @@ function AdsHistory() {
           </div>
           <h3>{renderTitle()}</h3>
           <div id="ads-history__content">{listRecord}</div>
-          <div id="adsHistoryEmpty" className="spin-container --d-none">
+          <div
+            id="adsHistoryEmpty"
+            className={`spin-container ${renderClassEmpty()}`}
+          >
             <EmptyCustom stringData={t("noData")} />
           </div>
-          <div id="adsHistorySpinner" className="spin-container --d-none">
+          <div
+            id="adsHistorySpinner"
+            className={`spin-container ${renderClassSpin()}`}
+          >
             <Spin />
           </div>
           <div className="ads-history__paging">

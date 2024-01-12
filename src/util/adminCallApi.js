@@ -104,3 +104,31 @@ export const cancelWidthdraw = function (data) {
     console.log(error);
   }
 };
+export const getAllUser = function (data) {
+  try {
+    return axiosService.post("/api/admin/getAllUser", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const typeAds = function (data) {
+  try {
+    return axiosService.post("/api/admin/typeAds", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const turn2fa = function (data) {
+  try {
+    return axiosService.post("/api/admin/turn2fa", data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const activeuser = function (data) {
+  try {
+    return axiosService.post("/api/admin/activeuser", data);
+  } catch (error) {
+    console.log(error);
+  }
+};

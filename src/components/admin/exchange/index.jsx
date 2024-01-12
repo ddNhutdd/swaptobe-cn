@@ -2,9 +2,10 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button } from "src/components/Common/Button";
+import { Button, buttonClassesType } from "src/components/Common/Button";
 import { EmptyCustom } from "src/components/Common/Empty";
-import { api_status } from "src/constant";
+import { Input } from "src/components/Common/Input";
+import { api_status, commontString } from "src/constant";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { currencySetFetchExchangeCount } from "src/redux/actions/currency.action";
 import {
@@ -12,18 +13,177 @@ import {
   getExchangeFetchStatus,
 } from "src/redux/constant/currency.constant";
 import { addExchange, editExchange } from "src/util/adminCallApi";
-import {
-  addClassToElementById,
-  getClassListFromElementById,
-  getElementById,
-  hideElement,
-  showElement,
-} from "src/util/common";
 function Exchange() {
   const dispatch = useDispatch();
   const exchanges = useSelector(getExchange);
   const exchangesFetchStatus = useSelector(getExchangeFetchStatus);
   const [callApiStatus, setCallApiStatus] = useState(api_status.pending);
+  const [mainData, setMainData] = useState([]);
+
+  const addExchangeClickHandle = function () {
+    if (callApiStatus === api_status.fetching) return;
+    fetchApiAddExchange();
+  };
+  const renderTableContent = function () {
+    if (!mainData || mainData.length <= 0) return;
+    return mainData.map((item) => (
+      <tr
+        onClick={tableRowClickHandle}
+        data-id={item.id}
+        data-title={item.title}
+        data-rate={item.rate}
+        key={item.id}
+      >
+        <td>
+          <span data-container="title">{item.title}</span>
+          <Input className="--d-none" id={`title-${item.id}`} type="text" />
+        </td>
+        <td>
+          <span data-container="rate">{item.rate}</span>
+          <Input className="--d-none" id={`rate-${item.id}`} type="text" />
+        </td>
+        <td>
+          <div className="exchange__action">
+            <Button
+              onClick={editExchangeClickHandle}
+              id={`saveRecord-${item.id}`}
+              className="--d-none"
+              disabled={disableButtonWhenPending()}
+            >
+              Save
+            </Button>
+            <Button
+              disabled={disableButtonWhenPending()}
+              onClick={cancelCLickHandle}
+              type={buttonClassesType.outline}
+              className="--d-none"
+            >
+              Cancel
+            </Button>
+          </div>
+        </td>
+      </tr>
+    ));
+  };
+  const cancelCLickHandle = function (e) {
+    e.stopPropagation();
+    if (callApiStatus === api_status.fetching) return;
+    const thisRow = e.target.closest("tr");
+    hideRow(thisRow);
+  };
+  const hideRow = function (row) {
+    const inputs = row.querySelectorAll("input");
+    const spans = row.querySelectorAll("span[data-container]");
+    const buttons = row.querySelectorAll("button");
+    for (const item of inputs) {
+      if (!item.classList.contains("--d-none")) item.classList.add("--d-none");
+    }
+    for (const item of spans) {
+      item.classList.remove("--d-none");
+    }
+    for (const item of buttons) {
+      if (!item.classList.contains("--d-none")) item.classList.add("--d-none");
+    }
+  };
+  const tableRowClickHandle = function (e) {
+    if (callApiStatus === api_status.fetching) return;
+    const buttons = e.currentTarget.querySelectorAll("button");
+    const inputs = e.currentTarget.querySelectorAll("input");
+    const title = e.currentTarget.dataset.title;
+    const rate = e.currentTarget.dataset.rate;
+    const firstButton = Array.from(buttons).at(0);
+    if (!firstButton.classList.contains("--d-none")) return;
+    for (const [index, item] of Object.entries(inputs)) {
+      item.classList.remove("--d-none");
+      if (+index === 0) item.value = title;
+      else item.value = rate;
+    }
+    for (const item of buttons) {
+      item.classList.remove("--d-none");
+    }
+    const spans = e.currentTarget.querySelectorAll("[data-container]");
+    for (const item of spans) {
+      if (!item.classList.contains("--d-none")) item.classList.add("--d-none");
+    }
+  };
+  const renderClassTableSpin = function () {
+    return exchangesFetchStatus === api_status.pending ? "" : "--d-none";
+  };
+  const renderClassTableEmpty = function () {
+    return exchangesFetchStatus !== api_status.pending &&
+      !mainData &&
+      mainData.length <= 0
+      ? ""
+      : "--d-none";
+  };
+  const fetchApiEditExchange = function (title, rate, id) {
+    return new Promise((resolve, reject) => {
+      if (callApiStatus === api_status.pending) resolve(false);
+      else setCallApiStatus(() => api_status.fetching);
+      editExchange({ title, rate, id })
+        .then((resp) => {
+          setCallApiStatus(() => api_status.fulfilled);
+          resolve(true);
+          callToastSuccess(commontString.success);
+        })
+        .catch((error) => {
+          console.log(error);
+          setCallApiStatus(() => api_status.rejected);
+          callToastError(commontString.error);
+          reject(false);
+        });
+    });
+  };
+  const editExchangeClickHandle = function (e) {
+    if (callApiStatus === api_status.fetching) return;
+    e.stopPropagation();
+    const thisRow = e.target.closest("tr");
+    const id = thisRow.dataset.id;
+    const newTitle = thisRow.querySelector("input#title-" + id).value;
+    const newRate = thisRow.querySelector("input#rate-" + id).value;
+    fetchApiEditExchange(newTitle, newRate, id)
+      .then((resp) => {
+        if (resp) {
+          setNewData(thisRow, newTitle, newRate);
+          hideRow(thisRow);
+        }
+      })
+      .catch((error) => {});
+  };
+  const setNewData = function (row, newTitle, newRate) {
+    row.dataset.title = newTitle;
+    row.dataset.rate = newRate;
+    const spans = row.querySelectorAll("span[data-container]");
+    for (const [index, item] of Object.entries(spans)) {
+      if (+index === 0) item.innerHTML = newTitle;
+      else item.innerHTML = newRate;
+    }
+  };
+  const disableButtonWhenPending = function () {
+    return callApiStatus === api_status.fetching ? true : false;
+  };
+  const fetchApiAddExchange = function () {
+    return new Promise((resolve, reject) => {
+      if (callApiStatus === api_status.fetching) resolve(false);
+      else setCallApiStatus(() => api_status.fetching);
+      addExchange({
+        title: "",
+        rate: 1,
+      })
+        .then((resp) => {
+          dispatch(currencySetFetchExchangeCount());
+          callToastSuccess(commontString.success);
+          setCallApiStatus(() => api_status.fulfilled);
+          resolve(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          setCallApiStatus(() => api_status.rejected);
+          callToastError(commontString.error);
+          reject(false);
+        });
+    });
+  };
 
   useEffect(() => {
     return () => {
@@ -31,253 +191,22 @@ function Exchange() {
     };
   }, []);
   useEffect(() => {
-    renderTable();
-  }, [exchangesFetchStatus]);
+    if (
+      exchanges &&
+      exchanges.length > 0 &&
+      exchangesFetchStatus !== api_status.fetching
+    )
+      setMainData(() => exchanges.reverse());
+  }, [exchanges, exchangesFetchStatus]);
 
-  const renderTable = function () {
-    closeExchangeContent();
-    closeExchangeEmpty();
-    closeExchangeSpinner();
-    const container = getElementById("adminExchangeContent");
-    container.innerHTML = "";
-    if (exchangesFetchStatus === api_status.fetching) {
-      showExchangeSpinner();
-    } else if (!exchanges || exchanges.length <= 0) {
-      showExchangeEmpty();
-    } else {
-      showExchangeContent();
-      for (const item of exchanges) {
-        container.insertAdjacentHTML(
-          "afterbegin",
-          `<tr><td class='--d-none'><span>${item.id}</span></td>
-        <td><span>${item.title}</span><input class='--d-none' id='title-${
-            item.id
-          }' type='text' /></td>
-        <td><span>${item.rate}</span><input class='--d-none' id='rate-${
-            item.id
-          }' type='text' /></td>
-        <td> <div class='exchange__action'> <button id='saveRecord-${
-          item.id
-        }' class='--d-none'><div class="loader --d-none"></div>Save</button>${" "}<button id='cancelRecord-${
-            item.id
-          }' class='--d-none'>Cancel</button></div></td>
-      </tr>`
-        );
-      }
-      // add event
-      for (const item of container.children) {
-        // click tr
-        item.addEventListener("click", tableRecordClickHandle.bind(null, item));
-        // button
-        const buttons = item.querySelectorAll("button");
-        for (const button of buttons) {
-          const id = button.id.split("-").at(-1);
-          const type = button.id.split("-").at(0);
-          if (type === "saveRecord") {
-            button.addEventListener(
-              "click",
-              saveRecordClickHandle.bind(null, id)
-            );
-          } else if (type === "cancelRecord") {
-            button.addEventListener("click", cancelRecordClickHandle);
-          }
-        }
-      }
-    }
-  };
-  const cancelRecordClickHandle = function (e) {
-    e.stopPropagation();
-    const id = e.target.id.split("-").at(-1);
-    const idButtonCancel = "cancelRecord-" + id;
-    if (getElementById(idButtonCancel).classList.contains("disabled")) {
-      return;
-    }
-    cancelEdit(id);
-  };
-  const cancelEdit = function (id) {
-    const inputRate = getElementById("rate-" + id);
-    const inputTitle = getElementById("title-" + id);
-    inputRate.value = "";
-    inputTitle.value = "";
-    hideElement(inputRate);
-    hideElement(inputTitle);
-    hideElement(getElementById("cancelRecord-" + id));
-    hideElement(getElementById("saveRecord-" + id));
-    const spans = inputRate.closest("tr").querySelectorAll("span");
-    for (const item of spans) {
-      showElement(item);
-    }
-  };
-  const saveRecordClickHandle = async function (id) {
-    const idButtonSave = "saveRecord-" + id;
-    if (getElementById(idButtonSave).classList.contains("disabled")) {
-      return;
-    }
-    const title = getElementById("title-" + id).value;
-    const rate = getElementById("rate-" + id).value;
-    disableAllButtonTable();
-    showLoaderForButtonTable(idButtonSave);
-    const resp = await fetchEditExchange({
-      title,
-      rate,
-      id,
-    });
-    enableAllButtonTable();
-    hideLoaderForButtonTable(idButtonSave);
-    //update table
-    if (resp) {
-      const trEle = getElementById(idButtonSave).closest("tr");
-      const spansEle = Array.from(trEle.querySelectorAll("span"));
-      spansEle.at(1).innerHTML = title;
-      spansEle.at(2).innerHTML = rate;
-    }
-    //
-    cancelEdit(id);
-  };
-  const showLoaderForButtonTable = function (id) {
-    const claList = getElementById(id).querySelector(".loader").classList;
-    if (claList.contains("--d-none")) claList.remove("--d-none");
-  };
-  const hideLoaderForButtonTable = function (id) {
-    const claList = getElementById(id).querySelector(".loader").classList;
-    if (!claList.contains("--d-none")) claList.add("--d-none");
-  };
-  const disableAllButtonTable = function () {
-    const container = getElementById("adminExchangeContent");
-    const buttons = container.querySelectorAll("button");
-    for (const button of buttons) {
-      const claList = button.classList;
-      if (!claList.contains("disable")) claList.add("disabled");
-    }
-  };
-  const enableAllButtonTable = function () {
-    const container = getElementById("adminExchangeContent");
-    const buttons = container.querySelectorAll("button");
-    for (const button of buttons) {
-      const claList = button.classList;
-      if (claList.contains("disabled")) claList.remove("disabled");
-    }
-  };
-  const tableRecordClickHandle = function (record) {
-    const showInput = function (input, value) {
-      input.value = value;
-      input.classList.remove("--d-none");
-    };
-    const elementClick = record.closest("tr");
-    const tds = Array.from(elementClick.querySelectorAll("span"));
-    hideElement(tds.at(1));
-    hideElement(tds.at(2));
-    const [id, title, rate] = tds.map((item) => item.innerHTML);
-    showInput(getElementById("title-" + id), title);
-    showInput(getElementById("rate-" + id), rate);
-    showElement(getElementById("saveRecord-" + id));
-    showElement(getElementById("cancelRecord-" + id));
-  };
-  const showExchangeContent = function () {
-    getClassListFromElementById("adminExchangeContent").remove("--d-none");
-  };
-  const closeExchangeContent = function () {
-    addClassToElementById("adminExchangeContent", "--d-none");
-  };
-  const showExchangeSpinner = function () {
-    getClassListFromElementById("adminExchangeSpinner").remove("--d-none");
-  };
-  const closeExchangeSpinner = function () {
-    addClassToElementById("adminExchangeSpinner", "--d-none");
-  };
-  const showExchangeEmpty = function () {
-    getClassListFromElementById("adminExchangeEmpty").remove("--d-none");
-  };
-  const closeExchangeEmpty = function () {
-    addClassToElementById("adminExchangeEmpty", "--d-none");
-  };
-  const fetchEditExchange = function (data) {
-    return new Promise((resolve) => {
-      if (callApiStatus === api_status.fetching) {
-        return resolve(false);
-      }
-      setCallApiStatus(() => api_status.fetching);
-      editExchange(data)
-        .then(() => {
-          setCallApiStatus(() => api_status.fulfilled);
-          callToastSuccess("Success");
-          return resolve(true);
-        })
-        .catch((error) => {
-          const mes = error;
-          switch (mes) {
-            case "value":
-              break;
-            default:
-              callToastError("Fail");
-              break;
-          }
-          setCallApiStatus(() => api_status.rejected);
-          return resolve(false);
-        });
-    });
-  };
-  const fetchAddExchange = function (data) {
-    return new Promise((resolve) => {
-      if (callApiStatus === api_status.fetching) {
-        return resolve(false);
-      }
-      setCallApiStatus(() => api_status.fetching);
-      addExchange(data)
-        .then((resp) => {
-          setCallApiStatus(() => api_status.fulfilled);
-          callToastSuccess("Success");
-          dispatch(currencySetFetchExchangeCount());
-          return resolve(true);
-        })
-        .catch((error) => {
-          const mes = error;
-          switch (mes) {
-            case "value":
-              break;
-            default:
-              callToastError("Fail");
-              break;
-          }
-          setCallApiStatus(() => api_status.rejected);
-          return resolve(false);
-        });
-    });
-  };
-  const addExchangeButtonClickHandle = async function (e) {
-    if (e.target.classList.contains("disabled")) return;
-    disableButtonAddExchange();
-    disableAllButtonTable();
-    await fetchAddExchange({ title: "Null", rate: "0" });
-    enableButtonAddExchange();
-    enableAllButtonTable();
-  };
-  /**
-   * disable and show loader
-   */
-  const disableButtonAddExchange = function () {
-    const btn = getElementById("addExchangeButton");
-    const clsList = btn.classList;
-    !clsList.contains("disabled") && clsList.add("disabled");
-    const loader = btn.querySelector(".loader");
-    showElement(loader);
-  };
-  const enableButtonAddExchange = function () {
-    const btn = getElementById("addExchangeButton");
-    const clsList = btn.classList;
-    clsList.contains("disabled") && clsList.remove("disabled");
-    const loader = btn.querySelector(".loader");
-    hideElement(loader);
-  };
   return (
     <div className="admin-exchange">
       <div className="admin-exchange__header">
         <div className="admin-exchange__title">Exchange</div>
         <div>
           <Button
-            disabled={callApiStatus === api_status.fetching ? true : false}
-            onClick={addExchangeButtonClickHandle}
-            id="addExchangeButton"
+            disabled={disableButtonWhenPending()}
+            onClick={addExchangeClickHandle}
           >
             Create
           </Button>
@@ -295,24 +224,16 @@ function Exchange() {
               </th>
             </tr>
           </thead>
-          <tbody id="adminExchangeContent">
-            <tr>
-              <td>1</td>
-              <td>VND</td>
-              <td>24576</td>
-            </tr>
-          </tbody>
-          <tbody id="adminExchangeSpinner" className="--d-none">
-            <tr>
+          <tbody>
+            {renderTableContent()}
+            <tr className={renderClassTableSpin()}>
               <td colSpan="8">
-                <div className="spin-container">
+                <div className={`spin-container`}>
                   <Spin />
                 </div>
               </td>
             </tr>
-          </tbody>
-          <tbody id="adminExchangeEmpty" className="--d-none">
-            <tr>
+            <tr className={renderClassTableEmpty()}>
               <td colSpan="8">
                 <div className="spin-container">
                   <EmptyCustom />
