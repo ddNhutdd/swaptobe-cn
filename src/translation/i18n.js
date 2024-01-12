@@ -22,6 +22,8 @@ export const availableLanguage = {
   km: "km",
   lo: "lo",
   id: "id",
+  fr: "fr",
+  es: "es",
 };
 export const availableLanguageMapper = {
   vi: "Vietnamese",
