@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "src/translation/i18n";
 import { getLocalStorage, roundIntl, rountRange } from "src/util/common";
 import { Button, buttonClassesType } from "../Common/Button";
+import { TagCustom, TagType } from "../Common/Tag";
 
 export const AdsHistoryRecordType = {
   admin: "admin",
@@ -21,18 +22,39 @@ function AdsHistoryRecord(props) {
     item,
     price,
     type = "",
+    // for user
     redirectConfirm = function () {},
     showModal = function () {},
     cancelAdsId = function () {},
+    // for admin
+    rejectClickHandle = function () {},
+    acceptClickHandle = function () {},
   } = props;
   const { t } = useTranslation();
 
   const renderActionByUser = function () {
     return type === AdsHistoryRecordType.user ? "" : "--d-none";
   };
-
   const renderActionByAdmin = function () {
     return type === AdsHistoryRecordType.admin ? "" : "--d-none";
+  };
+  const renderStatus = function (type) {
+    switch (type) {
+      case 2:
+        return <TagCustom type={TagType.pending} />;
+      case 1:
+        return <TagCustom type={TagType.success} />;
+      case 3:
+        return <TagCustom type={TagType.error} />;
+      default:
+        break;
+    }
+  };
+  const renderClassLastCol = function () {
+    return type === AdsHistoryRecordType.admin ? "" : "--d-none";
+  };
+  const renderClassButonLastCoin = function () {
+    return item.type === 2 ? "" : "--visible-hidden";
   };
 
   useEffect(() => {
@@ -138,7 +160,25 @@ function AdsHistoryRecord(props) {
                 } + ${" "} + ${renderActionByAdmin()}`}
                 colSpan="2"
               >
-                <Button>Admin</Button>
+                {renderStatus(item.type)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className={renderClassLastCol()}>
+        <table>
+          <tbody>
+            <tr className={renderClassButonLastCoin()}>
+              <td>
+                <Button onClick={rejectClickHandle.bind(null, item.id)}>
+                  Reject
+                </Button>
+              </td>
+              <td>
+                <Button onClick={acceptClickHandle.bind(null, item.id)}>
+                  Accept
+                </Button>
               </td>
             </tr>
           </tbody>

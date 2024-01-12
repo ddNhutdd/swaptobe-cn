@@ -117,29 +117,7 @@
         width: 100%;
         overflow-x: auto;
 
-        .ads__table {
-            @include adminTable;
 
-            thead {
-                tr {
-                    th {
-                        white-space: nowrap;
-                    }
-                }
-            }
-
-            tbody {
-                tr {
-                    td {
-                        .ads__content-action {
-                            display: flex;
-                            gap: 5px;
-                        }
-                    }
-
-                }
-            }
-        }
     }
 }
 

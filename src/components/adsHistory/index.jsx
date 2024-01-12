@@ -64,6 +64,7 @@ function AdsHistory() {
   const [callApiCancelStatus, setCallApiCancelStatus] = useState(
     api_status.pending
   );
+
   const showModal = () => {
     setIsModalConfirmOpen(true);
   };
@@ -71,7 +72,6 @@ function AdsHistory() {
     if (callApiCancelStatus === api_status.fetching) return;
     setIsModalConfirmOpen(false);
   };
-
   const renderClassEmpty = function () {
     console.log(callApiStatus, listRecord, listRecord.length);
     return callApiStatus !== api_status.fetching &&
@@ -82,7 +82,6 @@ function AdsHistory() {
   const renderClassSpin = function () {
     return callApiStatus === api_status.fetching ? "" : "--d-none";
   };
-
   const fetchListAdsSellToUser = function (page) {
     return new Promise((resolve) => {
       if (callApiStatus === api_status.fetching) resolve({});

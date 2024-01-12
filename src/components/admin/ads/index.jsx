@@ -15,6 +15,9 @@ import {
 import { TagCustom, TagType } from "src/components/Common/Tag";
 import { ModalConfirm } from "src/components/Common/ModalConfirm";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import AdsHistoryRecord, {
+  AdsHistoryRecordType,
+} from "src/components/adsHistoryRecord";
 
 function Ads() {
   const actionType = {
@@ -146,45 +149,16 @@ function Ads() {
     setCurrentPage(1);
     setTotalItems(1);
   };
-  const renderStatus = function (type) {
-    switch (type) {
-      case 2:
-        return <TagCustom type={TagType.pending} />;
-      case 1:
-        return <TagCustom type={TagType.success} />;
-      case 3:
-        return <TagCustom type={TagType.error} />;
-      default:
-        break;
-    }
-  };
   const renderTableContent = function () {
     return (mainData || []).map((item) => (
-      <tr key={item.id}>
-        <td>{item.userName}</td>
-        <td>{item.created_at}</td>
-        <td>{item.amount}</td>
-        <td>{item.amountMinimum}</td>
-        <td>{item.addressWallet}</td>
-        <td>{item.bankName}</td>
-        <td>{item.ownerAccount}</td>
-        <td>{item.numberBank}</td>
-        <td>{item.symbol}</td>
-        <td>{item.side}</td>
-        <td>{renderStatus(item.type)}</td>
-        <td>{renderActionSection(item.type, item.id)}</td>
-      </tr>
+      <AdsHistoryRecord
+        item={item}
+        price={100}
+        type={AdsHistoryRecordType.admin}
+        rejectClickHandle={rejectClickHandle}
+        acceptClickHandle={acceptClickHandle}
+      />
     ));
-  };
-  const renderActionSection = function (type, id) {
-    if (type === 2) {
-      return (
-        <div className="ads__content-action">
-          <Button onClick={rejectClickHandle.bind(null, id)}>Reject</Button>
-          <Button onClick={acceptClickHandle.bind(null, id)}>Accept</Button>
-        </div>
-      );
-    }
   };
   const rejectClickHandle = function (id) {
     setIsButtonAcceptClick(() => false);
@@ -465,43 +439,13 @@ function Ads() {
         </div>
       </div>
       <div className="ads__content">
-        <table className="ads__table">
-          <thead>
-            <tr>
-              <th>User Name</th>
-              <th>Created At</th>
-              <th>Amount</th>
-              <th>Amount Minimum</th>
-              <th>Address Wallet</th>
-              <th>Bank Name</th>
-              <th>Owner Account</th>
-              <th>Number Bank</th>
-              <th>Symbol</th>
-              <th>Action</th>
-              <th>Status</th>
-              <th>
-                <i className="fa-solid fa-gears"></i>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {renderTableContent()}
-            <tr className={renderClassTableSpin()}>
-              <td colSpan={12}>
-                <div className="spin-container">
-                  <Spin />
-                </div>
-              </td>
-            </tr>
-            <tr className={renderClassTableEmpty()}>
-              <td colSpan={12}>
-                <div className="spin-container">
-                  <EmptyCustom />
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {renderTableContent()}
+        <div className={"spin-container " + renderClassTableSpin()}>
+          <Spin />
+        </div>
+        <div className={renderClassTableEmpty()}>
+          <EmptyCustom />{" "}
+        </div>
       </div>
       <Modal
         title="Select Your Coin"
