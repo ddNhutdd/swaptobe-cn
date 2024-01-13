@@ -45,14 +45,15 @@ function Home() {
       window.removeEventListener("click", closeMenu);
     };
   }, []);
+
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
-  //
   const redirectToLogin = function (e) {
     e.preventDefault();
     history.push(url.login);
   };
-  const redirectTop2pTrading = function () {
-    history.push(url.p2pTrading);
+  const redirectToPage = function (e) {
+    const page = e.currentTarget.dataset.page;
+    history.push(page);
   };
   const tabOnClickHandle = function (e) {
     const order = e.target.dataset.name;
@@ -102,6 +103,7 @@ function Home() {
       ele.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   return (
     <div className="home">
       <div className="main-template__bg-1"></div>
@@ -118,10 +120,20 @@ function Home() {
           <ul className="home__header__menu fadeIn">
             <li>
               <div
+                data-page={url.p2pTrading}
                 className="home__header__menu-item"
-                onClick={redirectTop2pTrading}
+                onClick={redirectToPage}
               >
                 EXCHANGE
+              </div>
+            </li>
+            <li>
+              <div
+                data-page={url.wallet}
+                className="home__header__menu-item"
+                onClick={redirectToPage}
+              >
+                WALLET
               </div>
             </li>
             <li>

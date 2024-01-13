@@ -40,6 +40,11 @@
                 justify-content: flex-start;
                 align-items: center;
 
+                @media screen and (max-width:576px) {
+                    margin-bottom: 15px;
+                    justify-content: center;
+                }
+
                 img {
                     width: 30px;
                     height: 30px;

@@ -11,7 +11,12 @@ import {
   parseURLParameters,
   setLocalStorage,
 } from "src/util/common";
-import { defaultLanguage, localStorageVariable, url } from "src/constant";
+import {
+  coinString,
+  defaultLanguage,
+  localStorageVariable,
+  url,
+} from "src/constant";
 import i18n from "src/translation/i18n";
 
 import {
@@ -25,6 +30,7 @@ import {
 } from "src/redux/reducers/wallet2Slice";
 import { getUserWallet } from "src/redux/constant/coin.constant";
 import { DOMAIN } from "src/util/service";
+import { Button, buttonClassesType } from "../Common/Button";
 function SwaptobeWallet() {
   const { t } = useTranslation();
   const history = useHistory();
@@ -34,6 +40,7 @@ function SwaptobeWallet() {
   const isLogin = useSelector((root) => root.loginReducer.isLogin);
   const dispatch = useDispatch();
   const showActionContent = useSelector(getShow);
+
   useEffect(() => {
     // check is login
     if (!isLogin) {
@@ -60,14 +67,15 @@ function SwaptobeWallet() {
         userWallet["usdt_balance"] || 0
       );
   }, [userWallet]);
+
   const sellBuyNowHandleClick = function () {
     if (isLogin) {
+      dispatch(coinSetCoin(coinString.USDT));
       history.push(url.p2pTrading);
     } else {
       history.push(url.login);
     }
   };
-  //
   const renderActionContent = () => {
     switch (showActionContent) {
       case actionContent.main:
@@ -83,64 +91,49 @@ function SwaptobeWallet() {
   const backToActionContentMainClickHandle = (e) => {
     dispatch(setShow(actionContent.main));
   };
+  const renderStyleShowMain = function () {
+    return showActionContent === actionContent.main ? {} : { display: "none" };
+  };
+  const renderStyleShowWidthdraw = function () {
+    return showActionContent === actionContent.withdraw
+      ? {}
+      : { display: "none" };
+  };
+  const renderStyleShowDesposite = function () {
+    return showActionContent === actionContent.desposite
+      ? {}
+      : { display: "none" };
+  };
+
   return (
     <div className="swaptobe-wallet fadeInBottomToTop">
       <div className="container">
         <h5 className="title">
-          <span
-            style={
-              showActionContent !== actionContent.main
-                ? { display: "none" }
-                : {}
-            }
-          >
-            {t("walletOverview")}
+          <span className="title__header" style={renderStyleShowMain()}>
+            <span>{t("walletOverview")}</span>
           </span>
           <span
-            className="swaptobe-wallet--hover"
-            style={
-              showActionContent !== actionContent.withdraw
-                ? { display: "none" }
-                : {}
-            }
+            className="title__header"
+            style={renderStyleShowWidthdraw()}
             onClick={backToActionContentMainClickHandle}
           >
             <i className="fa-solid fa-arrow-left-long"></i>
-            {t("withdraw")}
+            <span>{t("withdraw")}</span>
           </span>
           <span
-            className="swaptobe-wallet--hover"
-            style={
-              showActionContent !== actionContent.desposite
-                ? { display: "none" }
-                : {}
-            }
+            className="title__header"
+            style={renderStyleShowDesposite()}
             onClick={backToActionContentMainClickHandle}
           >
             <i className="fa-solid fa-arrow-left-long"></i>
-            {t("deposit")} Cryto
+            <span>{t("deposit")} Cryto</span>
           </span>
         </h5>
         <div className="info">
-          <div className="left">
-            <div>{t("amount")} USDT</div>
-            <div>
-              <span id="showTotalValue"></span>{" "}
-              <img src={DOMAIN + "images/USDT.png"} alt="usdt" />
-            </div>
-          </div>
-          <div className="right">
-            <div className="right-text">
-              {t("startBuyingAndSellingCryptoCurrencies")}
-            </div>
-            <div className="right-actions">
-              <button onClick={sellBuyNowHandleClick} className="buy">
-                {t("buyNow")}
-              </button>
-              <button onClick={sellBuyNowHandleClick} className="sell">
-                {t("sellNow")}
-              </button>
-            </div>
+          <div>{t("amount")} USDT</div>
+          <div>
+            <span id="showTotalValue"></span>{" "}
+            <img src={DOMAIN + "images/USDT.png"} alt="usdt" />
           </div>
         </div>
         {renderActionContent()}

@@ -303,5 +303,8 @@
     "random": "Random",
     "own": "Own",
     "enterQuantityOfCoins": "Enter quantity of coins",
-    "enterAmountOfMoney": "Enter amount of money"
+    "enterAmountOfMoney": "Enter amount of money",
+    "noSupport": "No support",
+    "comingSoon": "Coming soon",
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "If you didn’t receive Transactions within 15 minutes, please contact Serepay support at support@serepay.net"
 }

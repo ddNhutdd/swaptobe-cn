@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 export const form = {
   Wallet: "wallet",
-  Aliases: "Aliases",
+  UserName: "userName",
 };
 const walletWithdrawSlice = createSlice({
   name: "walletWithdraw",

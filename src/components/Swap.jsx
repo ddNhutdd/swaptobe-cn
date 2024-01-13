@@ -21,19 +21,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { Pagination, Spin } from "antd";
 import { DOMAIN } from "src/util/service";
 import { useHistory } from "react-router-dom";
-import {
-  getAmountCoin,
-  getCoin,
-  getUserWallet,
-} from "src/redux/constant/coin.constant";
+import { getUserWallet } from "src/redux/constant/coin.constant";
 import { getHistorySwapApi, swapCoinApi } from "src/util/userCallApi";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import socket from "src/util/socket";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "./Common/Input";
+import { getCoin, getCoinAmount } from "src/redux/reducers/wallet2Slice";
 export default function Swap() {
-  //
   const { isLogin } = useSelector((root) => root.loginReducer);
   const history = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -42,7 +38,7 @@ export default function Swap() {
   const data2 = useSelector(getListCoinRealTime) ?? [];
   const [swapFromCoin, setSwapFromCoin] = useState(useSelector(getCoin));
   const [swapToCoin, setSwapToCoin] = useState("USDT");
-  const amountCoin = useSelector(getAmountCoin);
+  const amountCoin = useSelector(getCoinAmount);
   const userWallet = useSelector(getUserWallet);
   const [fromCoinValueString, setFromCoinValueString] = useState(
     amountCoin > 0 ? amountCoin.toString() : ""
@@ -61,6 +57,7 @@ export default function Swap() {
   const [swapHistoryTotalPage, setSwapHistoryTotalPage] = useState(1);
   const allCoinPrice = useRef([]);
   const dispatch = useDispatch();
+
   useEffect(() => {
     //
     const language =
@@ -83,7 +80,7 @@ export default function Swap() {
   useEffect(() => {
     fetchCoinSwapHistory();
   }, [swapFromCoin, swapToCoin, swapHistoryCurrentPage]);
-  //
+
   const { t } = useTranslation();
   const showModal = () => setIsModalVisible(true);
   const handleOk = () => setIsModalVisible(false);
@@ -365,6 +362,7 @@ export default function Swap() {
       callBack
     );
   };
+
   return (
     <div className="swap">
       <div className="container">

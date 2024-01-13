@@ -303,5 +303,8 @@
     "random": "ランダム",
     "own": "自分の",
     "enterQuantityOfCoins": "コインの数量を入力してください",
-    "enterAmountOfMoney": "金額を入力してください"
+    "enterAmountOfMoney": "金額を入力してください",
+    "noSupport": "サポートなし",
+    "comingSoon": "近日公開",
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "15分以内に取引が届かない場合は、support@serepay.net でSerepayサポートにお問い合わせください"
 }

@@ -46,6 +46,7 @@ export default function Header2({ history }) {
   const [totalMoney, setTotalMoney] = useState(0); // it is the string it displays on the web
   const dispatch = useDispatch();
   const location = useLocation();
+
   const barButtonClickHandle = function () {
     setIsShowMenu((s) => !s);
   };
@@ -226,20 +227,19 @@ export default function Header2({ history }) {
     if (!container) return;
     const listItem = container.querySelectorAll("[data-page]");
     for (const item of listItem) {
+      item.classList.remove("active");
       if (item.dataset.page === pathname) {
         item.classList.add("active");
-        break;
       }
     }
   };
+
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
     setCurrentLanguage(language);
-    //
-    setActiveCurrentPage();
-    //
+
     document.addEventListener("click", closeMenu);
     return () => {
       document.removeEventListener("click", closeMenu);
@@ -248,6 +248,10 @@ export default function Header2({ history }) {
   useEffect(() => {
     renderTotalMoney();
   }, [totalAssetsRealTime, listExChange, currencyFromRedux]);
+  useEffect(() => {
+    setActiveCurrentPage();
+  }, [location]);
+
   return (
     <header className="header2 fadeInTopToBottom">
       <div className="container">
@@ -312,28 +316,6 @@ export default function Header2({ history }) {
             <div
               className={`header2__wallet-menu ${renderClassShowMenuWallet()}`}
             >
-              <div className="header2__wallet-info">
-                <div className="header2__wallet-info-item user">
-                  <span>{username}</span>
-                </div>
-                <div className="header2__wallet-info-item">
-                  <span className="header2__wallet-info-icon">
-                    <i className="fa-brands fa-bitcoin"></i>
-                  </span>
-                  <span>
-                    {new Intl.NumberFormat(
-                      currencyMapper.USD,
-                      roundIntl(8)
-                    ).format(totalAssetsBtcRealTime)}
-                  </span>
-                </div>
-                <div className="header2__wallet-info-item">
-                  <span className="header2__wallet-info-icon">
-                    <i className="fa-solid fa-coins"></i>
-                  </span>
-                  <span>{totalMoney}</span>
-                </div>
-              </div>
               <div
                 onClick={redirectPageClickHandle}
                 data-page={url.wallet}

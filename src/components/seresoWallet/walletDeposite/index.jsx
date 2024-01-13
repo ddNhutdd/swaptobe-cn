@@ -5,8 +5,6 @@ import { Pagination, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
 import { useSelector, useDispatch } from "react-redux";
-import { getCoin } from "src/redux/constant/coin.constant";
-
 import {
   getClassListFromElementById,
   getElementById,
@@ -22,7 +20,11 @@ import {
 } from "src/constant";
 import { callToastSuccess } from "src/function/toast/callToast";
 import i18n from "src/translation/i18n";
-import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
+import {
+  actionContent,
+  getCoin,
+  setShow,
+} from "src/redux/reducers/wallet2Slice";
 import { EmptyCustom } from "src/components/Common/Empty";
 function SerepayWalletDeposit() {
   const dropdownNetworkMenuClickHandle = function (e) {

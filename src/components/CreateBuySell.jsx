@@ -60,6 +60,7 @@ export default function CreateBuy() {
   const [controlsErrors, setControlsErrors] = useState({});
   const callApiStatus = useRef(api_status.pending);
   const isMobileViewport = window.innerWidth < 600;
+
   useEffect(() => {
     data.current = listCoinRealTime ?? [];
     renderMarketBuyPrice();
@@ -75,11 +76,11 @@ export default function CreateBuy() {
         return;
       }
     });
-    //
+
     document.addEventListener("click", closeDropdownBank);
     bankDropdownSelect(selectedBank.current);
     renderBankDropdown();
-    //
+
     const callProfile = async function () {
       return await fetchUserNameProfile();
     };
@@ -91,6 +92,7 @@ export default function CreateBuy() {
       document.removeEventListener("click", closeDropdownBank);
     };
   }, []);
+
   const showCoinModal = () => setIsModalCoinVisible(true);
   const modalCoinHandleOk = () => setIsModalCoinVisible(false);
   const modalCoinHandleCancel = () => setIsModalCoinVisible(false);
@@ -377,7 +379,7 @@ export default function CreateBuy() {
     modalPreviewHandleCancel();
     submitHandle();
   };
-  //
+
   return (
     <div className="create-buy-ads fadeInBottomToTop">
       <div className="container">
@@ -408,7 +410,7 @@ export default function CreateBuy() {
               </span>
             </div>
             <i
-              className="fa-solid fa-pen-to-square"
+              className="fa-solid fa-pen-to-square --d-none"
               onClick={showCoinModal}
             ></i>
           </div>

@@ -28,7 +28,7 @@ import {
   userConfirmP2pCommand,
 } from "src/util/userCallApi";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
-import { callToastSuccess } from "src/function/toast/callToast";
+import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 function ConfirmItem(props) {
   const actionType = {
     buy: "buy",
@@ -55,6 +55,7 @@ function ConfirmItem(props) {
   const [userCurrentAction, setUserCurrentAction] = useState(); //The current user's action is different from the ad's side
   const idCommand = useRef();
   const isMobileViewport = window.innerWidth < 600;
+
   useEffect(() => {
     loadData();
   }, [content]);
@@ -77,6 +78,7 @@ function ConfirmItem(props) {
       clearInterval(intervalId);
     };
   }, []);
+
   const calcMoney = function (money) {
     if (!exchange || !currentCurrency || !money) return;
     const currencyRate = exchange.find(
@@ -325,8 +327,13 @@ function ConfirmItem(props) {
     }
   };
   const copyButtonClickHandle = async function (text) {
-    await navigator.clipboard.writeText(text);
-    callToastSuccess(t("success"));
+    if (!navigator.clipboard) {
+      callToastError(t("noSupport"));
+      return;
+    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => callToastSuccess(t("success")));
   };
   const renderBankInfo = function () {
     const inputString = t("accountInfoVietcomBank");

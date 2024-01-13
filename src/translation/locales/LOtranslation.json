@@ -303,5 +303,8 @@
     "random": "ປະຕິທິ",
     "own": "ຂອບ",
     "enterQuantityOfCoins": "ໃສ່ຈຳນວນເງິນ",
-    "enterAmountOfMoney": "ໃສ່ຈຳນວນເງິນ"
+    "enterAmountOfMoney": "ໃສ່ຈຳນວນເງິນ",
+    "noSupport": "ບໍ່ມີຄຳຂໍ",
+    "comingSoon": "ການສະໜອງເພື່ອ",
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "ຖ້າທ່ານບໍ່ໄດ້ຮັບການເຮັດສວນໃນ 15 ນາທີ, ກະລຸນາຕິດຕໍ່ສະຖານະຂໍ້ມູນ Serepay ທີ່ support@serepay.net"
 }

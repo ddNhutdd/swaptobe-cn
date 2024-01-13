@@ -11,6 +11,8 @@ import THtranslate from "./locales/THtranslation.json";
 import KMtranslate from "./locales/KMtranslation.json";
 import LOtranslate from "./locales/LOtranslation.json";
 import IDtranslate from "./locales/IDtranslation.json";
+import FRtranslate from "./locales/FRtranslation.json";
+import EStranslate from "./locales/EStranslation.json";
 
 export const availableLanguage = {
   vi: "vi",
@@ -35,6 +37,8 @@ export const availableLanguageMapper = {
   km: "Cambodian",
   lo: "Lao",
   id: "Indonesian",
+  fr: "French",
+  es: "Spanish",
 };
 // the translations
 const resources = {
@@ -64,6 +68,12 @@ const resources = {
   },
   id: {
     translation: IDtranslate,
+  },
+  fr: {
+    translation: FRtranslate,
+  },
+  es: {
+    translation: EStranslate,
   },
 };
 

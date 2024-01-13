@@ -196,19 +196,19 @@
                     font-size: 14px;
                     margin: 0;
 
-                    @media screen and (max-width: 576px) {
+                    @media screen and (max-width: 768px) {
                         display: block;
                     }
 
                     thead {
-                        @media screen and (max-width: 576px) {
+                        @media screen and (max-width: 768px) {
                             display: block;
                             width: 100%;
                         }
                     }
 
                     tbody {
-                        @media screen and (max-width: 576px) {
+                        @media screen and (max-width: 768px) {
                             display: block;
                             width: 100%;
                         }
@@ -218,7 +218,7 @@
                         border-bottom: 1px solid $background-color-4;
                         text-align: left;
 
-                        @media screen and (max-width: 576px) {
+                        @media screen and (max-width: 768px) {
                             width: 100%;
                             display: grid;
                             grid-template-columns: repeat(2, 1fr);
@@ -229,7 +229,7 @@
                             padding-right: 10px;
                             text-align: left;
 
-                            @media screen and (max-width: 576px) {
+                            @media screen and (max-width: 768px) {
                                 display: block;
                             }
                         }
@@ -240,26 +240,36 @@
                             vertical-align: text-top;
                             max-height: 130px;
 
-                            @media screen and (max-width: 576px) {
+                            @media screen and (max-width: 768px) {
                                 display: block;
                                 height: auto;
+
+                                &:last-child {
+                                    grid-column: span 2;
+                                }
                             }
 
                             .p2pHistory__buton-pending {
                                 @include adminButtonGhost;
+                                width: 100%;
                                 color: $new-primary-color-6;
                                 border-color: $new-primary-color-6;
+                                display: block;
 
                                 &:hover {
                                     background-color: $new-primary-color-6;
                                     color: $new-text-color-white;
                                 }
+
+
                             }
 
                             .p2pHistory__buton-success {
                                 @include adminButtonGhost;
                                 color: $green;
                                 border-color: $green;
+                                width: 100%;
+                                display: block;
 
                                 &:hover {
                                     color: $green;
@@ -272,6 +282,8 @@
                                 @include adminButtonGhost;
                                 color: $red;
                                 border-color: $red;
+                                width: 100%;
+                                display: block;
 
                                 &:hover {
                                     cursor: default;

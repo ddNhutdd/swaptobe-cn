@@ -13,7 +13,7 @@
     position: fixed;
     top: 0px;
     left: 0;
-    height: 80px;
+    height: 100px;
     padding-bottom: 15px;
     padding-top: 15px;
 
@@ -26,7 +26,7 @@
 
       .home__header__icon {
         img {
-          width: 80px;
+          width: 120px;
           object-fit: cover;
           display: block;
         }
@@ -165,16 +165,14 @@
 
   .home__carousel {
     width: 100%;
-    height: 1000px;
+    height: fit-content;
     background: transparent;
     color: $new-text-color-white;
     font-size: 18px;
     font-weight: 600;
     letter-spacing: 0.5px;
-
-    @media screen and (max-width: 992px) {
-      padding-top: 150px;
-    }
+    padding-top: 120px;
+    padding-bottom: 50px;
 
     .container {
       @include container;
@@ -197,8 +195,7 @@
           width: 100%;
 
           h1 {
-            // color: $white;
-            color: $new-primary-color-18;
+            color: $new-primary-color-10;
             font-weight: 700;
             letter-spacing: 0.5px;
           }

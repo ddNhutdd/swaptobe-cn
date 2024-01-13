@@ -25,14 +25,18 @@ import {
   transferToAddress,
   transferToUsername,
 } from "src/util/userCallApi";
-import { getCoin, getUserWallet } from "src/redux/constant/coin.constant";
+import { getUserWallet } from "src/redux/constant/coin.constant";
 
 import { historytransfer as historytransferApi } from "src/util/userCallApi";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "src/components/Common/Input";
-import { actionContent, setShow } from "src/redux/reducers/wallet2Slice";
+import {
+  actionContent,
+  getCoin,
+  setShow,
+} from "src/redux/reducers/wallet2Slice";
 import { form, getShow } from "src/redux/reducers/walletWithdraw";
 import { setShow as setShowTabFromRedux } from "src/redux/reducers/walletWithdraw";
 import { EmptyCustom } from "src/components/Common/Empty";
@@ -70,7 +74,8 @@ function FormWithdraw() {
   const [historytransfer, setHistoryTransfer] = useState([]);
   const [withdrawHistoryTotalItems, setWithdrawHistoryTotalItems] = useState(1);
   const [transferHistoryTotalItems, setTransferHistoryTotalItems] = useState(1);
-  const qrValue = useRef(deploy_domain);
+  const [qrValue, setQrValue] = useState(deploy_domain);
+
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
@@ -80,7 +85,7 @@ function FormWithdraw() {
     // if url have variable set value for control
     const { username, note, amountCoin } = parseURLParameters(search);
     if (username) {
-      setShowForm(form.Aliases);
+      setShowForm(form.UserName);
       setInputAmountCurrency(() => formatStringNumberCultureUS(amountCoin));
       userNameInputElement.current.value = username;
       messageElement.current.value = note;
@@ -94,10 +99,7 @@ function FormWithdraw() {
       dispatch(setShowTabFromRedux(form.wallet));
     };
   }, []);
-  const headerItemClickHandle = function (value) {
-    setShowForm(() => value);
-    setInputAmountCurrency("");
-  };
+
   const inputAmountCurrencyOnChangeHandles = function (e) {
     const inputValue = e.target.value;
     const inputValueWithoutComma = inputValue.replace(/,/g, "");
@@ -111,13 +113,15 @@ function FormWithdraw() {
     );
     setInputAmountCurrency(inputValueFormated);
     //change qr
-    const { username, note } = parseURLParameters(qrValue.current);
-    qrValue.current = generateNewURL(
-      deploy_domain,
-      username,
-      coin,
-      inputValueWithoutComma,
-      note
+    const { username, note } = parseURLParameters(qrValue);
+    setQrValue(() =>
+      generateNewURL(
+        deploy_domain,
+        username,
+        coin,
+        inputValueWithoutComma,
+        note
+      )
     );
   };
   const submitFormWalletHandle = function (e) {
@@ -369,50 +373,41 @@ function FormWithdraw() {
   const usernameInputChangeHandle = function (e) {
     const username = e.target.value;
     //change qr
-    const { note, amountCoin } = parseURLParameters(qrValue.current);
-    qrValue.current = generateNewURL(
-      deploy_domain,
-      username,
-      coin,
-      amountCoin,
-      note
+    const { note, amountCoin } = parseURLParameters(qrValue);
+    setQrValue(() =>
+      generateNewURL(deploy_domain, username, coin, amountCoin, note)
     );
   };
   const noteChangeHandle = function (e) {
     const note = e.target.value;
     //change qr
-    const { username, amountCoin } = parseURLParameters(qrValue.current);
-    qrValue.current = generateNewURL(
-      deploy_domain,
-      username,
-      coin,
-      amountCoin,
-      note
+    const { username, amountCoin } = parseURLParameters(qrValue);
+    setQrValue(() =>
+      generateNewURL(deploy_domain, username, coin, amountCoin, note)
     );
-    console.log(qrValue.current);
   };
+  const renderClassActiveTabWallet = function () {
+    return showForm === form.Wallet ? "active" : "--d-none";
+  };
+  const renderClassActiveTabUserName = function () {
+    return showForm === form.UserName ? "active" : "--d-none";
+  };
+  const renderClassDisableWhenFetching = function () {
+    return callApiSubmitStatus === api_status.fetching ? "disabled" : "";
+  };
+
   return (
     <div className="container">
       <div className="FormWithdraw">
         <div className="left">
           <div className="header">
             <span
-              onClick={() => {
-                headerItemClickHandle(form.Wallet);
-              }}
-              className={`${showForm === form.Wallet ? "active" : ""}  ${
-                callApiSubmitStatus === api_status.fetching ? "disabled" : ""
-              }`}
+              className={`${renderClassActiveTabWallet()}  ${renderClassDisableWhenFetching()}`}
             >
               {t("wallet")} {coin}
             </span>
             <span
-              onClick={() => {
-                headerItemClickHandle(form.Aliases);
-              }}
-              className={`${showForm === form.Aliases ? "active" : ""}  ${
-                callApiSubmitStatus === api_status.fetching ? "disabled" : ""
-              }`}
+              className={`${renderClassActiveTabUserName()}  ${renderClassDisableWhenFetching()}`}
             >
               {t("userName")}
             </span>
@@ -528,7 +523,9 @@ function FormWithdraw() {
             </div>
           </form>
           <form
-            className={`aliases ${showForm !== form.Aliases ? "--d-none" : ""}`}
+            className={`aliases ${
+              showForm !== form.UserName ? "--d-none" : ""
+            }`}
           >
             <div className="input">
               <p>{t("userName")}</p>
@@ -587,13 +584,14 @@ function FormWithdraw() {
             }`}
           >
             <div className="FormWithdraw__qr__bg">
+              {console.log(qrValue.current)}
               <QRCode
                 style={{
                   height: "auto",
                   maxWidth: "200px",
                   width: "200px",
                 }}
-                value={qrValue.current}
+                value={qrValue}
               />
             </div>
           </div>

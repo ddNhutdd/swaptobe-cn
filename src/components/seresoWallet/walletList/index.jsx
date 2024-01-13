@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import i18n, { availableLanguage } from "src/translation/i18n";
 import {
+  coinString,
   currency,
   currencyMapper,
   image_domain,
@@ -18,13 +19,14 @@ import {
 } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { Spin } from "antd";
-import { coinSetAmountCoin, coinSetCoin } from "src/redux/actions/coin.action";
 import { useHistory } from "react-router-dom";
 import { getUserWallet } from "src/redux/constant/coin.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import {
   actionContent,
+  setCoin,
+  setCoinAmount,
   setShow as setShowContent,
 } from "src/redux/reducers/wallet2Slice";
 import {
@@ -33,7 +35,6 @@ import {
 } from "src/redux/reducers/walletWithdraw";
 import { Button, buttonClassesType } from "src/components/Common/Button";
 function SerepayWalletList() {
-  //
   const history = useHistory();
   const allCoin = useSelector(getListCoinRealTime);
   const myListCoin = useSelector(getUserWallet);
@@ -42,7 +43,6 @@ function SerepayWalletList() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   useEffect(() => {
-    //lay ngon ngu khi load page
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
     i18n.changeLanguage(language);
@@ -55,8 +55,8 @@ function SerepayWalletList() {
     }
   };
   const swapOnClickHandle = function (coinName, amount) {
-    dispatch(coinSetCoin(coinName));
-    dispatch(coinSetAmountCoin(amount));
+    dispatch(setCoin(coinName));
+    dispatch(setCoinAmount(amount));
     history.push(url.swap);
   };
   const convertCurrency = function (usd, currency, exchange) {
@@ -67,10 +67,10 @@ function SerepayWalletList() {
     return (usd * rate).toFixed(3);
   };
   const renderButton = function (name) {
-    return name === "USDT" ? (
+    return name === coinString.USDT ? (
       <Button
         onClick={() => {
-          dispatch(coinSetCoin(name));
+          dispatch(setCoin(coinString.USDT));
           dispatch(setShowContent(actionContent.desposite));
           window.scrollTo(0, 0);
         }}
@@ -119,7 +119,7 @@ function SerepayWalletList() {
           {renderButton(item.name)}
           <Button
             onClick={() => {
-              dispatch(coinSetCoin(item.name));
+              dispatch(setCoin(item.name));
               dispatch(setShowContent(actionContent.withdraw));
               dispatch(setShowWithdrawTab(form.Wallet));
               window.scrollTo(0, 0);
@@ -130,9 +130,9 @@ function SerepayWalletList() {
           </Button>
           <Button
             onClick={() => {
-              dispatch(coinSetCoin(item.name));
+              dispatch(setCoin(item.name));
               dispatch(setShowContent(actionContent.withdraw));
-              dispatch(setShowWithdrawTab(form.Aliases));
+              dispatch(setShowWithdrawTab(form.UserName));
               window.scrollTo(0, 0);
             }}
             type={buttonClassesType.outline}
@@ -149,7 +149,7 @@ function SerepayWalletList() {
       </li>
     ));
   };
-  //
+
   return (
     <div className="swaptobeWalletList">
       <ul className="list">

@@ -4,12 +4,6 @@
     padding-top: 140px;
     background: $new-background-level-0;
 
-    .swaptobe-wallet--hover {
-        &:hover {
-            cursor: pointer;
-        }
-    }
-
     .container {
         @include container;
 
@@ -21,29 +15,45 @@
             font-size: 24px;
             margin-bottom: 40px;
 
-            span {
-                display: inline-flex;
-                justify-content: flex-start;
+            .title__header {
+                width: 100%;
+                display: flex;
+                justify-content: center;
                 align-items: center;
+                position: relative;
 
                 i {
                     display: inline-block;
                     margin-right: 5px;
                     color: $new-primary-color-6;
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    transform: translateY(-50%);
+
+                    &:hover {
+                        cursor: pointer;
+                    }
                 }
             }
+
+
         }
 
         .info {
             padding: 20px 15px;
             background-color: $new-background-level-1;
             border-radius: 12px;
-            color: $new-text-color-3;
-            display: flex;
             align-items: center;
-            justify-content: space-between;
             margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1;
             gap: 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: $new-text-color-white;
 
             @media screen and (max-width: 768px) {
                 flex-direction: column;
@@ -54,24 +64,13 @@
                 padding: 24px;
             }
 
-            .left {
+            div:nth-of-type(2) {
+                font-size: 28px;
+                font-weight: 700;
+                word-break: break-word;
                 display: flex;
-                flex-direction: column;
-                line-height: 1;
-                gap: 16px;
-                font-size: 16px;
-                font-weight: 500;
-                color: $new-text-color-white;
-
-                div:nth-of-type(2) {
-                    font-size: 28px;
-                    font-weight: 700;
-                    word-break: break-word;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-
+                align-items: center;
+                gap: 10px;
 
                 img {
                     width: 30px;
@@ -80,71 +79,7 @@
                 }
             }
 
-            .right {
-                .right-text {
-                    font-size: 16px;
-                    font-weight: 500;
-                    margin-bottom: 12px;
-                    color: $new-text-color-white;
 
-                    @media screen and (min-width: 480px) {
-                        margin-bottom: 16px;
-                    }
-                }
-
-                .right-actions {
-                    display: flex;
-                    justify-content: center;
-
-                    .buy {
-                        border: none;
-                        background: $new-primary-background-7;
-                        color: $new-text-color-white;
-                        border-radius: 5px;
-                        padding: 8px 20px;
-                        font-size: 13px;
-                        font-weight: 500;
-                        cursor: pointer;
-                        text-transform: uppercase;
-                        transition: background ease 0.3s;
-                        letter-spacing: 0.5px;
-
-                        @media screen and (min-width: 480px) {
-                            font-size: 14px;
-                            font-weight: 700;
-                        }
-
-                        &:hover {
-                            background: $new-primary-background-6;
-                        }
-                    }
-
-                    .sell {
-                        margin-left: 30px;
-                        border: none;
-                        background: $neutral-3;
-                        border: 1px solid $new-primary-background-7;
-                        color: $new-primary-background-7;
-                        border-radius: 5px;
-                        padding: 8px 20px;
-                        font-size: 13px;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        cursor: pointer;
-                        transition: background ease 0.3s;
-                        letter-spacing: 0.5px;
-
-                        @media screen and (min-width: 480px) {
-                            font-size: 14px;
-                            font-weight: 700;
-                        }
-
-                        &:hover {
-                            background: $neutral-2;
-                        }
-                    }
-                }
-            }
         }
     }
 }

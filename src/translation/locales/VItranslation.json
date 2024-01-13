@@ -303,5 +303,8 @@
     "random": "Ngẫu nhiên",
     "own": "Sở hữu",
     "enterQuantityOfCoins": "Nhập số lượng coin",
-    "enterAmountOfMoney": "Nhập số tiền"
+    "enterAmountOfMoney": "Nhập số tiền",
+    "noSupport": "Không hỗ trợ",
+    "comingSoon": "Sắp có",
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Nếu bạn không nhận được giao dịch trong vòng 15 phút, vui lòng liên hệ hỗ trợ Serepay tại support@serepay.net"
 }

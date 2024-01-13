@@ -21,7 +21,9 @@ function PhoneApps() {
       <div className="container">
         <div className="home__app__content">
           <div className="home__app__left">
-            <h3>{t("seresoApps")}</h3>
+            <h3>
+              {t("seresoApps")} - {t("comingSoon")}
+            </h3>
             <p className="home__app__small-header">
               {t("tradingWheneverAndWhereverYouAre")}
             </p>

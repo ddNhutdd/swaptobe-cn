@@ -303,5 +303,8 @@
     "random": "สุ่ม",
     "own": "ตัวเอง",
     "enterQuantityOfCoins": "ป้อนปริมาณเหรียญ",
-    "enterAmountOfMoney": "ป้อนจำนวนเงิน"
+    "enterAmountOfMoney": "ป้อนจำนวนเงิน",
+    "noSupport": "ไม่มีการสนับสนุน",
+    "comingSoon": "เร็ว ๆ นี้",
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "หากคุณไม่ได้รับธุรกรรมภายใน 15 นาที กรุณาติดต่อฝ่ายสนับสนุน Serepay ที่ support@serepay.net"
 }

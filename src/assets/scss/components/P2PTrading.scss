@@ -189,15 +189,7 @@
       }
 
       span {
-        display: inline-block;
-        margin-left: 8px;
-        color: $primary-color;
-        cursor: pointer;
-        color: #e6e6e6;
-
-        &:hover {
-          text-decoration: underline;
-        }
+        color: $blue-20
       }
     }
 

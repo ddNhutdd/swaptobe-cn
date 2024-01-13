@@ -63,6 +63,7 @@ function P2pManagement() {
   const exchange = useSelector(getExchange);
   const exchangeFetchApiStatus = useSelector(getExchangeFetchStatus);
   const currency = useSelector(getCurrent);
+
   useEffect(() => {
     const element = document.querySelector(".p2pManagement");
     element.classList.add("fadeInBottomToTop");
@@ -92,6 +93,7 @@ function P2pManagement() {
   useEffect(() => {
     loadDropdown();
   }, [advertisingStatus]);
+
   /**
    * load dropdown based on component state
    */
@@ -457,6 +459,7 @@ function P2pManagement() {
   const renderTitle = function () {
     return t("list" + capitalizeFirstLetter(advertisingStatus));
   };
+
   return (
     <div className="p2pManagement">
       <div className="container">

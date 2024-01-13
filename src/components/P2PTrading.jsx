@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import {
   formatStringNumberCultureUS,
   getLocalStorage,
+  processString,
   setLocalStorage,
 } from "src/util/common";
 import {
@@ -29,7 +30,7 @@ import P2pExchange from "./p2pExchange";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "./Common/Button";
 import { getProfile } from "src/util/userCallApi";
-//
+
 export default function P2PTrading({ history }) {
   const showContent = useSelector(getShow);
   const redirectPage = useHistory();
@@ -38,7 +39,7 @@ export default function P2PTrading({ history }) {
   const data = useSelector(getListCoinRealTime);
   const [sellPrice, setSellPrice] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
-  const [coinImage, setCoinImage] = useState(DOMAIN + "images/BTC.png");
+  const [coinImage, setCoinImage] = useState(DOMAIN + "images/USDT.png");
   const { coin } = useSelector((root) => root.coinReducer);
   const userSelectedCurrency = useSelector(getCurrent);
   const exChangeFromRedux = useSelector(getExchange);
@@ -48,53 +49,7 @@ export default function P2PTrading({ history }) {
   const [typeAds, setTypeAds] = useState(0);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  useEffect(() => {
-    setLocalStorage(localStorageVariable.coin, coin);
-    //
-    const language =
-      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
-    i18n.changeLanguage(language);
-    //
-    const element = document.querySelector(".p2ptrading");
-    if (element) {
-      element.classList.add("fadeInBottomToTop");
-    }
-    fetchApiGetProfile();
-  }, []);
 
-  const renderClassTypeAds = function () {
-    switch (typeAds) {
-      case 0:
-        return "--d-none";
-      case 1:
-        return "";
-      default:
-        break;
-    }
-  };
-  useEffect(() => {
-    if (data && data.length !== 0) {
-      const x = data.find((item) => item.name === coin);
-      setBuyPrice(x?.price + (x?.price / 100) * exchangeRateDisparityFromRedux);
-      setSellPrice(
-        x?.price - (x?.price / 100) * exchangeRateDisparityFromRedux
-      );
-      setCoinFullName(x?.token_key);
-      setCoinImage(DOMAIN + x?.image);
-    }
-  }, [data, coin]);
-  useEffect(() => {
-    exchange.current = exChangeFromRedux;
-  }, [exChangeFromRedux]);
-  //
-  const showModal = () => setIsModalVisible(true);
-  const handleOk = () => setIsModalVisible(false);
-  const handleCancel = () => setIsModalVisible(false);
-  const handleSelectedRow = (record) => {
-    setIsModalVisible(false);
-    setLocalStorage(localStorageVariable.coin, record.name);
-    dispatch(coinSetCoin(record.name));
-  };
   const columns = [
     {
       title: t("name"),
@@ -110,7 +65,6 @@ export default function P2PTrading({ history }) {
               alignItems: "flex-start",
               fontWeight: 500,
             }}
-            onClick={() => handleSelectedRow(record)}
           >
             <img
               style={{
@@ -166,6 +120,53 @@ export default function P2PTrading({ history }) {
       dataIndex: "volume",
     },
   ];
+
+  useEffect(() => {
+    setLocalStorage(localStorageVariable.coin, coin);
+    //
+    const language =
+      getLocalStorage(localStorageVariable.lng) || defaultLanguage;
+    i18n.changeLanguage(language);
+    //
+    const element = document.querySelector(".p2ptrading");
+    if (element) {
+      element.classList.add("fadeInBottomToTop");
+    }
+    fetchApiGetProfile();
+  }, []);
+  useEffect(() => {
+    if (data && data.length !== 0) {
+      const x = data.find((item) => item.name === coin);
+      setBuyPrice(x?.price + (x?.price / 100) * exchangeRateDisparityFromRedux);
+      setSellPrice(
+        x?.price - (x?.price / 100) * exchangeRateDisparityFromRedux
+      );
+      setCoinFullName(x?.token_key);
+      setCoinImage(DOMAIN + x?.image);
+    }
+  }, [data, coin]);
+  useEffect(() => {
+    exchange.current = exChangeFromRedux;
+  }, [exChangeFromRedux]);
+
+  const showModal = () => setIsModalVisible(true);
+  const handleOk = () => setIsModalVisible(false);
+  const handleCancel = () => setIsModalVisible(false);
+  const handleSelectedRow = (record) => {
+    setIsModalVisible(false);
+    setLocalStorage(localStorageVariable.coin, record.name);
+    dispatch(coinSetCoin(record.name));
+  };
+  const renderClassTypeAds = function () {
+    switch (typeAds) {
+      case 0:
+        return "--d-none";
+      case 1:
+        return "";
+      default:
+        break;
+    }
+  };
   const convertCurrency = function (usd) {
     if (
       !exchange.current ||
@@ -199,6 +200,18 @@ export default function P2PTrading({ history }) {
   const createAdsBuy = function () {
     setLocalStorage(localStorageVariable.createAds, coin);
     history.push(url.create_ads_buy);
+  };
+  const renderNotify = function () {
+    const string = t(
+      "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet"
+    );
+    const listSub = ["support@serepay.net"];
+    const callback = function (match, index) {
+      if (match === listSub.at(0)) {
+        return <span>{match}</span>;
+      }
+    };
+    return processString(string, listSub, callback);
   };
   const renderContent = function () {
     switch (showContent) {
@@ -271,8 +284,7 @@ export default function P2PTrading({ history }) {
               </div>
               <div className="bottom box">
                 <i className="fa-solid fa-bolt"></i>
-                {t("receiveBitcoinWithin15MinutesOrBeRefunded")}
-                <span>{t("moreDetails")}</span>
+                {renderNotify()}
               </div>
             </div>
             <Modal
@@ -300,11 +312,6 @@ export default function P2PTrading({ history }) {
                         }, 0);
                       },
                     }}
-                    onRow={(record) => {
-                      return {
-                        onClick: () => handleSelectedRow(record),
-                      };
-                    }}
                   />
                 ) : (
                   <div className="p2ptrading__model-spinner-container">
@@ -328,7 +335,7 @@ export default function P2PTrading({ history }) {
       })
       .catch((error) => {});
   };
-  //
+
   return (
     <>
       {renderContent()}

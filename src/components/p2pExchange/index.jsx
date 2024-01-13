@@ -49,9 +49,6 @@ const P2pExchange = memo(function () {
   const [callApiSearchStatus, setCallApiSearchStatus] = useState(
     api_status.pending
   );
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
   const searchResult = useRef();
   const [selectedCoin, setSelectedCoin] = useState(useSelector(getCoin));
   const handleCancelModal = () => {
@@ -63,6 +60,9 @@ const P2pExchange = memo(function () {
   const amountCoin = useRef(); // coin that the user enters in the input, if the user filters money, then change that money to coin
   const amountMoney = useRef(null); // The amount of money that the user enters in the input. If the user enters coin, the value of the variable is set to null
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
   const fetchListCoin = function () {
     setCallApiFetchListCoinStatus(() => api_status.fetching);
     return new Promise((resolve) => {
@@ -358,7 +358,7 @@ const P2pExchange = memo(function () {
     <div className="p2pExchange">
       <div className="container">
         <div className="p2pExchange__title">{t("p2pExchange")}</div>
-        <div className="p2pExchange__selected">
+        <div className="p2pExchange__selected  --d-none">
           <span className="p2pExchange__coin">
             <img
               src={image_domain.replace("USDT", selectedCoin.toUpperCase())}
