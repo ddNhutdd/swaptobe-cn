@@ -207,6 +207,11 @@ function FormWithdraw() {
                 <div className="formWithdraw__Wallet-body">
                   <div>Coin: {item.wallet.toUpperCase()}</div>
                   <div>
+                    {`${t("status")}: ${renderStatusHistoryWidthdraw(
+                      item.status
+                    )}`}
+                  </div>
+                  <div>
                     {t("note")}: {item.note}
                   </div>
                   <div className="formWithdraw__Wallet-body-amount">
@@ -221,12 +226,30 @@ function FormWithdraw() {
                       />
                     }
                   </div>
+                  <div>
+                    <span className="formWithdraw__Wallet-address">
+                      {`${t("toAddress")}: ${item.to_address}`}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </>
       );
+    }
+  };
+
+  const renderStatusHistoryWidthdraw = function (status) {
+    switch (status) {
+      case 0:
+        return t("reject");
+      case 1:
+        return t("success");
+      case 2:
+        return t("pending");
+      default:
+        break;
     }
   };
   const withdrawHistoryPagingOnChangeHandle = function (page) {

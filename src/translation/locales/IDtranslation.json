@@ -307,5 +307,7 @@
     "noSupport": "Tidak ada dukungan",
     "comingSoon": "Akan datang",
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Jika Anda tidak menerima transaksi dalam 15 menit, harap hubungi dukungan Serepay di support@serepay.net",
-    "marketSellPrice": "Harga Jual Pasar"
+    "marketSellPrice": "Harga Jual Pasar",
+    "toAddress": "Ke Alamat",
+    "reject": "Tolak"
 }

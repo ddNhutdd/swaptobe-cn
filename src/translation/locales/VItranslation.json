@@ -307,5 +307,7 @@
     "noSupport": "Không hỗ trợ",
     "comingSoon": "Sắp có",
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Nếu bạn không nhận được giao dịch trong vòng 15 phút, vui lòng liên hệ hỗ trợ Serepay tại support@serepay.net",
-    "marketSellPrice": "Giá Bán Trên Thị Trường"
+    "marketSellPrice": "Giá Bán Trên Thị Trường",
+    "toAddress": "Đến Địa chỉ",
+    "reject": "Từ chối"
 }

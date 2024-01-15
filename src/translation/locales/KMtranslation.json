@@ -307,5 +307,7 @@
     "noSupport": "គ្មានគាំទ្រ",
     "comingSoon": "មកដល់ឆ soon ឡើងវិញ",
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "ប្រសិនបើអ្នកមិនបានទទួលបានប្រតិបត្តិការក្នុងរយៈពេល 15 នាទី សូមទំនាក់ទំនងទៅកាន់គាំទ្រ Serepay តាមរយៈអ៊ីម៉ែលតាម support@serepay.net",
-    "marketSellPrice": "តម្លៃលក់ផ្សារ"
+    "marketSellPrice": "តម្លៃលក់ផ្សារ",
+    "toAddress": "ទៅ​អាសយដ្ឋាន",
+    "reject": "បដិសេធ"
 }

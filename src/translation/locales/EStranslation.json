@@ -307,5 +307,7 @@
     "noSupport": "Sin soporte",
     "comingSoon": "Próximamente",
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Si no recibiste transacciones en 15 minutos, por favor contacta el soporte de Serepay en support@serepay.net",
-    "marketSellPrice": "Market Sell Price"
+    "marketSellPrice": "Market Sell Price",
+    "toAddress": "Para la Dirección",
+    "reject": "Rechazar"
 }

@@ -307,5 +307,7 @@
     "noSupport": "サポートなし",
     "comingSoon": "近日公開",
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "15分以内に取引が届かない場合は、support@serepay.net でSerepayサポートにお問い合わせください",
-    "marketSellPrice": "市場販売価格"
+    "marketSellPrice": "市場販売価格",
+    "toAddress": "宛先に",
+    "reject": "却下"
 }

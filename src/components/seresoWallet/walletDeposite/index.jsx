@@ -206,12 +206,11 @@ function SerepayWalletDeposit() {
                   className="dropdown-content-selected"
                 >
                   <img
-                    src="https://remitano.dk-tech.vn/images/BTC.png"
+                    src={`https://remitano.dk-tech.vn/images/${coinFromRedux}.png`}
                     alt="name"
                   />
                   <span className="content">
-                    <span className="main-content">BTC</span>
-                    Bitcoin
+                    <span className="main-content">{coinFromRedux}</span>
                   </span>
                   <span></span>
                 </div>
