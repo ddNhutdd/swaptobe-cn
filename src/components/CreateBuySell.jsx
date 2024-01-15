@@ -15,11 +15,13 @@ import {
   getClassListFromElementById,
   getElementById,
   getLocalStorage,
+  roundIntl,
 } from "src/util/common";
 import { DOMAIN } from "src/util/service";
 import { companyAddAds, getProfile } from "src/util/userCallApi";
 import {
   api_status,
+  currencyMapper,
   defaultLanguage,
   localStorageVariable,
   regularExpress,
@@ -28,6 +30,8 @@ import {
 import { userWalletFetchCount } from "src/redux/actions/coin.action";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "./Common/Input";
+import { math } from "src/App";
+
 export default function CreateBuy() {
   const actionType = {
     sell: "sell",
@@ -42,6 +46,7 @@ export default function CreateBuy() {
   const [currentCoin, setCurrentCoin] = useState(
     getLocalStorage(localStorageVariable.createAds) || "BTC"
   );
+  const [marketSellPrice, setMarketSellPrice] = useState();
   const [isModalCoinVisible, setIsModalCoinVisible] = useState(false);
   const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
   const listCoinRealTime = useSelector(getListCoinRealTime);
@@ -64,6 +69,7 @@ export default function CreateBuy() {
   useEffect(() => {
     data.current = listCoinRealTime ?? [];
     renderMarketBuyPrice();
+    calcSellPrice();
   }, [listCoinRealTime]);
   useEffect(() => {
     const language =
@@ -112,7 +118,9 @@ export default function CreateBuy() {
     const result = calcBuyPrice();
     // set html
     getElementById("marketBuyPrice").innerHTML =
-      formatStringNumberCultureUS(String(result)) + " " + currentCurrency;
+      new Intl.NumberFormat(currencyMapper.USD, roundIntl(8)).format(result) +
+      " " +
+      currentCurrency;
   };
   const calcBuyPrice = function () {
     if (data.length <= 0 || exchage.length <= 0 || !exchangeRateDisparity)
@@ -122,11 +130,33 @@ export default function CreateBuy() {
       ?.price;
     if (!ccCoin) return;
     // process price
-    ccCoin += (ccCoin * exchangeRateDisparity) / 100;
-    const rate = exchage.filter((item) => item.title === currentCurrency)[0]
-      ?.rate;
-    ccCoin *= rate;
-    return ccCoin.toFixed(3);
+    const ccCoinFraction = math.fraction(ccCoin);
+    const rateDisparity = math.fraction(exchangeRateDisparity);
+    const priceBuy = math.add(
+      ccCoinFraction,
+      math.chain(ccCoinFraction).multiply(rateDisparity).divide(100).done()
+    );
+    return priceBuy;
+  };
+  const renderClassMarketSellPrice = function () {
+    return action === actionType.sell ? "" : "--d-none";
+  };
+  const renderClassMarketBuyPrice = function () {
+    return action === actionType.buy ? "" : "--d-none";
+  };
+  const calcSellPrice = function () {
+    if (data.length <= 0 || exchage.length <= 0 || !exchangeRateDisparity)
+      return;
+    const ccCoin = data.current.filter((item) => item.name === currentCoin)[0]
+      ?.price;
+    if (!ccCoin) return;
+    const ccCoinFraction = math.fraction(ccCoin);
+    const rateDisparity = math.fraction(exchangeRateDisparity);
+    const priceSell = math.subtract(
+      ccCoinFraction,
+      math.chain(ccCoinFraction).multiply(rateDisparity).divide(100).done()
+    );
+    setMarketSellPrice(() => priceSell);
   };
   const renderModalReview = function () {
     getElementById("modalPreviewPrice").innerHTML =
@@ -400,13 +430,26 @@ export default function CreateBuy() {
                 ? t("adsToBuyBTC").replace("BTC", currentCoin)
                 : t("adsToSellBTC").replace("BTC", currentCoin)}
             </h2>
-            <div>
+            <div className={renderClassMarketBuyPrice()}>
               {t("marketBuyPrice")}:{" "}
               <span
                 id="marketBuyPrice"
                 className="create-buy-ads__head-area-price"
               >
                 ---
+              </span>
+            </div>
+            <div className={renderClassMarketSellPrice()}>
+              {t("marketSellPrice")}:{" "}
+              <span
+                id="marketSellPrice"
+                className="create-buy-ads__head-area-price"
+              >
+                {new Intl.NumberFormat(currencyMapper.USD, roundIntl(8)).format(
+                  marketSellPrice
+                ) +
+                  " " +
+                  currentCurrency.toUpperCase()}
               </span>
             </div>
             <i

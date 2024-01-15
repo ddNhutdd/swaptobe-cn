@@ -18,7 +18,6 @@ import {
 } from "src/util/userCallApi";
 import { getCoin } from "src/redux/constant/coin.constant";
 import {
-  findIntegerMultiplier,
   formatStringNumberCultureUS,
   getLocalStorage,
   getRandomElementFromArray,
@@ -30,6 +29,9 @@ import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constan
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
+import { math } from "src/App";
+import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
+
 function TransactionBuy() {
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
   const history = useHistory();
@@ -37,8 +39,10 @@ function TransactionBuy() {
   const selectedCoin = getLocalStorage(
     localStorageVariable.coinNameFromP2pExchange
   );
-
   const { t } = useTranslation();
+  const getExchangeRateDisparityFromRedux = useSelector(
+    getExchangeRateDisparity
+  );
   const [callApiLoadTraderStatus, setCallApiLoadTraderStatus] = useState(
     api_status.pending
   );
@@ -60,6 +64,7 @@ function TransactionBuy() {
   const listCoinRealTime = useSelector(getListCoinRealTime);
   const exchangeRedux = useSelector(getExchange);
   const [price, setPrice] = useState();
+
   const inputCoinElement = useRef();
   const inputMoneyElement = useRef();
   const control = useRef({
@@ -334,16 +339,26 @@ function TransactionBuy() {
       !coinName ||
       !exchange ||
       exchange.length <= 0 ||
-      !currency
+      !currency ||
+      !getExchangeRateDisparityFromRedux
     )
       return;
     const price = listCoin.find((item) => item.name === coinName)?.price;
     const rate = exchange.find((item) => item.title === currency)?.rate;
 
-    const mt = findIntegerMultiplier([price, rate]);
-    const newPrice = price * mt;
-    const newRate = rate * mt;
-    return (newPrice * newRate) / (mt * mt);
+    const priceFraction = math.fraction(price);
+    const rateDisparityFraction = math.fraction(
+      getExchangeRateDisparityFromRedux
+    );
+
+    const rateFraction = math.fraction(rate);
+    const newPriceFraction = math.add(
+      priceFraction,
+      math.chain(priceFraction).multiply(rateDisparityFraction).done()
+    );
+    const result = math.multiply(rateFraction, newPriceFraction);
+    console.log(math.number(result));
+    return math.number(result);
   };
   const calcCoin = function (listCoin, coinName, exchange, vnd) {
     if (
@@ -358,12 +373,12 @@ function TransactionBuy() {
 
     const priceUsd = listCoin.find((item) => item.name === coinName)?.price;
     const exchangeVnd = exchange.find((item) => item.title === "VND")?.rate;
-    const mt = findIntegerMultiplier([priceUsd, exchangeVnd, vnd]);
-    const newPriceUsd = priceUsd * mt;
-    const newExchangeVnd = exchangeVnd * mt;
-    const newVnd = vnd * mt;
-    const result = newVnd / newExchangeVnd / newPriceUsd;
-    return result * mt;
+    // const mt = findIntegerMultiplier([priceUsd, exchangeVnd, vnd]);
+    // const newPriceUsd = priceUsd * mt;
+    // const newExchangeVnd = exchangeVnd * mt;
+    // const newVnd = vnd * mt;
+    // const result = newVnd / newExchangeVnd / newPriceUsd * mt;
+    return 0;
   };
   const calcVnd = function (listCoin, coinName, exchange, amountCoin) {
     if (
@@ -377,30 +392,31 @@ function TransactionBuy() {
       return 0;
     const priceUsd = listCoin.find((item) => item.name === coinName)?.price;
     const rate = exchange.find((item) => item.title === "VND")?.rate;
-    const mt = findIntegerMultiplier([priceUsd, rate, amountCoin]);
-    const newPriceUsd = priceUsd * mt;
-    const newRate = rate * mt;
-    const newAmountCoin = amountCoin * mt;
-    const result = (newAmountCoin * newPriceUsd * newRate) / (mt * mt * mt);
-    return result;
+    // const newPriceUsd = priceUsd * mt;
+    // const newRate = rate * mt;
+    // const newAmountCoin = amountCoin * mt;
+    // const result = (newAmountCoin * newPriceUsd * newRate) / (mt * mt * mt);
+    // const rateFraction = math.fraction();
+
+    return 0;
   };
   const calVNDFromOtherCurrencies = function (exchange, currency, amountMoney) {
     const rateDollarToVnd = exchange.find((item) => item.title === "VND")?.rate;
     const rateCurrentToDollar = exchange.find(
       (item) => item.title === currency
     )?.rate;
-    const mt = findIntegerMultiplier([
-      rateDollarToVnd,
-      rateCurrentToDollar,
-      amountMoney,
-    ]);
-    const newRateDollarToVnd = rateDollarToVnd * mt;
-    const newRateCurrentToDollar = rateCurrentToDollar * mt;
-    const newAmountMoney = amountMoney * mt;
-    const result =
-      (newRateCurrentToDollar * newRateDollarToVnd * newAmountMoney) /
-      (mt * mt * mt);
-    return result;
+    // const mt = findIntegerMultiplier([
+    //   rateDollarToVnd,
+    //   rateCurrentToDollar,
+    //   amountMoney,
+    // ]);
+    // const newRateDollarToVnd = rateDollarToVnd * mt;
+    // const newRateCurrentToDollar = rateCurrentToDollar * mt;
+    // const newAmountMoney = amountMoney * mt;
+    // const result =
+    //   (newRateCurrentToDollar * newRateDollarToVnd * newAmountMoney) /
+    //   (mt * mt * mt);
+    return 0;
   };
   const roundRule = function (value) {
     if (value > 10000) return 8;
@@ -561,7 +577,13 @@ function TransactionBuy() {
       loadInputCoin();
       hasRunFlag.current = true;
     }
-  }, [listCoinRealTime, selectedCoin, exchangeRedux, currencyRedux]);
+  }, [
+    listCoinRealTime,
+    selectedCoin,
+    exchangeRedux,
+    currencyRedux,
+    getExchangeRateDisparityFromRedux,
+  ]);
 
   return (
     <div className={`transaction fadeInBottomToTop`}>

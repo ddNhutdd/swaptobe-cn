@@ -8,11 +8,7 @@ import {
   localStorageVariable,
   url,
 } from "src/constant";
-import {
-  capitalizeFirstLetter,
-  findIntegerMultiplier,
-  getLocalStorage,
-} from "src/util/common";
+import { capitalizeFirstLetter, getLocalStorage } from "src/util/common";
 import i18n from "src/translation/i18n";
 import socket from "src/util/socket";
 import { useHistory } from "react-router-dom";
@@ -264,12 +260,14 @@ function P2pManagement() {
     let rate = exchange.find((item) => item.title === currency)?.rate;
     if (!rate) return;
     let newValue = +value.toFixed(3);
-    const mt = findIntegerMultiplier([rate, newValue]);
-    const result = (rate * mt * (newValue * mt)) / (mt * mt);
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency,
-    }).format(result);
+    // const mt = findIntegerMultiplier([rate, newValue]);
+    // const result = (rate * mt * (newValue * mt)) / (mt * mt);
+
+    // const formatResult = new Intl.NumberFormat("en-US", {
+    //   style: "currency",
+    //   currency: currency,
+    // }).format(result)
+    return "";
   };
   const renderTable = function () {
     if (!dataTable || dataTable.length <= 0) return;

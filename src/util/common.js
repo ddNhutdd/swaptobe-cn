@@ -343,13 +343,7 @@ export const processString = function (inputString, substringsList, callback) {
   }
   return <>{resultJSX}</>;
 };
-export const findIntegerMultiplier = function (numbers) {
-  const maxDecimalPlaces = Math.max(
-    ...numbers.map((num) => num.toString().split(".")[1]?.length || 0)
-  );
-  const result = +"1".padEnd(maxDecimalPlaces + 1, 0);
-  return result;
-};
+
 /**
  * The function randomly selects an element in the array, returns that element, if the array is empty, returns null
  * @param {array} arr list items

@@ -306,5 +306,6 @@
     "enterAmountOfMoney": "输入金额",
     "noSupport": "无支持",
     "comingSoon": "即将推出",
-    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "如果您在15分钟内未收到交易，请联系Serepay支持，电子邮件地址为support@serepay.net"
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "如果您在15分钟内未收到交易，请联系Serepay支持，电子邮件地址为support@serepay.net",
+    "marketSellPrice": "市场售价"
 }

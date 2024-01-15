@@ -306,5 +306,6 @@
     "enterAmountOfMoney": "ป้อนจำนวนเงิน",
     "noSupport": "ไม่มีการสนับสนุน",
     "comingSoon": "เร็ว ๆ นี้",
-    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "หากคุณไม่ได้รับธุรกรรมภายใน 15 นาที กรุณาติดต่อฝ่ายสนับสนุน Serepay ที่ support@serepay.net"
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "หากคุณไม่ได้รับธุรกรรมภายใน 15 นาที กรุณาติดต่อฝ่ายสนับสนุน Serepay ที่ support@serepay.net",
+    "marketSellPrice": "ราคาขายในตลาด"
 }

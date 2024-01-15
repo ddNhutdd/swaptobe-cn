@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd";
 import { Input } from "../Common/Input";
 import {
-  findIntegerMultiplier,
   formatStringNumberCultureUS,
   getLocalStorage,
   getRandomElementFromArray,
@@ -29,6 +28,8 @@ import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { useTranslation } from "react-i18next";
 import { getListCoinRealTime } from "src/redux/constant/listCoinRealTime.constant";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
+import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
+import { math } from "src/App";
 
 function TransactionSell() {
   const amount = getLocalStorage(localStorageVariable.coinFromP2pExchange || 0);
@@ -40,6 +41,9 @@ function TransactionSell() {
   const currencyRedux = useSelector(getCurrent);
   const listCoinRealTime = useSelector(getListCoinRealTime);
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
+  const getExchangeRateDisparityFromRedux = useSelector(
+    getExchangeRateDisparity
+  );
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -120,7 +124,13 @@ function TransactionSell() {
         roundIntl(3)
       ).format(amountVnd);
     }
-  }, [listCoinRealTime, selectedCoin, exchangeRedux, currencyRedux]);
+  }, [
+    listCoinRealTime,
+    selectedCoin,
+    exchangeRedux,
+    currencyRedux,
+    getExchangeRateDisparityFromRedux,
+  ]);
 
   const validationPageLoad = function () {
     if (!isLogin) {
@@ -328,16 +338,26 @@ function TransactionSell() {
       !coinName ||
       !exchange ||
       exchange.length <= 0 ||
-      !currency
+      !currency ||
+      !getExchangeRateDisparityFromRedux
     )
       return;
     const price = listCoin.find((item) => item.name === coinName)?.price;
     const rate = exchange.find((item) => item.title === currency)?.rate;
-
-    const mt = findIntegerMultiplier([price, rate]);
-    const newPrice = price * mt;
-    const newRate = rate * mt;
-    return (newPrice * newRate) / (mt * mt);
+    const priceFraction = math.fraction(price);
+    const rateFranction = math.fraction(rate);
+    const rateDisparityFranction = math.fraction(
+      getExchangeRateDisparityFromRedux
+    );
+    const newPriceFranction = math.add(
+      priceFraction,
+      math
+        .chain(priceFraction)
+        .multiply(rateDisparityFranction)
+        .divide(100)
+        .done()
+    );
+    return math.number(math.multiply(newPriceFranction, rateFranction));
   };
   const renderHeader = function () {
     const str = t("sellEthViaBankTransferVnd");
@@ -408,17 +428,34 @@ function TransactionSell() {
       !selectedCoin ||
       !exchange ||
       exchange.length <= 0 ||
-      !amountCoin
+      !amountCoin ||
+      getExchangeRateDisparityFromRedux
     )
       return;
     const priceUsd = listCoin.find((item) => item.name === selectedCoin)?.price;
     const rate = exchange.find((item) => item.title === "VND")?.rate;
-    const mt = findIntegerMultiplier([priceUsd, rate, amountCoin]);
-    const newAmountCoin = amountCoin * mt;
-    const newRate = rate * mt;
-    const newPriceUsd = priceUsd * mt;
-    const result = (newAmountCoin * newRate * newPriceUsd) / (mt * mt * mt);
-    return result;
+
+    const rateFraction = math.fraction(rate);
+    const amountCoinFraction = math.fraction(amountCoin);
+    const priceUsdFraction = math.fraction(priceUsd);
+    const rateDisparityFranction = math.fraction(
+      getExchangeRateDisparityFromRedux
+    );
+
+    const newPriceUsdFraction = math.subtract(
+      priceUsdFraction,
+      math
+        .chain(priceUsdFraction)
+        .multiply(rateDisparityFranction)
+        .divide(100)
+        .done()
+    );
+    const result = math
+      .chain(amountCoinFraction)
+      .multiply(rateFraction)
+      .multiply(newPriceUsdFraction)
+      .done();
+    return math.number(result);
   };
   const eulaCheckboxChangeHandle = function () {
     setEulaChecked(!eulaChecked);
