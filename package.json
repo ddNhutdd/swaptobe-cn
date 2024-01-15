@@ -40,12 +40,6 @@
     "eject": "react-scripts eject",
     "less": "lessc --js src/assets/theme/antd-customized.less src/assets/theme/antd-customized.css"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
