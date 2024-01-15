@@ -6,7 +6,6 @@ import {
   getLocalStorage,
   setLocalStorage,
   removeLocalStorage,
-  findIntegerMultiplier,
   roundIntl,
 } from "../util/common";
 import {
@@ -25,6 +24,7 @@ import {
   getTotalAssetsBtcRealTime,
   getTotalAssetsRealTime,
 } from "src/redux/constant/listCoinRealTime.constant";
+
 export default function Header2({ history }) {
   const { isLogin, username } = useSelector((root) => root.loginReducer);
   const currencyFromRedux = useSelector(getCurrent);
@@ -178,6 +178,9 @@ export default function Header2({ history }) {
     localStorage.removeItem(localStorageVariable.token);
     removeLocalStorage(localStorageVariable.coinFromP2pExchange);
     removeLocalStorage(localStorageVariable.currency);
+    removeLocalStorage(localStorageVariable.adsItem);
+    removeLocalStorage(localStorageVariable.coinNameFromP2pExchange);
+    removeLocalStorage(localStorageVariable.createAds);
     removeLocalStorage(localStorageVariable.moneyFromP2pExchange);
     dispatch(currencySetCurrent(defaultCurrency));
     removeLocalStorage(localStorageVariable.coin);
@@ -214,13 +217,7 @@ export default function Header2({ history }) {
       }).format(result)
     );
   };
-  const calcMoney = function (usd, exchange) {
-    const mt = findIntegerMultiplier([usd, exchange]);
-    const temUsd = usd * mt;
-    const temExchange = exchange * mt;
-    const result = (temUsd * temExchange) / (mt * mt);
-    return result;
-  };
+  const calcMoney = function (usd, exchange) {};
   const setActiveCurrentPage = function () {
     const pathname = location.pathname;
     const container = document.querySelector(".header2");

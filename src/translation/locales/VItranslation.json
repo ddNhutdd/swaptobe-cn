@@ -306,5 +306,6 @@
     "enterAmountOfMoney": "Nhập số tiền",
     "noSupport": "Không hỗ trợ",
     "comingSoon": "Sắp có",
-    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Nếu bạn không nhận được giao dịch trong vòng 15 phút, vui lòng liên hệ hỗ trợ Serepay tại support@serepay.net"
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Nếu bạn không nhận được giao dịch trong vòng 15 phút, vui lòng liên hệ hỗ trợ Serepay tại support@serepay.net",
+    "marketSellPrice": "Giá Bán Trên Thị Trường"
 }

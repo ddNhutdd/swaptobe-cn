@@ -51,6 +51,11 @@ import P2pManagement from "./components/p2pManagement";
 import TransactionBuy from "./components/transactionBuy";
 import Widthdraw from "./components/admin/widthdraw";
 import User from "./components/admin/user";
+import { create, all } from "mathjs";
+
+const config = {};
+export const math = create(all, config);
+
 function App() {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginReducer.isLogin);
@@ -114,6 +119,7 @@ function App() {
         console.log(error);
       });
   };
+
   useEffect(() => {
     if (localStorage.getItem("user")) {
       const user = JSON.parse(localStorage.getItem("user"));

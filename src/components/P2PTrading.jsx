@@ -30,6 +30,7 @@ import P2pExchange from "./p2pExchange";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "./Common/Button";
 import { getProfile } from "src/util/userCallApi";
+import { math } from "src/App";
 
 export default function P2PTrading({ history }) {
   const showContent = useSelector(getShow);
@@ -123,11 +124,11 @@ export default function P2PTrading({ history }) {
 
   useEffect(() => {
     setLocalStorage(localStorageVariable.coin, coin);
-    //
+
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
-    //
+
     const element = document.querySelector(".p2ptrading");
     if (element) {
       element.classList.add("fadeInBottomToTop");
@@ -137,10 +138,24 @@ export default function P2PTrading({ history }) {
   useEffect(() => {
     if (data && data.length !== 0) {
       const x = data.find((item) => item.name === coin);
-      setBuyPrice(x?.price + (x?.price / 100) * exchangeRateDisparityFromRedux);
-      setSellPrice(
-        x?.price - (x?.price / 100) * exchangeRateDisparityFromRedux
+      const price = x?.price;
+      if (!price) return;
+      const priceFraction = math.fraction(price);
+      const rateDisparityFraction = math.fraction(
+        exchangeRateDisparityFromRedux
       );
+      const buyPrice = math
+        .chain(priceFraction)
+        .divide(100)
+        .multiply(rateDisparityFraction)
+        .add(priceFraction)
+        .done();
+      const sellPrice = math.subtract(
+        priceFraction,
+        math.multiply(math.divide(priceFraction, 100), rateDisparityFraction)
+      );
+      setBuyPrice(buyPrice);
+      setSellPrice(sellPrice);
       setCoinFullName(x?.token_key);
       setCoinImage(DOMAIN + x?.image);
     }
@@ -208,7 +223,7 @@ export default function P2PTrading({ history }) {
     const listSub = ["support@serepay.net"];
     const callback = function (match, index) {
       if (match === listSub.at(0)) {
-        return <span>{match}</span>;
+        return <span key={index}>{match}</span>;
       }
     };
     return processString(string, listSub, callback);

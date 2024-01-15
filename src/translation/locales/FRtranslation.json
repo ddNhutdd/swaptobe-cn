@@ -306,5 +306,6 @@
     "enterAmountOfMoney": "Entrez le montant d'argent",
     "noSupport": "Pas de support",
     "comingSoon": "Bientôt disponible",
-    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Si vous n'avez pas reçu de transactions dans les 15 minutes, veuillez contacter le support de Serepay à l'adresse support@serepay.net"
+    "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Si vous n'avez pas reçu de transactions dans les 15 minutes, veuillez contacter le support de Serepay à l'adresse support@serepay.net",
+    "marketSellPrice": "Prix de vente sur le marché"
 }

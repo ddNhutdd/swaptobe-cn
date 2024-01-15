@@ -21,7 +21,6 @@ import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { searchBuyQuick, searchSellQuick } from "src/util/userCallApi";
 import {
   debounce,
-  findIntegerMultiplier,
   formatStringNumberCultureUS,
   getLocalStorage,
   roundDecimalValues,
@@ -282,12 +281,12 @@ const P2pExchange = memo(function () {
   ) {
     const rate = listExchange.find((item) => item.title === currency)?.rate;
     const price = listCoin.find((item) => item.name === coinName).price;
-    const mt = findIntegerMultiplier([amountMoney, rate, price]);
-    const newRate = rate * mt;
-    const newPrice = price * mt;
-    const newAmountMoney = amountMoney * mt;
-    const result = (newAmountMoney / newRate / newPrice) * mt;
-    return result;
+    // const mt = findIntegerMultiplier([amountMoney, rate, price]);
+    // const newRate = rate * mt;
+    // const newPrice = price * mt;
+    // const newAmountMoney = amountMoney * mt;
+    // const result = (newAmountMoney / newRate / newPrice) * mt;
+    return 0;
   };
   const renderClassSpin = function () {
     if (callApiSearchStatus === api_status.fetching) return "";
