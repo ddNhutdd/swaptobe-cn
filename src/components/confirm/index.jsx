@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import i18n from "src/translation/i18n";
 import {

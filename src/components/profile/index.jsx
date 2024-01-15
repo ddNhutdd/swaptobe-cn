@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Spin, Pagination } from "antd";
 import { getBankListV2 } from "src/assets/resource/getBankListV2";

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Spin, Pagination } from "antd";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -259,15 +258,17 @@ function P2pManagement() {
   const calcMoney = function (value) {
     let rate = exchange.find((item) => item.title === currency)?.rate;
     if (!rate) return;
-    let newValue = +value.toFixed(3);
-    // const mt = findIntegerMultiplier([rate, newValue]);
-    // const result = (rate * mt * (newValue * mt)) / (mt * mt);
 
-    // const formatResult = new Intl.NumberFormat("en-US", {
-    //   style: "currency",
-    //   currency: currency,
-    // }).format(result)
-    return "";
+    const rateFraction = math.fraction(rate);
+    const valueFraction = math.fraction(value);
+
+    const result = math.multiply(rateFraction, valueFraction);
+
+    const formatResult = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(math.number(result));
+    return formatResult;
   };
   const renderTable = function () {
     if (!dataTable || dataTable.length <= 0) return;

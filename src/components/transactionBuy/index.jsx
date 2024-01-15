@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
 import { Input } from "../Common/Input";
@@ -354,10 +353,13 @@ function TransactionBuy() {
     const rateFraction = math.fraction(rate);
     const newPriceFraction = math.add(
       priceFraction,
-      math.chain(priceFraction).multiply(rateDisparityFraction).done()
+      math
+        .chain(priceFraction)
+        .multiply(rateDisparityFraction)
+        .divide(100)
+        .done()
     );
     const result = math.multiply(rateFraction, newPriceFraction);
-    console.log(math.number(result));
     return math.number(result);
   };
   const calcCoin = function (listCoin, coinName, exchange, vnd) {
@@ -367,18 +369,29 @@ function TransactionBuy() {
       !coinName ||
       !exchange ||
       exchange.length <= 0 ||
-      !vnd
+      !vnd ||
+      !getExchangeRateDisparityFromRedux
     )
       return;
 
     const priceUsd = listCoin.find((item) => item.name === coinName)?.price;
     const exchangeVnd = exchange.find((item) => item.title === "VND")?.rate;
-    // const mt = findIntegerMultiplier([priceUsd, exchangeVnd, vnd]);
-    // const newPriceUsd = priceUsd * mt;
-    // const newExchangeVnd = exchangeVnd * mt;
-    // const newVnd = vnd * mt;
-    // const result = newVnd / newExchangeVnd / newPriceUsd * mt;
-    return 0;
+
+    const priceUsdFraction = math.fraction(priceUsd);
+    const rateDisparity = math.fraction(getExchangeRateDisparityFromRedux);
+    const newPriceUsdFraction = math.add(
+      priceUsdFraction,
+      math.chain(priceUsdFraction).multiply(rateDisparity).divide(100).done()
+    );
+    const vndFraction = math.fraction(vnd);
+    const exchangeVndFraction = math.fraction(exchangeVnd);
+
+    const result = math
+      .chain(vndFraction)
+      .divide(exchangeVndFraction)
+      .divide(newPriceUsdFraction)
+      .done();
+    return result;
   };
   const calcVnd = function (listCoin, coinName, exchange, amountCoin) {
     if (
@@ -387,36 +400,54 @@ function TransactionBuy() {
       !coinName ||
       !exchange ||
       exchange.length <= 0 ||
-      !amountCoin
+      !amountCoin ||
+      !getExchangeRateDisparityFromRedux
     )
       return 0;
     const priceUsd = listCoin.find((item) => item.name === coinName)?.price;
     const rate = exchange.find((item) => item.title === "VND")?.rate;
-    // const newPriceUsd = priceUsd * mt;
-    // const newRate = rate * mt;
-    // const newAmountCoin = amountCoin * mt;
-    // const result = (newAmountCoin * newPriceUsd * newRate) / (mt * mt * mt);
-    // const rateFraction = math.fraction();
 
-    return 0;
+    const rateDisparityFraction = math.fraction(
+      getExchangeRateDisparityFromRedux
+    );
+    const priceUsdFraction = math.fraction(priceUsd);
+
+    const newPriceUsdFraction = math.add(
+      priceUsdFraction,
+      math
+        .chain(priceUsdFraction)
+        .multiply(rateDisparityFraction)
+        .divide(100)
+        .done()
+    );
+    const rateFraction = math.fraction(rate);
+    const amountCoinFraction = math.fraction(amountCoin);
+
+    const result = math
+      .chain(amountCoinFraction)
+      .multiply(newPriceUsdFraction)
+      .multiply(rateFraction)
+      .done();
+
+    return math.number(result);
   };
   const calVNDFromOtherCurrencies = function (exchange, currency, amountMoney) {
     const rateDollarToVnd = exchange.find((item) => item.title === "VND")?.rate;
     const rateCurrentToDollar = exchange.find(
       (item) => item.title === currency
     )?.rate;
-    // const mt = findIntegerMultiplier([
-    //   rateDollarToVnd,
-    //   rateCurrentToDollar,
-    //   amountMoney,
-    // ]);
-    // const newRateDollarToVnd = rateDollarToVnd * mt;
-    // const newRateCurrentToDollar = rateCurrentToDollar * mt;
-    // const newAmountMoney = amountMoney * mt;
-    // const result =
-    //   (newRateCurrentToDollar * newRateDollarToVnd * newAmountMoney) /
-    //   (mt * mt * mt);
-    return 0;
+
+    const rateDollarToVndFraction = math.fraction(rateDollarToVnd);
+    const rateCurrentToDollarFraction = math.fraction(rateCurrentToDollar);
+    const amountMoneyFraction = math.fraction(amountMoney);
+
+    const result = math
+      .chain(rateCurrentToDollarFraction)
+      .multiply(rateDollarToVndFraction)
+      .multiply(amountMoneyFraction)
+      .done();
+
+    return math.number(result);
   };
   const roundRule = function (value) {
     if (value > 10000) return 8;

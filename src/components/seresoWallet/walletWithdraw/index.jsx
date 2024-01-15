@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -584,7 +583,6 @@ function FormWithdraw() {
             }`}
           >
             <div className="FormWithdraw__qr__bg">
-              {console.log(qrValue.current)}
               <QRCode
                 style={{
                   height: "auto",

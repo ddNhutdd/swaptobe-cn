@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { memo, useEffect, useState, useRef } from "react";
 import { Spin, Modal } from "antd";
 import {
@@ -28,11 +27,17 @@ import {
 } from "src/util/common";
 import { coinSetCoin } from "src/redux/actions/coin.action";
 import i18n from "src/translation/i18n";
+import { math } from "src/App";
+import { getExchangeRateDisparity } from "src/redux/reducers/exchangeRateDisparitySlice";
+
 const P2pExchange = memo(function () {
   const filterType = {
     coin: "coin",
     currency: "currency",
   };
+  const getExchangeRateDisparityFromRedux = useSelector(
+    getExchangeRateDisparity
+  );
   const history = useHistory();
   const apiParamLimit = useRef(1);
   const [filter, setFilter] = useState(filterType.coin); // indicates the user is filtering ads by currency or cryptocurrency
@@ -279,14 +284,43 @@ const P2pExchange = memo(function () {
     listExchange,
     listCoin
   ) {
+    if (!getExchangeRateDisparityFromRedux) return;
     const rate = listExchange.find((item) => item.title === currency)?.rate;
     const price = listCoin.find((item) => item.name === coinName).price;
-    // const mt = findIntegerMultiplier([amountMoney, rate, price]);
-    // const newRate = rate * mt;
-    // const newPrice = price * mt;
-    // const newAmountMoney = amountMoney * mt;
-    // const result = (newAmountMoney / newRate / newPrice) * mt;
-    return 0;
+
+    const priceFraction = math.fraction(price);
+    const rateDisparityFraction = math.fraction(
+      getExchangeRateDisparityFromRedux
+    );
+    let newPriceFraction = 0;
+    if (currentAction === actionTrading.buy) {
+      newPriceFraction = math.add(
+        priceFraction,
+        math
+          .chain(priceFraction)
+          .multiply(rateDisparityFraction)
+          .divide(100)
+          .done()
+      );
+    } else {
+      newPriceFraction = math.subtract(
+        priceFraction,
+        math
+          .chain(priceFraction)
+          .multiply(rateDisparityFraction)
+          .divide(100)
+          .done()
+      );
+    }
+    const amountMoneyFraction = math.fraction(amountMoney);
+    const rateFraction = math.fraction(rate);
+
+    const result = math
+      .chain(amountMoneyFraction)
+      .multiply(rateFraction)
+      .multiply(newPriceFraction)
+      .done();
+    return math.number(result);
   };
   const renderClassSpin = function () {
     if (callApiSearchStatus === api_status.fetching) return "";
@@ -352,6 +386,9 @@ const P2pExchange = memo(function () {
   useEffect(() => {
     searchWhenInputHasValue();
   }, [currencyFromRedux]);
+  useEffect(() => {
+    searchWhenInputHasValue();
+  }, [getExchangeRateDisparityFromRedux]);
 
   return (
     <div className="p2pExchange">

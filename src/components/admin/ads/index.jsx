@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from "react";
 import { Pagination, Spin, Modal } from "antd";
 import { EmptyCustom } from "src/components/Common/Empty";

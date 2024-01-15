@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Button as ButtonAntd, Card, Modal, Table } from "antd";
 import { Spin } from "antd";
 import { useHistory } from "react-router-dom";

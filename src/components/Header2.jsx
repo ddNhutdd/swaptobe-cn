@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n, { availableLanguageMapper } from "../translation/i18n";

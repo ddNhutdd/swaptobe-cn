@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Modal } from "antd";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";

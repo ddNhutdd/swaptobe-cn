@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd";
 import { Input } from "../Common/Input";
@@ -200,7 +199,6 @@ function TransactionSell() {
         history.push(url.profile);
         return;
       });
-    console.log(amount);
     payInputElement.current.value = new Intl.NumberFormat(
       currencyMapper.USD,
       roundIntl(10)
@@ -429,7 +427,7 @@ function TransactionSell() {
       !exchange ||
       exchange.length <= 0 ||
       !amountCoin ||
-      getExchangeRateDisparityFromRedux
+      !getExchangeRateDisparityFromRedux
     )
       return;
     const priceUsd = listCoin.find((item) => item.name === selectedCoin)?.price;
@@ -438,18 +436,18 @@ function TransactionSell() {
     const rateFraction = math.fraction(rate);
     const amountCoinFraction = math.fraction(amountCoin);
     const priceUsdFraction = math.fraction(priceUsd);
-    const rateDisparityFranction = math.fraction(
+    const rateDisparityFraction = math.fraction(
       getExchangeRateDisparityFromRedux
     );
-
     const newPriceUsdFraction = math.subtract(
       priceUsdFraction,
       math
         .chain(priceUsdFraction)
-        .multiply(rateDisparityFranction)
+        .multiply(rateDisparityFraction)
         .divide(100)
         .done()
     );
+
     const result = math
       .chain(amountCoinFraction)
       .multiply(rateFraction)

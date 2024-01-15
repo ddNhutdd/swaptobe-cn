@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Descriptions, Modal, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";

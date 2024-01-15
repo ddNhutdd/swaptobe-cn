@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useRef, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";

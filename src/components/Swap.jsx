@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Modal, Button, Empty } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {

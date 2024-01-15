@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import CreateBuySell from "./components/CreateBuySell";
