@@ -309,5 +309,6 @@
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Si no recibiste transacciones en 15 minutos, por favor contacta el soporte de Serepay en support@serepay.net",
     "marketSellPrice": "Market Sell Price",
     "toAddress": "Para la Dirección",
-    "reject": "Rechazar"
+    "reject": "Rechazar",
+    "theMinimumSellingQuantityCannotBeMoreThanTheNumberYouWantToSell": "La cantidad mínima de venta no puede ser mayor que la cantidad que deseas vender"
 }

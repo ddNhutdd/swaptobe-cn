@@ -242,24 +242,25 @@
                         box-sizing: border-box;
                         color: $green;
                         font-weight: bold;
+
+                        img {
+                            width: 20px;
+                            height: 20px;
+                            object-fit: cover;
+                        }
                     }
 
                     .wallet-deposite__history-final {
                         width: 100%;
                         display: flex;
                         align-items: center;
-                        justify-content: center;
+                        justify-content: flex-start;
 
                         span {
                             display: block;
 
                             &:first-child {
-                                width: 25%;
-                            }
-
-                            &:last-child {
-                                margin-left: 5px;
-                                width: 73%;
+                                margin-right: 5px;
                             }
                         }
 

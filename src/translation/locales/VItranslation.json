@@ -152,7 +152,7 @@
     "bankName": "Tên ngân hàng",
     "accountName": "Tên tài khoản",
     "accountNumber": "Số tài khoản",
-    "amountMinimum": "Số tiền tối thiểu",
+    "amountMinimum": "Số lượng tối thiểu",
     "createdAt": "Được tạo lúc",
     "addressWallet": "Địa chỉ ví",
     "balance": "Số dư",
@@ -309,5 +309,6 @@
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Nếu bạn không nhận được giao dịch trong vòng 15 phút, vui lòng liên hệ hỗ trợ Serepay tại support@serepay.net",
     "marketSellPrice": "Giá Bán Trên Thị Trường",
     "toAddress": "Đến Địa chỉ",
-    "reject": "Từ chối"
+    "reject": "Từ chối",
+    "theMinimumSellingQuantityCannotBeMoreThanTheNumberYouWantToSell": "Số lượng bán tối thiểu không thể lớn hơn số lượng bạn muốn bán"
 }

@@ -14,6 +14,7 @@ import {
 import {
   calculateTime,
   calculateTimeDifference,
+  formatCurrency,
   getElementById,
   getLocalStorage,
   hideElement,
@@ -28,6 +29,8 @@ import {
 } from "src/util/userCallApi";
 import { getCurrent, getExchange } from "src/redux/constant/currency.constant";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
+import { math } from "src/App";
+
 function ConfirmItem(props) {
   const actionType = {
     buy: "buy",
@@ -83,11 +86,10 @@ function ConfirmItem(props) {
     const currencyRate = exchange.find(
       (item) => item.title === currentCurrency
     ).rate;
-    const result = money * currencyRate;
-    return new Intl.NumberFormat(currencyMapper["USD"], {
-      style: "currency",
-      currency: currentCurrency,
-    }).format(result);
+    const moneyFraction = math.fraction(money);
+    const currencyRateFraction = math.fraction(currencyRate);
+    const result = math.multiply(moneyFraction, currencyRateFraction);
+    return formatCurrency(i18n.language, currentCurrency, math.number(result));
   };
   const timer = function () {
     return setInterval(() => {
@@ -511,7 +513,7 @@ function ConfirmItem(props) {
               <td>
                 <div className="confirm__money">
                   <span className="confirm--red">
-                    {new Intl.NumberFormat(currencyMapper["USD"], {
+                    {new Intl.NumberFormat(i18n.language, {
                       style: "currency",
                       currency: "VND",
                     }).format(pay)}
@@ -581,9 +583,9 @@ function ConfirmItem(props) {
             bordered
             size={isMobileViewport ? "small" : "middle"}
           >
-            <Descriptions.Item label={t("amount")}>
+            <Descriptions.Item label={t("amountOfMoney")}>
               <div className="green-text">
-                {new Intl.NumberFormat(currencyMapper["USD"], {
+                {new Intl.NumberFormat(i18n.language, {
                   style: "currency",
                   currency: "VND",
                 }).format(pay)}

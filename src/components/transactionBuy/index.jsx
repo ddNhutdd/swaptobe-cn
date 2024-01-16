@@ -17,6 +17,7 @@ import {
 } from "src/util/userCallApi";
 import { getCoin } from "src/redux/constant/coin.constant";
 import {
+  formatCurrency,
   formatStringNumberCultureUS,
   getLocalStorage,
   getRandomElementFromArray,
@@ -565,12 +566,7 @@ function TransactionBuy() {
       exchangeRedux,
       currencyRedux
     );
-    setPrice(() =>
-      new Intl.NumberFormat(currencyMapper.USD, {
-        style: "currency",
-        currency: currencyRedux,
-      }).format(price)
-    );
+    setPrice(() => formatCurrency(i18n.language, currencyRedux, price));
 
     // calculates the value for input coin
     try {

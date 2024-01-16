@@ -10,6 +10,8 @@ import { getBankListV2 } from "src/assets/resource/getBankListV2";
 import i18n from "src/translation/i18n";
 import {
   addClassToElementById,
+  formatCurrency,
+  formatNumber,
   formatStringNumberCultureUS,
   getClassListFromElementById,
   getElementById,
@@ -50,7 +52,7 @@ export default function CreateBuy() {
   const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
   const listCoinRealTime = useSelector(getListCoinRealTime);
   const currentCurrency = useSelector(getCurrent);
-  const exchage = useSelector(getExchange);
+  const exchange = useSelector(getExchange);
   const exchangeRateDisparity = useSelector(getExchangeRateDisparity);
   const selectedBank = useRef("OCB");
   const userName = useRef("");
@@ -116,18 +118,23 @@ export default function CreateBuy() {
   const renderMarketBuyPrice = function () {
     const result = calcBuyPrice();
     // set html
-    getElementById("marketBuyPrice").innerHTML =
-      new Intl.NumberFormat(currencyMapper.USD, roundIntl(8)).format(result) +
-      " " +
-      currentCurrency;
+    getElementById("marketBuyPrice").innerHTML = formatCurrency(
+      i18n.language,
+      currentCurrency,
+      result
+    );
   };
   const calcBuyPrice = function () {
-    if (data.length <= 0 || exchage.length <= 0 || !exchangeRateDisparity)
+    if (data.length <= 0 || exchange.length <= 0 || !exchangeRateDisparity)
       return;
     // find current price
     let ccCoin = data.current.filter((item) => item.name === currentCoin)[0]
       ?.price;
     if (!ccCoin) return;
+    const exchangeRate = exchange.find(
+      (item) => item.title === currentCurrency
+    )?.rate;
+    if (!exchangeRate) return;
     // process price
     const ccCoinFraction = math.fraction(ccCoin);
     const rateDisparity = math.fraction(exchangeRateDisparity);
@@ -135,7 +142,9 @@ export default function CreateBuy() {
       ccCoinFraction,
       math.chain(ccCoinFraction).multiply(rateDisparity).divide(100).done()
     );
-    return priceBuy;
+    const exchangeRateFraction = math.fraction(exchangeRate);
+    const result = math.multiply(priceBuy, exchangeRateFraction);
+    return math.number(result);
   };
   const renderClassMarketSellPrice = function () {
     return action === actionType.sell ? "" : "--d-none";
@@ -144,22 +153,33 @@ export default function CreateBuy() {
     return action === actionType.buy ? "" : "--d-none";
   };
   const calcSellPrice = function () {
-    if (data.length <= 0 || exchage.length <= 0 || !exchangeRateDisparity)
+    if (data.length <= 0 || exchange.length <= 0 || !exchangeRateDisparity)
       return;
     const ccCoin = data.current.filter((item) => item.name === currentCoin)[0]
       ?.price;
     if (!ccCoin) return;
+    const exchangeRate = exchange.find(
+      (item) => item.title === currentCurrency
+    )?.rate;
+    if (!exchangeRate) return;
+
     const ccCoinFraction = math.fraction(ccCoin);
     const rateDisparity = math.fraction(exchangeRateDisparity);
     const priceSell = math.subtract(
       ccCoinFraction,
       math.chain(ccCoinFraction).multiply(rateDisparity).divide(100).done()
     );
-    setMarketSellPrice(() => priceSell);
+    const exchangeRateFraction = math.fraction(exchangeRate);
+    const result = math.multiply(priceSell, exchangeRateFraction);
+
+    setMarketSellPrice(() => math.number(result));
   };
   const renderModalReview = function () {
-    getElementById("modalPreviewPrice").innerHTML =
-      formatStringNumberCultureUS(calcBuyPrice()) + " " + currentCurrency;
+    getElementById("modalPreviewPrice").innerHTML = formatCurrency(
+      i18n.language,
+      currentCurrency,
+      marketSellPrice
+    );
     getElementById("modalPreviewAmount").innerHTML =
       getElementById("amoutInput").value;
     getElementById("modalPreviewMinimumAmount").innerHTML =
@@ -349,6 +369,13 @@ export default function CreateBuy() {
             case "Insufficient balance":
               callToastError(t("insufficientBalance"));
               break;
+            case "The minimum selling quantity cannot be more than the number you want to sell":
+              callToastError(
+                t(
+                  "theMinimumSellingQuantityCannotBeMoreThanTheNumberYouWantToSell"
+                )
+              );
+              break;
             default:
               callToastError(t("anErrorHasOccurred"));
               break;
@@ -444,11 +471,11 @@ export default function CreateBuy() {
                 id="marketSellPrice"
                 className="create-buy-ads__head-area-price"
               >
-                {new Intl.NumberFormat(currencyMapper.USD, roundIntl(8)).format(
+                {formatCurrency(
+                  i18n.language,
+                  currentCurrency,
                   marketSellPrice
-                ) +
-                  " " +
-                  currentCurrency.toUpperCase()}
+                )}
               </span>
             </div>
             <i

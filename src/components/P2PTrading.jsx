@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import {
+  formatCurrency,
   formatStringNumberCultureUS,
   getLocalStorage,
   processString,
@@ -13,6 +14,7 @@ import {
 import {
   actionTrading,
   currency,
+  currencyMapper,
   defaultLanguage,
   localStorageVariable,
   url,
@@ -137,32 +139,81 @@ export default function P2PTrading({ history }) {
   useEffect(() => {
     if (data && data.length !== 0) {
       const x = data.find((item) => item.name === coin);
-      const price = x?.price;
-      if (!price) return;
-      const priceFraction = math.fraction(price);
-      const rateDisparityFraction = math.fraction(
-        exchangeRateDisparityFromRedux
-      );
-      const buyPrice = math
-        .chain(priceFraction)
-        .divide(100)
-        .multiply(rateDisparityFraction)
-        .add(priceFraction)
-        .done();
-      const sellPrice = math.subtract(
-        priceFraction,
-        math.multiply(math.divide(priceFraction, 100), rateDisparityFraction)
-      );
-      setBuyPrice(buyPrice);
-      setSellPrice(sellPrice);
+
+      setPrice();
       setCoinFullName(x?.token_key);
       setCoinImage(DOMAIN + x?.image);
     }
-  }, [data, coin]);
+  }, [data, coin, userSelectedCurrency]);
   useEffect(() => {
     exchange.current = exChangeFromRedux;
+    setPrice();
   }, [exChangeFromRedux]);
 
+  const setPrice = function () {
+    const buyPrice = calcBuyPrice();
+    const sellPrice = calcSellPrice();
+    setBuyPrice(buyPrice);
+    setSellPrice(sellPrice);
+  };
+  const calcBuyPrice = function () {
+    if (
+      !data ||
+      data.length <= 0 ||
+      !exChangeFromRedux ||
+      exChangeFromRedux.length <= 0
+    )
+      return;
+    const x = data.find((item) => item.name === coin);
+    const price = x?.price;
+    if (!price) return;
+    const rate = exChangeFromRedux.find(
+      (item) => item.title === userSelectedCurrency.toUpperCase()
+    )?.rate;
+
+    const priceFraction = math.fraction(price);
+    const rateDisparityFraction = math.fraction(exchangeRateDisparityFromRedux);
+    const newPriceFraction = math.add(
+      priceFraction,
+      math
+        .chain(priceFraction)
+        .multiply(rateDisparityFraction)
+        .divide(100)
+        .done()
+    );
+    const rateFraction = math.fraction(rate);
+    const result = math.multiply(newPriceFraction, rateFraction);
+    return result;
+  };
+  const calcSellPrice = function () {
+    if (
+      !data ||
+      data.length <= 0 ||
+      !exChangeFromRedux ||
+      exChangeFromRedux.length <= 0
+    )
+      return;
+    const x = data.find((item) => item.name === coin);
+    const price = x?.price;
+    if (!price) return;
+    const rate = exChangeFromRedux.find(
+      (item) => item.title === userSelectedCurrency.toUpperCase()
+    )?.rate;
+
+    const priceFraction = math.fraction(price);
+    const rateDisparityFraction = math.fraction(exchangeRateDisparityFromRedux);
+    const newPriceFraction = math.subtract(
+      priceFraction,
+      math
+        .chain(priceFraction)
+        .multiply(rateDisparityFraction)
+        .divide(100)
+        .done()
+    );
+    const rateFraction = math.fraction(rate);
+    const result = math.multiply(newPriceFraction, rateFraction);
+    return result;
+  };
   const showModal = () => setIsModalVisible(true);
   const handleOk = () => setIsModalVisible(false);
   const handleCancel = () => setIsModalVisible(false);
@@ -246,11 +297,14 @@ export default function P2PTrading({ history }) {
                 <div className="left box">
                   <div className="left1">
                     <i className="fa-solid fa-flag"></i>
-                    <span className="titleContainer">{t("sellingPrice")}:</span>
+                    <span className="titleContainer">{t("buyingPrice")}:</span>
                   </div>
                   <div className="left2">
-                    {formatStringNumberCultureUS(
-                      convertCurrency(sellPrice)?.toFixed(3) ?? ""
+                    {formatCurrency(
+                      i18n.language,
+                      userSelectedCurrency,
+                      buyPrice,
+                      false
                     )}
                     <span> {userSelectedCurrency}</span>
                   </div>
@@ -272,11 +326,14 @@ export default function P2PTrading({ history }) {
                 <div className="right box">
                   <div className="right1">
                     <i className="fa-solid fa-flag"></i>
-                    <span className="titleContainer">{t("buyingPrice")}:</span>
+                    <span className="titleContainer">{t("sellingPrice")}:</span>
                   </div>
                   <div className="right2">
-                    {formatStringNumberCultureUS(
-                      convertCurrency(buyPrice)?.toFixed(3) ?? ""
+                    {formatCurrency(
+                      i18n.language,
+                      userSelectedCurrency,
+                      sellPrice,
+                      false
                     )}
                     <span> {userSelectedCurrency}</span>
                   </div>

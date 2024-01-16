@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd";
 import { Input } from "../Common/Input";
 import {
+  formatCurrency,
   formatStringNumberCultureUS,
   getLocalStorage,
   getRandomElementFromArray,
@@ -101,12 +102,7 @@ function TransactionSell() {
       exchangeRedux,
       currencyRedux
     );
-    setPrice(() =>
-      new Intl.NumberFormat(currencyMapper.USD, {
-        style: "currency",
-        currency: currencyRedux,
-      }).format(price)
-    );
+    setPrice(() => formatCurrency(i18n.language, currencyRedux, price));
     // Calculate the value for the received input
     const amountCoin = payInputElement.current?.value?.replaceAll(",", "");
     const amountVnd = calcVND(

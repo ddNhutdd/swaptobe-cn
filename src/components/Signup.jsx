@@ -8,7 +8,11 @@ import { axiosService } from "../util/service";
 import { useState } from "react";
 import i18n from "src/translation/i18n";
 import { getLocalStorage } from "src/util/common";
-import { defaultLanguage, localStorageVariable } from "src/constant";
+import {
+  commontString,
+  defaultLanguage,
+  localStorageVariable,
+} from "src/constant";
 import { useTranslation } from "react-i18next";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 
@@ -65,11 +69,11 @@ export default function Signup({ history }) {
     try {
       let response = await axiosService.post("/api/user/signup", info);
       const verifyToken = response?.data?.data;
-      callToastSuccess(response.data.message);
+      callToastSuccess(t(commontString.success));
       axiosService.get("/api/user/verifyEmail/" + verifyToken);
       history.replace("/login");
     } catch (error) {
-      callToastError(error?.response?.data?.message);
+      callToastError(commontString.error);
     } finally {
       setLoading(false);
     }

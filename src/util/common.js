@@ -1,3 +1,5 @@
+import { availableLanguageCodeMapper } from "src/translation/i18n";
+
 export const setLocalStorage = (key, data) => {
   try {
     localStorage.setItem(key, JSON.stringify(data));
@@ -343,7 +345,6 @@ export const processString = function (inputString, substringsList, callback) {
   }
   return <>{resultJSX}</>;
 };
-
 /**
  * The function randomly selects an element in the array, returns that element, if the array is empty, returns null
  * @param {array} arr list items
@@ -354,7 +355,6 @@ export const getRandomElementFromArray = function (arr) {
   const randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
 };
-
 export const roundIntl = function (maximum) {
   return {
     style: "decimal",
@@ -366,4 +366,32 @@ export const rountRange = function (price) {
   if (price > 10000) return 8;
   else if (price > 100 && price <= 9999) return 6;
   else if (price <= 99) return 2;
+};
+export const formatCurrency = function (
+  locale,
+  currency,
+  number,
+  showSymbol = true
+) {
+  if (showSymbol) {
+    return new Intl.NumberFormat(availableLanguageCodeMapper[locale], {
+      style: "currency",
+      currency,
+    }).format(number);
+  } else {
+    return new Intl.NumberFormat(availableLanguageCodeMapper[locale], {
+      style: "currency",
+      currency,
+      currencyDisplay: "code",
+    })
+      .format(number)
+      .replace(currency, "")
+      .trim();
+  }
+};
+export const formatNumber = function (number, locale, digits) {
+  return new Intl.NumberFormat(
+    availableLanguageCodeMapper[locale],
+    roundIntl(digits)
+  ).format(number);
 };

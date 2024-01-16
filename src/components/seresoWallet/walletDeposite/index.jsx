@@ -9,10 +9,12 @@ import {
   getElementById,
   addClassToElementById,
   getLocalStorage,
+  formatNumber,
 } from "src/util/common";
 import { createWalletBEP20, getDepositHistory } from "src/util/userCallApi";
 import {
   api_status,
+  coinString,
   defaultLanguage,
   image_domain,
   localStorageVariable,
@@ -25,6 +27,7 @@ import {
   setShow,
 } from "src/redux/reducers/wallet2Slice";
 import { EmptyCustom } from "src/components/Common/Empty";
+
 function SerepayWalletDeposit() {
   const dropdownNetworkMenuClickHandle = function (e) {
     e.stopPropagation();
@@ -92,40 +95,54 @@ function SerepayWalletDeposit() {
     showHistorySpinner();
     const apiresp = await fetchApiGetHistory(coinName, page);
     closeHistorySpinner();
+    //render html
+    const renderHtml = [];
     if (apiresp && apiresp.length > 0) {
-      //render html
-      const renderEle = getElementById("historyContent");
-      if (!renderEle) return;
-      renderEle.innerHTML = ``;
       for (const item of apiresp) {
-        renderEle.innerHTML += `<div class="wallet-deposite__history-item">
-        <div class="wallet-deposite__history-time">
-          <i class="fa-solid fa-calendar"></i> ${item.created_at}
-        </div>
-        <div class="wallet-deposite__history-content">
-          <div class="wallet-deposite__history-name">
-            ${item.coin_key.toUpperCase()}
+        renderHtml.push(
+          <div key={item.id} className="wallet-deposite__history-item">
+            <div className="wallet-deposite__history-time">
+              <i className="fa-solid fa-calendar"></i> ${item.created_at}
+            </div>
+            <div className="wallet-deposite__history-content">
+              <div className="wallet-deposite__history-name">
+                {item.coin_key.toUpperCase()}
+              </div>
+              <div className="wallet-deposite__history-amount">
+                {formatNumber(item.amount, i18n.language, 8)}{" "}
+                <img
+                  src={`${image_domain.replace(
+                    coinString.USDT,
+                    item.coin_key.toUpperCase()
+                  )}`}
+                  alt={`${item.coin_key}`}
+                />
+              </div>
+              <div className="wallet-deposite__history-final">
+                <span>{t("finalAmount")}:</span>
+                <span>
+                  {formatNumber(item.before_amount, i18n.language, 8)}{" "}
+                  <img
+                    src={`${image_domain.replace(
+                      coinString.USDT,
+                      item.coin_key.toUpperCase()
+                    )}`}
+                    alt={`${item.coin_key}`}
+                  />
+                </span>
+              </div>
+            </div>
           </div>
-          <div class="wallet-deposite__history-amount">
-            +${item.amount} coins
-          </div>
-          <div class="wallet-deposite__history-final">
-            <span>${t("finalAmount")}:</span>
-            <span>${item.before_amount} <img src='${image_domain.replace(
-          "USDT",
-          item.coin_key.toUpperCase()
-        )}' alt='${item.coin_key}' /></span>
-          </div>
-        </div>
-      </div>`;
+        );
       }
-      //
       showHistory();
       closeHistoryEmpty();
     } else {
       showHistoryEmpty();
       closeHistory();
     }
+    console.log(renderHtml);
+    setHistoryData(() => renderHtml);
   };
   const closeHistory = function () {
     addClassToElementById("historyContent", "--d-none");
@@ -162,6 +179,7 @@ function SerepayWalletDeposit() {
   const [callApiCreateWalletStatus, setCallApiCreateWalletStatus] = useState(
     api_status.pending
   );
+  const [historyData, setHistoryData] = useState([]);
 
   const selectedCoin = useRef("");
   const historyPage = useRef(1);
@@ -314,7 +332,9 @@ function SerepayWalletDeposit() {
           <div
             id="historyContent"
             className=" wallet-deposit__history fadeInBottomToTop"
-          ></div>
+          >
+            {historyData}
+          </div>
           <div id="historySpinner" className="spin-container fadeInBottomToTop">
             <Spin />
           </div>

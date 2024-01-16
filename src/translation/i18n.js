@@ -13,7 +13,9 @@ import LOtranslate from "./locales/LOtranslation.json";
 import IDtranslate from "./locales/IDtranslation.json";
 import FRtranslate from "./locales/FRtranslation.json";
 import EStranslate from "./locales/EStranslation.json";
-
+import DEtranslate from "./locales/DEtranslation.json";
+import ITtranslate from "./locales/ITtranslation.json";
+import PTtranslate from "./locales/PTtranslation.json";
 export const availableLanguage = {
   vi: "vi",
   en: "en",
@@ -26,6 +28,25 @@ export const availableLanguage = {
   id: "id",
   fr: "fr",
   es: "es",
+  it: "it",
+  de: "de",
+  pt: "pt",
+};
+export const availableLanguageCodeMapper = {
+  vi: "vi-VN", // Tiếng Việt, Việt Nam
+  en: "en-US", // English, United States
+  ko: "ko-KR", // Korean, Republic of Korea
+  ja: "ja-JP", // Japanese, Japan
+  zh: "zh-CN", // Chinese, China
+  th: "th-TH", // Thai, Thailand
+  km: "km-KH", // Khmer, Cambodia
+  lo: "lo-LA", // Lao, Lao People's Democratic Republic
+  id: "id-ID", // Indonesian, Indonesia
+  fr: "fr-FR", // French, France
+  es: "es-ES", // Spanish, Spain
+  it: "it-IT", // Italian, Italy
+  de: "de-DE", // German, Germany
+  pt: "pt-PT", // Portuguese, Portugal
 };
 export const availableLanguageMapper = {
   vi: "Vietnamese",
@@ -39,6 +60,9 @@ export const availableLanguageMapper = {
   id: "Indonesian",
   fr: "French",
   es: "Spanish",
+  it: "Italian",
+  de: "German",
+  pt: "Portuguese",
 };
 // the translations
 const resources = {
@@ -74,6 +98,15 @@ const resources = {
   },
   es: {
     translation: EStranslate,
+  },
+  it: {
+    translation: ITtranslate,
+  },
+  pt: {
+    translation: PTtranslate,
+  },
+  de: {
+    translation: DEtranslate,
   },
 };
 

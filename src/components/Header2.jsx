@@ -209,12 +209,7 @@ export default function Header2({ history }) {
     );
     if (!exchange) return;
     const result = calcMoney(totalAssetsRealTime, exchange.rate);
-    setTotalMoney(() =>
-      new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: currentCurrency,
-      }).format(result)
-    );
+    setTotalMoney(() => result);
   };
   const calcMoney = function (usd, exchange) {};
   const setActiveCurrentPage = function () {

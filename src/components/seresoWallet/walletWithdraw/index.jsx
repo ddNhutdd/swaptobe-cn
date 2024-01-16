@@ -5,6 +5,7 @@ import { Spin, Pagination } from "antd";
 import QRCode from "react-qr-code";
 import {
   convertStringToNumber,
+  formatNumber,
   formatStringNumberCultureUS,
   generateNewURL,
   getLocalStorage,
@@ -215,7 +216,7 @@ function FormWithdraw() {
                     {t("note")}: {item.note}
                   </div>
                   <div className="formWithdraw__Wallet-body-amount">
-                    {t("amount")}: {item.amount}{" "}
+                    {t("amount")}: {formatNumber(item.amount, i18n.language, 8)}{" "}
                     {
                       <img
                         src={image_domain.replace(
@@ -239,7 +240,6 @@ function FormWithdraw() {
       );
     }
   };
-
   const renderStatusHistoryWidthdraw = function (status) {
     switch (status) {
       case 0:
@@ -353,7 +353,7 @@ function FormWithdraw() {
                 <div className="formWithdraw__Wallet-body">
                   <div>Coin: {item.coin_key.toUpperCase()}</div>
                   <div className="formWithdraw__Wallet-body-amount">
-                    {t("amount")}: {item.amount}{" "}
+                    {t("amount")}: {formatNumber(item.amount, i18n.language, 8)}{" "}
                     {
                       <img
                         src={image_domain.replace(
@@ -491,7 +491,7 @@ function FormWithdraw() {
             <div className="max-available">
               <span>{t("maxAvailable")}:</span>{" "}
               <span>
-                {getMaxAvailable()} {coin}
+                {formatNumber(getMaxAvailable(), i18n.language, 8)} {coin}
               </span>
             </div>
             <ul className="list-notify">
@@ -573,7 +573,7 @@ function FormWithdraw() {
             <div className="max-available">
               <span>{t("maxAvailable")}:</span>{" "}
               <span>
-                {getMaxAvailable()} {coin}
+                {formatNumber(getMaxAvailable(), i18n.language, 8)} {coin}
               </span>
             </div>
             <div className="input">

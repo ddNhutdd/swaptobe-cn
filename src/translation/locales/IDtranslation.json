@@ -309,5 +309,6 @@
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "Jika Anda tidak menerima transaksi dalam 15 menit, harap hubungi dukungan Serepay di support@serepay.net",
     "marketSellPrice": "Harga Jual Pasar",
     "toAddress": "Ke Alamat",
-    "reject": "Tolak"
+    "reject": "Tolak",
+    "theMinimumSellingQuantityCannotBeMoreThanTheNumberYouWantToSell": "Jumlah penjualan minimum tidak boleh lebih dari jumlah yang ingin Anda jual"
 }

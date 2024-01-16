@@ -11,6 +11,8 @@ import {
   url,
 } from "src/constant";
 import {
+  formatCurrency,
+  formatNumber,
   formatStringNumberCultureUS,
   getLocalStorage,
   roundIntl,
@@ -41,6 +43,7 @@ function SerepayWalletList() {
   const exchange = useSelector(getExchange);
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
   useEffect(() => {
     const language =
       getLocalStorage(localStorageVariable.lng) || availableLanguage.vi;
@@ -91,22 +94,16 @@ function SerepayWalletList() {
         </div>
         <div className="price">
           <span>
-            {userSelectedCurrency === currency.usd && "$"}
-            {userSelectedCurrency === currency.eur && "€"}
-            {userSelectedCurrency === currency.vnd && "đ"}
-            {formatStringNumberCultureUS(
-              String(
-                convertCurrency(item.price, userSelectedCurrency, exchange)
-              )
-            )}
+            {formatCurrency(i18n.language, userSelectedCurrency, item.price)}
           </span>
           <span className="swaptobeWalletList__own">
             <span>{t("own")}:</span>
             <span>
-              {new Intl.NumberFormat(
-                currencyMapper.USD,
-                roundIntl(rountRange(item.price))
-              ).format(getMyCoin(item.name, myListCoin))}
+              {formatNumber(
+                getMyCoin(item.name, myListCoin),
+                i18n.language,
+                rountRange(item.price)
+              )}
               <img
                 src={image_domain.replace("USDT", item.name)}
                 alt={item.name}
@@ -139,7 +136,11 @@ function SerepayWalletList() {
             {t("transfer")}
           </Button>
           <Button
-            onClick={() => swapOnClickHandle(item.name, getMyCoin(item.name))}
+            onClick={swapOnClickHandle.bind(
+              null,
+              item.name,
+              getMyCoin(item.name)
+            )}
             type={buttonClassesType.outline}
           >
             {t("swap")}

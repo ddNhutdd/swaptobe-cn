@@ -1,14 +1,18 @@
-import { Modal, Button, Empty } from "antd";
+import { Modal, Button } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
   convertStringToNumber,
+  formatNumber,
   formatStringNumberCultureUS,
   getLocalStorage,
   processString,
   roundDecimalValues,
+  roundIntl,
+  rountRange,
 } from "src/util/common";
 import {
   api_status,
+  commontString,
   defaultLanguage,
   image_domain,
   localStorageVariable,
@@ -28,6 +32,7 @@ import socket from "src/util/socket";
 import { callToastError, callToastSuccess } from "src/function/toast/callToast";
 import { Input } from "./Common/Input";
 import { getCoin, getCoinAmount } from "src/redux/reducers/wallet2Slice";
+import { EmptyCustom } from "./Common/Empty";
 export default function Swap() {
   const { isLogin } = useSelector((root) => root.loginReducer);
   const history = useHistory();
@@ -58,14 +63,15 @@ export default function Swap() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //
+    formatInputFromCoin(fromCoinValueString);
+
     const language =
       getLocalStorage(localStorageVariable.lng) || defaultLanguage;
     i18n.changeLanguage(language);
-    //
+
     const element = document.querySelector(".swap");
     element.classList.add("fadeInBottomToTop");
-    //
+
     socket.once("listCoin", (resp) => {
       if (resp && resp.length > 0) allCoinPrice.current = resp;
     });
@@ -109,6 +115,9 @@ export default function Swap() {
   };
   const fromCoinOnChange = function (e) {
     const inputValue = e.target.value;
+    formatInputFromCoin(inputValue);
+  };
+  const formatInputFromCoin = function (inputValue) {
     const inputValueWithoutComma = inputValue.replace(/,/g, "");
     const regex = /^$|^[0-9]+(\.[0-9]*)?$/;
     if (!regex.test(inputValueWithoutComma)) {
@@ -119,7 +128,6 @@ export default function Swap() {
       inputValueWithoutComma
     );
     setFromCoinValueString(inputValueFormated);
-    //
   };
   const setToCoinValueCalc = function () {
     if (data.length > 0) {
@@ -135,20 +143,15 @@ export default function Swap() {
   };
   const coinPriceDifference = function () {
     if (data.length > 0) {
-      const stringConvertCacl = formatStringNumberCultureUS(
-        convertCacl(
-          1,
-          data.filter((item) => item.name === swapFromCoin)[0].price,
-          data.filter((item) => item.name === swapToCoin)[0].price
-        ).toString()
+      const calcNumber = convertCacl(
+        1,
+        data.filter((item) => item.name === swapFromCoin)[0].price,
+        data.filter((item) => item.name === swapToCoin)[0].price
       );
       const coinValue = data.filter((item) => item.name === swapToCoin)[0]
         .price;
-      const result = roundDecimalValues(
-        convertStringToNumber(stringConvertCacl),
-        coinValue
-      );
-      return formatStringNumberCultureUS(result.toString());
+
+      return formatNumber(calcNumber, i18n.language, rountRange(coinValue));
     }
   };
   const convertCacl = function (inputValue, fromPrice, toPrice) {
@@ -216,7 +219,7 @@ export default function Swap() {
       callApiHistoryStatus !== api_status.fetching &&
       coinSwapHistory.length <= 0
     ) {
-      return <Empty description={<span>{t("noData")}</span>} />;
+      return <EmptyCustom />;
     } else if (
       callApiHistoryStatus !== api_status.fetching &&
       coinSwapHistory.length > 0
@@ -232,7 +235,7 @@ export default function Swap() {
                 <div className="item">
                   <span>{item.coin_key}: </span>
                   <span className="swap__history-minus">
-                    -{item.amount}{" "}
+                    {formatNumber(item.amount, i18n.language, 8)}{" "}
                     <img
                       src={image_domain.replace(
                         "USDT",
@@ -245,12 +248,14 @@ export default function Swap() {
                 <div className="item">
                   <span>{item.wallet}: </span>
                   <span className="swap__history-add">
-                    +
-                    {roundDecimalValues(
+                    {formatNumber(
                       item.wallet_amount,
-                      allCoinPrice.current.filter(
-                        (it) => it.name === item.wallet
-                      )[0]?.price
+                      i18n.language,
+                      rountRange(
+                        allCoinPrice.current.filter(
+                          (it) => it.name === item.wallet
+                        )[0]?.price
+                      )
                     )}{" "}
                     <img
                       src={image_domain.replace(
@@ -267,14 +272,13 @@ export default function Swap() {
                   {t("rate")} {item.wallet}:
                 </span>
                 <span>
-                  {formatStringNumberCultureUS(
-                    String(
-                      roundDecimalValues(
-                        item.rate,
-                        allCoinPrice.current.filter(
-                          (it) => it.name === item.wallet
-                        )[0]?.price
-                      )
+                  {formatNumber(
+                    item.rate,
+                    i18n.language,
+                    rountRange(
+                      allCoinPrice.current.filter(
+                        (it) => it.name === item.wallet
+                      )[0]?.price
                     )
                   )}
                 </span>
@@ -302,7 +306,7 @@ export default function Swap() {
       amountForm: convertStringToNumber(fromCoinValueString).toString(),
     })
       .then((resp) => {
-        callToastSuccess(resp?.data?.message || t("anErrorHasOccurred"));
+        callToastSuccess(t(commontString.success));
         fetchCoinSwapHistory();
         dispatch(userWalletFetchCount());
         setCallApiSwapStatus(api_status.fulfilled);
@@ -399,7 +403,11 @@ export default function Swap() {
             <div className="balance">
               <span className="balance-title">{t("balance")}: </span>
               {isLogin
-                ? userWallet[swapFromCoin.toLowerCase() + "_balance"] ?? 0
+                ? formatNumber(
+                    userWallet[swapFromCoin.toLowerCase() + "_balance"] ?? 0,
+                    i18n.language,
+                    8
+                  )
                 : ""}
             </div>
           </div>

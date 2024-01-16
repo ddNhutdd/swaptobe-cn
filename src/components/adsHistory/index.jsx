@@ -36,7 +36,6 @@ function AdsHistory() {
       loadData(currentPage);
     });
     // get list coin
-
     fetchListCoin().then((resp) => {
       renderTable(1, fetchListAdsBuyToUser);
     });
@@ -53,8 +52,8 @@ function AdsHistory() {
   const { t } = useTranslation();
   const [listRecord, setListRecord] = useState([]);
   const actionType = {
-    buy: t("buy"),
-    sell: t("sell"),
+    buy: "buy",
+    sell: "sell",
   };
   const cancelAdsId = useRef();
   const [tabActive, setTabActive] = useState(actionType.buy);
@@ -72,7 +71,6 @@ function AdsHistory() {
     setIsModalConfirmOpen(false);
   };
   const renderClassEmpty = function () {
-    console.log(callApiStatus, listRecord, listRecord.length);
     return callApiStatus !== api_status.fetching &&
       (!listRecord || listRecord.length <= 0)
       ? ""
@@ -192,14 +190,16 @@ function AdsHistory() {
           (c) => c.name === item.symbol
         ).price;
         listRecord.push(
-          <AdsHistoryRecord
-            item={item}
-            price={price}
-            showModal={showModal}
-            redirectConfirm={redirectConfirm}
-            cancelAdsId={cancelAdsId}
-            type={AdsHistoryRecordType.user}
-          />
+          <div key={item.id}>
+            <AdsHistoryRecord
+              item={item}
+              price={price}
+              showModal={showModal}
+              redirectConfirm={redirectConfirm}
+              cancelAdsId={cancelAdsId}
+              type={AdsHistoryRecordType.user}
+            />
+          </div>
         );
       }
       setListRecord(() => listRecord);
@@ -267,7 +267,7 @@ function AdsHistory() {
     loadData(1);
   };
   const tabChangeHandle = function (e) {
-    const selected = e.target.textContent;
+    const selected = e.target.dataset.tab;
     if (selected === actionType.sell) {
       action.current = actionType.sell;
       setTabActive(() => actionType.sell);
@@ -324,6 +324,15 @@ function AdsHistory() {
       ? t("listAdvertisementBuy")
       : t("listAdvertisementSell");
   };
+  const renderClassActiveTabBuy = function () {
+    return tabActive === actionType.buy ? "active" : "";
+  };
+  const renderClassActiveTabSell = function () {
+    return tabActive === actionType.sell ? "active" : "";
+  };
+  useEffect(() => {
+    console.log(tabActive);
+  }, [tabActive]);
   return (
     <div className="ads-history">
       <div className="container">
@@ -331,18 +340,16 @@ function AdsHistory() {
           <div className="ads-history__filter">
             <div className="ads-history__filter-tabs-container">
               <div
+                data-tab={actionType.buy}
                 onClick={tabChangeHandle}
-                className={`ads-history__filter-tabs ${
-                  tabActive === actionType.buy ? "active" : ""
-                }`}
+                className={`ads-history__filter-tabs ${renderClassActiveTabBuy()}`}
               >
                 {t("buy")}
               </div>
               <div
+                data-tab={actionType.sell}
                 onClick={tabChangeHandle}
-                className={`ads-history__filter-tabs ${
-                  tabActive === actionType.sell ? "active" : ""
-                }`}
+                className={`ads-history__filter-tabs ${renderClassActiveTabSell()}`}
               >
                 {t("sell")}
               </div>

@@ -4,7 +4,11 @@ import QRCode from "react-qr-code";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { axiosService } from "../util/service";
-import { defaultLanguage, localStorageVariable } from "src/constant";
+import {
+  commontString,
+  defaultLanguage,
+  localStorageVariable,
+} from "src/constant";
 import { getLocalStorage } from "src/util/common";
 import i18n from "src/translation/i18n";
 import { useTranslation } from "react-i18next";
@@ -49,10 +53,10 @@ export default function Wallet() {
     try {
       let response = await axiosService.post("api/crypto/widthdraw", data);
       console.log(response.data);
-      callToastSuccess(response.data.message);
+      callToastSuccess(t(commontString.success));
     } catch (error) {
       console.log(error);
-      callToastError(error.response.data.message);
+      callToastError(t(commontString.error));
     }
   };
   useEffect(() => {

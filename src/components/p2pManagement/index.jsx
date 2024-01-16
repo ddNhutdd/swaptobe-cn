@@ -7,7 +7,12 @@ import {
   localStorageVariable,
   url,
 } from "src/constant";
-import { capitalizeFirstLetter, getLocalStorage } from "src/util/common";
+import {
+  capitalizeFirstLetter,
+  formatCurrency,
+  formatNumber,
+  getLocalStorage,
+} from "src/util/common";
 import i18n from "src/translation/i18n";
 import socket from "src/util/socket";
 import { useHistory } from "react-router-dom";
@@ -23,6 +28,8 @@ import {
   getExchangeFetchStatus,
 } from "src/redux/constant/currency.constant";
 import { EmptyCustom } from "../Common/Empty";
+import { math } from "src/App";
+
 function P2pManagement() {
   const { t } = useTranslation();
   const advertisingStatusType = {
@@ -264,10 +271,11 @@ function P2pManagement() {
 
     const result = math.multiply(rateFraction, valueFraction);
 
-    const formatResult = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency,
-    }).format(math.number(result));
+    const formatResult = formatCurrency(
+      i18n.language,
+      currency,
+      math.number(result)
+    );
     return formatResult;
   };
   const renderTable = function () {
@@ -322,7 +330,7 @@ function P2pManagement() {
         <td>
           <div>
             <div>{item.symbol}</div>
-            <div>{item.amount}</div>
+            <div>{formatNumber(item.amount, i18n.language, 8)}</div>
             <div>{calcMoney(item.rate)}</div>
             <div>{t(item.side)}</div>
           </div>

@@ -9,7 +9,12 @@ import {
 } from "src/constant";
 import { useTranslation } from "react-i18next";
 import i18n from "src/translation/i18n";
-import { getLocalStorage, roundIntl, rountRange } from "src/util/common";
+import {
+  formatNumber,
+  getLocalStorage,
+  roundIntl,
+  rountRange,
+} from "src/util/common";
 import { Button, buttonClassesType } from "../Common/Button";
 import { TagCustom, TagType } from "../Common/Tag";
 
@@ -77,7 +82,13 @@ function AdsHistoryRecord(props) {
             </tr>
             <tr>
               <td>{t("amountMinimum")}:</td>
-              <td>{item.amountMinimum}</td>
+              <td>
+                {formatNumber(
+                  item.amountMinimum,
+                  i18n.language,
+                  rountRange(price)
+                )}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -86,12 +97,13 @@ function AdsHistoryRecord(props) {
         <table>
           <tbody>
             <tr>
-              <td>Quantity Remaining:</td>
+              <td>{t("quantityRemaining")}:</td>
               <td>
-                {new Intl.NumberFormat(
-                  currencyMapper.USD,
-                  roundIntl(rountRange(price))
-                ).format(item.amount - item.amountSuccess)}
+                {formatNumber(
+                  item.amount - item.amountSuccess,
+                  i18n.language,
+                  rountRange(price)
+                )}
               </td>
             </tr>
             <tr>

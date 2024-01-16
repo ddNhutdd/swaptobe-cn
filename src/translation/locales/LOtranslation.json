@@ -309,5 +309,6 @@
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "ຖ້າທ່ານບໍ່ໄດ້ຮັບການເຮັດສວນໃນ 15 ນາທີ, ກະລຸນາຕິດຕໍ່ສະຖານະຂໍ້ມູນ Serepay ທີ່ support@serepay.net",
     "marketSellPrice": "ລາຄາຂາຍຕະຫຼາດ",
     "toAddress": "ການສົ່ງຜົນ",
-    "reject": "ປະຕິບ"
+    "reject": "ປະຕິບ",
+    "theMinimumSellingQuantityCannotBeMoreThanTheNumberYouWantToSell": "ຈຳນວນຂາຍຕ້ອງບໍ່ສາມາດຫຼາຍກວ່າຈຳນວນທ່ານຕໍ່ວົງ"
 }

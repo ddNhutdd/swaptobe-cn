@@ -187,6 +187,7 @@ function App() {
     )?.price;
     return roundDecimalValues(totalUsd / priceBtc, 100000000);
   };
+
   return (
     <BrowserRouter>
       <ScrollToTop>

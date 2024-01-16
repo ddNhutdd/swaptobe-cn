@@ -5,6 +5,7 @@ import QRCode from "react-qr-code";
 import { useTranslation } from "react-i18next";
 import {
   api_status,
+  commontString,
   defaultLanguage,
   localStorageVariable,
   url,
@@ -423,8 +424,7 @@ function Profile() {
     uploadKyc(formData)
       .then((resp) => {
         //show notify
-        const mes = resp.data.message;
-        callToastSuccess(mes);
+        callToastSuccess(t(commontString.success));
         // reload component
         setShowConTent(content.verifing);
         //
@@ -432,7 +432,7 @@ function Profile() {
       })
       .catch((error) => {
         setCallApiKYCStatus(api_status.rejected);
-        callToastError(error.message);
+        callToastError(t(commontString.error));
         console.log(error);
       });
   };
@@ -853,12 +853,12 @@ function Profile() {
       addListBanking(data)
         .then((resp) => {
           callApiBankingUserStatus.current = api_status.fulfilled;
-          callToastSuccess("Success");
+          callToastSuccess(t(commontString.success));
           return resolve(resp.data.data);
         })
         .catch((error) => {
           callApiBankingUserStatus.current = api_status.rejected;
-          callToastError("Fail");
+          callToastError(t(commontString.error));
           return resolve(null);
         });
     });

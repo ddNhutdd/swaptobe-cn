@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { axiosService } from "../util/service";
-import { defaultLanguage, localStorageVariable, url } from "src/constant";
+import { commontString, defaultLanguage, localStorageVariable, url } from "src/constant";
 import { useEffect } from "react";
 import { getLocalStorage, removeLocalStorage } from "src/util/common";
 import i18n from "src/translation/i18n";
@@ -72,7 +72,7 @@ export default function Login({ history }) {
       //redirect to admin
       redirecToAdmin(response.data.data);
     } catch (error) {
-      callToastError(error?.response?.data?.message);
+      callToastError(t(commontString.error));
     } finally {
       setIsLoading(false);
     }

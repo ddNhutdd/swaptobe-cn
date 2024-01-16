@@ -309,5 +309,6 @@
     "ifYouDidntReceiveTransactionsWithin15MinutesPleaseContactSerepaySupportAtSupportAtSerepayDotNet": "15分以内に取引が届かない場合は、support@serepay.net でSerepayサポートにお問い合わせください",
     "marketSellPrice": "市場販売価格",
     "toAddress": "宛先に",
-    "reject": "却下"
+    "reject": "却下",
+    "theMinimumSellingQuantityCannotBeMoreThanTheNumberYouWantToSell": "最小販売数量は、販売したい数量を超えることはできません"
 }
